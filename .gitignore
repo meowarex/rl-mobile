@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+**/build/
+*.apk
+*.aab
+*.dex
+
+# Android
+local.properties
+Manager/app/release/
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Keys / secrets
+*.keystore
+*.jks
+
+# Reference material (APKs, original source)
+Reference/

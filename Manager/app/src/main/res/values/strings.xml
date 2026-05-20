@@ -1,0 +1,263 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+  <string name="app_name">Radiant Lyrics Manager</string>
+  <string name="app_description">A patcher for the TIDAL Android App</string>
+
+  <string name="rlmobile" translatable="false">Radiant Lyrics</string>
+  <string name="tidal" translatable="false">TIDAL</string>
+  <string name="github" translatable="false">GitHub</string>
+  <string name="support_server">Support Server</string>
+  <string name="installer">Installer</string>
+
+  <string name="action_cancel">Cancel</string>
+  <string name="action_retry">Retry</string>
+  <string name="action_continue">Continue</string>
+  <string name="action_retry_install">Retry installation</string>
+  <string name="action_open_error_log">Open error log</string>
+  <string name="action_apply">Apply</string>
+  <string name="action_confirm">Confirm</string>
+  <string name="action_dismiss">Dismiss</string>
+  <string name="action_install">Install</string>
+  <string name="action_uninstall">Uninstall</string>
+  <string name="action_add_install">New Install</string>
+  <string name="action_update_install">Update Install</string>
+  <string name="action_update">Update</string>
+  <string name="action_clear">Clear</string>
+  <string name="action_delete">Delete</string>
+  <string name="action_launch">Launch</string>
+  <string name="action_close">Close</string>
+  <string name="action_search">Search</string>
+  <string name="action_copy">Copy</string>
+  <string name="action_collapse">Collapse</string>
+  <string name="action_expand">Expand</string>
+  <string name="action_copied">Copied!</string>
+  <string name="action_cleared_cache">Cleared cache!</string>
+  <string name="action_exit_anyways">Exit Anyways</string>
+  <string name="action_open_info">Open Info</string>
+  <string name="action_reset_default">Reset to default</string>
+
+  <string name="intent_reinstall_fail">Failed to automatically reinstall! Please try doing it manually.</string>
+  <string name="intent_import_component_success">Successfully imported %s</string>
+  <string name="intent_import_component_failure">Failed to import custom component!</string>
+
+  <string name="permissions_title">Grant Permissions</string>
+  <string name="permissions_subtitle">Radiant Lyrics Manager requires permissions:</string>
+  <string name="permissions_legend">%s indicates required permissions!</string>
+  <string name="permissions_grant">Grant</string>
+  <string name="permissions_granted">Granted</string>
+  <string name="permissions_header_options">Options</string>
+  <string name="permissions_header_permissions">Permissions</string>
+  <string name="permissions_install_title">Install from Unknown Sources</string>
+  <string name="permissions_install_desc">Permissions are required to initiate an installation from this app.</string>
+  <string name="permissions_storage_title">External Storage</string>
+  <string name="permissions_storage_desc">Radiant Lyrics Manager stores shared data in ~/RadiantLyrics, which requires full storage permissions. Scoped storage is not currently supported.</string>
+  <string name="permissions_notifs_title">Notifications</string>
+  <string name="permissions_battery_title">Background Battery</string>
+  <string name="permissions_battery_desc">Ensures the installation process does not get automatically cancelled if the app is minimized.</string>
+  <string name="permissions_notifs_desc">Used only to show the download progress if Radiant Lyrics Manager is minimized during installation.</string>
+
+  <string name="permissions_root_denied">Failed to obtain root permissions</string>
+  <string name="permissions_shizuku_denied">Failed to obtain Shizuku permissions</string>
+  <string name="permissions_dhizuku_denied">Failed to obtain Dhizuku permissions</string>
+
+  <string name="installs_no_installs">No installations found!</string>
+  <string name="launch_app_fail">Failed to launch app</string>
+
+  <string name="settings_header_advanced">Advanced</string>
+  <string name="settings_header_installation">Installation</string>
+  <string name="settings_header_appearance">Appearance</string>
+  <string name="settings_header_info">Info</string>
+  <string name="setting_theme">Theme</string>
+  <string name="setting_theme_desc">The theme to apply to this app</string>
+  <string name="setting_dynamic_color">Dynamic color</string>
+  <string name="setting_dynamic_color_desc">Enables Material You theming on Android 12+</string>
+  <string name="setting_developer_options">Developer options</string>
+  <string name="setting_developer_options_desc">Don\'t enable this unless you know what it does! (yes, really)</string>
+  <string name="setting_installer">Installation Method</string>
+  <string name="setting_installer_desc">Various methods are supported to interface with the system\'s package installer.</string>
+  <string name="setting_keep_patched_apks">Keep patched APKs</string>
+  <string name="setting_keep_patched_apks_desc">Keep all patched files and APKs after installation for debugging purposes. Note that exporting the APK is only useful after a successful patching session.</string>
+  <string name="settings_clear_cache">Clear cache</string>
+  <string name="settings_export_apk">Export APK</string>
+
+  <string name="installer_pm">Direct</string>
+  <string name="installer_pm_desc">Invokes the PackageInstaller API directly from the app\'s context. (Default)</string>
+  <string name="installer_root">Root</string>
+  <string name="installer_intent">Intent</string>
+  <string name="installer_intent_desc">Launches an intent to handle installation through the system\'s configured default installer.</string>
+  <string name="installer_root_desc">Invokes PackageManager directly using device root such as Magisk or KernelSU.</string>
+  <string name="installer_shizuku">Shizuku</string>
+  <string name="installer_shizuku_desc">Invokes the PackageInstaller API remotely through Shizuku. ADB, Wireless ADB, and Root backends are all supported.</string>
+  <string name="installer_dhizuku">Dhizuku</string>
+  <string name="installer_dhizuku_desc">Invokes the PackageInstaller API remotely through Dhizuku using DeviceOwner permissions.</string>
+
+  <string name="theme_system">System</string>
+  <string name="theme_dark">Dark</string>
+  <string name="theme_light">Light</string>
+  <string name="theme_black">Black</string>
+
+  <string name="plugins_title">Plugins</string>
+  <string name="plugins_view_changelog">View changelog</string>
+  <string name="plugins_delete_plugin">Uninstall %s</string>
+  <string name="plugins_delete_plugin_body">Are you sure you want to uninstall the %s plugin?</string>
+  <string name="plugins_none_installed">No plugins installed!</string>
+  <string name="plugins_changelog_media">Changelog Media</string>
+  <string name="plugins_error">An error occurred while processing plugins!</string>
+  <string name="plugins_safe_mode_title">Safe mode</string>
+  <string name="plugins_safe_mode_desc">Temporarily disables all plugins when starting Radiant Lyrics</string>
+
+  <string name="navigation_back">Back</string>
+  <string name="navigation_about">About</string>
+  <string name="navigation_logs">Logs</string>
+  <string name="navigation_settings">Settings</string>
+
+  <string name="contributors_lead">Lead</string>
+  <string name="contributors">Contributors</string>
+  <string name="contributors_contributions">%s contributions</string>
+
+  <string name="network_load_fail">Failed to load</string>
+  <string name="network_warning_title">Metered network</string>
+  <string name="network_warning_body">It appears you are connected to mobile data or a potentially metered network. Continuing with the installation may result in several hundred megabytes being downloaded. Are you sure you want to continue?</string>
+  <string name="network_warning_disable">Don\'t show this again</string>
+
+  <string name="version_none">None</string>
+  <string name="version_stable">Stable</string>
+  <string name="version_beta">Beta</string>
+  <string name="version_alpha">Alpha</string>
+  <string name="version_unknown">Unknown</string>
+  <string name="version_load_fail">Failed to retrieve version</string>
+
+  <string name="installer_file_save_success">Saved to %s</string>
+  <string name="installer_file_save_failed">Failed to save %s</string>
+  <string name="installer_install_success">Successfully installed Radiant Lyrics</string>
+  <string name="installer_install_aborted">Cancelled Radiant Lyrics installation</string>
+  <string name="installer_uninstall_new">Please uninstall your current version in order to continue!</string>
+  <string name="installer_uninstall_success">Successfully uninstalled app</string>
+  <string name="installer_uninstall_aborted">Cancelled uninstallation</string>
+  <string name="installer_dl_verify_fail">Failed to verify download</string>
+  <string name="installer_insufficient_storage">Insufficient storage space!</string>
+  <string name="installer_banner_minimization">Since battery optimizations have not been disabled, minimizing this screen may abort the installation process!</string>
+  <string name="installer_banner_failure">Installation failed! You can either retry or click this banner to open the GitHub repository for help.</string>
+  <string name="installer_banner_success">Successfully installed Radiant Lyrics! Do *NOT* uninstall the manager (this app) as it is required to perform certain types of updates.</string>
+
+  <string name="install_error_unknown">Installer failure (Unknown reason)</string>
+  <string name="install_error_unhandled_intent">No handlers available for %s!</string>
+  <string name="install_error_blocked">Installation was blocked</string>
+  <string name="install_error_invalid">One or more APKs were invalid or corrupt</string>
+  <string name="install_error_conflict">Conflicts with an existing app, usually due to mismatched signatures</string>
+  <string name="install_error_storage">Not enough storage available to install</string>
+  <string name="install_error_incompatible">Application is incompatible with this device</string>
+  <string name="install_error_timeout">Installer timed out</string>
+
+  <string name="install_group_prepare">Prepare</string>
+  <string name="install_group_download">Download dependencies</string>
+  <string name="install_group_patch">Patch APK</string>
+  <string name="install_group_install">Install APK</string>
+
+  <string name="patch_step_fetch_info">Fetching target TIDAL version</string>
+  <string name="patch_step_downgrade_check">Checking for newer installations</string>
+  <string name="patch_step_restore_cache">Restoring from cache</string>
+  <string name="patch_step_dl_tidal_apk">Downloading TIDAL APK</string>
+  <string name="patch_step_dl_smali">Downloading smali patches</string>
+  <string name="patch_step_copy_deps">Copying dependencies</string>
+  <string name="patch_step_patch_manifests">Patching APK manifest</string>
+  <string name="patch_step_patch_certs">Adding modern root certificates</string>
+  <string name="patch_step_patch_icon">Patching app icon</string>
+  <string name="patch_step_patch_smali">Applying smali patches</string>
+  <string name="patch_step_reorganize_dex">Reorganizing dex files</string>
+  <string name="patch_step_save_metadata">Store metadata</string>
+  <string name="patch_step_alignment">Aligning APK</string>
+  <string name="patch_step_signing">Signing APK</string>
+  <string name="patch_step_install">Installing APK</string>
+  <string name="patch_step_cleanup">Cleaning up</string>
+
+  <string name="status_queued">Queued</string>
+  <string name="status_ongoing">Ongoing</string>
+  <string name="status_skipped">Skipped</string>
+  <string name="status_success">Success</string>
+  <string name="status_failed">Failed</string>
+
+  <string name="installer_abort_title">Really exit?</string>
+  <string name="installer_abort_body">Are you sure you really want to abort an in-progress installation?</string>
+
+  <string name="updater_title">Update to v%s</string>
+  <string name="updater_body">A new update has been released for Radiant Lyrics Manager! It may be required in order to function properly. Would you like to update?</string>
+  <string name="updater_open_github">View release on GitHub</string>
+  <string name="updater_check_fail">Failed to check for updates!</string>
+  <string name="updater_update_fail">Failed to update! Please download and install the update manually!</string>
+
+  <string name="downloader_err_unknown">Download failed (Unknown)</string>
+  <string name="downloader_err_code">Download failed (%s)</string>
+  <string name="downloader_err_timeout">Download failed (Timeout)</string>
+  <string name="downloader_err_response">Download failed (Invalid response)</string>
+  <string name="downloader_err_file_exists">Download failed (File exists)</string>
+  <string name="downloader_err_storage_space">Download failed (Insufficient space)</string>
+
+  <string name="home_network_fail">Failed to fetch data!</string>
+
+  <string name="patchopts_title">Radiant Lyrics provides several customizations at installation time that are not able to be changed once installed.</string>
+  <string name="patchopts_pkgname_title">Package Name</string>
+  <string name="patchopts_pkgname_desc">The package name is a unique identifier for all apps. Using different ones can allow for multiple installations of Radiant Lyrics.</string>
+  <string name="patchopts_pkgname_invalid">Invalid package name!</string>
+  <string name="patchopts_pkgname_taken">Target app will be overwritten!</string>
+  <string name="patchopts_pkgname_ok">Valid package name!</string>
+  <string name="patchopts_appname_title">App Name</string>
+  <string name="patchopts_appname_desc">The app name is what\'s displayed in your home launcher. This should be changed on secondary installations for ease of use.</string>
+  <string name="patchopts_debuggable_title">Debuggable</string>
+  <string name="patchopts_debuggable_desc">Enable the debuggable manifest flag. Only use this if you know what you are doing!</string>
+  <string name="patchopts_custom_injector_title">Custom Injector</string>
+  <string name="patchopts_custom_injector_desc">A custom injector build that was imported by Manager.</string>
+  <string name="patchopts_custom_patches_title">Custom Patches</string>
+  <string name="patchopts_custom_patches_desc">A custom smali patch bundle that was imported by Manager.</string>
+  <string name="patchopts_divider_basic">Basic</string>
+  <string name="patchopts_divider_advanced">Advanced</string>
+
+  <string name="componentopts_screen_title">Custom Component (%s)</string>
+  <string name="componentopts_screen_desc">Select a custom build that was imported by Manager.</string>
+  <string name="componentopts_selected_none">Latest</string>
+  <string name="componentopts_deleted">Successfully deleted component!</string>
+
+  <string name="log_title">Log</string>
+  <string name="log_section_install_info">Installation Info</string>
+  <string name="log_section_env_info">Environment Info</string>
+  <string name="log_section_error">Error Stacktrace</string>
+  <string name="log_section_log">Installation Log</string>
+  <string name="log_action_export">Export log</string>
+  <string name="log_action_export_apk">Export APK</string>
+  <string name="log_action_share">Share log</string>
+
+  <string name="logs_title">Logs</string>
+  <string name="logs_none">No logs present!</string>
+  <string name="logs_action_delete_all">Delete all logs</string>
+  <string name="logs_status_delete_success">Successfully deleted all logs</string>
+  <string name="logs_wipe_title">Clear Logs</string>
+  <string name="logs_wipe_desc">Are you sure you want to permanently delete all the logs?</string>
+
+  <string name="notif_group_install_title">Active installation</string>
+  <string name="notif_group_install_desc">Progress notifications sent during a minimized installation</string>
+  <string name="notif_install_ready_title">Radiant Lyrics installation ready!</string>
+  <string name="notif_install_ready_desc">Click to install…</string>
+  <string name="notif_install_fail_title">Radiant Lyrics failed to install</string>
+  <string name="notif_install_fail_desc">Click to view more info…</string>
+
+  <string name="play_protect_warning_title">Play Protect</string>
+  <string name="play_protect_warning_desc">Google Play Protect appears to be enabled on your device. It may attempt to interfere with a new installation due to the usage of a unique signing key. You can disable it in Play Protect\'s settings.\n\nIf it does show a warning dialog, press\n\"More Details\" -> \"Install anyway\"</string>
+  <string name="play_protect_warning_ok">Continue</string>
+  <string name="play_protect_warning_open_gpp">Open Play Protect</string>
+  <string name="play_protect_warning_disable">Don\'t show this again</string>
+
+  <string name="fun_fact_prefix">Fun Fact: %s</string>
+  <string name="fun_fact_1">Did you know that Google Play Protect is useless?</string>
+  <string name="fun_fact_2">Radiant Lyrics restores the blurred album art lyrics dialog from TIDAL\'s legacy player.</string>
+  <string name="fun_fact_3">The legacy LyricsDialog uses a BlurTransformation with radius 5 via RenderScript.</string>
+  <string name="fun_fact_4">i am in your walls</string>
+  <string name="fun_fact_5">The TIDAL app has two coexisting player implementations — old View-based and new Compose.</string>
+  <string name="fun_fact_6">Having issues? Open an issue on GitHub!</string>
+  <string name="fun_fact_7">The lyricsButton was hidden because TIDAL rerouted lyrics data to the new Compose player.</string>
+  <string name="fun_fact_8" translatable="false">\"just patch it lol\"</string>
+  <string name="fun_fact_9">Radiant Lyrics targets TIDAL v2.192.0</string>
+  <string name="fun_fact_10">Smali patches are distributed as unified diffs inside patches.zip</string>
+  <string name="fun_fact_11">The blurred background uses Coil + BlurTransformation(radius=5) crossfaded onto an ImageView.</string>
+  <string name="fun_fact_12" translatable="false">meowarex made this</string>
+
+  <string name="time_elapsed_seconds">%.2fs</string>
+</resources>

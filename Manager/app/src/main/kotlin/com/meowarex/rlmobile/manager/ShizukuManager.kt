@@ -1,0 +1,96 @@
+package com.meowarex.rlmobile.manager
+
+import android.content.Context
+import android.content.pm.PackageManager
+import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.util.showToast
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.sync.Mutex
+import rikka.shizuku.Shizuku
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.coroutines.resume
+import kotlin.random.Random
+
+/**
+ * Handles setting up Shizuku and obtaining permissions.
+ */
+class ShizukuManager(private val context: Context) {
+    private var shizukuPermissionLock = Mutex()
+    private val shizukuAvailable = AtomicBoolean(false)
+
+    init {
+        Shizuku.addBinderReceivedListenerSticky {
+            shizukuAvailable.set(true)
+        }
+        Shizuku.addBinderDeadListener {
+            shizukuAvailable.set(false)
+
+            if (shizukuPermissionLock.isLocked)
+                shizukuPermissionLock.unlock()
+        }
+    }
+
+    /**
+     * Determines whether Shizuku is available and the binder has been retrieved.
+     */
+    fun shizukuAvailable(): Boolean {
+        if (!shizukuAvailable.get()) {
+            return Shizuku.pingBinder()
+                .also(shizukuAvailable::set)
+        }
+        return true
+    }
+
+    /**
+     * Checks whether Shizuku permissions have been granted to this app.
+     */
+    fun checkPermissions(): Boolean {
+        if (!shizukuAvailable()) return false
+
+        // Old shizuku does not have permission checks
+        if (Shizuku.isPreV11()) return true
+
+        return Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
+    }
+
+    /**
+     * Requests and waits for Shizuku permissions if they have not already been granted.
+     */
+    suspend fun requestPermissions(): Boolean {
+        if (!shizukuAvailable()) return false
+
+        // Lock and check if the previous holder already obtained permissions
+        shizukuPermissionLock.lock()
+        try {
+            if (checkPermissions()) {
+                shizukuPermissionLock.unlock()
+                return true
+            }
+        } catch (_: Exception) {
+            shizukuPermissionLock.unlock()
+        }
+
+        return suspendCancellableCoroutine { continuation ->
+            val currentRequestCode = Random.nextInt()
+            val onPermissionRequestResult =
+                Shizuku.OnRequestPermissionResultListener { requestCode, grantResult ->
+                    if (requestCode != currentRequestCode)
+                        return@OnRequestPermissionResultListener
+
+                    if (grantResult == PackageManager.PERMISSION_DENIED)
+                        context.showToast(R.string.permissions_shizuku_denied)
+
+                    continuation.resume(grantResult == PackageManager.PERMISSION_GRANTED)
+                    shizukuPermissionLock.unlock()
+                }
+
+            continuation.invokeOnCancellation {
+                Shizuku.removeRequestPermissionResultListener(onPermissionRequestResult)
+                shizukuPermissionLock.unlock()
+            }
+
+            Shizuku.addRequestPermissionResultListener(onPermissionRequestResult)
+            Shizuku.requestPermission(currentRequestCode)
+        }
+    }
+}

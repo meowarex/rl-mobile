@@ -1,0 +1,64 @@
+--- a/com/tidal/android/feature/playerscreen/ui/b0.smali
++++ b/com/tidal/android/feature/playerscreen/ui/b0.smali
+@@ -45,7 +45,7 @@
+ 
+ # virtual methods
+ .method public final invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+-    .locals 17
++    .locals 26    # extra regs for the pill AndroidView call
+ 
+     .line 1
+     move-object/from16 v0, p0
+@@ -460,6 +460,52 @@
+     .line 200
+     invoke-static/range {v2 .. v9}, Lcom/tidal/android/feature/playerscreen/ui/composables/LyricsKt;->a(Lcom/tidal/android/feature/playerscreen/ui/g;Ltl0/l;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Ltl0/l;Landroidx/compose/runtime/Composer;II)V
+ 
++    sget-object v17, Lradiant/SpvFactory;->a:Lradiant/SpvFactory;    # factory that builds the legacy progress view
++
++    sget-object v18, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;
++
++    const/16 v19, 0x0
++
++    const/16 v20, 0x0
++
++    const/16 v21, 0x0
++
++    sget-object v22, Lradiant/NoOp;->a:Lradiant/NoOp;    # swallow taps so lyrics behind don't trigger
++
++    const/16 v23, 0xe
++
++    const/16 v24, 0x0
++
++    invoke-static/range {v18 .. v24}, Landroidx/compose/foundation/ClickableKt;->clickable-XHw0xAI$default(Landroidx/compose/ui/Modifier;ZLjava/lang/String;Landroidx/compose/ui/semantics/Role;Ltl0/a;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v23
++
++    const/high16 v24, 0x41800000    # 16f (horizontal padding dp)
++
++    invoke-static/range {v24 .. v24}, Landroidx/compose/ui/unit/Dp;->constructor-impl(F)F
++
++    move-result v24
++
++    const/high16 v25, 0x42a00000    # 80f (vertical padding dp)
++
++    invoke-static/range {v25 .. v25}, Landroidx/compose/ui/unit/Dp;->constructor-impl(F)F
++
++    move-result v25
++
++    invoke-static/range {v23 .. v25}, Landroidx/compose/foundation/layout/PaddingKt;->padding-VpY3zN4(Landroidx/compose/ui/Modifier;FF)Landroidx/compose/ui/Modifier;
++
++    move-result-object v18
++
++    const/16 v19, 0x0
++
++    move-object/from16 v20, v7    # composer
++
++    const/16 v21, 0x0
++
++    const/16 v22, 0x4
++
++    invoke-static/range {v17 .. v22}, Landroidx/compose/ui/viewinterop/AndroidView_androidKt;->AndroidView(Ltl0/l;Landroidx/compose/ui/Modifier;Ltl0/l;Landroidx/compose/runtime/Composer;II)V    # mount the progress pill on top of the lyrics
++
+     .line 201
+     .line 202
+     .line 203

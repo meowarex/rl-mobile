@@ -1,0 +1,115 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
+@@ -2966,7 +2966,7 @@
+ .end method
+
+ .method public static final e(ILandroidx/compose/runtime/Composer;Lcom/tidal/android/feature/playerscreen/ui/k;Lcom/tidal/android/feature/playerscreen/ui/r$a;Ltl0/a;Ltl0/l;Z)V
+-    .locals 61
++    .locals 89    # extra regs for blur + sparkle
+     .annotation build Landroidx/compose/runtime/Composable;
+     .end annotation
+
+@@ -4164,6 +4164,103 @@
+
+     invoke-static {v5, v3, v4}, Landroidx/compose/runtime/Updater;->set-impl(Landroidx/compose/runtime/Composer;Ljava/lang/Object;Ltl0/p;)V
+
++    const v3, 0x52414449    # group key for slot table
++
++    invoke-interface {v10, v3}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open group
++
++    move-object/from16 v3, p3    # player state
++
++    iget-object v3, v3, Lcom/tidal/android/feature/playerscreen/ui/r$a;->c:Lcom/tidal/android/feature/playerscreen/ui/d;    # cover pager
++
++    iget-object v4, v3, Lcom/tidal/android/feature/playerscreen/ui/d;->a:Lon0/b;    # item list
++
++    iget v5, v3, Lcom/tidal/android/feature/playerscreen/ui/d;->b:I    # current index
++
++    invoke-interface {v4}, Ljava/util/List;->size()I
++
++    move-result v6
++
++    if-le v6, v5, :radiant_skip    # index out of bounds -> skip
++
++    if-ltz v5, :radiant_skip
++
++    invoke-interface {v4, v5}, Ljava/util/List;->get(I)Ljava/lang/Object;
++
++    move-result-object v4
++
++    instance-of v6, v4, Lcom/tidal/android/feature/playerscreen/ui/c$a;    # only album covers
++
++    if-eqz v6, :radiant_skip
++
++    check-cast v4, Lcom/tidal/android/feature/playerscreen/ui/c$a;
++
++    iget v5, v4, Lcom/tidal/android/feature/playerscreen/ui/c$a;->b:I    # album id
++
++    iget-object v4, v4, Lcom/tidal/android/feature/playerscreen/ui/c$a;->c:Ljava/lang/String;    # cover uuid
++
++    new-instance v6, Lcom/tidal/android/feature/playerscreen/ui/composables/p0;    # tidal's cover request
++
++    invoke-direct {v6, v5, v4}, Lcom/tidal/android/feature/playerscreen/ui/composables/p0;-><init>(ILjava/lang/String;)V
++
++    sget-object v5, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;
++
++    const/4 v7, 0x0
++
++    const/4 v8, 0x1
++
++    const/4 v3, 0x0
++
++    invoke-static {v5, v7, v8, v3}, Landroidx/compose/foundation/layout/SizeKt;->fillMaxSize$default(Landroidx/compose/ui/Modifier;FILjava/lang/Object;)Landroidx/compose/ui/Modifier;    # fill the player root
++
++    move-result-object v5
++
++    const/high16 v7, 0x42c00000    # 96f (blur radius dp)
++
++    invoke-static {v7}, Landroidx/compose/ui/unit/Dp;->constructor-impl(F)F
++
++    move-result v7
++
++    sget-object v8, Landroidx/compose/ui/draw/BlurredEdgeTreatment;->Companion:Landroidx/compose/ui/draw/BlurredEdgeTreatment$Companion;
++
++    invoke-virtual {v8}, Landroidx/compose/ui/draw/BlurredEdgeTreatment$Companion;->getRectangle---Goahg()Landroidx/compose/ui/graphics/Shape;
++
++    move-result-object v8
++
++    invoke-static {v5, v7, v8}, Landroidx/compose/ui/draw/BlurKt;->blur-F8QBwvs(Landroidx/compose/ui/Modifier;FLandroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;    # apply blur
++
++    move-result-object v5
++
++    sget-object v7, Landroidx/compose/ui/layout/ContentScale;->Companion:Landroidx/compose/ui/layout/ContentScale$Companion;
++
++    invoke-virtual {v7}, Landroidx/compose/ui/layout/ContentScale$Companion;->getCrop()Landroidx/compose/ui/layout/ContentScale;    # cover-crop scaling
++
++    move-result-object v7
++
++    move-object/from16 v61, v6    # request
++
++    const/16 v62, 0x0    # contentDescription
++
++    move-object/from16 v63, v5    # modifier (blurred + fillMaxSize)
++
++    const/16 v64, 0x0    # colorFilter
++
++    move-object/from16 v65, v7    # contentScale
++
++    move-object/from16 v66, v4    # cover uuid
++
++    const/16 v67, 0x0
++
++    move-object/from16 v68, v10    # composer
++
++    const/16 v69, 0x0
++
++    const/16 v70, 0x48
++
++    invoke-static/range {v61 .. v70}, Lsd0/f;->a(Ltl0/l;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/ColorFilter;Landroidx/compose/ui/layout/ContentScale;Ljava/lang/Object;Ltl0/a;Landroidx/compose/runtime/Composer;II)V    # render blurred cover
++
++    :radiant_skip
++    invoke-interface {v10}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V    # close group
++
+     .line 138
+     sget-object v3, Landroidx/compose/foundation/layout/BoxScopeInstance;->INSTANCE:Landroidx/compose/foundation/layout/BoxScopeInstance;
+

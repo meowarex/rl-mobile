@@ -1,0 +1,30 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/LyricsKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/LyricsKt.smali
+@@ -110,16 +110,18 @@
+     .line 36
+     move-result-wide v6
+ 
+-    .line 37
+-    sget-object v5, Lcom/tidal/android/feature/playerscreen/ui/composables/LyricsKt;->b:[F
++    add-int/lit8 v8, v3, -0xa    # i - 10 (10 = active line index)
+ 
+-    .line 38
+-    .line 39
+-    rsub-int/lit8 v8, v3, 0xa
+-
+-    .line 40
+-    .line 41
+-    aget v8, v5, v8
++    if-nez v8, :radiant_alpha_zero    # not active line -> hide
++
++    const/high16 v8, 0x3f800000    # alpha 1.0 (visible)
++
++    goto :radiant_alpha_done
++
++    :radiant_alpha_zero
++    const/4 v8, 0x0    # alpha 0.0 (hidden)
++
++    :radiant_alpha_done
+ 
+     .line 42
+     .line 43

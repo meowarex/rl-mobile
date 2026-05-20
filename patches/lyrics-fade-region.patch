@@ -1,0 +1,11 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/k1.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/k1.smali
+@@ -64,7 +64,7 @@
+ 
+     .line 16
+     .line 17
+-    iget v2, p0, Lcom/tidal/android/feature/playerscreen/ui/composables/k1;->a:F
++    const/high16 v2, 0x43480000    # hardcode top fade region to 200dp (decouple from contentPadding)
+ 
+     .line 18
+     .line 19
