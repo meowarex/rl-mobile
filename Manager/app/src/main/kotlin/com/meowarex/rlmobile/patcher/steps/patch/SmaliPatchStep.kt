@@ -44,7 +44,11 @@ class SmaliPatchStep : Step(), IDexProvider, KoinComponent {
         container.log("Loading patches from smali patch archive: ${patchesZip.absolutePath}")
         smaliDir.mkdirs()
         ZipReader(patchesZip).use { zip ->
-            for (patchFile in zip.entryNames) {
+            // Iterate in filename order so patches apply deterministically, matching
+            // the apply-order contract in patches/README. Zip iteration order would
+            // otherwise depend on archive layout and could break ordered patches that
+            // share a target file.
+            for (patchFile in zip.entryNames.sorted()) {
                 container.log("Parsing patch file $patchFile")
                 if (patchFile.endsWith("/")) continue
 
@@ -113,7 +117,13 @@ class SmaliPatchStep : Step(), IDexProvider, KoinComponent {
                         /* dexFile = */ dexFile,
                         /* outputDir = */ smaliDir,
                         /* jobs = */ coreCount - 1,
-                        /* options = */ BaksmaliOptions().apply { localsDirective = true },
+                        /* options = */ BaksmaliOptions().apply {
+                            localsDirective = true
+                            // Match apktool's label naming (:cond_0, :cond_1, ...) so patches
+                            // authored from `apktool d` decompilation apply cleanly. Default
+                            // would emit offset-based labels like :cond_8de.
+                            sequentialLabels = true
+                        },
                         /* classes = */ patches.map { "L${it.fullClassName};" },
                     )
                 } catch (t: Throwable) {
