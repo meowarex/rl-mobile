@@ -63,7 +63,7 @@
 +
 +    move-result-object v5
 +
-+    const/high16 v7, 0x42c00000    # 96f (blur radius dp)
++    const/high16 v7, 0x44b40000    # 1440f (blur radius dp)
 +
 +    invoke-static {v7}, Landroidx/compose/ui/unit/Dp;->constructor-impl(F)F
 +
