@@ -13,6 +13,7 @@ import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.di.ActivityProvider
 import com.meowarex.rlmobile.manager.*
 import com.meowarex.rlmobile.ui.theme.Theme
+import com.meowarex.rlmobile.updatechecker.UpdateCheckWorker
 import com.meowarex.rlmobile.util.*
 
 class SettingsModel(
@@ -56,6 +57,11 @@ class SettingsModel(
 
     fun setKeepPatchedApks(value: Boolean) {
         preferences.keepPatchedApks = value
+    }
+
+    fun setAutoUpdateCheck(value: Boolean) {
+        preferences.autoUpdateCheck = value
+        if (value) UpdateCheckWorker.schedule(application) else UpdateCheckWorker.cancel(application)
     }
 
     fun clearCache() = screenModelScope.launchIO {

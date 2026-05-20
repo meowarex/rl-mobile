@@ -99,6 +99,16 @@ class SettingsScreen : Screen, Parcelable {
                     }
                 }
 
+                item(key = "SETTING_AUTO_UPDATE_CHECK", contentType = "SETTING_SWITCH") {
+                    SettingsSwitch(
+                        label = stringResource(R.string.setting_auto_update_check),
+                        secondaryLabel = stringResource(R.string.setting_auto_update_check_desc),
+                        pref = preferences.autoUpdateCheck,
+                        icon = { Icon(painterResource(R.drawable.ic_update), null) },
+                        onPrefChange = { model.setAutoUpdateCheck(it) },
+                    )
+                }
+
                 item(key = "HEADER_INSTALL", contentType = "DIVIDER") {
                     SettingsHeader(stringResource(R.string.settings_header_installation))
                 }

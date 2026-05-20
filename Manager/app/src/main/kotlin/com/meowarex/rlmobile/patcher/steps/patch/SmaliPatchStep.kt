@@ -38,11 +38,25 @@ class SmaliPatchStep : Step(), IDexProvider, KoinComponent {
 
         val patches = mutableListOf<LoadedPatch>()
 
-        // Load and parse all the patches from the smali patch archive
+        // Load and parse all the patches from the smali patch archive.
+        // Extension classes (extension/**/*.smali) are extracted into smaliDir
+        // so they get assembled into the new dex alongside patched classes.
         container.log("Loading patches from smali patch archive: ${patchesZip.absolutePath}")
+        smaliDir.mkdirs()
         ZipReader(patchesZip).use { zip ->
             for (patchFile in zip.entryNames) {
                 container.log("Parsing patch file $patchFile")
+                if (patchFile.endsWith("/")) continue
+
+                if (patchFile.endsWith(".smali") && patchFile.startsWith("extension/")) {
+                    val relative = patchFile.removePrefix("extension/")
+                    val out = smaliDir.resolve(relative)
+                    out.parentFile?.mkdirs()
+                    out.writeBytes(zip.openEntry(patchFile)!!.read())
+                    container.log("Extracted extension smali: $relative")
+                    continue
+                }
+
                 if (!patchFile.endsWith(".patch")) continue
 
                 val lines = zip.openEntry(patchFile)!!.read()

@@ -191,6 +191,9 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.runtime.tracing)
 
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.work.runtime)
+
     implementation(libs.kotlinx.immutable)
     implementation(libs.kotlinx.serialization.json)
 
