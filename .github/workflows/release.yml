@@ -1,65 +1,38 @@
-name: Build & Publish Release App
+name: "[main] Release"
 
 on:
   push:
-    tags: [ "v*.*.*" ]
-
-concurrency:
-  group: "release"
-  cancel-in-progress: true
-
-permissions:
-  contents: write
+    branches:
+      - main
+    paths-ignore:
+      - "**/*.md"
 
 jobs:
-  publish:
+  Build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  Release:
+    name: Publish Release
+    needs: Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup JDK 21
-        uses: actions/setup-java@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
-          java-version: 21
-          distribution: zulu
+          name: rl-mobile-artifacts
+          path: ./dist/
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Rename APK
+        run: mv ./dist/app-release.apk ./dist/rl-mobile-manager.apk
+
+      - name: Publish release
+        uses: marvinpinto/action-automatic-releases@latest
         with:
-          cache-write-only: true
-
-      - name: Build with Gradle
-        working-directory: Manager
-        env:
-          SIGNING_KEY_ALIAS: ${{ secrets.keyAlias }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.keyPassword }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.keystorePassword }}
-          SIGNING_STORE_FILE: ${{ github.workspace }}/release.keystore
-          RELEASE: true
-        run: |
-          echo "${{ secrets.keystore }}" | base64 -d > ${{ github.workspace }}/release.keystore
-          ./gradlew :app:packageRelease --stacktrace
-          rm ${{ github.workspace }}/release.keystore
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: app
-          if-no-files-found: error
-          path: Manager/app/build/outputs/apk/release/app-release.apk
-
-      - name: Publish Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          tag="${{ github.ref_name }}"
-          apk_file="rl-mobile-manager-$tag.apk"
-          mv -T ./Manager/app/build/outputs/apk/release/app-release.apk "./$apk_file"
-
-          gh release create "$tag" \
-            --title "$tag" \
-            --generate-notes \
-            --verify-tag \
-            --fail-on-no-commits \
-            "./$apk_file"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: latest
+          prerelease: false
+          title: Latest Release
+          files: ./dist/**
