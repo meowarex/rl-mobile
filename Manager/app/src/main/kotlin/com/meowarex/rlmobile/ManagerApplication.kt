@@ -26,6 +26,7 @@ import com.meowarex.rlmobile.ui.screens.settings.SettingsModel
 import com.meowarex.rlmobile.ui.widgets.updater.UpdaterViewModel
 import com.meowarex.rlmobile.updatechecker.UpdateCheckWorker
 import kotlinx.coroutines.Dispatchers
+import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.*
@@ -101,7 +102,12 @@ class ManagerApplication : Application() {
                 .build()
         }
 
-        // Schedule periodic update check
-        UpdateCheckWorker.schedule(this)
+        // Schedule periodic update check only when the user has opted in,
+        // so the disabled state survives app restarts instead of being re-enqueued.
+        if (get<PreferencesManager>().autoUpdateCheck) {
+            UpdateCheckWorker.schedule(this)
+        } else {
+            UpdateCheckWorker.cancel(this)
+        }
     }
 }

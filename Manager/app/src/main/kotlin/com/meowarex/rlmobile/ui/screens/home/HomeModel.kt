@@ -97,6 +97,7 @@ class HomeModel(
     fun openApp(packageName: String) {
         val launchIntent = application.packageManager.getLaunchIntentForPackage(packageName)
         if (launchIntent != null) {
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             application.startActivity(launchIntent)
         } else {
             application.showToast(R.string.launch_app_fail)

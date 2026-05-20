@@ -51,8 +51,16 @@ class SmaliPatchStep : Step(), IDexProvider, KoinComponent {
                 if (patchFile.endsWith(".smali") && patchFile.startsWith("extension/")) {
                     val relative = patchFile.removePrefix("extension/")
                     val out = smaliDir.resolve(relative)
-                    out.parentFile?.mkdirs()
-                    out.writeBytes(zip.openEntry(patchFile)!!.read())
+                    // Guard against zip-slip: a crafted entry could otherwise escape smaliDir.
+                    val baseCanonical = smaliDir.canonicalPath + File.separator
+                    val outCanonical = out.canonicalPath
+                    if (!outCanonical.startsWith(baseCanonical)) {
+                        throw SecurityException("Zip entry escapes target directory: $patchFile")
+                    }
+                    val entry = zip.openEntry(patchFile)
+                        ?: throw FileNotFoundException("Missing zip entry: $patchFile")
+                    out.canonicalFile.parentFile?.mkdirs()
+                    out.writeBytes(entry.read())
                     container.log("Extracted extension smali: $relative")
                     continue
                 }

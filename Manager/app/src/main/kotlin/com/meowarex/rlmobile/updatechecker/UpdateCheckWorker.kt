@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -14,7 +15,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import androidx.work.*
 import com.meowarex.rlmobile.BuildConfig
-import com.meowarex.rlmobile.MainActivity
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.manager.PreferencesManager
 import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
@@ -81,7 +81,7 @@ class UpdateCheckWorker(
         val pendingIntent = PendingIntent.getActivity(
             applicationContext,
             0,
-            Intent(applicationContext, MainActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
+            Intent(Intent.ACTION_VIEW, Uri.parse(releaseUrl)).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
 

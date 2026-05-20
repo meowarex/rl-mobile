@@ -35,7 +35,8 @@ object ManifestPatcher {
                 }
             }
         })
-        val origPkg = originalPackage ?: "com.aspiro.tidal"
+        val origPkg = originalPackage
+            ?: throw IllegalStateException("Manifest has no package attribute; refusing to rewrite authorities/permissions without a known originalPackage")
 
         val reader = AxmlReader(manifestBytes)
         val writer = AxmlWriter()
@@ -104,7 +105,7 @@ object ManifestPatcher {
                                     super.attr(
                                         ns, name, resourceId, type,
                                         when (name) {
-                                            "name" -> (value as String).replace(origPkg, packageName)
+                                            "name" -> (value as? String)?.replace(origPkg, packageName) ?: value
                                             else -> value
                                         }
                                     )
@@ -155,7 +156,7 @@ object ManifestPatcher {
                                                 super.attr(
                                                     ns, name, resourceId, type,
                                                     if (name == "authorities") {
-                                                        (value as String).replace(origPkg, packageName)
+                                                        (value as? String)?.replace(origPkg, packageName) ?: value
                                                     } else {
                                                         value
                                                     }

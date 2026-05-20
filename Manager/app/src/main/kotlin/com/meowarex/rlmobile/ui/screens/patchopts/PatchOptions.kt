@@ -38,7 +38,7 @@ data class PatchOptions(
     companion object {
         val Default = PatchOptions(
             appName = "TIDAL",
-            packageName = "com.tidal.music",
+            packageName = "com.aspiro.tidal",
             debuggable = false,
             customInjector = null,
             customPatches = null,

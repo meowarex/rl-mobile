@@ -10,7 +10,10 @@ class CommitsPagingSource(
 ) : PagingSource<Int, GithubCommit>() {
 
     override fun getRefreshKey(state: PagingState<Int, GithubCommit>): Int? =
-        state.anchorPosition?.let { state.closestPageToPosition(it)?.prevKey }
+        state.anchorPosition?.let {
+            val page = state.closestPageToPosition(it) ?: return null
+            page.prevKey?.plus(1) ?: page.nextKey?.minus(1)
+        }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GithubCommit> {
         val page = params.key ?: 0

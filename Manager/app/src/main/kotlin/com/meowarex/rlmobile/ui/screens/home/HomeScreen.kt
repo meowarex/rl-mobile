@@ -12,10 +12,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.core.screen.Screen
@@ -55,16 +60,28 @@ class HomeScreen : Screen, Parcelable {
                     title = { Text(stringResource(R.string.navigation_home)) },
                     actions = {
                         IconButton(onClick = { model.refresh() }) {
-                            Icon(painterResource(R.drawable.ic_refresh), contentDescription = null)
+                            Icon(
+                                painterResource(R.drawable.ic_refresh),
+                                contentDescription = stringResource(R.string.navigation_refresh),
+                            )
                         }
                         IconButton(onClick = { navigator.push(AboutScreen()) }) {
-                            Icon(painterResource(R.drawable.ic_info), contentDescription = null)
+                            Icon(
+                                painterResource(R.drawable.ic_info),
+                                contentDescription = stringResource(R.string.navigation_about),
+                            )
                         }
                         IconButton(onClick = { navigator.push(LogsListScreen()) }) {
-                            Icon(painterResource(R.drawable.ic_receipt), contentDescription = null)
+                            Icon(
+                                painterResource(R.drawable.ic_receipt),
+                                contentDescription = stringResource(R.string.navigation_logs),
+                            )
                         }
                         IconButton(onClick = { navigator.push(SettingsScreen()) }) {
-                            Icon(painterResource(R.drawable.ic_settings), contentDescription = null)
+                            Icon(
+                                painterResource(R.drawable.ic_settings),
+                                contentDescription = stringResource(R.string.navigation_settings),
+                            )
                         }
                     },
                 )
@@ -117,17 +134,19 @@ private fun ColumnScope.HomeContent(
     val currentVersionName = install?.version?.let { "v${it.toString()}" }
     val latestVersionName = state.latestTidalVersionCode?.let { "build $it" }
 
-    if (install?.icon != null) {
+    val fallbackPainter = if (install?.icon == null) {
+        // R.mipmap.ic_launcher is an adaptive-icon XML on API 26+, which painterResource cannot decode.
+        val context = LocalContext.current
+        remember {
+            val drawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher)
+            drawable?.toBitmap()?.asImageBitmap()?.let(::BitmapPainter)
+        }
+    } else null
+
+    val iconPainter = install?.icon ?: fallbackPainter
+    if (iconPainter != null) {
         Image(
-            painter = install.icon,
-            contentDescription = null,
-            modifier = Modifier
-                .size(60.dp)
-                .clip(CircleShape),
-        )
-    } else {
-        Image(
-            painter = painterResource(R.mipmap.ic_launcher),
+            painter = iconPainter,
             contentDescription = null,
             modifier = Modifier
                 .size(60.dp)
