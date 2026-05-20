@@ -56,8 +56,25 @@ jobs:
             exit 1
           fi
           if [[ "$tidal_src" == *.apkm ]]; then
-            echo "Extracting base.apk from $tidal_src"
-            unzip -p "$tidal_src" base.apk > ./dist/tidal-stock.apk
+            echo "Extracting & merging splits from $tidal_src"
+            workdir=$(mktemp -d)
+            unzip -q "$tidal_src" -d "$workdir"
+            cp "$workdir/base.apk" ./dist/tidal-stock.apk
+
+            # Merge native libs from arm64-v8a split into base.apk
+            for split in "$workdir"/split_config.arm64_v8a.apk \
+                         "$workdir"/split_config.xxhdpi.apk \
+                         "$workdir"/split_config.en.apk; do
+              [ -f "$split" ] || continue
+              echo "Merging $(basename "$split")"
+              libdir=$(mktemp -d)
+              unzip -q "$split" -d "$libdir"
+              # Drop META-INF (signatures) and the split's manifest
+              rm -rf "$libdir/META-INF" "$libdir/AndroidManifest.xml"
+              (cd "$libdir" && zip -qr "$OLDPWD/dist/tidal-stock.apk" .)
+              rm -rf "$libdir"
+            done
+            rm -rf "$workdir"
           else
             cp "$tidal_src" ./dist/tidal-stock.apk
           fi
