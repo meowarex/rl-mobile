@@ -44,7 +44,12 @@ class PatchManifestStep(private val options: PatchOptions) : Step() {
                     val bytes = if (name == "AndroidManifest.xml") {
                         patchedManifest
                     } else {
-                        reader.openEntry(name)!!.read()
+                        try {
+                            reader.openEntry(name)!!.read()
+                        } catch (t: Throwable) {
+                            container.log("Failed to read entry: $name")
+                            throw t
+                        }
                     }
                     writer.writeEntry(name, bytes)
                 }
