@@ -26,7 +26,7 @@ jobs:
           path: ./dist/
 
       - name: Rename APK
-        run: mv ./dist/app-release.apk ./dist/rl-mobile-manager.apk
+        run: mv ./dist/app-release.apk ./dist/rl-manager.apk
 
       - name: Publish release
         uses: marvinpinto/action-automatic-releases@latest
