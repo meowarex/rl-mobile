@@ -2,17 +2,17 @@
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
 @@ -2966,7 +2966,7 @@
  .end method
-
+ 
  .method public static final e(ILandroidx/compose/runtime/Composer;Lcom/tidal/android/feature/playerscreen/ui/k;Lcom/tidal/android/feature/playerscreen/ui/r$a;Ltl0/a;Ltl0/l;Z)V
 -    .locals 61
 +    .locals 89    # extra regs for blur + sparkle
      .annotation build Landroidx/compose/runtime/Composable;
      .end annotation
-
+ 
 @@ -4164,6 +4164,103 @@
-
+ 
      invoke-static {v5, v3, v4}, Landroidx/compose/runtime/Updater;->set-impl(Landroidx/compose/runtime/Composer;Ljava/lang/Object;Ltl0/p;)V
-
+ 
 +    const v3, 0x52414449    # group key for slot table
 +
 +    invoke-interface {v10, v3}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open group
@@ -112,4 +112,40 @@
 +
      .line 138
      sget-object v3, Landroidx/compose/foundation/layout/BoxScopeInstance;->INSTANCE:Landroidx/compose/foundation/layout/BoxScopeInstance;
-
+ 
+@@ -4931,7 +5028,11 @@
+     const/4 v10, 0x0
+ 
+     .line 226
+-    invoke-static {v10, v9, v4, v2, v7}, Lcom/tidal/android/feature/playerscreen/ui/composables/h1;->a(Landroidx/compose/ui/Modifier;Ltl0/a;ZLandroidx/compose/runtime/Composer;I)V
++    const v10, 0x52414448    # empty group replaces removed top-right lyrics pill
++
++    invoke-interface {v2, v10}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V
++
++    invoke-interface {v2}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V
+ 
+     .line 227
+     invoke-interface {v2}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V
+@@ -5707,6 +5808,22 @@
+     :cond_8de
+     check-cast v4, Ltl0/a;
+ 
++    new-instance v74, Lc8/j;    # build lyrics-toggle lambda (same one h1 used)
++
++    move-object/from16 v75, p5
++
++    const/16 v76, 0x1    # discriminator 1 = lyrics action
++
++    invoke-direct/range {v74 .. v76}, Lc8/j;-><init>(Ljava/lang/Object;I)V
++
++    const/16 v71, 0x0    # $$changed flags
++
++    move-object/from16 v72, v7    # composer
++
++    const/16 v73, 0x0    # modifier (null -> Companion)
++
++    invoke-static/range {v71 .. v74}, Lradiant/SparkleButton;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Ltl0/a;)V    # render bottom-left sparkle
++
+     const/4 v2, 0x0
+ 
+     invoke-static {v13, v7, v2, v4}, Lcom/tidal/android/feature/playerscreen/ui/composables/h3;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Ltl0/a;)V
