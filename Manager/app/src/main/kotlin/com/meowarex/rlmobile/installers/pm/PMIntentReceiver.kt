@@ -60,13 +60,14 @@ class PMIntentReceiver : BroadcastReceiver() {
             PackageInstaller.STATUS_FAILURE_ABORTED -> InstallerResult.Cancelled(systemTriggered = true)
 
             else -> {
-                Log.w(BuildConfig.TAG, "PM failed with error code $status")
+                val message = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE)
+                Log.w(BuildConfig.TAG, "PM failed with error code $status: $message")
 
                 if (status <= PackageInstaller.STATUS_SUCCESS) {
                     // Unknown status code (not an error)
                     return
                 } else {
-                    PMInstallerError(status).also {
+                    PMInstallerError(status, message).also {
                         Toast.makeText(
                             /* context = */ context,
                             /* text = */ it.getLocalizedReason(context),

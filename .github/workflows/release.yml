@@ -56,19 +56,11 @@ jobs:
             exit 1
           fi
           if [[ "$tidal_src" == *.apkm ]]; then
-            echo "Extracting & merging splits from $tidal_src"
-            workdir=$(mktemp -d)
-            unzip -q "$tidal_src" -d "$workdir"
-            ls "$workdir"
-            dist_abs=$(realpath ./dist)/tidal-stock.apk
-
-            javac scripts/MergeApk.java -d scripts
-            splits=("$workdir"/split_*.apk)
-            java -cp scripts MergeApk "$dist_abs" "$workdir/base.apk" "${splits[@]}"
-
-            rm -rf "$workdir"
+            echo "Merging splits from $tidal_src via APKEditor"
+            curl -sLo /tmp/APKEditor.jar https://github.com/REAndroid/APKEditor/releases/download/V1.4.3/APKEditor-1.4.3.jar
+            java -jar /tmp/APKEditor.jar m -i "$tidal_src" -o ./dist/tidal-stock.apk
             echo "Merged tidal-stock.apk:"
-            ls -la "$dist_abs"
+            ls -la ./dist/tidal-stock.apk
           else
             cp "$tidal_src" ./dist/tidal-stock.apk
           fi
