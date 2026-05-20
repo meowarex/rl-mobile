@@ -9,11 +9,17 @@ A Manager app for Android that patches TIDAL to bring the Radiant Lyrics experie
 - Hides the ugly cover art when in lyrics mode
 - Syllable Level lyrics (SoonTM)
 
+
+### Disclaimer
+
+This project is not affiliated with TIDAL in any way. Use at your own risk.
+- I can't guarantee using this project won't result in any platform enforcement **(Bans)**
+
 ## Installation
 
 ### Batteries <3
-- Android 8.0+
-- TIDAL app (v2.192.0 / build 9089)
+- Android 10.0+ & >340 DPI
+- Paid TIDAL Account
 
 ### Steps
 1. Download the latest `rl-manager.apk` from [Releases](../../releases/latest)
