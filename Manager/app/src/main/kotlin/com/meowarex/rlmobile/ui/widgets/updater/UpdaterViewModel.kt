@@ -147,13 +147,13 @@ class UpdaterViewModel(
         // Fetch releases from GitHub (60s local cache)
         val releases = github.getManagerReleases().getOrThrow()
 
-        // Find the latest release + APK release asset
+        // Find the latest release — version is parsed from the release title (e.g. "v1.0.5")
         val (version, release, apkUrl) = releases
             .mapNotNull { release ->
-                val version = SemVer.parseOrNull(release.tagName)
+                val version = SemVer.parseOrNull(release.name?.removePrefix("v") ?: "")
                     ?: return@mapNotNull null
 
-                val asset = release.assets.find { it.name == "rl-manager-${release.tagName}.apk" }
+                val asset = release.assets.find { it.name == "rl-manager.apk" }
                     ?: return@mapNotNull null
 
                 Triple(version, release, asset.browserDownloadUrl)

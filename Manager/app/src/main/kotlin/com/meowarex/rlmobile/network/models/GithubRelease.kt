@@ -10,6 +10,7 @@ data class GithubRelease(
     val assets: List<GithubReleaseAssets>,
     @SerialName("tag_name")
     val tagName: String,
+    val name: String? = null,
     @SerialName("html_url")
     val htmlUrl: String,
 ) {

@@ -8,13 +8,27 @@ on:
       - "**/*.md"
 
 jobs:
+  Version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: set
+        run: |
+          BASE=$(cat .version | tr -d '[:space:]')
+          echo "version=$BASE.${{ github.run_number }}" >> $GITHUB_OUTPUT
+
   Build:
+    needs: Version
     uses: ./.github/workflows/build.yml
+    with:
+      version: ${{ needs.Version.outputs.version }}
     secrets: inherit
 
   Release:
     name: Publish Release
-    needs: Build
+    needs: [Version, Build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -54,5 +68,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: latest
           prerelease: false
-          title: Latest Release
+          title: v${{ needs.Version.outputs.version }}
           files: ./dist/**
