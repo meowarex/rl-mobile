@@ -12,16 +12,19 @@ import kotlinx.parcelize.Parcelize
  * that is captured by a receiver into something human readable.
  */
 @Parcelize
-data class PMInstallerError(val status: Int) : InstallerResult.Error(), Parcelable {
-    override fun getDebugReason() = when (status) {
-        PackageInstaller.STATUS_FAILURE -> "Unknown failure"
-        PackageInstaller.STATUS_FAILURE_BLOCKED -> "Blocked"
-        PackageInstaller.STATUS_FAILURE_INVALID -> "Invalid package"
-        PackageInstaller.STATUS_FAILURE_CONFLICT -> "Package conflict"
-        PackageInstaller.STATUS_FAILURE_STORAGE -> "Storage error"
-        PackageInstaller.STATUS_FAILURE_INCOMPATIBLE -> "Device incompatibility"
-        /* PackageInstaller.STATUS_FAILURE_TIMEOUT */ 8 -> "Operation timeout"
-        else -> "Unknown code ($status)"
+data class PMInstallerError(val status: Int, val message: String? = null) : InstallerResult.Error(), Parcelable {
+    override fun getDebugReason(): String {
+        val reason = when (status) {
+            PackageInstaller.STATUS_FAILURE -> "Unknown failure"
+            PackageInstaller.STATUS_FAILURE_BLOCKED -> "Blocked"
+            PackageInstaller.STATUS_FAILURE_INVALID -> "Invalid package"
+            PackageInstaller.STATUS_FAILURE_CONFLICT -> "Package conflict"
+            PackageInstaller.STATUS_FAILURE_STORAGE -> "Storage error"
+            PackageInstaller.STATUS_FAILURE_INCOMPATIBLE -> "Device incompatibility"
+            /* PackageInstaller.STATUS_FAILURE_TIMEOUT */ 8 -> "Operation timeout"
+            else -> "Unknown code ($status)"
+        }
+        return if (message != null) "$reason: $message" else reason
     }
 
     override fun getLocalizedReason(context: Context): String {
