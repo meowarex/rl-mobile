@@ -35,7 +35,7 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("String", "TAG", "\"RLMobileManager\"")
+        buildConfigField("String", "TAG", "\"RLManager\"")
         buildConfigField("String", "SUPPORT_SERVER", "\"\"") // no support server yet
 
         buildConfigField("String", "PATCHES_REPO_OWNER", "\"meowarex\"")
