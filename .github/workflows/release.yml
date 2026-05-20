@@ -60,22 +60,15 @@ jobs:
             workdir=$(mktemp -d)
             unzip -q "$tidal_src" -d "$workdir"
             ls "$workdir"
-            cp "$workdir/base.apk" ./dist/tidal-stock.apk
-            dist_abs=$(realpath ./dist/tidal-stock.apk)
+            dist_abs=$(realpath ./dist)/tidal-stock.apk
 
-            # Merge every split APK's contents into base.apk
-            for split in "$workdir"/split_*.apk "$workdir"/config.*.apk; do
-              [ -f "$split" ] || continue
-              echo "Merging $(basename "$split")"
-              libdir=$(mktemp -d)
-              unzip -q "$split" -d "$libdir"
-              rm -rf "$libdir/META-INF" "$libdir/AndroidManifest.xml" "$libdir/resources.arsc"
-              (cd "$libdir" && zip -qrD "$dist_abs" .)
-              rm -rf "$libdir"
-            done
+            javac scripts/MergeApk.java -d scripts
+            splits=("$workdir"/split_*.apk)
+            java -cp scripts MergeApk "$dist_abs" "$workdir/base.apk" "${splits[@]}"
+
             rm -rf "$workdir"
-            echo "Merged tidal-stock.apk size:"
-            ls -la ./dist/tidal-stock.apk
+            echo "Merged tidal-stock.apk:"
+            ls -la "$dist_abs"
           else
             cp "$tidal_src" ./dist/tidal-stock.apk
           fi
