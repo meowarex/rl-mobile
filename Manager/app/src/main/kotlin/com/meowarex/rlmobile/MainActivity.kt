@@ -26,7 +26,6 @@ import com.meowarex.rlmobile.ui.screens.patching.PatchingScreen
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptions
 import com.meowarex.rlmobile.ui.screens.permissions.PermissionsModel
 import com.meowarex.rlmobile.ui.screens.permissions.PermissionsScreen
-import com.meowarex.rlmobile.ui.screens.plugins.PluginsScreen
 import com.meowarex.rlmobile.ui.theme.ManagerTheme
 import com.meowarex.rlmobile.ui.widgets.updater.UpdaterDialog
 import com.meowarex.rlmobile.util.*
@@ -123,16 +122,6 @@ class MainActivity : ComponentActivity() {
                 navigator.push(handleReinstall(packageName))
             }
 
-            INTENT_OPEN_PLUGINS -> {
-                // TODO: per-install plugins screen
-                // val packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME) ?: run {
-                //     Log.w(BuildConfig.TAG, "Missing $EXTRA_PACKAGE_NAME extra for intent $INTENT_REINSTALL")
-                //     return@launchBlock
-                // }
-
-                navigator.push(PluginsScreen())
-            }
-
             INTENT_IMPORT_COMPONENT -> {
                 val path = intent.getStringExtra(EXTRA_FILE_PATH) ?: run {
                     Log.w(BuildConfig.TAG, "Missing $EXTRA_FILE_PATH extra for intent $INTENT_IMPORT_COMPONENT")
@@ -200,7 +189,6 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         const val INTENT_REINSTALL = "com.meowarex.rlmobile.REINSTALL"
-        const val INTENT_OPEN_PLUGINS = "com.meowarex.rlmobile.OPEN_PLUGINS"
         const val INTENT_IMPORT_COMPONENT = "com.meowarex.rlmobile.IMPORT_COMPONENT"
 
         const val EXTRA_PACKAGE_NAME = "rlmobile.packageName"

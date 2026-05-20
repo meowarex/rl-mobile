@@ -4,7 +4,9 @@ agp = "9.0.0"
 androidx-activity = "1.12.2"
 androidx-core = "1.17.0"
 androidx-lifecycle = "2.10.0"
+androidx-paging = "3.3.6"
 androidx-splashscreen = "1.2.0"
+androidx-work = "2.10.0"
 apksig = "9.0.0"
 axml = "1.0.1"
 binary-resources = "2.1.0"
@@ -43,6 +45,8 @@ androidx-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", 
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle" }
 androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-splashscreen" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
+androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 
 # Coil (image library)
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }

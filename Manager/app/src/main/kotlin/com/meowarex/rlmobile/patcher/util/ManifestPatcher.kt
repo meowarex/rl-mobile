@@ -15,6 +15,9 @@ object ManifestPatcher {
     private const val PACKAGE = "package"
     private const val COMPILE_SDK_VERSION = "compileSdkVersion"
     private const val COMPILE_SDK_VERSION_CODENAME = "compileSdkVersionCodename"
+    private const val IS_SPLIT_REQUIRED = "isSplitRequired"
+    private const val REQUIRED_SPLIT_TYPES = "requiredSplitTypes"
+    private const val SPLIT_TYPES = "splitTypes"
 
     fun patchManifest(
         manifestBytes: ByteArray,
@@ -22,6 +25,18 @@ object ManifestPatcher {
         appName: String,
         debuggable: Boolean,
     ): ByteArray {
+        // Extract original package name so we can rewrite every reference to it
+        // (permissions, provider authorities) to the new packageName.
+        var originalPackage: String? = null
+        AxmlReader(manifestBytes).accept(object : AxmlVisitor() {
+            override fun child(ns: String?, name: String?) = object : NodeVisitor() {
+                override fun attr(ns: String?, name: String?, resourceId: Int, type: Int, value: Any?) {
+                    if (name == PACKAGE && value is String) originalPackage = value
+                }
+            }
+        })
+        val origPkg = originalPackage ?: "com.aspiro.tidal"
+
         val reader = AxmlReader(manifestBytes)
         val writer = AxmlWriter()
 
@@ -42,6 +57,11 @@ object ManifestPatcher {
                         COMPILE_SDK_VERSION_CODENAME to "6.0-2438415"
                     )
                 ) {
+                    // Drop split-only manifest attributes — we merged all splits into one APK
+                    override fun attr(ns: String?, name: String, resourceId: Int, type: Int, value: Any?) {
+                        if (name == IS_SPLIT_REQUIRED || name == REQUIRED_SPLIT_TYPES || name == SPLIT_TYPES) return
+                        super.attr(ns, name, resourceId, type, value)
+                    }
                     private var addExternalStoragePerm = false
 
                     override fun child(ns: String?, name: String): NodeVisitor {
@@ -84,7 +104,7 @@ object ManifestPatcher {
                                     super.attr(
                                         ns, name, resourceId, type,
                                         when (name) {
-                                            "name" -> (value as String).replace("com.tidal.android", packageName)
+                                            "name" -> (value as String).replace(origPkg, packageName)
                                             else -> value
                                         }
                                     )
@@ -135,7 +155,7 @@ object ManifestPatcher {
                                                 super.attr(
                                                     ns, name, resourceId, type,
                                                     if (name == "authorities") {
-                                                        (value as String).replace("com.tidal.android", packageName)
+                                                        (value as String).replace(origPkg, packageName)
                                                     } else {
                                                         value
                                                     }

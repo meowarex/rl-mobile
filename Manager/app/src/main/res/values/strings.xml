@@ -7,6 +7,14 @@
   <string name="github" translatable="false">GitHub</string>
   <string name="support_server">Support Server</string>
   <string name="installer">Installer</string>
+  <string name="navigation_home">Home</string>
+
+  <string name="notif_channel_updates">Manager updates</string>
+  <string name="notif_update_title">Manager update available</string>
+  <string name="notif_update_text">v%1$s is now available</string>
+
+  <string name="setting_auto_update_check">Background update check</string>
+  <string name="setting_auto_update_check_desc">Show a notification when a new Manager version is released</string>
 
   <string name="action_cancel">Cancel</string>
   <string name="action_retry">Retry</string>

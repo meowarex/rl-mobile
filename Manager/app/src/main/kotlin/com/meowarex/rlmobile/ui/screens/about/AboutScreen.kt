@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
+import com.meowarex.rlmobile.BuildConfig
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.ui.components.*
 import com.meowarex.rlmobile.ui.screens.about.components.LeadContributor
@@ -69,7 +70,7 @@ fun AboutScreenContent(state: State<AboutScreenState>) {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    LeadContributor("meowarex", "Radiant Lyrics")
+                    LeadContributor(BuildConfig.PATCHES_REPO_OWNER, "Radiant Lyrics")
                 }
             }
 
@@ -100,7 +101,8 @@ fun AboutScreenContent(state: State<AboutScreenState>) {
                 }
 
                 is AboutScreenState.Loaded -> {
-                    items(state.contributors, key = { it.username }) { user ->
+                    val others = state.contributors.filter { it.username != BuildConfig.PATCHES_REPO_OWNER }
+                    items(others, key = { it.username }) { user ->
                         ContributorCommitsItem(user)
                     }
                 }
