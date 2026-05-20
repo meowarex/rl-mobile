@@ -1,0 +1,4 @@
+tidal-apk/*.apk filter=lfs diff=lfs merge=lfs -text
+tidal-apk/*.apkm filter=lfs diff=lfs merge=lfs -text
+patches/extension/**/*.smali text eol=lf
+patches/*.patch text eol=lf
