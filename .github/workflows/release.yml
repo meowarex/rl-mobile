@@ -19,14 +19,34 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           name: rl-mobile-artifacts
           path: ./dist/
 
-      - name: Rename APK
-        run: mv ./dist/app-release.apk ./dist/rl-manager.apk
+      - name: Prepare release assets
+        run: |
+          mv ./dist/app-release.apk ./dist/rl-manager.apk
+          cp patches/data.json ./dist/data.json
+          cd patches && zip -r ../dist/patches.zip . -x "data.json" && cd ..
+
+          tidal_src=$(find tidal-apk -maxdepth 1 \( -name "*.apk" -o -name "*.apkm" \) | head -1)
+          if [ -z "$tidal_src" ]; then
+            echo "::error::No TIDAL .apk or .apkm found in tidal-apk/"
+            exit 1
+          fi
+          if [[ "$tidal_src" == *.apkm ]]; then
+            echo "Extracting base.apk from $tidal_src"
+            unzip -p "$tidal_src" base.apk > ./dist/tidal-stock.apk
+          else
+            cp "$tidal_src" ./dist/tidal-stock.apk
+          fi
 
       - name: Publish release
         uses: marvinpinto/action-automatic-releases@latest
