@@ -153,7 +153,7 @@ class UpdaterViewModel(
                 val version = SemVer.parseOrNull(release.tagName)
                     ?: return@mapNotNull null
 
-                val asset = release.assets.find { it.name == "rl-mobile-manager-${release.tagName}.apk" }
+                val asset = release.assets.find { it.name == "rl-manager-${release.tagName}.apk" }
                     ?: return@mapNotNull null
 
                 Triple(version, release, asset.browserDownloadUrl)
