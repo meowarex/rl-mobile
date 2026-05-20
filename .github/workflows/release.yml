@@ -59,22 +59,23 @@ jobs:
             echo "Extracting & merging splits from $tidal_src"
             workdir=$(mktemp -d)
             unzip -q "$tidal_src" -d "$workdir"
+            ls "$workdir"
             cp "$workdir/base.apk" ./dist/tidal-stock.apk
+            dist_abs=$(realpath ./dist/tidal-stock.apk)
 
-            # Merge native libs from arm64-v8a split into base.apk
-            for split in "$workdir"/split_config.arm64_v8a.apk \
-                         "$workdir"/split_config.xxhdpi.apk \
-                         "$workdir"/split_config.en.apk; do
+            # Merge every split APK's contents into base.apk
+            for split in "$workdir"/split_*.apk "$workdir"/config.*.apk; do
               [ -f "$split" ] || continue
               echo "Merging $(basename "$split")"
               libdir=$(mktemp -d)
               unzip -q "$split" -d "$libdir"
-              # Drop META-INF (signatures) and the split's manifest
-              rm -rf "$libdir/META-INF" "$libdir/AndroidManifest.xml"
-              (cd "$libdir" && zip -qr "$OLDPWD/dist/tidal-stock.apk" .)
+              rm -rf "$libdir/META-INF" "$libdir/AndroidManifest.xml" "$libdir/resources.arsc"
+              (cd "$libdir" && zip -qrD "$dist_abs" .)
               rm -rf "$libdir"
             done
             rm -rf "$workdir"
+            echo "Merged tidal-stock.apk size:"
+            ls -la ./dist/tidal-stock.apk
           else
             cp "$tidal_src" ./dist/tidal-stock.apk
           fi

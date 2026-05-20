@@ -40,6 +40,7 @@ class PatchManifestStep(private val options: PatchOptions) : Step() {
         ZipReader(apk).use { reader ->
             ZipWriter(repacked, /* append = */ false).use { writer ->
                 for (name in reader.entryNames) {
+                    if (name.endsWith("/")) continue
                     val bytes = if (name == "AndroidManifest.xml") {
                         patchedManifest
                     } else {
