@@ -40,6 +40,13 @@
 # Keep class names of patching steps since they're used via reflection
 -keepnames class com.meowarex.rlmobile.patcher.steps.**
 
+# Room/WorkManager: generated *_Impl classes are reflectively instantiated via
+# their no-arg constructor (Class#getDeclaredConstructor()). proguard-android-optimize.txt
+# strips no-arg ctors otherwise, which crashes WorkManager auto-init at startup with
+# NoSuchMethodException: androidx.work.impl.WorkDatabase_Impl.<init> [].
+-keep class * extends androidx.room.RoomDatabase { <init>(); }
+-keep class **_Impl { <init>(); }
+
 # Repackage classes into the top-level.
 -repackageclasses
 
