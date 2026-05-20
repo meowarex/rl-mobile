@@ -2,15 +2,6 @@ name: Build Release App
 
 on:
   workflow_call:
-    secrets:
-      keyAlias:
-        required: true
-      keyPassword:
-        required: true
-      keystorePassword:
-        required: true
-      keystore:
-        required: true
 
 jobs:
   build:
