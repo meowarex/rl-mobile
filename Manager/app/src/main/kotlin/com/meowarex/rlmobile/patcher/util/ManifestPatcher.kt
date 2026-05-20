@@ -89,16 +89,13 @@ object ManifestPatcher {
                                 }
                             }
 
-                            "uses-sdk" -> object : NodeVisitor(nv) {
-                                override fun attr(ns: String?, name: String?, resourceId: Int, type: Int, value: Any?) {
-                                    if (name == "targetSdkVersion") {
-                                        val version = if (Build.VERSION.SDK_INT >= 31) 30 else 28
-                                        super.attr(ns, name, resourceId, type, version)
-                                    } else {
-                                        super.attr(ns, name, resourceId, type, value)
-                                    }
-                                }
-                            }
+                            // Preserve the original targetSdkVersion. Downgrading it (e.g. to 30)
+                            // makes Android render MediaStyle notifications with the legacy
+                            // compact-row layout instead of the modern auto-rendered controls,
+                            // because TIDAL's notification builder skips addAction() on API 33+
+                            // expecting the system to auto-infer buttons from the MediaSession —
+                            // which only happens for apps targeting SDK >= 31.
+                            "uses-sdk" -> nv
 
                             "permission" -> object : NodeVisitor(nv) {
                                 override fun attr(ns: String?, name: String, resourceId: Int, type: Int, value: Any?) {
