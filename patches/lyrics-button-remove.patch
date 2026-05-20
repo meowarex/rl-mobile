@@ -1,0 +1,15 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
+@@ -4931,7 +4931,11 @@
+     const/4 v10, 0x0
+ 
+     .line 226
+-    invoke-static {v10, v9, v4, v2, v7}, Lcom/tidal/android/feature/playerscreen/ui/composables/h1;->a(Landroidx/compose/ui/Modifier;Ltl0/a;ZLandroidx/compose/runtime/Composer;I)V
++    const v10, 0x52414448    # empty group key
++
++    invoke-interface {v2, v10}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open empty
++
++    invoke-interface {v2}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V    # close empty
+ 
+     .line 227
+     invoke-interface {v2}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V

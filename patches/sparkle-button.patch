@@ -1,0 +1,34 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
+@@ -2966,7 +2966,7 @@
+ .end method
+ 
+ .method public static final e(ILandroidx/compose/runtime/Composer;Lcom/tidal/android/feature/playerscreen/ui/k;Lcom/tidal/android/feature/playerscreen/ui/r$a;Ltl0/a;Ltl0/l;Z)V
+-    .locals 71    # extra regs for blur backdrop
++    .locals 89    # extra regs for sparkle button
+     .annotation build Landroidx/compose/runtime/Composable;
+     .end annotation
+ 
+@@ -5838,6 +5838,22 @@
+     :cond_51
+     check-cast v4, Ltl0/a;
+ 
++    new-instance v74, Lc8/j;    # build lyrics-toggle lambda (same one h1 used)
++
++    move-object/from16 v75, p5    # p5 holds the lambda receiver
++
++    const/16 v76, 0x1    # discriminator 1 = lyrics action
++
++    invoke-direct/range {v74 .. v76}, Lc8/j;-><init>(Ljava/lang/Object;I)V    # construct lambda
++
++    const/16 v71, 0x0    # $$changed flags
++
++    move-object/from16 v72, v7    # composer
++
++    const/16 v73, 0x0    # modifier (null -> Companion)
++
++    invoke-static/range {v71 .. v74}, Lradiant/SparkleButton;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Ltl0/a;)V    # render bottom-left sparkle
++
+     const/4 v2, 0x0
+ 
+     invoke-static {v13, v7, v2, v4}, Lcom/tidal/android/feature/playerscreen/ui/composables/h3;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Ltl0/a;)V
