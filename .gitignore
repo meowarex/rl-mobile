@@ -21,3 +21,9 @@ Manager/app/release/
 
 # Reference material (APKs, original source)
 Reference/
+
+# tidal-apk/: CI consumes the top-level .apk/.apkm; ignore decompiled subdirs
+*.apkm
+!tidal-apk/*.apk
+!tidal-apk/*.apkm
+tidal-apk/*/
