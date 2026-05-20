@@ -2,6 +2,10 @@ name: Build Release App
 
 on:
   workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -15,6 +19,12 @@ jobs:
           distribution: zulu
 
       - uses: gradle/actions/setup-gradle@v4
+
+      - name: Inject version
+        run: |
+          sed -i 's/versionName = ".*"/versionName = "${{ inputs.version }}"/' Manager/app/build.gradle.kts
+          sed -i "s/versionCode = .*/versionCode = ${{ github.run_number }}/" Manager/app/build.gradle.kts
+          grep -E "versionCode|versionName" Manager/app/build.gradle.kts
 
       - name: Build
         working-directory: Manager
