@@ -1,0 +1,12 @@
+--- a/ig/d.smali
++++ b/ig/d.smali
+@@ -26,8 +26,8 @@
+     new-instance v0, Lig/d;
+
+     .line 2
+     .line 3
+-    const-string v1, "player-market-ui"
++    const-string v1, "player-market-ui-rl-forced-off"    # break flag key lookup
+
+     .line 4
+     .line 5

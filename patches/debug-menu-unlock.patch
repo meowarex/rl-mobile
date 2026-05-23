@@ -1,0 +1,43 @@
+--- a/com/tidal/android/core/debug/DebugFeatureInteractorDefault.smali
++++ b/com/tidal/android/core/debug/DebugFeatureInteractorDefault.smali
+@@ -53,6 +53,11 @@
+ .method public final a()Z
+     .locals 2
+
++    # rl-debug-unlock: force a() to always return true, bypassing the
++    # "debug-menu" feature flag check that normally hides the Settings entry.
++    const/4 v0, 0x1
++    return v0
++
+     .line 1
+     iget-object v0, p0, Lcom/tidal/android/core/debug/DebugFeatureInteractorDefault;->a:Lcom/tidal/android/featureflags/l;
+
+@@ -97,6 +102,14 @@
+         }
+     .end annotation
+
++    # rl-debug-unlock: short-circuit b() to always emit MutableStateFlow(TRUE).
++    # Mirrors the original ":cond_1 :goto_0" path the app uses for internal/test builds.
++    sget-object v0, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
++
++    invoke-static {v0}, Lkotlinx/coroutines/flow/StateFlowKt;->MutableStateFlow(Ljava/lang/Object;)Lkotlinx/coroutines/flow/MutableStateFlow;
++
++    move-result-object v0
++
++    return-object v0
++
+     .line 1
+     sget-object v0, Lh50/a;->a:Ljava/lang/String;
+
+@@ -261,6 +274,11 @@
+ .method public final c()Z
+     .locals 3
+
++    # rl-debug-unlock: force c() to always return true, bypassing the
++    # applicationId-substring / in-app-bug-reports / export-logs flag checks.
++    const/4 v0, 0x1
++    return v0
++
+     .line 1
+     sget-object v0, Lh50/a;->a:Ljava/lang/String;
+

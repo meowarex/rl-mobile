@@ -1,0 +1,51 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
+@@ -5086,7 +5086,11 @@
+     const/4 v13, 0x0
+
+     .line 247
+-    invoke-static {v9, v0, v13, v2, v10}, Lcom/tidal/android/feature/playerscreen/ui/composables/BroadcastButtonKt;->b(Lcom/tidal/android/feature/playerscreen/ui/b;Ltl0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
++    const v9, 0x52414244    # empty group key
++
++    invoke-interface {v2, v9}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open empty
++
++    invoke-interface {v2}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V    # close empty
+
+     .line 248
+     invoke-interface {v2}, Landroidx/compose/runtime/Composer;->endNode()V
+@@ -5758,17 +5758,19 @@
+     :cond_53
+-    new-instance v4, Landroidx/compose/foundation/text/input/internal/selection/l;
+-
+-    const/4 v6, 0x2
+-
+-    invoke-direct {v4, v11, v6}, Landroidx/compose/foundation/text/input/internal/selection/l;-><init>(Ljava/lang/Object;I)V
+-
+-    .line 336
+-    invoke-interface {v7, v4}, Landroidx/compose/runtime/Composer;->updateRememberedValue(Ljava/lang/Object;)V
+-
+-    .line 337
+-    :cond_54
+-    check-cast v4, Ltl0/a;
+-
+-    const/4 v2, 0x0
+-
+-    invoke-static {v13, v7, v2, v4}, Lcom/tidal/android/feature/playerscreen/ui/composables/u4;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Ltl0/a;)V
++    new-instance v4, Lcom/tidal/android/feature/playerscreen/ui/f0;    # connect click lambda
++
++    move-object/from16 v6, p5    # action dispatcher
++
++    const/4 v8, 0x0    # connect-clicked discriminator
++
++    invoke-direct {v4, v6, v8}, Lcom/tidal/android/feature/playerscreen/ui/f0;-><init>(Ljava/lang/Object;I)V    # build lambda
++
++    invoke-interface {v7, v4}, Landroidx/compose/runtime/Composer;->updateRememberedValue(Ljava/lang/Object;)V    # cache lambda
++
++    :cond_54
++    check-cast v4, Ltl0/a;
++
++    iget-object v8, v10, Lcom/tidal/android/feature/playerscreen/ui/r$a;->d:Lcom/tidal/android/feature/playerscreen/ui/b;    # broadcast state
++
++    const/4 v2, 0x0    # changed flags
++
++    invoke-static {v8, v4, v13, v7, v2}, Lcom/tidal/android/feature/playerscreen/ui/composables/BroadcastButtonKt;->b(Lcom/tidal/android/feature/playerscreen/ui/b;Ltl0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V    # render connect button
