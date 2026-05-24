@@ -29,6 +29,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.ui.components.SegmentedButton
+import com.meowarex.rlmobile.ui.components.Tag
 import com.meowarex.rlmobile.ui.screens.about.AboutScreen
 import com.meowarex.rlmobile.ui.screens.home.components.CommitList
 import com.meowarex.rlmobile.ui.screens.logs.LogsListScreen
@@ -194,8 +195,8 @@ private fun ColumnScope.HomeContent(
     val tidalBehind = install != null && install.tidalUpToDate == false
     AnimatedVisibility(visible = patchesBehind || tidalBehind) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            if (patchesBehind) UpdateTag(text = "New Patches!")
-            if (tidalBehind) UpdateTag(text = "TIDAL Update!")
+            if (patchesBehind) Tag(text = "New Patches!")
+            if (tidalBehind) Tag(text = "TIDAL Update!")
         }
     }
 
@@ -240,20 +241,5 @@ private fun ColumnScope.HomeContent(
 
     ElevatedCard(modifier = Modifier.fillMaxSize()) {
         CommitList(commits = commits.collectAsLazyPagingItems())
-    '}
-}
-
-@Composable
-private fun UpdateTag(text: String) {
-    Surface(
-        color = MaterialTheme.colorScheme.primaryContainer,
-        shape = RoundedCornerShape(6.dp),
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
-        )
     }
 }

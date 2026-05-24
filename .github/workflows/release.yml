@@ -48,6 +48,8 @@ jobs:
         run: |
           mv ./dist/app-release.apk ./dist/rl-manager.apk
           cp patches/data.json ./dist/data.json
+          # Point each release's data.json at its own assets so historical releases stay self-contained.
+          sed -i "s|releases/download/latest/|releases/download/v${{ needs.Version.outputs.version }}/|g" ./dist/data.json
           cd patches && zip -r ../dist/patches.zip . -x "data.json" && cd ..
 
           tidal_src=$(find tidal-apk -maxdepth 1 \( -name "*.apk" -o -name "*.apkm" \) | head -1)
@@ -67,10 +69,10 @@ jobs:
           fi
 
       - name: Publish release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: softprops/action-gh-release@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: latest
+          tag_name: v${{ needs.Version.outputs.version }}
+          name: v${{ needs.Version.outputs.version }}
           prerelease: false
-          title: v${{ needs.Version.outputs.version }}
+          make_latest: "true"
           files: ./dist/**

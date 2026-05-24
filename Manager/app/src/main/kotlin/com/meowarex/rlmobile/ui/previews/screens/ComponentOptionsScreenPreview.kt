@@ -30,6 +30,12 @@ private fun ComponentOptionsScreenPreview(
             selected = parameters.selected,
             onSelectComponent = {},
             onDeleteComponent = {},
+            onImportFromUri = {},
+            releasesExpanded = false,
+            releasesState = com.meowarex.rlmobile.ui.screens.componentopts.ComponentOptionsModel.ReleasesState.Idle,
+            onToggleReleases = {},
+            onImportRelease = {},
+            importingReleaseTag = null,
             onBackPressed = {},
         )
     }

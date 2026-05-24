@@ -71,7 +71,7 @@
   <string name="permissions_notifs_title">Notifications</string>
   <string name="permissions_battery_title">Background Battery</string>
   <string name="permissions_battery_desc">Ensures the installation process does not get automatically cancelled if the app is minimized.</string>
-  <string name="permissions_notifs_desc">Used only to show the download progress if Radiant Lyrics Manager is minimized during installation.</string>
+  <string name="permissions_notifs_desc">Used to notify you when updates are available!</string>
 
   <string name="permissions_root_denied">Failed to obtain root permissions</string>
   <string name="permissions_shizuku_denied">Failed to obtain Shizuku permissions</string>
@@ -278,6 +278,11 @@
   <string name="componentopts_screen_desc">Select a custom build that was imported by Manager.</string>
   <string name="componentopts_selected_none">Latest</string>
   <string name="componentopts_deleted">Successfully deleted component!</string>
+  <string name="componentopts_browse_title">Browse files…</string>
+  <string name="componentopts_browse_desc">Import a file from your device</string>
+  <string name="componentopts_releases_title">GitHub Releases</string>
+  <string name="componentopts_releases_desc">Pick a historical release from the repo</string>
+  <string name="componentopts_releases_empty">No releases with this component found</string>
 
   <string name="log_title">Log</string>
   <string name="log_section_install_info">Installation Info</string>
