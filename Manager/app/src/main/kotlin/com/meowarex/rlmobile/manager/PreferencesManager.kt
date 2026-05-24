@@ -15,4 +15,8 @@ class PreferencesManager(preferences: SharedPreferences) : BasePreferenceManager
     var showNetworkWarning by booleanPreference("show_network_warning", true)
     var showPlayProtectWarning by booleanPreference("show_play_protect_warning", true)
     var autoUpdateCheck by booleanPreference("auto_update_check", true)
+
+    var lastSeenManagerVersion by stringPreference("last_seen_manager_version", "")
+    var lastSeenPatchesVersion by stringPreference("last_seen_patches_version", "")
+    var lastSeenTidalVersionCode by intPreference("last_seen_tidal_version_code", -1)
 }

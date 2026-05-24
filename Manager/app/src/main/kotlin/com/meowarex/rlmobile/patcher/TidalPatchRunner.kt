@@ -17,7 +17,7 @@ class TidalPatchRunner(
         RestoreDownloadsStep(),
 
         // Download
-        DownloadTidalStep(),
+        DownloadTidalStep(options.customTidalApk),
         DownloadPatchesStep(options.customPatches),
         CopyDependenciesStep(),
 

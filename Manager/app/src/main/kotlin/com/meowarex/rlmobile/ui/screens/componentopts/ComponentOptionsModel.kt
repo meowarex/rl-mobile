@@ -39,7 +39,7 @@ class ComponentOptionsModel(
      */
     suspend fun refreshComponents(type: PatchComponent.Type) {
         val files = when (type) {
-            PatchComponent.Type.Injector -> paths.customInjectors()
+            PatchComponent.Type.TidalApk -> paths.customTidalApks()
             PatchComponent.Type.Patches -> paths.customSmaliPatches()
         }
 

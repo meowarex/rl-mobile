@@ -10,5 +10,12 @@ data class InstallData(
     val packageName: String,
     val version: TidalVersion,
     val icon: BitmapPainter,
-    val isUpToDate: Boolean?,
-)
+    val tidalUpToDate: Boolean?,
+    val patchesUpToDate: Boolean?,
+) {
+    val isUpToDate: Boolean?
+        get() = when {
+            tidalUpToDate == null || patchesUpToDate == null -> null
+            else -> tidalUpToDate && patchesUpToDate
+        }
+}

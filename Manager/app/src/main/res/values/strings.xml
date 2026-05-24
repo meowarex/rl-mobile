@@ -43,9 +43,17 @@
   <string name="action_open_info">Open Info</string>
   <string name="action_reset_default">Reset to default</string>
 
-  <string name="intent_reinstall_fail">Failed to automatically reinstall! Please try doing it manually.</string>
+  <string name="intent_reinstall_fail">Failed to automatically repatch! Please try doing it manually.</string>
   <string name="intent_import_component_success">Successfully imported %s</string>
   <string name="intent_import_component_failure">Failed to import custom component!</string>
+
+  <string name="manager_update_title">Update Complete</string>
+  <string name="manager_update_subtitle">Manager was successfully updated!</string>
+  <string name="manager_update_row_manager">Manager</string>
+  <string name="manager_update_row_patches">Patches</string>
+  <string name="manager_update_row_tidal">TIDAL</string>
+  <string name="manager_update_tag_complete">Complete</string>
+  <string name="manager_update_tag_available">Available</string>
 
   <string name="permissions_title">Grant Permissions</string>
   <string name="permissions_subtitle">Radiant Lyrics Manager requires permissions:</string>
@@ -235,10 +243,10 @@
   >The app name is what\'s displayed in your home launcher. This should be changed on secondary installations for ease of use.</string>
   <string name="patchopts_debuggable_title">Debuggable</string>
   <string name="patchopts_debuggable_desc">Enable the debuggable manifest flag. Only use this if you know what you are doing!</string>
-  <string name="patchopts_custom_injector_title">Custom Injector</string>
-  <string name="patchopts_custom_injector_desc">A custom injector build that was imported by Manager.</string>
+  <string name="patchopts_custom_tidal_apk_title">Custom TIDAL APK</string>
+  <string name="patchopts_custom_tidal_apk_desc">Provide your own Stock TIDAL APK to patch instead of the version from Github.</string>
   <string name="patchopts_custom_patches_title">Custom Patches</string>
-  <string name="patchopts_custom_patches_desc">A custom smali patch bundle that was imported by Manager.</string>
+  <string name="patchopts_custom_patches_desc">Provide your own Patches Zip to use instead of the ones from Github.</string>
   <string name="patchopts_divider_basic">Basic</string>
   <string name="patchopts_divider_advanced">Advanced</string>
   <string name="patchopts_patches_title">Patches</string>

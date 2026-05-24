@@ -34,6 +34,7 @@ import com.meowarex.rlmobile.ui.screens.home.components.CommitList
 import com.meowarex.rlmobile.ui.screens.logs.LogsListScreen
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionsScreen
 import com.meowarex.rlmobile.ui.screens.settings.SettingsScreen
+import com.meowarex.rlmobile.ui.widgets.managerupdate.ManagerUpdateDialog
 import com.meowarex.rlmobile.util.*
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -106,14 +107,21 @@ class HomeScreen : Screen, Parcelable {
                         state = state,
                         commits = model.commits,
                         onInstall = { navigator.pushOnce(PatchOptionsScreen()) },
-                        onReinstall = {
+                        onRepatch = {
                             scope.launchIO {
-                                val screen = model.createReinstallScreen() ?: return@launchIO
+                                val screen = model.createRepatchScreen() ?: return@launchIO
                                 mainThread { navigator.push(screen) }
                             }
                         },
                         onLaunch = model::launchInstall,
                         onInfo = model::openCurrentAppInfo,
+                    )
+                }
+
+                model.managerUpdateDeltas?.let { deltas ->
+                    ManagerUpdateDialog(
+                        deltas = deltas,
+                        onDismiss = model::dismissManagerUpdate,
                     )
                 }
             }
@@ -126,12 +134,13 @@ private fun ColumnScope.HomeContent(
     state: HomeState.Loaded,
     commits: kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<com.meowarex.rlmobile.network.models.GithubCommit>>,
     onInstall: () -> Unit,
-    onReinstall: () -> Unit,
+    onRepatch: () -> Unit,
     onLaunch: () -> Unit,
     onInfo: () -> Unit,
 ) {
     val install = state.install
-    val currentVersionName = install?.version?.let { "v${it.toString()}" }
+    val currentVersionName = (install?.version as? com.meowarex.rlmobile.ui.util.TidalVersion.Existing)
+        ?.let { "v${it.name} (build ${it.code})" }
     val latestVersionName = state.latestTidalVersionCode?.let { "build $it" }
 
     val fallbackPainter = if (install?.icon == null) {
@@ -181,8 +190,17 @@ private fun ColumnScope.HomeContent(
         }
     }
 
+    val patchesBehind = install != null && install.patchesUpToDate == false
+    val tidalBehind = install != null && install.tidalUpToDate == false
+    AnimatedVisibility(visible = patchesBehind || tidalBehind) {
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            if (patchesBehind) UpdateTag(text = "New Patches!")
+            if (tidalBehind) UpdateTag(text = "TIDAL Update!")
+        }
+    }
+
     Button(
-        onClick = if (install == null) onInstall else onReinstall,
+        onClick = if (install == null) onInstall else onRepatch,
         enabled = state.latestTidalVersionCode != null,
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -190,7 +208,7 @@ private fun ColumnScope.HomeContent(
             state.latestTidalVersionCode == null -> "Loading…"
             install == null -> "Install"
             install.isUpToDate == false -> "Update"
-            else -> "Reinstall"
+            else -> "Repatch"
         }
         Text(
             text = label,
@@ -222,5 +240,20 @@ private fun ColumnScope.HomeContent(
 
     ElevatedCard(modifier = Modifier.fillMaxSize()) {
         CommitList(commits = commits.collectAsLazyPagingItems())
+    '}
+}
+
+@Composable
+private fun UpdateTag(text: String) {
+    Surface(
+        color = MaterialTheme.colorScheme.primaryContainer,
+        shape = RoundedCornerShape(6.dp),
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+        )
     }
 }

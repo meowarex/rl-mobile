@@ -44,27 +44,27 @@ private data class ComponentOptionsParameters(
 private class ComponentOptionsParametersProvider : PreviewParameterProvider<ComponentOptionsParameters> {
     private val components = persistentListOf(
         PatchComponent(
-            type = PatchComponent.Type.Injector,
+            type = PatchComponent.Type.TidalApk,
             version = SemVer(1, 2, 3),
             timestamp = Clock.System.now(),
         ),
         PatchComponent(
-            type = PatchComponent.Type.Injector,
+            type = PatchComponent.Type.TidalApk,
             version = SemVer(2, 3, 1),
             timestamp = Clock.System.now() - 10.minutes,
         ),
         PatchComponent(
-            type = PatchComponent.Type.Injector,
+            type = PatchComponent.Type.TidalApk,
             version = SemVer(2, 3, 1),
             timestamp = Clock.System.now() - 1.days,
         ),
         PatchComponent(
-            type = PatchComponent.Type.Injector,
+            type = PatchComponent.Type.TidalApk,
             version = SemVer(0, 0, 1),
             timestamp = Clock.System.now() - 10.hours,
         ),
         PatchComponent(
-            type = PatchComponent.Type.Injector,
+            type = PatchComponent.Type.TidalApk,
             version = SemVer(3, 0, 2),
             timestamp = Clock.System.now() - 7.days,
         ),
@@ -72,7 +72,7 @@ private class ComponentOptionsParametersProvider : PreviewParameterProvider<Comp
 
     override val values = sequenceOf(
         ComponentOptionsParameters(
-            componentType = PatchComponent.Type.Injector,
+            componentType = PatchComponent.Type.TidalApk,
             components = components,
             selected = null,
         ),

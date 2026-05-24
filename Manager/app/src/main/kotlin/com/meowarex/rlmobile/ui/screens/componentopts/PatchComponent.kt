@@ -34,8 +34,8 @@ data class PatchComponent(
     @Parcelize
     @Serializable
     enum class Type : Parcelable {
-        @SerialName("injector")
-        Injector,
+        @SerialName("tidal")
+        TidalApk,
 
         @SerialName("patches")
         Patches,
@@ -47,11 +47,11 @@ data class PatchComponent(
      */
     fun getFile(paths: PathManager): File {
         val dir = when (type) {
-            Type.Injector -> paths.customInjectorsDir
+            Type.TidalApk -> paths.customTidalApksDir
             Type.Patches -> paths.customPatchesDir
         }
         val ext = when (type) {
-            Type.Injector -> "dex"
+            Type.TidalApk -> "apk"
             Type.Patches -> "zip"
         }
 

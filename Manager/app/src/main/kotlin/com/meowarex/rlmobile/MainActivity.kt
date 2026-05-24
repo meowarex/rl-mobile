@@ -142,7 +142,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val targetDir = when (componentType) {
-                    "injector" -> paths.customInjectorsDir
+                    "tidal" -> paths.customTidalApksDir
                     "patches" -> paths.customPatchesDir
                     else -> {
                         Log.w(BuildConfig.TAG, "Extra $EXTRA_COMPONENT_TYPE is not a valid value!")

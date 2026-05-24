@@ -25,10 +25,7 @@ data class PatchOptions(
      */
     val debuggable: Boolean,
 
-    /**
-     * A custom build of injector that was used rather than the latest.
-     */
-    val customInjector: PatchComponent? = null,
+    val customTidalApk: PatchComponent? = null,
 
     /**
      * A custom smali patches bundle that was used rather than the latest.
@@ -42,9 +39,9 @@ data class PatchOptions(
             appName = "TIDAL",
             packageName = "com.aspiro.tidal",
             debuggable = false,
-            customInjector = null,
+            customTidalApk = null,
             customPatches = null,
-            disabledPatches = emptySet(),
+            disabledPatches = (KnownPatch.DebugMenuUnlock.fileNames + KnownPatch.EnableLegacyUi.fileNames).toSet(),
         )
     }
 }

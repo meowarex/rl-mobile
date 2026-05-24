@@ -26,7 +26,7 @@ class PathManager(
 
     val customComponentsDir = patchingDir.resolve("custom")
 
-    val customInjectorsDir = customComponentsDir.resolve("injector")
+    val customTidalApksDir = customComponentsDir.resolve("tidal")
 
     val customPatchesDir = customComponentsDir.resolve("patches")
 
@@ -54,7 +54,7 @@ class PathManager(
         .resolve("patches")
         .resolve("$version.zip")
 
-    fun customInjectors() = customInjectorsDir.listFiles()?.asList() ?: emptyList()
+    fun customTidalApks() = customTidalApksDir.listFiles()?.asList() ?: emptyList()
 
     fun customSmaliPatches() = customPatchesDir.listFiles()?.asList() ?: emptyList()
 }

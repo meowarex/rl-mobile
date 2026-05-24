@@ -81,16 +81,16 @@ class PatchOptionsModel(
     val enabledPatchCount: Int
         get() = KnownPatch.All.count { isPatchEnabled(it) }
 
-    var customInjector by mutableStateOf<PatchComponent?>(null)
+    var customTidalApk by mutableStateOf<PatchComponent?>(null)
         private set
     var customPatches by mutableStateOf<PatchComponent?>(null)
         private set
 
-    fun selectCustomInjector(navigator: Navigator) = screenModelScope.launch {
-        customInjector = navigator.pushForResult(
+    fun selectCustomTidalApk(navigator: Navigator) = screenModelScope.launch {
+        customTidalApk = navigator.pushForResult(
             ComponentOptionsScreen(
-                default = customInjector,
-                componentType = PatchComponent.Type.Injector,
+                default = customTidalApk,
+                componentType = PatchComponent.Type.TidalApk,
             )
         )
     }
@@ -120,7 +120,7 @@ class PatchOptionsModel(
             appName = appName,
             packageName = packageName,
             debuggable = debuggable,
-            customInjector = customInjector,
+            customTidalApk = customTidalApk,
             customPatches = customPatches,
             disabledPatches = disabledPatches,
         )

@@ -55,9 +55,9 @@ class PatchOptionsScreen(
             packageNameState = model.packageNameState,
             setPackageName = model::changePackageName,
 
-            customInjector = model.customInjector,
+            customTidalApk = model.customTidalApk,
             customPatches = model.customPatches,
-            onSelectCustomInjector = { model.selectCustomInjector(navigator) },
+            onSelectCustomTidalApk = { model.selectCustomTidalApk(navigator) },
             onSelectCustomPatches = { model.selectCustomPatches(navigator) },
 
             enabledPatchCount = model.enabledPatchCount,
@@ -88,8 +88,8 @@ fun PatchOptionsScreenContent(
     packageNameState: PackageNameState,
     setPackageName: (String) -> Unit,
 
-    customInjector: PatchComponent?,
-    onSelectCustomInjector: () -> Unit,
+    customTidalApk: PatchComponent?,
+    onSelectCustomTidalApk: () -> Unit,
     customPatches: PatchComponent?,
     onSelectCustomPatches: () -> Unit,
 
@@ -180,14 +180,14 @@ fun PatchOptionsScreenContent(
                 )
 
                 IconPatchOption(
-                    icon = painterResource(R.drawable.ic_extension),
-                    name = stringResource(R.string.patchopts_custom_injector_title),
-                    description = stringResource(R.string.patchopts_custom_injector_desc),
-                    modifier = Modifier.clickable(onClick = onSelectCustomInjector),
+                    icon = painterResource(R.drawable.ic_music_note),
+                    name = stringResource(R.string.patchopts_custom_tidal_apk_title),
+                    description = stringResource(R.string.patchopts_custom_tidal_apk_desc),
+                    modifier = Modifier.clickable(onClick = onSelectCustomTidalApk),
                 ) {
-                    FilledTonalButton(onClick = onSelectCustomInjector) {
+                    FilledTonalButton(onClick = onSelectCustomTidalApk) {
                         Text(
-                            text = customInjector?.version?.toString()
+                            text = customTidalApk?.version?.toString()
                                 ?: stringResource(R.string.componentopts_selected_none)
                         )
                     }
