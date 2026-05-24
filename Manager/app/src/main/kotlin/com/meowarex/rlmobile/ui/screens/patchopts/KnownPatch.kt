@@ -77,7 +77,7 @@ enum class KnownPatch(
         ),
         titleRes = R.string.patch_lyrics_progress_pill_title,
         descRes = R.string.patch_lyrics_progress_pill_desc,
-        requires = listOf(LyricsDisableCover, LyricsReplaceShareButton),
+        requires = listOf(LyricsDisableCover, LyricsReplaceLyricsButton, LyricsReplaceShareButton),
     ),
     EnableLegacyUi(
         order = 10,
