@@ -138,6 +138,11 @@
   <string name="contributors_contributions">%s contributions</string>
 
   <string name="network_load_fail">Failed to load</string>
+  <string name="network_warning_title">Metered network</string>
+  <string
+    name="network_warning_body"
+  >It appears you are connected to mobile data or a potentially metered network. Continuing with the installation may result in several hundred megabytes being downloaded. Are you sure you want to continue?</string>
+  <string name="network_warning_disable">Don\'t show this again</string>
 
   <string name="version_none">None</string>
   <string name="version_stable">Stable</string>
@@ -310,7 +315,7 @@
   <string name="play_protect_warning_open_gpp">Open Play Protect</string>
   <string name="play_protect_warning_disable">Don\'t show this again</string>
 
-  <string name="fun_fact_prefix">Fun Fact: %s</string>
+  <string name="fun_fact_prefix">%s</string>
   <string name="fun_fact_1">Did you know that TIDAL no longer like blur!</string>
   <string name="fun_fact_2">Radiant Lyrics is also available for DESKTOP!!!</string>
   <string name="fun_fact_3">i am in your walls!</string>

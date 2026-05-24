@@ -60,7 +60,7 @@ jobs:
           if [[ "$tidal_src" == *.apkm ]]; then
             echo "Merging splits from $tidal_src via APKEditor"
             curl --fail --location --retry 3 --retry-delay 2 -sSo /tmp/APKEditor.jar \
-              https://github.com/REAndroid/APKEditor/releases/download/V1.4.3/APKEditor-1.4.3.jar
+              https://github.com/REAndroid/APKEditor/releases/download/V1.4.9/APKEditor-1.4.9.jar
             java -jar /tmp/APKEditor.jar m -i "$tidal_src" -o ./dist/tidal-stock.apk
             echo "Merged tidal-stock.apk:"
             ls -la ./dist/tidal-stock.apk

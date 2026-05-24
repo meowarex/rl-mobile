@@ -1,26 +1,26 @@
---- a/com/tidal/android/feature/playerscreen/ui/g0.smali
-+++ b/com/tidal/android/feature/playerscreen/ui/g0.smali
-@@ -666,8 +666,23 @@
+--- a/com/tidal/android/feature/playerscreen/ui/h0.smali
++++ b/com/tidal/android/feature/playerscreen/ui/h0.smali
+@@ -669,8 +669,23 @@
      move-object v5, v1
- 
-     .line 288
+
+     .line 289
 +    const v1, 0x52414443    # group key
 +
 +    invoke-interface {v7, v1}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open group around the cover
 +
-+    iget-object v1, v0, Lcom/tidal/android/feature/playerscreen/ui/g0;->b:Lcom/tidal/android/feature/playerscreen/ui/r$a;    # player state
++    iget-object v1, v0, Lcom/tidal/android/feature/playerscreen/ui/h0;->b:Lcom/tidal/android/feature/playerscreen/ui/r$a;    # player state
 +
 +    iget-object v1, v1, Lcom/tidal/android/feature/playerscreen/ui/r$a;->j:Lcom/tidal/android/feature/playerscreen/ui/g;    # current view mode
 +
-+    instance-of v1, v1, Lcom/tidal/android/feature/playerscreen/ui/g$a;    # only render when on cover mode
++    instance-of v1, v1, Lcom/tidal/android/feature/playerscreen/ui/g$a;    # cover mode only
 +
 +    if-eqz v1, :radiant_after_cover    # lyrics/credits mode -> skip cover
 +
-     invoke-static/range {v2 .. v9}, Lcom/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt;->c(Lcom/tidal/android/feature/playerscreen/ui/d;Ltl0/l;FLandroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+     invoke-static/range {v2 .. v9}, Lcom/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt;->c(Lcom/tidal/android/feature/playerscreen/ui/d;Lyl0/l;FLandroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
 
-+    :radiant_after_cover
++    :radiant_after_cover    # skip target
 +    invoke-interface {v7}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V    # close group
 +
-     .line 289
      .line 290
      .line 291
+     .line 292

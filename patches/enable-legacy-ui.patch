@@ -1,7 +1,7 @@
---- a/ig/d.smali
-+++ b/ig/d.smali
+--- a/kg/e.smali
++++ b/kg/e.smali
 @@ -26,8 +26,8 @@
-     new-instance v0, Lig/d;
+     new-instance v0, Lkg/e;
 
      .line 2
      .line 3

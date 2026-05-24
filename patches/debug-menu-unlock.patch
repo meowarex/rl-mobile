@@ -1,43 +1,36 @@
 --- a/com/tidal/android/core/debug/DebugFeatureInteractorDefault.smali
 +++ b/com/tidal/android/core/debug/DebugFeatureInteractorDefault.smali
-@@ -53,6 +53,11 @@
+@@ -54,6 +54,9 @@
  .method public final a()Z
      .locals 2
 
-+    # rl-debug-unlock: force a() to always return true, bypassing the
-+    # "debug-menu" feature flag check that normally hides the Settings entry.
-+    const/4 v0, 0x1
-+    return v0
++    const/4 v0, 0x1    # force true
++    return v0    # bypass debug flag
 +
      .line 1
      iget-object v0, p0, Lcom/tidal/android/core/debug/DebugFeatureInteractorDefault;->a:Lcom/tidal/android/featureflags/l;
 
-@@ -97,6 +102,14 @@
+@@ -98,6 +101,14 @@
          }
      .end annotation
 
-+    # rl-debug-unlock: short-circuit b() to always emit MutableStateFlow(TRUE).
-+    # Mirrors the original ":cond_1 :goto_0" path the app uses for internal/test builds.
-+    sget-object v0, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
++    sget-object v0, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;    # always-true value
 +
-+    invoke-static {v0}, Lkotlinx/coroutines/flow/StateFlowKt;->MutableStateFlow(Ljava/lang/Object;)Lkotlinx/coroutines/flow/MutableStateFlow;
++    invoke-static {v0}, Lkotlinx/coroutines/flow/StateFlowKt;->MutableStateFlow(Ljava/lang/Object;)Lkotlinx/coroutines/flow/MutableStateFlow;    # wrap in flow
 +
-+    move-result-object v0
++    move-result-object v0    # the flow
 +
-+    return-object v0
++    return-object v0    # short-circuit b()
 +
      .line 1
-     sget-object v0, Lh50/a;->a:Ljava/lang/String;
+     sget-object v0, Lj50/a;->a:Ljava/lang/String;
 
-@@ -261,6 +274,11 @@
+@@ -261,5 +272,8 @@
  .method public final c()Z
      .locals 3
 
-+    # rl-debug-unlock: force c() to always return true, bypassing the
-+    # applicationId-substring / in-app-bug-reports / export-logs flag checks.
-+    const/4 v0, 0x1
-+    return v0
++    const/4 v0, 0x1    # force true
++    return v0    # bypass debug flag
 +
      .line 1
-     sget-object v0, Lh50/a;->a:Ljava/lang/String;
-
+     sget-object v0, Lj50/a;->a:Ljava/lang/String;

@@ -1,11 +1,11 @@
---- a/com/tidal/android/feature/playerscreen/ui/composables/k1.smali
-+++ b/com/tidal/android/feature/playerscreen/ui/composables/k1.smali
+--- a/com/tidal/android/feature/playerscreen/ui/composables/o1.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/o1.smali
 @@ -64,26 +64,29 @@
 
      .line 16
      .line 17
--    iget v2, p0, Lcom/tidal/android/feature/playerscreen/ui/composables/k1;->a:F
-+    const/high16 v2, 0x43200000    # 160f startDp — alpha clamps to 0 above this, hiding lyrics under the pill
+-    iget v2, p0, Lcom/tidal/android/feature/playerscreen/ui/composables/o1;->a:F
++    const/high16 v2, 0x43200000    # 160f start dp
 
      .line 18
      .line 19
@@ -17,9 +17,9 @@
 -    move-result v3
 +    move-result v2    # startY in px
 +
-+    const/high16 v3, 0x435c0000    # 220f endDp — 60dp transition, alpha clamps to 1 below this
++    const/high16 v3, 0x435c0000    # 220f end dp
 +
-+    invoke-interface {p1, v3}, Landroidx/compose/ui/unit/Density;->toPx-0680j_4(F)F
++    invoke-interface {p1, v3}, Landroidx/compose/ui/unit/Density;->toPx-0680j_4(F)F    # dp to px
 +
 +    move-result v3    # endY in px
 

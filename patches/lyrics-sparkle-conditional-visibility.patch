@@ -1,7 +1,7 @@
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
-@@ -5854,17 +5854,38 @@
-     invoke-static {v13, v7, v2, v4}, Lcom/tidal/android/feature/playerscreen/ui/composables/h3;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Ltl0/a;)V
+@@ -5725,17 +5725,38 @@
+     invoke-static {v13, v7, v2, v4}, Lcom/tidal/android/feature/playerscreen/ui/composables/l3;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Lyl0/a;)V
 +
 +    iget-boolean v2, v10, Lcom/tidal/android/feature/playerscreen/ui/r$a;->i:Z    # hasLyrics flag
 +
@@ -11,13 +11,13 @@
 +
 +    invoke-interface {v7, v2}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open lyrics branch
 
-     new-instance v74, Lc8/j;    # lyrics-toggle lambda
+     new-instance v74, Lcom/tidal/android/feature/playerscreen/ui/g0;    # lyrics toggle lambda
 
-     move-object/from16 v75, p5    # lambda receiver
+     move-object/from16 v75, p5    # action dispatcher
 
-     const/16 v76, 0x1    # lyrics action
+     const/16 v76, 0x0    # lyrics action disc
 
-     invoke-direct/range {v74 .. v76}, Lc8/j;-><init>(Ljava/lang/Object;I)V    # build lambda
+     invoke-direct/range {v74 .. v76}, Lcom/tidal/android/feature/playerscreen/ui/g0;-><init>(Ljava/lang/Object;I)V    # build lambda
 
      const/16 v71, 0x0    # changed flags
 
@@ -25,17 +25,17 @@
 
      const/16 v73, 0x0    # null modifier
 
-     invoke-static/range {v71 .. v74}, Lradiant/SparkleButton;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Ltl0/a;)V    # render sparkle button
+     invoke-static/range {v71 .. v74}, Lradiant/SparkleButton;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Lyl0/a;)V    # render sparkle button
 +
 +    invoke-interface {v7}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V    # close lyrics branch
 +
 +    goto :goto_sparkle_done    # skip empty branch
 +
-+    :cond_sparkle_no_lyrics
++    :cond_sparkle_no_lyrics    # no-lyrics branch
 +    const v2, 0x3057f75c    # group key (no lyrics)
 +
 +    invoke-interface {v7, v2}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open empty
 +
 +    invoke-interface {v7}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V    # close empty
 +
-+    :goto_sparkle_done
++    :goto_sparkle_done    # join target

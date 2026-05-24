@@ -1,6 +1,6 @@
 .class public final Lradiant/NoOp;
 .super Ljava/lang/Object;
-.implements Ltl0/a;
+.implements Lyl0/a;
 
 
 # static fields

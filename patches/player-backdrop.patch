@@ -1,11 +1,11 @@
 # rl-locals: com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali e( 71
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
-@@ -4164,6 +4164,133 @@
- 
-     invoke-static {v5, v3, v4}, Landroidx/compose/runtime/Updater;->set-impl(Landroidx/compose/runtime/Composer;Ljava/lang/Object;Ltl0/p;)V
- 
-+    const v3, 0x52414449    # group key for slot table
+@@ -4172,6 +4172,133 @@
+
+     invoke-static {v5, v3, v4}, Landroidx/compose/runtime/Updater;->set-impl(Landroidx/compose/runtime/Composer;Ljava/lang/Object;Lyl0/p;)V
+
++    const v3, 0x52414449    # slot table key
 +
 +    invoke-interface {v10, v3}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open group
 +
@@ -13,75 +13,75 @@
 +
 +    iget-object v3, v3, Lcom/tidal/android/feature/playerscreen/ui/r$a;->c:Lcom/tidal/android/feature/playerscreen/ui/d;    # cover pager
 +
-+    iget-object v4, v3, Lcom/tidal/android/feature/playerscreen/ui/d;->a:Lon0/b;    # item list
++    iget-object v4, v3, Lcom/tidal/android/feature/playerscreen/ui/d;->a:Ltn0/b;    # item list
 +
 +    iget v5, v3, Lcom/tidal/android/feature/playerscreen/ui/d;->b:I    # current index
 +
-+    invoke-interface {v4}, Ljava/util/List;->size()I
++    invoke-interface {v4}, Ljava/util/List;->size()I    # list size
 +
-+    move-result v6
++    move-result v6    # size value
 +
-+    if-le v6, v5, :radiant_skip    # index out of bounds -> skip
++    if-le v6, v5, :radiant_skip    # bounds check
 +
-+    if-ltz v5, :radiant_skip
++    if-ltz v5, :radiant_skip    # negative check
 +
-+    invoke-interface {v4, v5}, Ljava/util/List;->get(I)Ljava/lang/Object;
++    invoke-interface {v4, v5}, Ljava/util/List;->get(I)Ljava/lang/Object;    # current item
 +
-+    move-result-object v4
++    move-result-object v4    # current item
 +
 +    instance-of v6, v4, Lcom/tidal/android/feature/playerscreen/ui/c$a;    # only album covers
 +
-+    if-eqz v6, :radiant_skip
++    if-eqz v6, :radiant_skip    # skip non-albums
 +
-+    check-cast v4, Lcom/tidal/android/feature/playerscreen/ui/c$a;
++    check-cast v4, Lcom/tidal/android/feature/playerscreen/ui/c$a;    # narrow type
 +
 +    iget v5, v4, Lcom/tidal/android/feature/playerscreen/ui/c$a;->b:I    # album id
 +
 +    iget-object v4, v4, Lcom/tidal/android/feature/playerscreen/ui/c$a;->c:Ljava/lang/String;    # cover uuid
 +
-+    new-instance v6, Lcom/tidal/android/feature/playerscreen/ui/composables/p0;    # tidal's cover request
++    new-instance v6, Lcom/tidal/android/feature/playerscreen/ui/composables/n0;    # cover request lambda
 +
-+    invoke-direct {v6, v5, v4}, Lcom/tidal/android/feature/playerscreen/ui/composables/p0;-><init>(ILjava/lang/String;)V
++    invoke-direct {v6, v5, v4}, Lcom/tidal/android/feature/playerscreen/ui/composables/n0;-><init>(ILjava/lang/String;)V    # build request
 +
-+    sget-object v5, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;
++    sget-object v5, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;    # base modifier
 +
-+    const/4 v7, 0x0
++    const/4 v7, 0x0    # fraction unused
 +
-+    const/4 v8, 0x1
++    const/4 v8, 0x1    # default fraction
 +
-+    const/4 v3, 0x0
++    const/4 v3, 0x0    # synthetic null
 +
 +    invoke-static {v5, v7, v8, v3}, Landroidx/compose/foundation/layout/SizeKt;->fillMaxSize$default(Landroidx/compose/ui/Modifier;FILjava/lang/Object;)Landroidx/compose/ui/Modifier;    # fill the player root
 +
-+    move-result-object v5
++    move-result-object v5    # filled modifier
 +
-+    const/high16 v7, 0x42b40000    # 90f (blur radius dp)
++    const/high16 v7, 0x42b40000    # 90f blur dp
 +
-+    invoke-static {v7}, Landroidx/compose/ui/unit/Dp;->constructor-impl(F)F
++    invoke-static {v7}, Landroidx/compose/ui/unit/Dp;->constructor-impl(F)F    # to Dp
 +
-+    move-result v7
++    move-result v7    # blur dp value
 +
-+    sget-object v8, Landroidx/compose/ui/draw/BlurredEdgeTreatment;->Companion:Landroidx/compose/ui/draw/BlurredEdgeTreatment$Companion;
++    sget-object v8, Landroidx/compose/ui/draw/BlurredEdgeTreatment;->Companion:Landroidx/compose/ui/draw/BlurredEdgeTreatment$Companion;    # blur edge companion
 +
-+    invoke-virtual {v8}, Landroidx/compose/ui/draw/BlurredEdgeTreatment$Companion;->getRectangle---Goahg()Landroidx/compose/ui/graphics/Shape;
++    invoke-virtual {v8}, Landroidx/compose/ui/draw/BlurredEdgeTreatment$Companion;->getRectangle---Goahg()Landroidx/compose/ui/graphics/Shape;    # rectangle treatment
 +
-+    move-result-object v8
++    move-result-object v8    # edge shape
 +
 +    invoke-static {v5, v7, v8}, Landroidx/compose/ui/draw/BlurKt;->blur-F8QBwvs(Landroidx/compose/ui/Modifier;FLandroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;    # apply blur
 +
-+    move-result-object v5
++    move-result-object v5    # blurred modifier
 +
-+    sget-object v7, Landroidx/compose/ui/layout/ContentScale;->Companion:Landroidx/compose/ui/layout/ContentScale$Companion;
++    sget-object v7, Landroidx/compose/ui/layout/ContentScale;->Companion:Landroidx/compose/ui/layout/ContentScale$Companion;    # scale companion
 +
 +    invoke-virtual {v7}, Landroidx/compose/ui/layout/ContentScale$Companion;->getCrop()Landroidx/compose/ui/layout/ContentScale;    # cover-crop scaling
 +
-+    move-result-object v7
++    move-result-object v7    # crop scale
 +
 +    move-object/from16 v61, v6    # request
 +
 +    const/16 v62, 0x0    # contentDescription
 +
-+    move-object/from16 v63, v5    # modifier (blurred + fillMaxSize)
++    move-object/from16 v63, v5    # blurred modifier
 +
 +    const/16 v64, 0x0    # colorFilter
 +
@@ -89,49 +89,49 @@
 +
 +    move-object/from16 v66, v4    # cover uuid
 +
-+    const/16 v67, 0x0
++    const/16 v67, 0x0    # null onError
 +
 +    move-object/from16 v68, v10    # composer
 +
-+    const/16 v69, 0x0
++    const/16 v69, 0x0    # changed flags
 +
-+    const/16 v70, 0x48
++    const/16 v70, 0x48    # default mask
 +
-+    invoke-static/range {v61 .. v70}, Lsd0/f;->a(Ltl0/l;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/ColorFilter;Landroidx/compose/ui/layout/ContentScale;Ljava/lang/Object;Ltl0/a;Landroidx/compose/runtime/Composer;II)V    # render blurred cover
++    invoke-static/range {v61 .. v70}, Lxd0/f;->a(Lyl0/l;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/ColorFilter;Landroidx/compose/ui/layout/ContentScale;Ljava/lang/Object;Lyl0/a;Landroidx/compose/runtime/Composer;II)V    # render blurred cover
 +
 +    sget-object v3, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;    # scrim chain start
 +
 +    const/4 v4, 0x0    # fraction unused
 +
-+    const/4 v5, 0x1    # $default mask
++    const/4 v5, 0x1    # default mask
 +
 +    const/4 v6, 0x0    # null obj
 +
 +    invoke-static {v3, v4, v5, v6}, Landroidx/compose/foundation/layout/SizeKt;->fillMaxSize$default(Landroidx/compose/ui/Modifier;FILjava/lang/Object;)Landroidx/compose/ui/Modifier;    # fill screen
 +
-+    move-result-object v3    # modifier
++    move-result-object v3    # fullscreen modifier
 +
-+    const v6, -0x80000000    # 0x80000000 = 50% black
++    const v6, -0x80000000    # 50% black ARGB
 +
-+    invoke-static {v6}, Landroidx/compose/ui/graphics/ColorKt;->Color(I)J    # pack ARGB long
++    invoke-static {v6}, Landroidx/compose/ui/graphics/ColorKt;->Color(I)J    # pack color long
 +
-+    move-result-wide v6    # color
++    move-result-wide v6    # color long
 +
 +    invoke-static {}, Landroidx/compose/ui/graphics/RectangleShapeKt;->getRectangleShape()Landroidx/compose/ui/graphics/Shape;    # rect shape
 +
-+    move-result-object v4    # shape
++    move-result-object v4    # rect shape
 +
 +    invoke-static {v3, v6, v7, v4}, Landroidx/compose/foundation/BackgroundKt;->background-bw27NRU(Landroidx/compose/ui/Modifier;JLandroidx/compose/ui/graphics/Shape;)Landroidx/compose/ui/Modifier;    # tint with scrim
 +
-+    move-result-object v3    # modifier
++    move-result-object v3    # tinted modifier
 +
-+    const/4 v4, 0x0    # $changed flags
++    const/4 v4, 0x0    # changed flags
 +
 +    invoke-static {v3, v10, v4}, Landroidx/compose/foundation/layout/SpacerKt;->Spacer(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V    # draw scrim
 +
-+    :radiant_skip
++    :radiant_skip    # skip target
 +    invoke-interface {v10}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V    # close group
 +
      .line 138
      sget-object v3, Landroidx/compose/foundation/layout/BoxScopeInstance;->INSTANCE:Landroidx/compose/foundation/layout/BoxScopeInstance;
- 
+

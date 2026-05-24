@@ -1,6 +1,6 @@
---- a/com/tidal/android/feature/playerscreen/ui/b0.smali
-+++ b/com/tidal/android/feature/playerscreen/ui/b0.smali
-@@ -45,7 +45,7 @@
+--- a/com/tidal/android/feature/playerscreen/ui/c0.smali
++++ b/com/tidal/android/feature/playerscreen/ui/c0.smali
+@@ -47,7 +47,7 @@
 
  # virtual methods
  .method public final invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
@@ -9,9 +9,9 @@
 
      .line 1
      move-object/from16 v0, p0
-@@ -460,6 +460,64 @@
+@@ -461,6 +461,64 @@
      .line 200
-     invoke-static/range {v2 .. v9}, Lcom/tidal/android/feature/playerscreen/ui/composables/LyricsKt;->a(Lcom/tidal/android/feature/playerscreen/ui/g;Ltl0/l;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Ltl0/l;Landroidx/compose/runtime/Composer;II)V
+     invoke-static/range {v2 .. v9}, Lcom/tidal/android/feature/playerscreen/ui/composables/LyricsKt;->a(Lcom/tidal/android/feature/playerscreen/ui/g;Lyl0/l;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/layout/PaddingValues;Lyl0/l;Landroidx/compose/runtime/Composer;II)V
 
 +    sget-object v17, Lradiant/SpvFactory;->a:Lradiant/SpvFactory;    # progress view factory
 +
@@ -29,7 +29,7 @@
 +
 +    const/16 v24, 0x0    # synthetic null
 +
-+    invoke-static/range {v18 .. v24}, Landroidx/compose/foundation/ClickableKt;->clickable-XHw0xAI$default(Landroidx/compose/ui/Modifier;ZLjava/lang/String;Landroidx/compose/ui/semantics/Role;Ltl0/a;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;    # apply clickable
++    invoke-static/range {v18 .. v24}, Landroidx/compose/foundation/ClickableKt;->clickable-XHw0xAI$default(Landroidx/compose/ui/Modifier;ZLjava/lang/String;Landroidx/compose/ui/semantics/Role;Lyl0/a;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;    # apply clickable
 +
 +    move-result-object v23    # clickable modifier
 +
@@ -69,7 +69,7 @@
 +
 +    const/16 v22, 0x4    # default mask
 +
-+    invoke-static/range {v17 .. v22}, Landroidx/compose/ui/viewinterop/AndroidView_androidKt;->AndroidView(Ltl0/l;Landroidx/compose/ui/Modifier;Ltl0/l;Landroidx/compose/runtime/Composer;II)V    # mount progress pill
++    invoke-static/range {v17 .. v22}, Landroidx/compose/ui/viewinterop/AndroidView_androidKt;->AndroidView(Lyl0/l;Landroidx/compose/ui/Modifier;Lyl0/l;Landroidx/compose/runtime/Composer;II)V    # mount progress pill
 +
      .line 201
      .line 202

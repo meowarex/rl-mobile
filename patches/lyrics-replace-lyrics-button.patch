@@ -1,11 +1,11 @@
 # rl-locals: com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali e( 79
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
-@@ -4931,7 +4931,11 @@
-     const/4 v10, 0x0
+@@ -4945,7 +4945,11 @@
+     const/4 v7, 0x0
 
      .line 226
--    invoke-static {v10, v9, v4, v2, v7}, Lcom/tidal/android/feature/playerscreen/ui/composables/h1;->a(Landroidx/compose/ui/Modifier;Ltl0/a;ZLandroidx/compose/runtime/Composer;I)V
+-    invoke-static {v7, v9, v4, v2, v10}, Lcom/tidal/android/feature/playerscreen/ui/composables/k1;->a(Landroidx/compose/ui/Modifier;Lyl0/a;ZLandroidx/compose/runtime/Composer;I)V
 +    const v10, 0x52414448    # empty group key
 +
 +    invoke-interface {v2, v10}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open empty
@@ -14,21 +14,21 @@
 
      .line 227
      invoke-interface {v2}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V
-@@ -5838,6 +5838,22 @@
+@@ -5720,6 +5724,22 @@
      :cond_51
-     check-cast v4, Ltl0/a;
+     check-cast v4, Lyl0/a;
 
      const/4 v2, 0x0
 
-     invoke-static {v13, v7, v2, v4}, Lcom/tidal/android/feature/playerscreen/ui/composables/h3;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Ltl0/a;)V
+     invoke-static {v13, v7, v2, v4}, Lcom/tidal/android/feature/playerscreen/ui/composables/l3;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Lyl0/a;)V
 +
-+    new-instance v74, Lc8/j;    # lyrics-toggle lambda
++    new-instance v74, Lcom/tidal/android/feature/playerscreen/ui/g0;    # lyrics toggle lambda
 +
-+    move-object/from16 v75, p5    # lambda receiver
++    move-object/from16 v75, p5    # action dispatcher
 +
-+    const/16 v76, 0x1    # lyrics action
++    const/16 v76, 0x0    # lyrics action disc
 +
-+    invoke-direct/range {v74 .. v76}, Lc8/j;-><init>(Ljava/lang/Object;I)V    # build lambda
++    invoke-direct/range {v74 .. v76}, Lcom/tidal/android/feature/playerscreen/ui/g0;-><init>(Ljava/lang/Object;I)V    # build lambda
 +
 +    const/16 v71, 0x0    # changed flags
 +
@@ -36,4 +36,4 @@
 +
 +    const/16 v73, 0x0    # null modifier
 +
-+    invoke-static/range {v71 .. v74}, Lradiant/SparkleButton;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Ltl0/a;)V    # render sparkle button
++    invoke-static/range {v71 .. v74}, Lradiant/SparkleButton;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Lyl0/a;)V    # render sparkle button

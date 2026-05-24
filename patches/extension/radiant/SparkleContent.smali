@@ -3,7 +3,7 @@
 .source "SourceFile"
 
 # interfaces
-.implements Ltl0/p;
+.implements Lyl0/p;
 
 
 # virtual methods
