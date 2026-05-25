@@ -63,6 +63,8 @@
 .method public static onWampTrack(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;Lcom/aspiro/wamp/model/Track;)V
     .locals 11
 
+    invoke-static {p1}, Lradiant/HomeBackdrop;->onTrack(Lcom/aspiro/wamp/model/Track;)V
+
     const/4 v3, 0x0
 
     sput-boolean v3, Lradiant/RLAPILyricsHook;->isRlState:Z

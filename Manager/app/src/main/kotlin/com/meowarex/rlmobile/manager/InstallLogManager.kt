@@ -12,8 +12,6 @@ import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptions
 import com.meowarex.rlmobile.util.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -21,52 +19,19 @@ import kotlin.time.Duration
 import kotlin.time.Instant
 
 /**
- * Central manager for storing all attempted installations and
- * their associated logs/crashes (not including manager crashes themselves).
+ * In-memory store for the most recent install attempts
  */
 class InstallLogManager(
     private val application: Application,
     private val prefs: PreferencesManager,
-    private val json: Json,
+    @Suppress("unused") private val json: Json,
 ) {
-    val logsDir = application.filesDir.resolve("install-logs").apply { mkdir() }
+    private val entries = linkedMapOf<String, InstallLogData>()
 
-    /**
-     * Lists all the install data entries that exist on disk, sorted decreasing by
-     * the file creation date.
-     * @return List of installation ids, most recent installation first.
-     */
-    fun fetchInstallDataEntries(): List<String> {
-        val files = logsDir.listFiles { it.extension == "json" } ?: emptyArray()
-
-        return files
-            .sortedByDescending { it.lastModified() }
-            .map { it.nameWithoutExtension }
+    fun fetchInstallData(id: String): InstallLogData? = synchronized(entries) {
+        entries[id]
     }
 
-    /**
-     * Loads the install log from disk, if it exists.
-     */
-    fun fetchInstallData(id: String): InstallLogData? {
-        val path = logsDir.resolve("$id.json")
-        if (!path.exists()) return null
-
-        return try {
-            json.decodeFromStream(path.inputStream())
-        } catch (t: Throwable) {
-            Log.e(BuildConfig.TAG, "Failed to open install log $id", t)
-            null
-        }
-    }
-
-    fun deleteAllEntries() {
-        logsDir.deleteRecursively()
-        logsDir.mkdir()
-    }
-
-    /**
-     * Writes an install log entry to disk.
-     */
     suspend fun storeInstallData(
         id: String,
         installDate: Instant,
@@ -75,8 +40,6 @@ class InstallLogManager(
         log: String,
         error: Throwable?,
     ) {
-        val path = logsDir.resolve("$id.json")
-
         val data = InstallLogData(
             id = id,
             installDate = installDate,
@@ -87,16 +50,16 @@ class InstallLogManager(
             errorStacktrace = error?.let { Log.getStackTraceString(it).trimEnd() },
         )
 
-        try {
-            path.writeText(json.encodeToString(data))
-        } catch (e: IOException) {
-            Log.e(BuildConfig.TAG, "Failed to write log to disk", e)
+        synchronized(entries) {
+            entries[id] = data
+            // Keep only the most recent few in memory.
+            while (entries.size > MAX_ENTRIES) {
+                val oldest = entries.keys.iterator().next()
+                entries.remove(oldest)
+            }
         }
     }
 
-    /**
-     * Creates a list of details about the current installation environment.
-     */
     @Suppress("KotlinConstantConditions", "SimplifyBooleanWithConstants")
     @SuppressLint("UsableSpace")
     suspend fun getEnvironmentInfo(): String {
@@ -138,6 +101,10 @@ class InstallLogManager(
             Play Protect: $playProtect
             SOC: $soc
         """.trimIndent()
+    }
+
+    private companion object {
+        const val MAX_ENTRIES = 8
     }
 }
 

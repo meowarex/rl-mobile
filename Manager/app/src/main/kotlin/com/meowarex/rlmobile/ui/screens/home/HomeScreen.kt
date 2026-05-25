@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,13 +33,14 @@ import com.meowarex.rlmobile.ui.components.SegmentedButton
 import com.meowarex.rlmobile.ui.components.Tag
 import com.meowarex.rlmobile.ui.screens.about.AboutScreen
 import com.meowarex.rlmobile.ui.screens.home.components.CommitList
-import com.meowarex.rlmobile.ui.screens.logs.LogsListScreen
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionsScreen
 import com.meowarex.rlmobile.ui.screens.settings.SettingsScreen
 import com.meowarex.rlmobile.ui.widgets.managerupdate.ManagerUpdateDialog
+import com.meowarex.rlmobile.ui.widgets.updater.UpdaterViewModel
 import com.meowarex.rlmobile.util.*
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import org.koin.androidx.compose.koinViewModel
 
 @Parcelize
 class HomeScreen : Screen, Parcelable {
@@ -50,6 +52,9 @@ class HomeScreen : Screen, Parcelable {
         val navigator = LocalNavigator.currentOrThrow
         val scope = rememberCoroutineScope()
         val model = koinScreenModel<HomeModel>()
+        val activity = LocalContext.current as ComponentActivity
+        val updater = koinViewModel<UpdaterViewModel>(viewModelStoreOwner = activity)
+        val managerUpdateAvailable = updater.targetVersion != null
 
         LifecycleResumeEffect(Unit) {
             model.refresh(delay = true)
@@ -67,16 +72,18 @@ class HomeScreen : Screen, Parcelable {
                                 contentDescription = stringResource(R.string.navigation_refresh),
                             )
                         }
+                        if (managerUpdateAvailable) {
+                            IconButton(onClick = updater::reopenDialog) {
+                                Icon(
+                                    painterResource(R.drawable.ic_update),
+                                    contentDescription = stringResource(R.string.action_update),
+                                )
+                            }
+                        }
                         IconButton(onClick = { navigator.push(AboutScreen()) }) {
                             Icon(
                                 painterResource(R.drawable.ic_info),
                                 contentDescription = stringResource(R.string.navigation_about),
-                            )
-                        }
-                        IconButton(onClick = { navigator.push(LogsListScreen()) }) {
-                            Icon(
-                                painterResource(R.drawable.ic_receipt),
-                                contentDescription = stringResource(R.string.navigation_logs),
                             )
                         }
                         IconButton(onClick = { navigator.push(SettingsScreen()) }) {
@@ -107,6 +114,7 @@ class HomeScreen : Screen, Parcelable {
                     is HomeState.Loaded -> HomeContent(
                         state = state,
                         commits = model.commits,
+                        managerUpdateAvailable = managerUpdateAvailable,
                         onInstall = { navigator.pushOnce(PatchOptionsScreen()) },
                         onRepatch = {
                             scope.launchIO {
@@ -134,6 +142,7 @@ class HomeScreen : Screen, Parcelable {
 private fun ColumnScope.HomeContent(
     state: HomeState.Loaded,
     commits: kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<com.meowarex.rlmobile.network.models.GithubCommit>>,
+    managerUpdateAvailable: Boolean,
     onInstall: () -> Unit,
     onRepatch: () -> Unit,
     onLaunch: () -> Unit,
@@ -200,12 +209,14 @@ private fun ColumnScope.HomeContent(
         }
     }
 
+    val blockedByManagerUpdate = managerUpdateAvailable && (patchesBehind || tidalBehind)
     Button(
         onClick = if (install == null) onInstall else onRepatch,
-        enabled = state.latestTidalVersionCode != null,
+        enabled = state.latestTidalVersionCode != null && !blockedByManagerUpdate,
         modifier = Modifier.fillMaxWidth(),
     ) {
         val label = when {
+            blockedByManagerUpdate -> "Manager Update Required"
             state.latestTidalVersionCode == null -> "Loading…"
             install == null -> "Install"
             patchesBehind && tidalBehind -> "Update Patches & TIDAL"

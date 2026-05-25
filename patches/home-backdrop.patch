@@ -1,0 +1,43 @@
+--- a/com/tidal/android/feature/home/ui/k.smali
++++ b/com/tidal/android/feature/home/ui/k.smali
+@@ -424,7 +424,7 @@
+     const/4 v6, 0x0
+
+     .line 181
+-    move-wide v7, v8
++    const-wide/16 v7, 0x0    # transparent containerColor
+
+     .line 182
+     const-wide/16 v9, 0x0
+--- a/com/tidal/android/feature/home/ui/p.smali
++++ b/com/tidal/android/feature/home/ui/p.smali
+@@ -187,6 +187,10 @@
+     .line 61
+     .line 62
+     :cond_3
++    const/4 v0, 0x0    # render $changed flag
++
++    invoke-static {v4, v0}, Lradiant/HomeBackdrop;->render(Landroidx/compose/runtime/Composer;I)V    # render album-art backdrop
++
+     invoke-interface {p1}, Landroidx/compose/foundation/layout/PaddingValues;->calculateTopPadding-D9Ej5fM()F
+
+     .line 63
+--- a/com/tidal/android/feature/home/ui/composables/e.smali
++++ b/com/tidal/android/feature/home/ui/composables/e.smali
+@@ -790,6 +790,8 @@
+     .line 104
+     move-result-wide v14
+
++    const-wide/16 v14, 0x0    # transparent topBar background
++
+     .line 105
+     const/16 v17, 0x2
+
+@@ -850,6 +852,8 @@
+     .line 134
+     move-result-wide v14
+
++    const-wide/16 v14, 0x0    # transparent TopAppBar containerColor
++
+     .line 135
+     sget-object v3, Landroidx/compose/ui/graphics/Color;->Companion:Landroidx/compose/ui/graphics/Color$Companion;

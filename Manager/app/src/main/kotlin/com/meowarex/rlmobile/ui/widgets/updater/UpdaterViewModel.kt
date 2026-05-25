@@ -55,6 +55,10 @@ class UpdaterViewModel(
         showDialog = false
     }
 
+    fun reopenDialog() {
+        if (targetVersion != null) showDialog = true
+    }
+
     fun triggerUpdate() = viewModelScope.launchIO {
         if (!isWorking.compareAndSet(expect = false, update = true))
             return@launchIO

@@ -63,6 +63,16 @@ enum class KnownPatch(
         titleRes = R.string.patch_player_backdrop_title,
         descRes = R.string.patch_player_backdrop_desc,
     ),
+    CoverEverywhere(
+        order = 35,
+        fileNames = listOf(
+            "home-backdrop.patch",
+            "collection-backdrop.patch",
+            "cover-capture.patch",
+        ),
+        titleRes = R.string.patch_cover_everywhere_title,
+        descRes = R.string.patch_cover_everywhere_desc,
+    ),
     DebugMenuUnlock(
         order = 100,
         fileNames = listOf("debug-menu-unlock.patch"),
@@ -93,6 +103,7 @@ enum class KnownPatch(
             LyricsKeepControlsVisible,
             PlayerBackdrop,
             LyricsProgressPill,
+            CoverEverywhere,
         ),
     );
 

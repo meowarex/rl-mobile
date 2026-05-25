@@ -92,18 +92,25 @@ class SmaliPatchStep(
                         container.log("Recorded rl-locals bump: $smaliPath method≈\"$methodSubstring\" >= $newValue")
                     }
 
-                    val targetLine = lines.firstOrNull { it.startsWith("--- a/") }
-                        ?: throw Error("Patch $patchFile is missing a '--- a/...' header")
-                    val fullClassName = targetLine
-                        .removePrefix("--- a/")
-                        .removeSuffix(".smali")
-                        .trim()
-                    val patch = LoadedPatch(
-                        fullClassName = fullClassName,
-                        patch = UnifiedDiffUtils.parseUnifiedDiff(lines),
-                    )
-                    patches.add(patch)
-                    container.log("Loaded patch file $patchFile for class ${patch.fullClassName}")
+                    // Split into per-target sections — a single .patch may contain multiple
+                    // `--- a/...` blocks targeting different classes.
+                    val sections = splitMultiTargetPatch(lines)
+                    if (sections.isEmpty()) {
+                        throw Error("Patch $patchFile is missing a '--- a/...' header")
+                    }
+                    for (section in sections) {
+                        val targetLine = section.first { it.startsWith("--- a/") }
+                        val fullClassName = targetLine
+                            .removePrefix("--- a/")
+                            .removeSuffix(".smali")
+                            .trim()
+                        val patch = LoadedPatch(
+                            fullClassName = fullClassName,
+                            patch = UnifiedDiffUtils.parseUnifiedDiff(section),
+                        )
+                        patches.add(patch)
+                        container.log("Loaded patch file $patchFile for class ${patch.fullClassName}")
+                    }
                 } catch (t: Throwable) {
                     throw Error("Failed to parse patch file $patchFile", t)
                 }
@@ -313,6 +320,28 @@ class SmaliPatchStep(
 
     private companion object {
         val LOCALS_DIRECTIVE = Regex("""^#\s*rl-locals:\s+(\S+)\s+(\S+)\s+(\d+)\s*$""")
+    }
+
+    /**
+     * Splits a unified diff into per-target sections. A single `.patch` file may bundle
+     * multiple file diffs (each starting with `--- a/...`); each section becomes its own
+     * patch with its own target class. The header lines before the first `--- a/` (and
+     * any `# rl-locals:` directives) are preserved by being copied into every section so
+     * that `UnifiedDiffUtils.parseUnifiedDiff` can still parse the section in isolation.
+     */
+    private fun splitMultiTargetPatch(lines: List<String>): List<List<String>> {
+        val headerEnd = lines.indexOfFirst { it.startsWith("--- a/") }
+        if (headerEnd < 0) return emptyList()
+        val header = lines.subList(0, headerEnd)
+
+        val sectionStarts = lines.withIndex()
+            .filter { (_, line) -> line.startsWith("--- a/") }
+            .map { it.index }
+
+        return sectionStarts.mapIndexed { i, start ->
+            val end = sectionStarts.getOrNull(i + 1) ?: lines.size
+            header + lines.subList(start, end)
+        }
     }
 }
 

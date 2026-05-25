@@ -18,7 +18,6 @@ import com.meowarex.rlmobile.ui.screens.about.AboutModel
 import com.meowarex.rlmobile.ui.screens.componentopts.ComponentOptionsModel
 import com.meowarex.rlmobile.ui.screens.home.HomeModel
 import com.meowarex.rlmobile.ui.screens.log.LogScreenModel
-import com.meowarex.rlmobile.ui.screens.logs.LogsListScreenModel
 import com.meowarex.rlmobile.ui.screens.patching.PatchingScreenModel
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionsModel
 import com.meowarex.rlmobile.ui.screens.permissions.PermissionsModel
@@ -64,7 +63,6 @@ class ManagerApplication : Application() {
                 factoryOf(::PatchOptionsModel)
                 factoryOf(::ComponentOptionsModel)
                 factoryOf(::LogScreenModel)
-                factoryOf(::LogsListScreenModel)
                 factoryOf(::PermissionsModel)
                 viewModelOf(::UpdaterViewModel)
             })
