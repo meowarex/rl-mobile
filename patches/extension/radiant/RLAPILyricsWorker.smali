@@ -448,11 +448,7 @@
 
     move-result-object v4
 
-    const-string v5, "text"
-
-    const-string v6, ""
-
-    invoke-virtual {v4, v5, v6}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    invoke-static {v4}, Lradiant/WordLyrics;->lineText(Lorg/json/JSONObject;)Ljava/lang/String;
 
     move-result-object v5
 
@@ -679,6 +675,17 @@
 
     invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
+    invoke-static {}, Lradiant/WordLyrics;->romanizeOn()Z
+
+    move-result v0
+
+    if-eqz v0, :no_romanize
+
+    const-string v0, "&romanize=true"
+
+    invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    :no_romanize
     const-string v0, "&platform=rl-mobile"
 
     invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;

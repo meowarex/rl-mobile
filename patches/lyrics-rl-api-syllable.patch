@@ -1,0 +1,80 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/f2.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/f2.smali
+@@ -932,7 +932,7 @@
+ 
+ # virtual methods
+ .method public final invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+-    .locals 28
++    .locals 40
+ 
+     .line 1
+     move-object/from16 v0, p0
+@@ -1158,6 +1158,8 @@
+     .line 100
+     check-cast v1, Lcom/tidal/android/feature/playerscreen/ui/f;
+ 
++    move/16 v33, v2    # lazy item index
++
+     .line 101
+     .line 102
+     const v3, 0x6b82e849
+@@ -1646,6 +1648,26 @@
+     .line 331
+     iget-object v3, v1, Lcom/tidal/android/feature/playerscreen/ui/f;->a:Ljava/lang/String;
+ 
++    iget v4, v0, Lcom/tidal/android/feature/playerscreen/ui/composables/f2;->b:I
++
++    move/16 v34, v4    # TIDALs active line
++
++    iget-object v4, v1, Lcom/tidal/android/feature/playerscreen/ui/f;->a:Ljava/lang/String;
++
++    move-object/16 v35, v4    # plain line text
++
++    iget-wide v4, v0, Lcom/tidal/android/feature/playerscreen/ui/composables/f2;->d:J
++
++    move-wide/16 v36, v4    # sung colour
++
++    iget-wide v4, v0, Lcom/tidal/android/feature/playerscreen/ui/composables/f2;->e:J
++
++    move-wide/16 v38, v4    # unsung colour
++
++    invoke-static/range {v33 .. v39}, Lradiant/WordLyrics;->renderSyl(IILjava/lang/String;JJ)Landroidx/compose/ui/text/AnnotatedString;
++
++    move-result-object v3    # syllable-wiped line
++
+     .line 332
+     .line 333
+     invoke-interface {v2}, Landroidx/compose/runtime/State;->getValue()Ljava/lang/Object;
+@@ -1672,7 +1694,7 @@
+ 
+     .line 344
+     .line 345
+-    const v27, 0xfff8
++    const v27, 0x7ff8    # $default: pass onTextLayout
+ 
+     .line 346
+     .line 347
+@@ -1727,7 +1749,13 @@
+ 
+     .line 369
+     .line 370
+-    const/16 v22, 0x0
++    move/from16 v1, v33    # line index
++
++    invoke-static {v1}, Lradiant/SylLayout;->cb(I)Lam0/l;    # per-line layout capture
++
++    move-result-object v1
++
++    move-object/from16 v22, v1    # onTextLayout
+ 
+     .line 371
+     .line 372
+@@ -1743,7 +1771,7 @@
+ 
+     .line 377
+     .line 378
+-    invoke-static/range {v3 .. v27}, Landroidx/compose/material3/TextKt;->Text--4IGK_g(Ljava/lang/String;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZIILam0/l;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
++    invoke-static/range {v3 .. v27}, Landroidx/compose/material3/TextKt;->Text--4IGK_g(Landroidx/compose/ui/text/AnnotatedString;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZILjava/util/Map;Lam0/l;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
+ 
+     .line 379
+     .line 380
