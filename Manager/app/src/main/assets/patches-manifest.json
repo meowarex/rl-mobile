@@ -36,7 +36,7 @@
         "lyrics-rl-api-isrc.patch"
       ],
       "title": "Radiant Lyrics API - WIP",
-      "description": "Use Radiant Lyrics API to fetch Lyrics (Higher quality & More providers). Pick how the highlight moves: whole Line or word-by-word (Word).",
+      "description": "Use Radiant Lyrics API to fetch Lyrics (Syllable Level & Higher Quality)",
       "default": false,
       "defaultVariantIndex": 0,
       "variants": [
@@ -49,6 +49,59 @@
           "fileNames": [
             "lyrics-rl-api-word.patch"
           ]
+        },
+        {
+          "title": "Syllable",
+          "fileNames": [
+            "lyrics-rl-api-syllable.patch"
+          ]
+        }
+      ],
+      "extensionFiles": [
+        "radiant/RLAPILyricsHook.smali",
+        "radiant/RLAPILyricsWorker.smali",
+        "radiant/IsrcCache.smali",
+        "radiant/WordLyrics.smali",
+        "radiant/WordLyricsTick.smali",
+        "radiant/SylBrush.smali",
+        "radiant/SylLayout.smali"
+      ],
+      "advancedOptions": [
+        {
+          "type": "toggle",
+          "key": "romanize",
+          "title": "Romanization",
+          "description": "Return a romanized transcription and show that instead of the original script",
+          "default": false,
+          "token": "RL_ROMANIZE",
+          "inline": true
+        },
+        {
+          "type": "toggle",
+          "key": "context_aware",
+          "title": "Context Aware Lyrics",
+          "description": "Display voice context cues (adlibs and duet singers get displayed seperately)",
+          "default": true,
+          "token": "RL_CTX_ON"
+        },
+        {
+          "type": "choice",
+          "key": "context_aware_mode",
+          "title": "Show",
+          "description": "",
+          "entries": [
+            "Adlibs",
+            "Singers",
+            "Both"
+          ],
+          "values": [
+            "0x1",
+            "0x2",
+            "0x3"
+          ],
+          "defaultIndex": 0,
+          "requiresOption": "context_aware",
+          "token": "RL_CTX"
         }
       ]
     },
