@@ -190,7 +190,9 @@ class PatchOptionsModel(
 
     fun isAdvancedModified(spec: PatchSpec): Boolean = spec.advancedOptions.any { option ->
         when (option) {
-            is OptionSpec.Toggle -> toggleValue(spec, option) != option.default
+            // inline toggles sit next to the variant picker, not in the sheet, so they
+            // must not light up the sheet's "modified" dot
+            is OptionSpec.Toggle -> !option.inline && toggleValue(spec, option) != option.default
             is OptionSpec.Slider -> sliderValue(spec, option) != option.default
             is OptionSpec.Choice -> choiceValue(spec, option) != option.defaultIndex
             is OptionSpec.Color -> colorValue(spec, option) != option.default

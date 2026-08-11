@@ -1,11 +1,11 @@
-.class public final Lradiant/MiniPlayerTrackGestures$TextDraw;
+.class public final Lradiant/gestures/MiniPlayerTrackGestures$TextDraw;
 .super Ljava/lang/Object;
 .implements Lam0/l;
 
 
 # annotations
 .annotation system Ldalvik/annotation/EnclosingClass;
-    value = Lradiant/MiniPlayerTrackGestures;
+    value = Lradiant/gestures/MiniPlayerTrackGestures;
 .end annotation
 
 .annotation system Ldalvik/annotation/InnerClass;
@@ -15,18 +15,18 @@
 
 
 # static fields
-.field public static final INSTANCE:Lradiant/MiniPlayerTrackGestures$TextDraw;
+.field public static final INSTANCE:Lradiant/gestures/MiniPlayerTrackGestures$TextDraw;
 
 
 # direct methods
 .method static constructor <clinit>()V
     .locals 1
 
-    new-instance v0, Lradiant/MiniPlayerTrackGestures$TextDraw;
+    new-instance v0, Lradiant/gestures/MiniPlayerTrackGestures$TextDraw;
 
-    invoke-direct {v0}, Lradiant/MiniPlayerTrackGestures$TextDraw;-><init>()V
+    invoke-direct {v0}, Lradiant/gestures/MiniPlayerTrackGestures$TextDraw;-><init>()V
 
-    sput-object v0, Lradiant/MiniPlayerTrackGestures$TextDraw;->INSTANCE:Lradiant/MiniPlayerTrackGestures$TextDraw;
+    sput-object v0, Lradiant/gestures/MiniPlayerTrackGestures$TextDraw;->INSTANCE:Lradiant/gestures/MiniPlayerTrackGestures$TextDraw;
 
     return-void
 .end method
@@ -44,7 +44,7 @@
 .method public final invoke(Landroidx/compose/ui/graphics/drawscope/ContentDrawScope;)Lkotlin/u;
     .locals 12
 
-    sget-object v0, Lradiant/MiniPlayerTrackGestures;->b:Landroidx/compose/runtime/MutableFloatState;
+    sget-object v0, Lradiant/gestures/MiniPlayerTrackGestures;->b:Landroidx/compose/runtime/MutableFloatState;
 
     invoke-interface {v0}, Landroidx/compose/runtime/MutableFloatState;->getFloatValue()F
 
@@ -132,7 +132,7 @@
 
     check-cast p1, Landroidx/compose/ui/graphics/drawscope/ContentDrawScope;
 
-    invoke-virtual {p0, p1}, Lradiant/MiniPlayerTrackGestures$TextDraw;->invoke(Landroidx/compose/ui/graphics/drawscope/ContentDrawScope;)Lkotlin/u;
+    invoke-virtual {p0, p1}, Lradiant/gestures/MiniPlayerTrackGestures$TextDraw;->invoke(Landroidx/compose/ui/graphics/drawscope/ContentDrawScope;)Lkotlin/u;
 
     move-result-object p1
 

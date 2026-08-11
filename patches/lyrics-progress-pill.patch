@@ -17,23 +17,7 @@
 +
 +    sget-object v18, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;    # base modifier
 +
-+    const/16 v19, 0x0    # clickable enabled=true default
-+
-+    const/16 v20, 0x0    # null role
-+
-+    const/16 v21, 0x0    # null onClickLabel
-+
-+    sget-object v22, Lradiant/NoOp;->a:Lradiant/NoOp;    # swallow taps
-+
-+    const/16 v23, 0xe    # default-flag bitmask
-+
-+    const/16 v24, 0x0    # synthetic null
-+
-+    invoke-static/range {v18 .. v24}, Landroidx/compose/foundation/ClickableKt;->clickable-XHw0xAI$default(Landroidx/compose/ui/Modifier;ZLjava/lang/String;Landroidx/compose/ui/semantics/Role;Lam0/a;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;    # apply clickable
-+
-+    move-result-object v23    # clickable modifier
-+
-+    move-object/from16 v0, v23    # mod to low reg
++    move-object/from16 v0, v18    # mod to low reg
 +
 +    const/4 v1, 0x0    # ignored fraction
 +
@@ -58,6 +42,22 @@
 +    move-result v25    # vert padding dp
 +
 +    invoke-static/range {v23 .. v25}, Landroidx/compose/foundation/layout/PaddingKt;->padding-VpY3zN4(Landroidx/compose/ui/Modifier;FF)Landroidx/compose/ui/Modifier;    # apply padding
++
++    move-result-object v18    # sized modifier
++
++    const/16 v19, 0x0    # clickable enabled=true default
++
++    const/16 v20, 0x0    # null onClickLabel
++
++    const/16 v21, 0x0    # null role
++
++    sget-object v22, Lradiant/NoOp;->a:Lradiant/NoOp;    # block taps
++
++    const/16 v23, 0xe    # default-flag bitmask
++
++    const/16 v24, 0x0    # synthetic null
++
++    invoke-static/range {v18 .. v24}, Landroidx/compose/foundation/ClickableKt;->clickable-XHw0xAI$default(Landroidx/compose/ui/Modifier;ZLjava/lang/String;Landroidx/compose/ui/semantics/Role;Lam0/a;ILjava/lang/Object;)Landroidx/compose/ui/Modifier;    # taps stop at the pill
 +
 +    move-result-object v18    # final modifier
 +

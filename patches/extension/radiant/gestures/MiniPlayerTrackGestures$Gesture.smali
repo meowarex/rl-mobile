@@ -1,11 +1,11 @@
-.class public final Lradiant/MiniPlayerTrackGestures$Gesture;
+.class public final Lradiant/gestures/MiniPlayerTrackGestures$Gesture;
 .super Ljava/lang/Object;
 .implements Lam0/l;
 
 
 # annotations
 .annotation system Ldalvik/annotation/EnclosingClass;
-    value = Lradiant/MiniPlayerTrackGestures;
+    value = Lradiant/gestures/MiniPlayerTrackGestures;
 .end annotation
 
 .annotation system Ldalvik/annotation/InnerClass;
@@ -24,7 +24,7 @@
 
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
-    iput-object p1, p0, Lradiant/MiniPlayerTrackGestures$Gesture;->a:Lam0/l;
+    iput-object p1, p0, Lradiant/gestures/MiniPlayerTrackGestures$Gesture;->a:Lam0/l;
 
     return-void
 .end method
@@ -32,7 +32,7 @@
 .method private nextTrack()V
     .locals 2
 
-    iget-object v0, p0, Lradiant/MiniPlayerTrackGestures$Gesture;->a:Lam0/l;
+    iget-object v0, p0, Lradiant/gestures/MiniPlayerTrackGestures$Gesture;->a:Lam0/l;
 
     sget-object v1, Lcom/tidal/android/feature/appscaffold/ui/r$a;->a:Lcom/tidal/android/feature/appscaffold/ui/r$a; # Tidal's built-in next track mini-player event
 
@@ -44,7 +44,7 @@
 .method private previousTrack()V
     .locals 2
 
-    iget-object v0, p0, Lradiant/MiniPlayerTrackGestures$Gesture;->a:Lam0/l;
+    iget-object v0, p0, Lradiant/gestures/MiniPlayerTrackGestures$Gesture;->a:Lam0/l;
 
     sget-object v1, Lcom/tidal/android/feature/appscaffold/ui/r$c;->a:Lcom/tidal/android/feature/appscaffold/ui/r$c; # Our synthetic previous track event
 
@@ -86,7 +86,7 @@
     invoke-virtual {p1}, Landroid/view/MotionEvent;->getRawY()F
 
     move-result v1
-    invoke-static {v0, v1}, Lradiant/MiniPlayerTrackGestures;->beginDrag(FF)V
+    invoke-static {v0, v1}, Lradiant/gestures/MiniPlayerTrackGestures;->beginDrag(FF)V
     goto :done
 
     # ACTION_MOVE
@@ -97,7 +97,7 @@
     invoke-virtual {p1}, Landroid/view/MotionEvent;->getRawY()F
 
     move-result v1
-    invoke-static {v0, v1}, Lradiant/MiniPlayerTrackGestures;->moveDrag(FF)V
+    invoke-static {v0, v1}, Lradiant/gestures/MiniPlayerTrackGestures;->moveDrag(FF)V
     goto :done
 
     # ACTION_UP
@@ -108,7 +108,7 @@
     invoke-virtual {p1}, Landroid/view/MotionEvent;->getRawY()F
 
     move-result v1
-    invoke-static {v0, v1}, Lradiant/MiniPlayerTrackGestures;->finishDrag(FF)I
+    invoke-static {v0, v1}, Lradiant/gestures/MiniPlayerTrackGestures;->finishDrag(FF)I
 
     move-result v0
 
@@ -117,19 +117,19 @@
     # Negative result = swipe left -> next. Positive result = swipe right -> previous
     if-gez v0, :previous
 
-    invoke-static {}, Lradiant/MiniPlayerTrackGestures;->suppressTapOpen()V
-    invoke-direct {p0}, Lradiant/MiniPlayerTrackGestures$Gesture;->nextTrack()V
+    invoke-static {}, Lradiant/gestures/MiniPlayerTrackGestures;->suppressTapOpen()V
+    invoke-direct {p0}, Lradiant/gestures/MiniPlayerTrackGestures$Gesture;->nextTrack()V
     goto :done
 
     :previous
 
-    invoke-static {}, Lradiant/MiniPlayerTrackGestures;->suppressTapOpen()V
-    invoke-direct {p0}, Lradiant/MiniPlayerTrackGestures$Gesture;->previousTrack()V
+    invoke-static {}, Lradiant/gestures/MiniPlayerTrackGestures;->suppressTapOpen()V
+    invoke-direct {p0}, Lradiant/gestures/MiniPlayerTrackGestures$Gesture;->previousTrack()V
     goto :done
 
     # ACTION_CANCEL
     :cancel
-    invoke-static {}, Lradiant/MiniPlayerTrackGestures;->cancelDrag()V
+    invoke-static {}, Lradiant/gestures/MiniPlayerTrackGestures;->cancelDrag()V
 
     :done
     sget-object p1, Lkotlin/u;->a:Lkotlin/u;
@@ -142,7 +142,7 @@
 
     check-cast p1, Landroid/view/MotionEvent;
 
-    invoke-virtual {p0, p1}, Lradiant/MiniPlayerTrackGestures$Gesture;->invoke(Landroid/view/MotionEvent;)Lkotlin/u;
+    invoke-virtual {p0, p1}, Lradiant/gestures/MiniPlayerTrackGestures$Gesture;->invoke(Landroid/view/MotionEvent;)Lkotlin/u;
 
     move-result-object p1
 
