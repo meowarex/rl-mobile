@@ -34,6 +34,13 @@
 
 .field public static lineWordBg:[[Z
 
+# Line ends and adlib lines
+.field public static lineEnds:[J
+
+.field public static lineIsBg:[Z
+
+.field public static lineEff:[J
+
 .field public static lineSide:[I
 
 .field public static dualSide:Z
@@ -72,7 +79,7 @@
 
 .field public static volatile ticking:Z
 
-# per-render scratch handed to styleSpot
+# per-render scratch handed to spotGroup
 .field public static tmpStarts:[J
 
 .field public static tmpOffs:[I
@@ -205,6 +212,12 @@
     sput-object v0, Lradiant/WordLyrics;->lineSylBg:[[Z
 
     sput-object v0, Lradiant/WordLyrics;->lineWordBg:[[Z
+
+    sput-object v0, Lradiant/WordLyrics;->lineEnds:[J
+
+    sput-object v0, Lradiant/WordLyrics;->lineIsBg:[Z
+
+    sput-object v0, Lradiant/WordLyrics;->lineEff:[J
 
     sput-object v0, Lradiant/WordLyrics;->lineSide:[I
 
@@ -568,27 +581,18 @@
 
     invoke-virtual {v6, v0, v8, v9}, Landroidx/compose/ui/text/AnnotatedString$Builder;->addStyle(Landroidx/compose/ui/text/SpanStyle;II)V
 
-    # Which line is playing now
+    # Recompose when the playing line changes
     invoke-static {}, Lradiant/WordLyrics;->lineState()Landroidx/compose/runtime/MutableState;
 
     move-result-object v0
 
     invoke-interface {v0}, Landroidx/compose/runtime/MutableState;->getValue()Ljava/lang/Object;
 
-    move-result-object v0
-
-    const/4 v5, -0x1
-
-    if-eqz v0, :w_have_al
-
-    check-cast v0, Ljava/lang/Integer;
-
-    invoke-virtual {v0}, Ljava/lang/Integer;->intValue()I
+    invoke-static {v15}, Lradiant/WordLyrics;->isActiveLine(I)Z
 
     move-result v5
 
-    :w_have_al
-    if-ne v15, v5, :w_emit
+    if-eqz v5, :w_emit
 
     # Re-render this line every tick
     invoke-static {}, Lradiant/WordLyrics;->state()Landroidx/compose/runtime/MutableState;
@@ -1160,6 +1164,8 @@
 
     invoke-static {v0}, Lradiant/WordLyrics;->buildWordBg(Lorg/json/JSONArray;)V
 
+    invoke-static {v0}, Lradiant/WordLyrics;->buildLineMeta(Lorg/json/JSONArray;)V
+
     move-object/from16 v6, p0
 
     invoke-static {v6, v0}, Lradiant/WordLyrics;->buildSides(Ljava/lang/String;Lorg/json/JSONArray;)V
@@ -1481,6 +1487,367 @@
     move-result-object v0
 
     return-object v0
+.end method
+
+# Works out when each line ends
+.method static buildLineMeta(Lorg/json/JSONArray;)V
+    .locals 16
+
+    move-object/from16 v14, p0
+
+    invoke-virtual {v14}, Lorg/json/JSONArray;->length()I
+
+    move-result v0
+
+    new-array v1, v0, [J
+
+    new-array v2, v0, [Z
+
+    new-array v3, v0, [J
+
+    const/4 v4, 0x0
+
+    :lm_line
+    if-ge v4, v0, :lm_eff
+
+    invoke-virtual {v14, v4}, Lorg/json/JSONArray;->getJSONObject(I)Lorg/json/JSONObject;
+
+    move-result-object v5
+
+    const-string v6, "syllabus"
+
+    invoke-virtual {v5, v6}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+
+    move-result-object v6
+
+    if-eqz v6, :lm_single
+
+    invoke-virtual {v6}, Lorg/json/JSONArray;->length()I
+
+    move-result v7
+
+    if-nez v7, :lm_have
+
+    :lm_single
+    # No syllables, use the line start
+    const-string v8, "startTime"
+
+    const-wide/16 v9, 0x0
+
+    invoke-virtual {v5, v8, v9, v10}, Lorg/json/JSONObject;->optDouble(Ljava/lang/String;D)D
+
+    move-result-wide v9
+
+    const-wide v11, 0x408f400000000000L    # 1000.0
+
+    mul-double/2addr v9, v11
+
+    double-to-long v9, v9
+
+    aput-wide v9, v3, v4
+
+    const-wide/16 v11, 0x320
+
+    add-long/2addr v9, v11
+
+    aput-wide v9, v1, v4
+
+    const/4 v8, 0x0
+
+    aput-boolean v8, v2, v4
+
+    goto :lm_next
+
+    :lm_have
+    const/4 v8, 0x0
+
+    invoke-virtual {v6, v8}, Lorg/json/JSONArray;->getJSONObject(I)Lorg/json/JSONObject;
+
+    move-result-object v8
+
+    const-string v9, "time"
+
+    invoke-virtual {v8, v9}, Lorg/json/JSONObject;->optLong(Ljava/lang/String;)J
+
+    move-result-wide v9
+
+    aput-wide v9, v3, v4
+
+    add-int/lit8 v8, v7, -0x1
+
+    invoke-virtual {v6, v8}, Lorg/json/JSONArray;->getJSONObject(I)Lorg/json/JSONObject;
+
+    move-result-object v8
+
+    const-string v9, "time"
+
+    invoke-virtual {v8, v9}, Lorg/json/JSONObject;->optLong(Ljava/lang/String;)J
+
+    move-result-wide v9
+
+    const-string v11, "duration"
+
+    invoke-virtual {v8, v11}, Lorg/json/JSONObject;->optLong(Ljava/lang/String;)J
+
+    move-result-wide v11
+
+    add-long/2addr v9, v11
+
+    aput-wide v9, v1, v4
+
+    # Whole line an adlib?
+    const/4 v8, 0x1
+
+    const/4 v9, 0x0
+
+    :lm_bg
+    if-ge v9, v7, :lm_bg_done
+
+    invoke-virtual {v6, v9}, Lorg/json/JSONArray;->getJSONObject(I)Lorg/json/JSONObject;
+
+    move-result-object v10
+
+    const-string v11, "isBackground"
+
+    const/4 v12, 0x0
+
+    invoke-virtual {v10, v11, v12}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
+
+    move-result v10
+
+    if-nez v10, :lm_bg_next
+
+    const/4 v8, 0x0
+
+    goto :lm_bg_done
+
+    :lm_bg_next
+    add-int/lit8 v9, v9, 0x1
+
+    goto :lm_bg
+
+    :lm_bg_done
+    aput-boolean v8, v2, v4
+
+    :lm_next
+    add-int/lit8 v4, v4, 0x1
+
+    goto :lm_line
+
+    :lm_eff
+    new-array v5, v0, [J
+
+    const/4 v4, 0x0
+
+    :lm_eff_loop
+    if-ge v4, v0, :lm_store
+
+    # Hold until the next lead vocal
+    const-wide v6, 0x7fffffffffffffffL
+
+    add-int/lit8 v8, v4, 0x1
+
+    :lm_scan
+    if-ge v8, v0, :lm_have_next
+
+    aget-boolean v9, v2, v8
+
+    if-nez v9, :lm_scan_next
+
+    aget-wide v6, v3, v8
+
+    goto :lm_have_next
+
+    :lm_scan_next
+    add-int/lit8 v8, v8, 0x1
+
+    goto :lm_scan
+
+    :lm_have_next
+    aget-wide v9, v1, v4
+
+    const-wide/16 v11, 0x9c4
+
+    add-long/2addr v11, v9
+
+    cmp-long v13, v6, v11
+
+    if-gez v13, :lm_cap_ok
+
+    move-wide v11, v6
+
+    :lm_cap_ok
+    cmp-long v13, v11, v9
+
+    if-gez v13, :lm_eff_set
+
+    move-wide v11, v9
+
+    :lm_eff_set
+    aput-wide v11, v5, v4
+
+    add-int/lit8 v4, v4, 0x1
+
+    goto :lm_eff_loop
+
+    :lm_store
+    sput-object v1, Lradiant/WordLyrics;->lineEnds:[J
+
+    sput-object v2, Lradiant/WordLyrics;->lineIsBg:[Z
+
+    sput-object v5, Lradiant/WordLyrics;->lineEff:[J
+
+    return-void
+.end method
+
+# The last line that has started
+.method static activeIdx()I
+    .locals 3
+
+    sget-object v0, Lradiant/WordLyrics;->lineStarts:[J
+
+    invoke-static {}, Lradiant/WordLyrics;->computeNow()J
+
+    move-result-wide v1
+
+    invoke-static {v0, v1, v2}, Lradiant/WordLyrics;->search([JJ)I
+
+    move-result v0
+
+    return v0
+.end method
+
+# Is this line still being sung
+.method public static isActiveLine(I)Z
+    .locals 8
+
+    const/4 v0, 0x0
+
+    sget-object v2, Lradiant/WordLyrics;->lineEff:[J
+
+    if-nez v2, :al_meta
+
+    # No ends, fall back to one line
+    invoke-static {}, Lradiant/WordLyrics;->activeIdx()I
+
+    move-result v7
+
+    if-ne p0, v7, :ret
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :al_meta
+    sget-object v1, Lradiant/WordLyrics;->lineStarts:[J
+
+    if-eqz v1, :ret
+
+    if-ltz p0, :ret
+
+    array-length v7, v1
+
+    if-ge p0, v7, :ret
+
+    array-length v7, v2
+
+    if-ge p0, v7, :ret
+
+    invoke-static {}, Lradiant/WordLyrics;->computeNow()J
+
+    move-result-wide v3
+
+    aget-wide v5, v1, p0
+
+    cmp-long v7, v3, v5
+
+    if-ltz v7, :ret
+
+    aget-wide v5, v2, p0
+
+    cmp-long v7, v3, v5
+
+    if-gez v7, :ret
+
+    const/4 v0, 0x1
+
+    :ret
+    return v0
+.end method
+
+# Has this line finished for good
+.method public static isPastLine(I)Z
+    .locals 6
+
+    const/4 v0, 0x0
+
+    sget-object v1, Lradiant/WordLyrics;->lineEff:[J
+
+    if-nez v1, :pl_meta
+
+    invoke-static {}, Lradiant/WordLyrics;->activeIdx()I
+
+    move-result v5
+
+    if-ge p0, v5, :pl_ret
+
+    const/4 v0, 0x1
+
+    return v0
+
+    :pl_meta
+    if-ltz p0, :pl_ret
+
+    array-length v5, v1
+
+    if-ge p0, v5, :pl_ret
+
+    invoke-static {}, Lradiant/WordLyrics;->computeNow()J
+
+    move-result-wide v2
+
+    aget-wide v4, v1, p0
+
+    cmp-long v5, v2, v4
+
+    if-ltz v5, :pl_ret
+
+    const/4 v0, 0x1
+
+    :pl_ret
+    return v0
+.end method
+
+# First of any overlapping pair
+.method public static primaryLine(I)I
+    .locals 4
+
+    sget-object v0, Lradiant/WordLyrics;->lineEff:[J
+
+    if-eqz v0, :pr_ret
+
+    array-length v1, v0
+
+    const/4 v2, 0x0
+
+    :pr_loop
+    if-ge v2, v1, :pr_ret
+
+    invoke-static {v2}, Lradiant/WordLyrics;->isActiveLine(I)Z
+
+    move-result v3
+
+    if-eqz v3, :pr_next
+
+    return v2
+
+    :pr_next
+    add-int/lit8 v2, v2, 0x1
+
+    goto :pr_loop
+
+    :pr_ret
+    return p0
 .end method
 
 # MARKER: Context Aware Lyrics ingest
@@ -2751,27 +3118,18 @@
 
     invoke-static {v6, v15, v7, v9}, Lradiant/WordLyrics;->applyParagraphs(Landroidx/compose/ui/text/AnnotatedString$Builder;III)V
 
-    # Which line is playing now
+    # Recompose when the playing line changes
     invoke-static {}, Lradiant/WordLyrics;->lineState()Landroidx/compose/runtime/MutableState;
 
     move-result-object v0
 
     invoke-interface {v0}, Landroidx/compose/runtime/MutableState;->getValue()Ljava/lang/Object;
 
-    move-result-object v0
-
-    const/4 v5, -0x1
-
-    if-eqz v0, :sl_have_al
-
-    check-cast v0, Ljava/lang/Integer;
-
-    invoke-virtual {v0}, Ljava/lang/Integer;->intValue()I
+    invoke-static {v15}, Lradiant/WordLyrics;->isPastLine(I)Z
 
     move-result v5
 
-    :sl_have_al
-    if-ge v15, v5, :sl_not_past
+    if-eqz v5, :sl_not_past
 
     # Past lines stay fully sung
     invoke-static {}, Lradiant/WordLyrics;->sungStyle()Landroidx/compose/ui/text/SpanStyle;
@@ -2794,7 +3152,11 @@
 
     invoke-virtual {v6, v0, v8, v9}, Landroidx/compose/ui/text/AnnotatedString$Builder;->addStyle(Landroidx/compose/ui/text/SpanStyle;II)V
 
-    if-ne v15, v5, :sl_emit
+    invoke-static {v15}, Lradiant/WordLyrics;->isActiveLine(I)Z
+
+    move-result v5
+
+    if-eqz v5, :sl_emit
 
     # Re-render this line every tick
     invoke-static {}, Lradiant/WordLyrics;->state()Landroidx/compose/runtime/MutableState;

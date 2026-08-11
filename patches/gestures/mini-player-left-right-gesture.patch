@@ -4,7 +4,7 @@
  
      move-result-object v6
  
-+    invoke-static {v6, v1}, Lradiant/MiniPlayerTrackGestures;->trackModifier(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # attach horizontal swipe listener
++    invoke-static {v6, v1}, Lradiant/gestures/MiniPlayerTrackGestures;->trackModifier(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # attach horizontal swipe listener
 +
 +    move-result-object v6
 +
@@ -15,7 +15,7 @@
      .line 56
      iget-object v11, v0, Lcom/tidal/android/feature/appscaffold/ui/t;->b:Lcom/tidal/android/feature/appscaffold/ui/q;
  
-+    invoke-static {v11}, Lradiant/MiniPlayerTrackGestures;->onRenderedItem(Ljava/lang/Object;)V    # reset stale drag offset if track metadata changes mid-gesture
++    invoke-static {v11}, Lradiant/gestures/MiniPlayerTrackGestures;->onRenderedItem(Ljava/lang/Object;)V    # reset stale drag offset if track metadata changes mid-gesture
 +
      .line 57
      invoke-virtual/range {v16 .. v16}, Lcom/squareup/ui/market/core/theme/MarketStylesheet;->getBorderRadii()Lcom/squareup/ui/market/core/theme/MarketStylesheet$b;
@@ -24,7 +24,7 @@
  
      move-result-object v6
  
-+    invoke-static {v6}, Lradiant/MiniPlayerTrackGestures;->feedbackModifier(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;    # move the whole cover container with horizontal swipe
++    invoke-static {v6}, Lradiant/gestures/MiniPlayerTrackGestures;->feedbackModifier(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;    # move the whole cover container with horizontal swipe
 +
 +    move-result-object v6
 +
@@ -35,7 +35,7 @@
  
      move-result-object v5
  
-+    invoke-static {v5}, Lradiant/MiniPlayerTrackGestures;->textFeedbackModifier(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;    # move title/artist
++    invoke-static {v5}, Lradiant/gestures/MiniPlayerTrackGestures;->textFeedbackModifier(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;    # move title/artist
 +
 +    move-result-object v5
 +
@@ -107,7 +107,7 @@
  .method public final invoke()Ljava/lang/Object;
      .locals 2
  
-+    invoke-static {}, Lradiant/MiniPlayerTrackGestures;->consumeTapOpenSuppression()Z    # skip open-player if a horizontal skip-swipe just happened
++    invoke-static {}, Lradiant/gestures/MiniPlayerTrackGestures;->consumeTapOpenSuppression()Z    # skip open-player if a horizontal skip-swipe just happened
 +
 +    move-result v0
 +

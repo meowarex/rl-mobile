@@ -23,3 +23,14 @@
      if-gez v4, :cond_4
  
      .line 68
+@@ -203,6 +212,10 @@
+ 
+     .line 71
+     :goto_1
++    invoke-static {v5}, Lradiant/WordLyrics;->primaryLine(I)I    # stick to the first overlapping line
++
++    move-result v5
++
+     iget v4, v2, Lcom/tidal/android/feature/playerscreen/ui/g$c;->c:I
+ 
+     .line 72

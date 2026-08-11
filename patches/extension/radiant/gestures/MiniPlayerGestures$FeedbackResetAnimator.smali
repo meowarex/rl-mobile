@@ -1,11 +1,11 @@
-.class public final Lradiant/MiniPlayerGestures$FeedbackResetAnimator;
+.class public final Lradiant/gestures/MiniPlayerGestures$FeedbackResetAnimator;
 .super Ljava/lang/Object;
 .implements Landroid/animation/ValueAnimator$AnimatorUpdateListener;
 
 
 # annotations
 .annotation system Ldalvik/annotation/EnclosingClass;
-    value = Lradiant/MiniPlayerGestures;
+    value = Lradiant/gestures/MiniPlayerGestures;
 .end annotation
 
 .annotation system Ldalvik/annotation/InnerClass;
@@ -41,7 +41,7 @@
 
     move-result v1
 
-    invoke-static {v1}, Lradiant/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
+    invoke-static {v1}, Lradiant/gestures/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
 
     invoke-virtual {v0}, Landroid/animation/ValueAnimator;->getAnimatedFraction()F
 
@@ -53,7 +53,7 @@
 
     if-gez v1, :done
 
-    invoke-static {v0}, Lradiant/MiniPlayerGestures;->clearSwipeFeedbackAnimator(Landroid/animation/ValueAnimator;)V
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerGestures;->clearSwipeFeedbackAnimator(Landroid/animation/ValueAnimator;)V
 
     :done
     return-void

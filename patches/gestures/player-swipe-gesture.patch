@@ -1,0 +1,55 @@
+--- a/androidx/compose/material3/ModalBottomSheetKt$ModalBottomSheet$4$1.smali
++++ b/androidx/compose/material3/ModalBottomSheetKt$ModalBottomSheet$4$1.smali
+@@ -212,6 +212,12 @@
+     .line 24
+     iget-object p1, p0, Landroidx/compose/material3/ModalBottomSheetKt$ModalBottomSheet$4$1;->$sheetState:Landroidx/compose/material3/SheetState;
+ 
++    invoke-static {p1}, Lradiant/gestures/MiniPlayerGestures;->suppressAutoShow(Landroidx/compose/material3/SheetState;)Z    # avoid Material3 show() taking over manual drag
++
++    move-result v1
++
++    if-nez v1, :skip_show
++
+     .line 25
+     .line 26
+     iput v2, p0, Landroidx/compose/material3/ModalBottomSheetKt$ModalBottomSheet$4$1;->label:I
+@@ -232,6 +238,7 @@
+     .line 34
+     return-object v0
+ 
++    :skip_show
+     .line 35
+     :cond_2
+     :goto_0
+--- a/androidx/compose/material3/ModalBottomSheetKt.smali
++++ b/androidx/compose/material3/ModalBottomSheetKt.smali
+@@ -1288,12 +1288,18 @@
+ 
+     .line 33
+     invoke-interface {v5, v12}, Landroidx/compose/runtime/Composer;->updateRememberedValue(Ljava/lang/Object;)V
+ 
+     .line 34
+     :cond_47
++    move-object v14, v12    # settle callback
++
++    check-cast v14, Lam0/l;    # to Function1
++
++    invoke-static {v13, v14}, Lradiant/gestures/MiniPlayerGestures;->setSettleCallback(Landroidx/compose/material3/SheetState;Lam0/l;)V    # reuse native settle animation on release
++
+     move-object/from16 v32, v12
+ 
+     check-cast v32, Lam0/l;
+ 
+     .line 35
+     invoke-interface {v5}, Landroidx/compose/runtime/Composer;->rememberedValue()Ljava/lang/Object;
+--- a/androidx/compose/material3/SheetDefaultsKt.smali
++++ b/androidx/compose/material3/SheetDefaultsKt.smali
+@@ -98,7 +98,7 @@
+     const/4 v2, 0x0
+ 
+     .line 16
+-    const/16 v3, 0x12c
++    const/16 v3, 0x64    # 100ms
+ 
+     .line 17
+     .line 18

@@ -1,10 +1,10 @@
-.class public final Lradiant/MiniPlayerGestures$ApplyPending;
+.class public final Lradiant/gestures/MiniPlayerGestures$ApplyPending;
 .super Ljava/lang/Object;
 .implements Ljava/lang/Runnable;
 
 # annotations
 .annotation system Ldalvik/annotation/EnclosingClass;
-    value = Lradiant/MiniPlayerGestures;
+    value = Lradiant/gestures/MiniPlayerGestures;
 .end annotation
 
 .annotation system Ldalvik/annotation/InnerClass;
@@ -25,9 +25,9 @@
 
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
-    iput-object p1, p0, Lradiant/MiniPlayerGestures$ApplyPending;->a:Landroidx/compose/material3/SheetState;
+    iput-object p1, p0, Lradiant/gestures/MiniPlayerGestures$ApplyPending;->a:Landroidx/compose/material3/SheetState;
 
-    iput p2, p0, Lradiant/MiniPlayerGestures$ApplyPending;->b:I
+    iput p2, p0, Lradiant/gestures/MiniPlayerGestures$ApplyPending;->b:I
 
     return-void
 .end method
@@ -39,23 +39,23 @@
 .method public final run()V
     .locals 3
 
-    iget-object v0, p0, Lradiant/MiniPlayerGestures$ApplyPending;->a:Landroidx/compose/material3/SheetState;
+    iget-object v0, p0, Lradiant/gestures/MiniPlayerGestures$ApplyPending;->a:Landroidx/compose/material3/SheetState;
 
-    invoke-static {v0}, Lradiant/MiniPlayerGestures;->applyPendingDrag(Landroidx/compose/material3/SheetState;)V
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerGestures;->applyPendingDrag(Landroidx/compose/material3/SheetState;)V
 
-    iget v1, p0, Lradiant/MiniPlayerGestures$ApplyPending;->b:I
+    iget v1, p0, Lradiant/gestures/MiniPlayerGestures$ApplyPending;->b:I
 
     add-int/lit8 v1, v1, -0x1
 
     if-lez v1, :done
 
-    invoke-static {v0}, Lradiant/MiniPlayerGestures;->needsApply(Landroidx/compose/material3/SheetState;)Z
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerGestures;->needsApply(Landroidx/compose/material3/SheetState;)Z
 
     move-result v2
 
     if-eqz v2, :done
 
-    invoke-static {v0, v1}, Lradiant/MiniPlayerGestures;->scheduleApply(Landroidx/compose/material3/SheetState;I)V
+    invoke-static {v0, v1}, Lradiant/gestures/MiniPlayerGestures;->scheduleApply(Landroidx/compose/material3/SheetState;I)V
 
     :done
     return-void

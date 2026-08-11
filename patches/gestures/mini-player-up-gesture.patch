@@ -1,0 +1,76 @@
+# rl-locals: com/tidal/android/feature/appscaffold/ui/composable/i.smali b( 52
+--- a/com/tidal/android/feature/appscaffold/ui/composable/i.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/i.smali
+@@ -1691,6 +1691,14 @@
+ 
+     move-result-object v24
+ 
++    move-object/from16 v49, p5    # gesture expand lambda (AppScaffold Function1 param)
++
++    move-object/from16 v50, v24    # SheetState
++
++    const/16 v51, __RL_MINI_PLAYER_SWIPE_UP_DRAG__    # Enable Drag option
++
++    invoke-static/range {v49 .. v51}, Lradiant/gestures/MiniPlayerGestures;->configure(Lam0/l;Landroidx/compose/material3/SheetState;Z)V    # wire swipe-up to expand the sheet
++
+     .line 69
+     invoke-static {}, Landroidx/compose/ui/platform/CompositionLocalsKt;->getLocalDensity()Landroidx/compose/runtime/ProvidableCompositionLocal;
+ 
+--- a/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
+@@ -712,6 +712,22 @@
+ 
+     iget-object v3, v0, Lcom/tidal/android/feature/appscaffold/ui/t;->c:Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerContract$PlayState;
+ 
++    iget-object v5, v0, Lcom/tidal/android/feature/appscaffold/ui/t;->a:Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerContract$ItemType;    # currently rendered mini player media type
++
++    sget-object v6, Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerContract$ItemType;->Unknown:Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerContract$ItemType;    # Unknown = no media playing
++
++    if-ne v5, v6, :rl_has_media    # prevent swipe up when nothing playing
++
++    const/4 v5, 0x0
++
++    goto :rl_set_media
++
++    :rl_has_media
++    const/4 v5, 0x1
++
++    :rl_set_media
++    invoke-static {v5}, Lradiant/gestures/MiniPlayerGestures;->setHasMiniPlayerMedia(Z)V
++
+     invoke-virtual {v1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+ 
+     const v4, -0x571456a1
+@@ -1215,6 +1231,10 @@
+ 
+     move-result-object v6
+ 
++    invoke-static {v6}, Lradiant/gestures/MiniPlayerGestures;->trackAreaModifier(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;    # attach swipe up listener
++
++    move-result-object v6
++
+     .line 38
+     sget-object v21, Landroidx/compose/ui/Alignment;->Companion:Landroidx/compose/ui/Alignment$Companion;
+ 
+@@ -1390,6 +1410,10 @@
+ 
+     move-result-object v6
+ 
++    invoke-static {v6}, Lradiant/gestures/MiniPlayerGestures;->feedbackModifier(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;    # move cover (swipe up feedback)
++
++    move-result-object v6
++
+     .line 63
+     invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->p0()Lf20/a;
+ 
+@@ -1501,6 +1525,10 @@
+ 
+     move-result-object v5
+ 
++    invoke-static {v5}, Lradiant/gestures/MiniPlayerGestures;->feedbackModifier(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;    # move title/artist (swipe up feedback)
++
++    move-result-object v5
++
+     .line 72
+     invoke-virtual/range {v32 .. v32}, Landroidx/compose/foundation/layout/Arrangement;->getTop()Landroidx/compose/foundation/layout/Arrangement$Vertical;
+ 

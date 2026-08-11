@@ -1,11 +1,11 @@
-.class public final Lradiant/MiniPlayerTrackGestures$OffsetLayer;
+.class public final Lradiant/gestures/MiniPlayerTrackGestures$OffsetLayer;
 .super Ljava/lang/Object;
 .implements Lam0/l;
 
 
 # annotations
 .annotation system Ldalvik/annotation/EnclosingClass;
-    value = Lradiant/MiniPlayerTrackGestures;
+    value = Lradiant/gestures/MiniPlayerTrackGestures;
 .end annotation
 
 .annotation system Ldalvik/annotation/InnerClass;
@@ -15,18 +15,18 @@
 
 
 # static fields
-.field public static final INSTANCE:Lradiant/MiniPlayerTrackGestures$OffsetLayer;
+.field public static final INSTANCE:Lradiant/gestures/MiniPlayerTrackGestures$OffsetLayer;
 
 
 # direct methods
 .method static constructor <clinit>()V
     .locals 1
 
-    new-instance v0, Lradiant/MiniPlayerTrackGestures$OffsetLayer;
+    new-instance v0, Lradiant/gestures/MiniPlayerTrackGestures$OffsetLayer;
 
-    invoke-direct {v0}, Lradiant/MiniPlayerTrackGestures$OffsetLayer;-><init>()V
+    invoke-direct {v0}, Lradiant/gestures/MiniPlayerTrackGestures$OffsetLayer;-><init>()V
 
-    sput-object v0, Lradiant/MiniPlayerTrackGestures$OffsetLayer;->INSTANCE:Lradiant/MiniPlayerTrackGestures$OffsetLayer;
+    sput-object v0, Lradiant/gestures/MiniPlayerTrackGestures$OffsetLayer;->INSTANCE:Lradiant/gestures/MiniPlayerTrackGestures$OffsetLayer;
 
     return-void
 .end method
@@ -44,7 +44,7 @@
 .method public final invoke(Landroidx/compose/ui/graphics/GraphicsLayerScope;)Lkotlin/u;
     .locals 1
 
-    sget-object v0, Lradiant/MiniPlayerTrackGestures;->b:Landroidx/compose/runtime/MutableFloatState;
+    sget-object v0, Lradiant/gestures/MiniPlayerTrackGestures;->b:Landroidx/compose/runtime/MutableFloatState;
 
     invoke-interface {v0}, Landroidx/compose/runtime/MutableFloatState;->getFloatValue()F
 
@@ -62,7 +62,7 @@
 
     check-cast p1, Landroidx/compose/ui/graphics/GraphicsLayerScope;
 
-    invoke-virtual {p0, p1}, Lradiant/MiniPlayerTrackGestures$OffsetLayer;->invoke(Landroidx/compose/ui/graphics/GraphicsLayerScope;)Lkotlin/u;
+    invoke-virtual {p0, p1}, Lradiant/gestures/MiniPlayerTrackGestures$OffsetLayer;->invoke(Landroidx/compose/ui/graphics/GraphicsLayerScope;)Lkotlin/u;
 
     move-result-object p1
 

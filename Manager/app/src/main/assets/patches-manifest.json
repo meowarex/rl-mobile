@@ -370,15 +370,19 @@
           "description": "Adds swipe up gesture to the mini-player to reopen the player",
           "default": true,
           "fileNames": [
-            "mini-player-gestures.patch"
+            "mini-player-up-gesture.patch",
+            "player-swipe-gesture.patch",
+            "lyrics-gesture-scroll-guard.patch"
           ],
           "extensionFiles": [
-            "radiant/MiniPlayerGestures.smali",
-            "radiant/MiniPlayerGestures$Gesture.smali",
-            "radiant/MiniPlayerGestures$FeedbackLayer.smali",
-            "radiant/MiniPlayerGestures$FeedbackResetAnimator.smali",
-            "radiant/MiniPlayerGestures$RootGesture.smali",
-            "radiant/MiniPlayerGestures$ApplyPending.smali"
+            "radiant/gestures/MiniPlayerGestures.smali",
+            "radiant/gestures/MiniPlayerGestures$Gesture.smali",
+            "radiant/gestures/MiniPlayerGestures$FeedbackLayer.smali",
+            "radiant/gestures/MiniPlayerGestures$FeedbackResetAnimator.smali",
+            "radiant/gestures/MiniPlayerGestures$RootGesture.smali",
+            "radiant/gestures/MiniPlayerGestures$ApplyPending.smali",
+            "radiant/gestures/LyricsDrag.smali",
+            "radiant/gestures/LyricsDrag$Guard.smali"
           ]
         },
         {
@@ -405,14 +409,14 @@
           "default": false,
           "requiresOption": "gestures",
           "fileNames": [
-            "mini-player-gestures-left-right.patch"
+            "mini-player-left-right-gesture.patch"
           ],
           "extensionFiles": [
-            "radiant/MiniPlayerTrackGestures.smali",
-            "radiant/MiniPlayerTrackGestures$Gesture.smali",
-            "radiant/MiniPlayerTrackGestures$OffsetLayer.smali",
-            "radiant/MiniPlayerTrackGestures$ResetAnimator.smali",
-            "radiant/MiniPlayerTrackGestures$TextDraw.smali",
+            "radiant/gestures/MiniPlayerTrackGestures.smali",
+            "radiant/gestures/MiniPlayerTrackGestures$Gesture.smali",
+            "radiant/gestures/MiniPlayerTrackGestures$OffsetLayer.smali",
+            "radiant/gestures/MiniPlayerTrackGestures$ResetAnimator.smali",
+            "radiant/gestures/MiniPlayerTrackGestures$TextDraw.smali",
             "com/tidal/android/feature/appscaffold/ui/r$c.smali"
           ]
         }

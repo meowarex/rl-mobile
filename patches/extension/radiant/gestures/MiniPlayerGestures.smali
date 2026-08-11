@@ -1,4 +1,4 @@
-.class public final Lradiant/MiniPlayerGestures;
+.class public final Lradiant/gestures/MiniPlayerGestures;
 .super Ljava/lang/Object;
 
 
@@ -82,7 +82,7 @@
 
     move-result-object v0
 
-    sput-object v0, Lradiant/MiniPlayerGestures;->v:Landroidx/compose/runtime/MutableFloatState;
+    sput-object v0, Lradiant/gestures/MiniPlayerGestures;->v:Landroidx/compose/runtime/MutableFloatState;
 
     return-void
 .end method
@@ -98,7 +98,7 @@
 .method public static animateSwipeFeedbackReset()V
     .locals 7
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
 
     if-eqz v0, :read_offset
 
@@ -106,10 +106,10 @@
 
     const/4 v0, 0x0
 
-    sput-object v0, Lradiant/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
+    sput-object v0, Lradiant/gestures/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
 
     :read_offset
-    sget-object v0, Lradiant/MiniPlayerGestures;->v:Landroidx/compose/runtime/MutableFloatState;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->v:Landroidx/compose/runtime/MutableFloatState;
 
     invoke-interface {v0}, Landroidx/compose/runtime/MutableFloatState;->getFloatValue()F
 
@@ -155,20 +155,20 @@
 
     invoke-virtual {v1, v0}, Landroid/animation/ValueAnimator;->setInterpolator(Landroid/animation/TimeInterpolator;)V
 
-    new-instance v0, Lradiant/MiniPlayerGestures$FeedbackResetAnimator;
+    new-instance v0, Lradiant/gestures/MiniPlayerGestures$FeedbackResetAnimator;
 
-    invoke-direct {v0}, Lradiant/MiniPlayerGestures$FeedbackResetAnimator;-><init>()V
+    invoke-direct {v0}, Lradiant/gestures/MiniPlayerGestures$FeedbackResetAnimator;-><init>()V
 
     invoke-virtual {v1, v0}, Landroid/animation/ValueAnimator;->addUpdateListener(Landroid/animation/ValueAnimator$AnimatorUpdateListener;)V
 
-    sput-object v1, Lradiant/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
+    sput-object v1, Lradiant/gestures/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
 
     invoke-virtual {v1}, Landroid/animation/ValueAnimator;->start()V
 
     return-void
 
     :snap_zero
-    invoke-static {v3}, Lradiant/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
+    invoke-static {v3}, Lradiant/gestures/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
 
     return-void
 .end method
@@ -176,7 +176,7 @@
 .method public static beginSwipeFeedback()V
     .locals 1
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
 
     if-eqz v0, :zero
 
@@ -184,12 +184,12 @@
 
     const/4 v0, 0x0
 
-    sput-object v0, Lradiant/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
+    sput-object v0, Lradiant/gestures/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
 
     :zero
     const/4 v0, 0x0
 
-    invoke-static {v0}, Lradiant/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
 
     return-void
 .end method
@@ -197,13 +197,13 @@
 .method public static beginSwipeGesture(F)V
     .locals 1
 
-    sput p0, Lradiant/MiniPlayerGestures;->y:F
+    sput p0, Lradiant/gestures/MiniPlayerGestures;->y:F
 
     const/4 v0, 0x0
 
-    sput v0, Lradiant/MiniPlayerGestures;->z:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->z:F
 
-    invoke-static {}, Lradiant/MiniPlayerGestures;->beginSwipeFeedback()V
+    invoke-static {}, Lradiant/gestures/MiniPlayerGestures;->beginSwipeFeedback()V
 
     return-void
 .end method
@@ -211,11 +211,11 @@
 .method public static applyPendingDrag(Landroidx/compose/material3/SheetState;)V
     .locals 5
 
-    sget-boolean v0, Lradiant/MiniPlayerGestures;->b:Z
+    sget-boolean v0, Lradiant/gestures/MiniPlayerGestures;->b:Z
 
     if-eqz v0, :done
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
 
     if-ne v0, p0, :done
 
@@ -238,15 +238,15 @@
     move-result v4
 
     # targetOffset = startRawY + dragOffset - hiddenAnchor.
-    sget v0, Lradiant/MiniPlayerGestures;->e:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->e:F
 
-    sget v1, Lradiant/MiniPlayerGestures;->c:F
+    sget v1, Lradiant/gestures/MiniPlayerGestures;->c:F
 
     add-float/2addr v0, v1
 
     sub-float/2addr v0, v4
 
-    sget v1, Lradiant/MiniPlayerGestures;->d:F
+    sget v1, Lradiant/gestures/MiniPlayerGestures;->d:F
 
     sub-float v2, v0, v1
 
@@ -260,11 +260,11 @@
 
     move-result v2
 
-    sget v0, Lradiant/MiniPlayerGestures;->d:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->d:F
 
     add-float/2addr v0, v2
 
-    sput v0, Lradiant/MiniPlayerGestures;->d:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->d:F
 
     :done
     return-void
@@ -309,44 +309,44 @@
 .method public static beginDrag(Landroidx/compose/material3/SheetState;FFJ)V
     .locals 1
 
-    sput-object p0, Lradiant/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
+    sput-object p0, Lradiant/gestures/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
 
     const/4 v0, 0x1
 
-    sput-boolean v0, Lradiant/MiniPlayerGestures;->b:Z
+    sput-boolean v0, Lradiant/gestures/MiniPlayerGestures;->b:Z
 
-    sput p1, Lradiant/MiniPlayerGestures;->c:F
+    sput p1, Lradiant/gestures/MiniPlayerGestures;->c:F
 
     const/4 v0, 0x0
 
-    sput-object v0, Lradiant/MiniPlayerGestures;->g:Landroidx/compose/material3/SheetState;
+    sput-object v0, Lradiant/gestures/MiniPlayerGestures;->g:Landroidx/compose/material3/SheetState;
 
-    sput-object v0, Lradiant/MiniPlayerGestures;->h:Lam0/l;
+    sput-object v0, Lradiant/gestures/MiniPlayerGestures;->h:Lam0/l;
 
-    sput v0, Lradiant/MiniPlayerGestures;->d:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->d:F
 
-    sput p2, Lradiant/MiniPlayerGestures;->e:F
+    sput p2, Lradiant/gestures/MiniPlayerGestures;->e:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->f:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->f:F
 
-    sput p1, Lradiant/MiniPlayerGestures;->j:F
+    sput p1, Lradiant/gestures/MiniPlayerGestures;->j:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->l:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->l:F
 
-    sget v0, Lradiant/MiniPlayerGestures;->n:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->n:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->m:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->m:F
 
-    sput-wide p3, Lradiant/MiniPlayerGestures;->i:J
+    sput-wide p3, Lradiant/gestures/MiniPlayerGestures;->i:J
 
-    sput-wide p3, Lradiant/MiniPlayerGestures;->k:J
+    sput-wide p3, Lradiant/gestures/MiniPlayerGestures;->k:J
 
     # Try immediately then retry because anchors can be created one frame later
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->applyPendingDrag(Landroidx/compose/material3/SheetState;)V
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->applyPendingDrag(Landroidx/compose/material3/SheetState;)V
 
     const/16 v0, 0xa
 
-    invoke-static {p0, v0}, Lradiant/MiniPlayerGestures;->scheduleApply(Landroidx/compose/material3/SheetState;I)V
+    invoke-static {p0, v0}, Lradiant/gestures/MiniPlayerGestures;->scheduleApply(Landroidx/compose/material3/SheetState;I)V
 
     return-void
 .end method
@@ -354,7 +354,7 @@
 .method public static beginMotion(Landroid/view/MotionEvent;)V
     .locals 2
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
 
     if-eqz v0, :obtain
 
@@ -365,7 +365,7 @@
 
     move-result-object v0
 
-    sput-object v0, Lradiant/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
+    sput-object v0, Lradiant/gestures/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
 
     const/4 v1, 0x0
 
@@ -373,15 +373,15 @@
 
     move-result v1
 
-    sput v1, Lradiant/MiniPlayerGestures;->p:I
+    sput v1, Lradiant/gestures/MiniPlayerGestures;->p:I
 
-    invoke-static {v0, p0}, Lradiant/MiniPlayerGestures;->addRawMovement(Landroid/view/VelocityTracker;Landroid/view/MotionEvent;)V
+    invoke-static {v0, p0}, Lradiant/gestures/MiniPlayerGestures;->addRawMovement(Landroid/view/VelocityTracker;Landroid/view/MotionEvent;)V
 
     invoke-virtual {p0}, Landroid/view/MotionEvent;->getRawX()F
 
     move-result v1
 
-    sput v1, Lradiant/MiniPlayerGestures;->n:F
+    sput v1, Lradiant/gestures/MiniPlayerGestures;->n:F
 
     return-void
 .end method
@@ -389,31 +389,31 @@
 .method public static endDrag(Landroidx/compose/material3/SheetState;)V
     .locals 3
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
 
     if-ne v0, p0, :done
 
     const/4 v0, 0x0
 
-    sput-boolean v0, Lradiant/MiniPlayerGestures;->b:Z
+    sput-boolean v0, Lradiant/gestures/MiniPlayerGestures;->b:Z
 
-    sput v0, Lradiant/MiniPlayerGestures;->c:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->c:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->d:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->d:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->e:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->e:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->f:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->f:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->j:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->j:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->l:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->l:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->m:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->m:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->n:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->n:F
 
-    sget-object v2, Lradiant/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
+    sget-object v2, Lradiant/gestures/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
 
     if-eqz v2, :motion_recycled
 
@@ -421,17 +421,17 @@
 
     const/4 v2, 0x0
 
-    sput-object v2, Lradiant/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
+    sput-object v2, Lradiant/gestures/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
 
     :motion_recycled
 
     const/4 v1, 0x0
 
-    sput-object v1, Lradiant/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
+    sput-object v1, Lradiant/gestures/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
 
     const-wide/16 v0, 0x0
 
-    sput-wide v0, Lradiant/MiniPlayerGestures;->k:J
+    sput-wide v0, Lradiant/gestures/MiniPlayerGestures;->k:J
 
     :done
     return-void
@@ -440,13 +440,13 @@
 .method public static cancelDrag(Landroidx/compose/material3/SheetState;Lam0/l;)V
     .locals 1
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->isDragging(Landroidx/compose/material3/SheetState;)Z
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->isDragging(Landroidx/compose/material3/SheetState;)Z
 
     move-result v0
 
     if-eqz v0, :done
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->endDrag(Landroidx/compose/material3/SheetState;)V
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->endDrag(Landroidx/compose/material3/SheetState;)V
 
     sget-object p0, Lcom/tidal/android/feature/appscaffold/ui/b$a;->a:Lcom/tidal/android/feature/appscaffold/ui/b$a;
 
@@ -459,27 +459,27 @@
 .method public static finishDrag(Landroidx/compose/material3/SheetState;Lam0/l;F)V
     .locals 6
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->isDragging(Landroidx/compose/material3/SheetState;)Z
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->isDragging(Landroidx/compose/material3/SheetState;)Z
 
     move-result v0
 
     if-eqz v0, :done
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->g:Landroidx/compose/material3/SheetState;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->g:Landroidx/compose/material3/SheetState;
 
     if-ne v0, p0, :fallback_snap
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->h:Lam0/l;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->h:Lam0/l;
 
     if-eqz v0, :fallback_snap
 
-    invoke-static {p0, p2}, Lradiant/MiniPlayerGestures;->prepareSettleVelocity(Landroidx/compose/material3/SheetState;F)F
+    invoke-static {p0, p2}, Lradiant/gestures/MiniPlayerGestures;->prepareSettleVelocity(Landroidx/compose/material3/SheetState;F)F
 
     move-result p2
 
     :native_settle
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->endDrag(Landroidx/compose/material3/SheetState;)V
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->endDrag(Landroidx/compose/material3/SheetState;)V
 
     invoke-static {p2}, Ljava/lang/Float;->valueOf(F)Ljava/lang/Float;
 
@@ -578,14 +578,14 @@
 
     invoke-static {v0, v3}, Landroidx/compose/material3/internal/AnchoredDraggableState;->access$setLastVelocity(Landroidx/compose/material3/internal/AnchoredDraggableState;F)V
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->endDrag(Landroidx/compose/material3/SheetState;)V
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->endDrag(Landroidx/compose/material3/SheetState;)V
 
     sget-object v3, Landroidx/compose/material3/SheetValue;->Hidden:Landroidx/compose/material3/SheetValue;
 
     if-ne v2, v3, :done
 
     :close
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->endDrag(Landroidx/compose/material3/SheetState;)V
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->endDrag(Landroidx/compose/material3/SheetState;)V
 
     sget-object p0, Lcom/tidal/android/feature/appscaffold/ui/b$a;->a:Lcom/tidal/android/feature/appscaffold/ui/b$a;
 
@@ -598,11 +598,11 @@
 .method public static isDragging(Landroidx/compose/material3/SheetState;)Z
     .locals 1
 
-    sget-boolean v0, Lradiant/MiniPlayerGestures;->b:Z
+    sget-boolean v0, Lradiant/gestures/MiniPlayerGestures;->b:Z
 
     if-eqz v0, :no
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
 
     if-ne v0, p0, :no
 
@@ -619,11 +619,11 @@
 .method public static isAnyDragging()Z
     .locals 1
 
-    sget-boolean v0, Lradiant/MiniPlayerGestures;->b:Z
+    sget-boolean v0, Lradiant/gestures/MiniPlayerGestures;->b:Z
 
     if-nez v0, :yes
 
-    invoke-static {}, Lradiant/MiniPlayerGestures;->isHorizontalGestureSuppressed()Z
+    invoke-static {}, Lradiant/gestures/MiniPlayerGestures;->isHorizontalGestureSuppressed()Z
 
     move-result v0
 
@@ -638,7 +638,7 @@
 .method public static isHorizontalGestureSuppressed()Z
     .locals 2
 
-    sget v0, Lradiant/MiniPlayerGestures;->x:I
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
     const/4 v1, 0x1
 
@@ -657,7 +657,7 @@
 .method public static isHorizontalGestureLocked()Z
     .locals 2
 
-    sget v0, Lradiant/MiniPlayerGestures;->x:I
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
     const/4 v1, 0x2
 
@@ -676,7 +676,7 @@
 .method public static lockHorizontalGesture()Z
     .locals 2
 
-    sget v0, Lradiant/MiniPlayerGestures;->x:I
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
     const/4 v1, 0x1
 
@@ -689,7 +689,7 @@
     :lock
     const/4 v0, 0x2
 
-    sput v0, Lradiant/MiniPlayerGestures;->x:I
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
     const/4 v0, 0x1
 
@@ -702,11 +702,11 @@
 
     const/4 v0, 0x0
 
-    sput v0, Lradiant/MiniPlayerGestures;->x:I
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
-    sput v0, Lradiant/MiniPlayerGestures;->y:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->y:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->z:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->z:F
 
     return-void
 .end method
@@ -714,7 +714,7 @@
 .method public static lockVerticalGesture()Z
     .locals 2
 
-    sget v0, Lradiant/MiniPlayerGestures;->x:I
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
     const/4 v1, 0x2
 
@@ -727,7 +727,7 @@
     :lock
     const/4 v0, 0x1
 
-    sput v0, Lradiant/MiniPlayerGestures;->x:I
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
     return v0
 .end method
@@ -735,7 +735,7 @@
 .method public static hasMiniPlayerMedia()Z
     .locals 1
 
-    sget-boolean v0, Lradiant/MiniPlayerGestures;->r:Z
+    sget-boolean v0, Lradiant/gestures/MiniPlayerGestures;->r:Z
 
     return v0
 .end method
@@ -743,7 +743,7 @@
 .method public static setHasMiniPlayerMedia(Z)V
     .locals 0
 
-    sput-boolean p0, Lradiant/MiniPlayerGestures;->r:Z
+    sput-boolean p0, Lradiant/gestures/MiniPlayerGestures;->r:Z
 
     return-void
 .end method
@@ -751,11 +751,11 @@
 .method public static configure(Lam0/l;Landroidx/compose/material3/SheetState;Z)V
     .locals 0
 
-    sput-object p0, Lradiant/MiniPlayerGestures;->s:Lam0/l;
+    sput-object p0, Lradiant/gestures/MiniPlayerGestures;->s:Lam0/l;
 
-    sput-object p1, Lradiant/MiniPlayerGestures;->t:Landroidx/compose/material3/SheetState;
+    sput-object p1, Lradiant/gestures/MiniPlayerGestures;->t:Landroidx/compose/material3/SheetState;
 
-    sput-boolean p2, Lradiant/MiniPlayerGestures;->u:Z
+    sput-boolean p2, Lradiant/gestures/MiniPlayerGestures;->u:Z
 
     return-void
 .end method
@@ -763,13 +763,13 @@
 .method public static clearSwipeFeedbackAnimator(Landroid/animation/ValueAnimator;)V
     .locals 1
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
 
     if-ne v0, p0, :done
 
     const/4 v0, 0x0
 
-    sput-object v0, Lradiant/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
+    sput-object v0, Lradiant/gestures/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
 
     :done
     return-void
@@ -796,7 +796,7 @@
 .method public static feedbackModifier(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
     .locals 1
 
-    sget-object v0, Lradiant/MiniPlayerGestures$FeedbackLayer;->INSTANCE:Lradiant/MiniPlayerGestures$FeedbackLayer;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures$FeedbackLayer;->INSTANCE:Lradiant/gestures/MiniPlayerGestures$FeedbackLayer;
 
     invoke-static {p0, v0}, Landroidx/compose/ui/graphics/GraphicsLayerModifierKt;->graphicsLayer(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;
 
@@ -812,7 +812,7 @@
 
     move-result v0
 
-    invoke-static {}, Lradiant/MiniPlayerGestures;->minFlingVelocity()F
+    invoke-static {}, Lradiant/gestures/MiniPlayerGestures;->minFlingVelocity()F
 
     move-result v1
 
@@ -851,9 +851,9 @@
 .method public static modifier(Landroidx/compose/ui/Modifier;Lam0/l;Landroidx/compose/material3/SheetState;Z)Landroidx/compose/ui/Modifier;
     .locals 1
 
-    new-instance v0, Lradiant/MiniPlayerGestures$Gesture;
+    new-instance v0, Lradiant/gestures/MiniPlayerGestures$Gesture;
 
-    invoke-direct {v0, p1, p2, p3}, Lradiant/MiniPlayerGestures$Gesture;-><init>(Lam0/l;Landroidx/compose/material3/SheetState;Z)V
+    invoke-direct {v0, p1, p2, p3}, Lradiant/gestures/MiniPlayerGestures$Gesture;-><init>(Lam0/l;Landroidx/compose/material3/SheetState;Z)V
 
     invoke-static {p0, v0}, Landroidx/compose/ui/input/pointer/PointerInteropFilter_androidKt;->motionEventSpy(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;
 
@@ -865,17 +865,17 @@
 .method public static trackAreaModifier(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
     .locals 3
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->s:Lam0/l;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->s:Lam0/l;
 
     if-eqz v0, :done
 
-    sget-object v1, Lradiant/MiniPlayerGestures;->t:Landroidx/compose/material3/SheetState;
+    sget-object v1, Lradiant/gestures/MiniPlayerGestures;->t:Landroidx/compose/material3/SheetState;
 
     if-eqz v1, :done
 
-    sget-boolean v2, Lradiant/MiniPlayerGestures;->u:Z
+    sget-boolean v2, Lradiant/gestures/MiniPlayerGestures;->u:Z
 
-    invoke-static {p0, v0, v1, v2}, Lradiant/MiniPlayerGestures;->modifier(Landroidx/compose/ui/Modifier;Lam0/l;Landroidx/compose/material3/SheetState;Z)Landroidx/compose/ui/Modifier;
+    invoke-static {p0, v0, v1, v2}, Lradiant/gestures/MiniPlayerGestures;->modifier(Landroidx/compose/ui/Modifier;Lam0/l;Landroidx/compose/material3/SheetState;Z)Landroidx/compose/ui/Modifier;
 
     move-result-object p0
 
@@ -892,7 +892,7 @@
 
     if-gtz v0, :snap_zero
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
 
     if-eqz v0, :rubber_band
 
@@ -900,7 +900,7 @@
 
     const/4 v0, 0x0
 
-    sput-object v0, Lradiant/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
+    sput-object v0, Lradiant/gestures/MiniPlayerGestures;->w:Landroid/animation/ValueAnimator;
 
     :rubber_band
     invoke-static {p0}, Ljava/lang/Math;->abs(F)F
@@ -909,7 +909,7 @@
 
     const/high16 v1, 0x41800000    # 16.0f dp travel
 
-    invoke-static {v1}, Lradiant/MiniPlayerGestures;->dp(F)F
+    invoke-static {v1}, Lradiant/gestures/MiniPlayerGestures;->dp(F)F
 
     move-result v1
 
@@ -936,12 +936,12 @@
     neg-float p0, v0
 
     :publish
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
 
     return-void
 
     :snap_zero
-    invoke-static {v4}, Lradiant/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
+    invoke-static {v4}, Lradiant/gestures/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
 
     return-void
 .end method
@@ -949,7 +949,7 @@
 .method public static setSwipeFeedbackFromDrag(F)V
     .locals 3
 
-    sput p0, Lradiant/MiniPlayerGestures;->z:F
+    sput p0, Lradiant/gestures/MiniPlayerGestures;->z:F
 
     const/4 v0, 0x0
 
@@ -957,14 +957,14 @@
 
     if-ltz v1, :maybe_up
 
-    invoke-static {v0}, Lradiant/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
 
     return-void
 
     :maybe_up
     const/high16 v0, 0x40c00000    # 6.0f feedback deadzone
 
-    invoke-static {v0}, Lradiant/MiniPlayerGestures;->dp(F)F
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerGestures;->dp(F)F
 
     move-result v0
 
@@ -976,14 +976,14 @@
 
     add-float/2addr p0, v0
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->setSwipeFeedback(F)V
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->setSwipeFeedback(F)V
 
     return-void
 
     :snap_zero
     const/4 v0, 0x0
 
-    invoke-static {v0}, Lradiant/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerGestures;->setSwipeFeedbackDirect(F)V
 
     return-void
 .end method
@@ -991,29 +991,29 @@
 .method public static completeSimpleSwipe(Lam0/l;F)Z
     .locals 4
 
-    sget-boolean v0, Lradiant/MiniPlayerGestures;->u:Z
+    sget-boolean v0, Lradiant/gestures/MiniPlayerGestures;->u:Z
 
     if-nez v0, :no
 
-    sget v0, Lradiant/MiniPlayerGestures;->x:I
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
     const/4 v1, 0x1
 
     if-ne v0, v1, :no
 
-    sget-boolean v0, Lradiant/MiniPlayerGestures;->r:Z
+    sget-boolean v0, Lradiant/gestures/MiniPlayerGestures;->r:Z
 
     if-eqz v0, :consume_no
 
-    sget v0, Lradiant/MiniPlayerGestures;->y:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->y:F
 
     sub-float/2addr p1, v0
 
-    sput p1, Lradiant/MiniPlayerGestures;->z:F
+    sput p1, Lradiant/gestures/MiniPlayerGestures;->z:F
 
     const/high16 v0, 0x42400000    # 48.0f release threshold
 
-    invoke-static {v0}, Lradiant/MiniPlayerGestures;->dp(F)F
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerGestures;->dp(F)F
 
     move-result v0
 
@@ -1024,14 +1024,14 @@
     if-lez v2, :open
 
     :consume_no
-    invoke-static {}, Lradiant/MiniPlayerGestures;->resetGestureLock()V
+    invoke-static {}, Lradiant/gestures/MiniPlayerGestures;->resetGestureLock()V
 
     const/4 v0, 0x0
 
     return v0
 
     :open
-    invoke-static {}, Lradiant/MiniPlayerGestures;->resetGestureLock()V
+    invoke-static {}, Lradiant/gestures/MiniPlayerGestures;->resetGestureLock()V
 
     sget-object v0, Lcom/tidal/android/feature/appscaffold/ui/b$b;->a:Lcom/tidal/android/feature/appscaffold/ui/b$b;
 
@@ -1050,21 +1050,21 @@
 .method public static updateSimpleSwipe(F)Z
     .locals 3
 
-    sget-boolean v0, Lradiant/MiniPlayerGestures;->u:Z
+    sget-boolean v0, Lradiant/gestures/MiniPlayerGestures;->u:Z
 
     if-nez v0, :no
 
-    sget v0, Lradiant/MiniPlayerGestures;->x:I
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
     const/4 v1, 0x1
 
     if-ne v0, v1, :no
 
-    sget v0, Lradiant/MiniPlayerGestures;->y:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->y:F
 
     sub-float/2addr p0, v0
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->setSwipeFeedbackFromDrag(F)V
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->setSwipeFeedbackFromDrag(F)V
 
     const/4 v0, 0x1
 
@@ -1079,7 +1079,7 @@
 .method public static setSwipeFeedbackDirect(F)V
     .locals 1
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->v:Landroidx/compose/runtime/MutableFloatState;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->v:Landroidx/compose/runtime/MutableFloatState;
 
     invoke-interface {v0, p0}, Landroidx/compose/runtime/MutableFloatState;->setFloatValue(F)V
 
@@ -1089,7 +1089,7 @@
 .method public static suppressHorizontalGestures()V
     .locals 2
 
-    sget v0, Lradiant/MiniPlayerGestures;->x:I
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
     const/4 v1, 0x2
 
@@ -1100,7 +1100,7 @@
     :lock
     const/4 v0, 0x1
 
-    sput v0, Lradiant/MiniPlayerGestures;->x:I
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->x:I
 
     return-void
 .end method
@@ -1224,13 +1224,13 @@
 .method public static releaseVelocity(Landroidx/compose/material3/SheetState;)F
     .locals 6
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->isDragging(Landroidx/compose/material3/SheetState;)Z
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->isDragging(Landroidx/compose/material3/SheetState;)Z
 
     move-result p0
 
     if-eqz p0, :zero
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
 
     if-eqz v0, :sampled_velocity
 
@@ -1240,38 +1240,38 @@
 
     invoke-virtual {v0, v1, v2}, Landroid/view/VelocityTracker;->computeCurrentVelocity(IF)V
 
-    sget v1, Lradiant/MiniPlayerGestures;->p:I
+    sget v1, Lradiant/gestures/MiniPlayerGestures;->p:I
 
     invoke-virtual {v0, v1}, Landroid/view/VelocityTracker;->getYVelocity(I)F
 
     move-result p0
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->clampReleaseVelocity(F)F
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->clampReleaseVelocity(F)F
 
     move-result p0
 
-    sget v1, Lradiant/MiniPlayerGestures;->p:I
+    sget v1, Lradiant/gestures/MiniPlayerGestures;->p:I
 
     invoke-virtual {v0, v1}, Landroid/view/VelocityTracker;->getXVelocity(I)F
 
     move-result v0
 
-    invoke-static {v0}, Lradiant/MiniPlayerGestures;->clampReleaseVelocity(F)F
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerGestures;->clampReleaseVelocity(F)F
 
     move-result v0
 
     goto :have_velocity
 
     :sampled_velocity
-    sget p0, Lradiant/MiniPlayerGestures;->f:F
+    sget p0, Lradiant/gestures/MiniPlayerGestures;->f:F
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->clampReleaseVelocity(F)F
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->clampReleaseVelocity(F)F
 
     move-result p0
 
-    sget v0, Lradiant/MiniPlayerGestures;->l:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->l:F
 
-    invoke-static {v0}, Lradiant/MiniPlayerGestures;->clampReleaseVelocity(F)F
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerGestures;->clampReleaseVelocity(F)F
 
     move-result v0
 
@@ -1310,9 +1310,9 @@
 .method public static rootModifier(Landroidx/compose/ui/Modifier;Lam0/l;Landroidx/compose/material3/SheetState;)Landroidx/compose/ui/Modifier;
     .locals 1
 
-    new-instance v0, Lradiant/MiniPlayerGestures$RootGesture;
+    new-instance v0, Lradiant/gestures/MiniPlayerGestures$RootGesture;
 
-    invoke-direct {v0, p1, p2}, Lradiant/MiniPlayerGestures$RootGesture;-><init>(Lam0/l;Landroidx/compose/material3/SheetState;)V
+    invoke-direct {v0, p1, p2}, Lradiant/gestures/MiniPlayerGestures$RootGesture;-><init>(Lam0/l;Landroidx/compose/material3/SheetState;)V
 
     invoke-static {p0, v0}, Landroidx/compose/ui/input/pointer/PointerInteropFilter_androidKt;->motionEventSpy(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;
 
@@ -1324,9 +1324,9 @@
 .method public static setSettleCallback(Landroidx/compose/material3/SheetState;Lam0/l;)V
     .locals 0
 
-    sput-object p0, Lradiant/MiniPlayerGestures;->g:Landroidx/compose/material3/SheetState;
+    sput-object p0, Lradiant/gestures/MiniPlayerGestures;->g:Landroidx/compose/material3/SheetState;
 
-    sput-object p1, Lradiant/MiniPlayerGestures;->h:Lam0/l;
+    sput-object p1, Lradiant/gestures/MiniPlayerGestures;->h:Lam0/l;
 
     return-void
 .end method
@@ -1334,7 +1334,7 @@
 .method public static trackMotion(Landroid/view/MotionEvent;)V
     .locals 2
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
 
     if-nez v0, :have_tracker
 
@@ -1342,16 +1342,16 @@
 
     move-result-object v0
 
-    sput-object v0, Lradiant/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
+    sput-object v0, Lradiant/gestures/MiniPlayerGestures;->o:Landroid/view/VelocityTracker;
 
     :have_tracker
-    invoke-static {v0, p0}, Lradiant/MiniPlayerGestures;->addRawMovement(Landroid/view/VelocityTracker;Landroid/view/MotionEvent;)V
+    invoke-static {v0, p0}, Lradiant/gestures/MiniPlayerGestures;->addRawMovement(Landroid/view/VelocityTracker;Landroid/view/MotionEvent;)V
 
     invoke-virtual {p0}, Landroid/view/MotionEvent;->getRawX()F
 
     move-result v1
 
-    sput v1, Lradiant/MiniPlayerGestures;->n:F
+    sput v1, Lradiant/gestures/MiniPlayerGestures;->n:F
 
     return-void
 .end method
@@ -1359,17 +1359,17 @@
 .method public static needsApply(Landroidx/compose/material3/SheetState;)Z
     .locals 3
 
-    sget-boolean v0, Lradiant/MiniPlayerGestures;->b:Z
+    sget-boolean v0, Lradiant/gestures/MiniPlayerGestures;->b:Z
 
     if-eqz v0, :no
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
 
     if-ne v0, p0, :no
 
-    sget v0, Lradiant/MiniPlayerGestures;->c:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->c:F
 
-    sget v1, Lradiant/MiniPlayerGestures;->d:F
+    sget v1, Lradiant/gestures/MiniPlayerGestures;->d:F
 
     sub-float/2addr v0, v1
 
@@ -1406,9 +1406,9 @@
 
     invoke-direct {v0, v1}, Landroid/os/Handler;-><init>(Landroid/os/Looper;)V
 
-    new-instance v1, Lradiant/MiniPlayerGestures$ApplyPending;
+    new-instance v1, Lradiant/gestures/MiniPlayerGestures$ApplyPending;
 
-    invoke-direct {v1, p0, p1}, Lradiant/MiniPlayerGestures$ApplyPending;-><init>(Landroidx/compose/material3/SheetState;I)V
+    invoke-direct {v1, p0, p1}, Lradiant/gestures/MiniPlayerGestures$ApplyPending;-><init>(Landroidx/compose/material3/SheetState;I)V
 
     const-wide/16 v2, 0x10
 
@@ -1421,15 +1421,15 @@
 .method public static updateDragTimed(Landroidx/compose/material3/SheetState;FJ)V
     .locals 8
 
-    sget-boolean v0, Lradiant/MiniPlayerGestures;->b:Z
+    sget-boolean v0, Lradiant/gestures/MiniPlayerGestures;->b:Z
 
     if-eqz v0, :done
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
 
     if-ne v0, p0, :done
 
-    sget v0, Lradiant/MiniPlayerGestures;->c:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->c:F
 
     sub-float v0, p1, v0
 
@@ -1439,11 +1439,11 @@
 
     if-eqz v1, :no_movement
 
-    sput-wide p2, Lradiant/MiniPlayerGestures;->i:J
+    sput-wide p2, Lradiant/gestures/MiniPlayerGestures;->i:J
 
-    sput p1, Lradiant/MiniPlayerGestures;->c:F
+    sput p1, Lradiant/gestures/MiniPlayerGestures;->c:F
 
-    sget-wide v1, Lradiant/MiniPlayerGestures;->k:J
+    sget-wide v1, Lradiant/gestures/MiniPlayerGestures;->k:J
 
     sub-long v1, p2, v1
 
@@ -1454,7 +1454,7 @@
     if-gez v5, :apply
 
     :sample_velocity
-    sget v0, Lradiant/MiniPlayerGestures;->j:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->j:F
 
     sub-float v0, p1, v0
 
@@ -1462,9 +1462,9 @@
 
     const/high16 v2, 0x447a0000    # 1000.0f
 
-    sget v6, Lradiant/MiniPlayerGestures;->n:F
+    sget v6, Lradiant/gestures/MiniPlayerGestures;->n:F
 
-    sget v7, Lradiant/MiniPlayerGestures;->m:F
+    sget v7, Lradiant/gestures/MiniPlayerGestures;->m:F
 
     sub-float v6, v6, v7
 
@@ -1497,7 +1497,7 @@
     move v0, v1
 
     :store_velocity
-    sput v0, Lradiant/MiniPlayerGestures;->f:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->f:F
 
     const v1, 0x469c4000    # 20000.0f
 
@@ -1520,20 +1520,20 @@
     move v6, v1
 
     :store_x_velocity
-    sput v6, Lradiant/MiniPlayerGestures;->l:F
+    sput v6, Lradiant/gestures/MiniPlayerGestures;->l:F
 
-    sput p1, Lradiant/MiniPlayerGestures;->j:F
+    sput p1, Lradiant/gestures/MiniPlayerGestures;->j:F
 
-    sget v6, Lradiant/MiniPlayerGestures;->n:F
+    sget v6, Lradiant/gestures/MiniPlayerGestures;->n:F
 
-    sput v6, Lradiant/MiniPlayerGestures;->m:F
+    sput v6, Lradiant/gestures/MiniPlayerGestures;->m:F
 
-    sput-wide p2, Lradiant/MiniPlayerGestures;->k:J
+    sput-wide p2, Lradiant/gestures/MiniPlayerGestures;->k:J
 
     goto :apply
 
     :no_movement
-    sget-wide v1, Lradiant/MiniPlayerGestures;->k:J
+    sget-wide v1, Lradiant/gestures/MiniPlayerGestures;->k:J
 
     sub-long v1, p2, v1
 
@@ -1549,27 +1549,27 @@
 
     const/4 v0, 0x0
 
-    sput v0, Lradiant/MiniPlayerGestures;->f:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->f:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->l:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->l:F
 
-    sput p1, Lradiant/MiniPlayerGestures;->j:F
+    sput p1, Lradiant/gestures/MiniPlayerGestures;->j:F
 
-    sget v0, Lradiant/MiniPlayerGestures;->n:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->n:F
 
-    sput v0, Lradiant/MiniPlayerGestures;->m:F
+    sput v0, Lradiant/gestures/MiniPlayerGestures;->m:F
 
-    sput-wide p2, Lradiant/MiniPlayerGestures;->k:J
+    sput-wide p2, Lradiant/gestures/MiniPlayerGestures;->k:J
 
     :apply
 
-    invoke-static {p1}, Lradiant/MiniPlayerGestures;->setSwipeFeedbackFromDrag(F)V
+    invoke-static {p1}, Lradiant/gestures/MiniPlayerGestures;->setSwipeFeedbackFromDrag(F)V
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->applyPendingDrag(Landroidx/compose/material3/SheetState;)V
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->applyPendingDrag(Landroidx/compose/material3/SheetState;)V
 
     const/4 v0, 0x3
 
-    invoke-static {p0, v0}, Lradiant/MiniPlayerGestures;->scheduleApply(Landroidx/compose/material3/SheetState;I)V
+    invoke-static {p0, v0}, Lradiant/gestures/MiniPlayerGestures;->scheduleApply(Landroidx/compose/material3/SheetState;I)V
 
     :done
     return-void
@@ -1578,11 +1578,11 @@
 .method public static updateDragToYTimed(Landroidx/compose/material3/SheetState;FJ)V
     .locals 1
 
-    sget v0, Lradiant/MiniPlayerGestures;->e:F
+    sget v0, Lradiant/gestures/MiniPlayerGestures;->e:F
 
     sub-float/2addr p1, v0
 
-    invoke-static {p0, p1, p2, p3}, Lradiant/MiniPlayerGestures;->updateDragTimed(Landroidx/compose/material3/SheetState;FJ)V
+    invoke-static {p0, p1, p2, p3}, Lradiant/gestures/MiniPlayerGestures;->updateDragTimed(Landroidx/compose/material3/SheetState;FJ)V
 
     return-void
 .end method
@@ -1590,19 +1590,19 @@
 .method public static suppressAutoShow(Landroidx/compose/material3/SheetState;)Z
     .locals 1
 
-    sget-boolean v0, Lradiant/MiniPlayerGestures;->b:Z
+    sget-boolean v0, Lradiant/gestures/MiniPlayerGestures;->b:Z
 
     if-eqz v0, :no
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->a:Landroidx/compose/material3/SheetState;
 
     if-ne v0, p0, :no
 
-    invoke-static {p0}, Lradiant/MiniPlayerGestures;->applyPendingDrag(Landroidx/compose/material3/SheetState;)V
+    invoke-static {p0}, Lradiant/gestures/MiniPlayerGestures;->applyPendingDrag(Landroidx/compose/material3/SheetState;)V
 
     const/4 v0, 0x5
 
-    invoke-static {p0, v0}, Lradiant/MiniPlayerGestures;->scheduleApply(Landroidx/compose/material3/SheetState;I)V
+    invoke-static {p0, v0}, Lradiant/gestures/MiniPlayerGestures;->scheduleApply(Landroidx/compose/material3/SheetState;I)V
 
     const/4 v0, 0x1
 

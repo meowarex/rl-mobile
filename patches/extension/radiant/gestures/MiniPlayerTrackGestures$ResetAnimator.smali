@@ -1,11 +1,11 @@
-.class public final Lradiant/MiniPlayerTrackGestures$ResetAnimator;
+.class public final Lradiant/gestures/MiniPlayerTrackGestures$ResetAnimator;
 .super Ljava/lang/Object;
 .implements Landroid/animation/ValueAnimator$AnimatorUpdateListener;
 
 
 # annotations
 .annotation system Ldalvik/annotation/EnclosingClass;
-    value = Lradiant/MiniPlayerTrackGestures;
+    value = Lradiant/gestures/MiniPlayerTrackGestures;
 .end annotation
 
 .annotation system Ldalvik/annotation/InnerClass;
@@ -40,7 +40,7 @@
 
     move-result v1
 
-    invoke-static {v1}, Lradiant/MiniPlayerTrackGestures;->setDragOffsetDirect(F)V
+    invoke-static {v1}, Lradiant/gestures/MiniPlayerTrackGestures;->setDragOffsetDirect(F)V
 
     invoke-virtual {v0}, Landroid/animation/ValueAnimator;->getAnimatedFraction()F
 
@@ -52,7 +52,7 @@
 
     if-gez v1, :done
 
-    invoke-static {v0}, Lradiant/MiniPlayerTrackGestures;->clearResetAnimator(Landroid/animation/ValueAnimator;)V
+    invoke-static {v0}, Lradiant/gestures/MiniPlayerTrackGestures;->clearResetAnimator(Landroid/animation/ValueAnimator;)V
 
     :done
 

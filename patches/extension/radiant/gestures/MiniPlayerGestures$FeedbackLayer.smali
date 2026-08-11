@@ -1,11 +1,11 @@
-.class public final Lradiant/MiniPlayerGestures$FeedbackLayer;
+.class public final Lradiant/gestures/MiniPlayerGestures$FeedbackLayer;
 .super Ljava/lang/Object;
 .implements Lam0/l;
 
 
 # annotations
 .annotation system Ldalvik/annotation/EnclosingClass;
-    value = Lradiant/MiniPlayerGestures;
+    value = Lradiant/gestures/MiniPlayerGestures;
 .end annotation
 
 .annotation system Ldalvik/annotation/InnerClass;
@@ -15,18 +15,18 @@
 
 
 # static fields
-.field public static final INSTANCE:Lradiant/MiniPlayerGestures$FeedbackLayer;
+.field public static final INSTANCE:Lradiant/gestures/MiniPlayerGestures$FeedbackLayer;
 
 
 # direct methods
 .method static constructor <clinit>()V
     .locals 1
 
-    new-instance v0, Lradiant/MiniPlayerGestures$FeedbackLayer;
+    new-instance v0, Lradiant/gestures/MiniPlayerGestures$FeedbackLayer;
 
-    invoke-direct {v0}, Lradiant/MiniPlayerGestures$FeedbackLayer;-><init>()V
+    invoke-direct {v0}, Lradiant/gestures/MiniPlayerGestures$FeedbackLayer;-><init>()V
 
-    sput-object v0, Lradiant/MiniPlayerGestures$FeedbackLayer;->INSTANCE:Lradiant/MiniPlayerGestures$FeedbackLayer;
+    sput-object v0, Lradiant/gestures/MiniPlayerGestures$FeedbackLayer;->INSTANCE:Lradiant/gestures/MiniPlayerGestures$FeedbackLayer;
 
     return-void
 .end method
@@ -44,7 +44,7 @@
 .method public final invoke(Landroidx/compose/ui/graphics/GraphicsLayerScope;)Lkotlin/u;
     .locals 1
 
-    sget-object v0, Lradiant/MiniPlayerGestures;->v:Landroidx/compose/runtime/MutableFloatState;
+    sget-object v0, Lradiant/gestures/MiniPlayerGestures;->v:Landroidx/compose/runtime/MutableFloatState;
 
     invoke-interface {v0}, Landroidx/compose/runtime/MutableFloatState;->getFloatValue()F
 
@@ -62,7 +62,7 @@
 
     check-cast p1, Landroidx/compose/ui/graphics/GraphicsLayerScope;
 
-    invoke-virtual {p0, p1}, Lradiant/MiniPlayerGestures$FeedbackLayer;->invoke(Landroidx/compose/ui/graphics/GraphicsLayerScope;)Lkotlin/u;
+    invoke-virtual {p0, p1}, Lradiant/gestures/MiniPlayerGestures$FeedbackLayer;->invoke(Landroidx/compose/ui/graphics/GraphicsLayerScope;)Lkotlin/u;
 
     move-result-object p1
 
