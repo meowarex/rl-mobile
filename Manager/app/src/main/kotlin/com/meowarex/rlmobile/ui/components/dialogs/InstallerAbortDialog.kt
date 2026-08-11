@@ -1,62 +1,37 @@
 package com.meowarex.rlmobile.ui.components.dialogs
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantDialog
 
 @Composable
 fun InstallerAbortDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    AlertDialog(
+    RadiantDialog(
         onDismissRequest = onDismiss,
-        confirmButton = {
-            FilledTonalButton(
-                onClick = onConfirm,
-                colors = ButtonDefaults.filledTonalButtonColors(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError,
-                ),
-            ) {
-                Text(stringResource(R.string.action_exit_anyways))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = onDismiss,
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                ),
-            ) {
-                Text(stringResource(R.string.action_cancel))
-            }
-        },
-        title = {
-            Text(stringResource(R.string.installer_abort_title))
-        },
-        text = {
-            Text(
-                text = stringResource(R.string.installer_abort_body),
-                textAlign = TextAlign.Center,
-            )
-        },
+        title = stringResource(R.string.installer_abort_title),
         icon = {
             Icon(
                 painter = painterResource(R.drawable.ic_warning),
                 contentDescription = null,
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(26.dp),
             )
         },
-        containerColor = MaterialTheme.colorScheme.errorContainer,
-        iconContentColor = MaterialTheme.colorScheme.onErrorContainer,
-        titleContentColor = MaterialTheme.colorScheme.onErrorContainer,
-        textContentColor = MaterialTheme.colorScheme.onErrorContainer
-    )
+        confirmText = stringResource(R.string.action_exit_anyways),
+        onConfirm = onConfirm,
+        destructive = true,
+        dismissText = stringResource(R.string.action_cancel),
+        onDismissAction = onDismiss,
+    ) {
+        Text(stringResource(R.string.installer_abort_body))
+    }
 }

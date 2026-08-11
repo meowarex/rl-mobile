@@ -12,6 +12,6 @@ fun SettingsHeader(
 ) {
     TextDivider(
         text = text,
-        modifier = Modifier.padding(18.dp, 20.dp, 18.dp, 10.dp)
+        modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 26.dp, bottom = 12.dp),
     )
 }

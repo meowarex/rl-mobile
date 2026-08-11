@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantDialog
 import com.meowarex.rlmobile.ui.components.Tag
 
 data class VersionDelta(
@@ -30,57 +31,32 @@ fun ManagerUpdateDialog(
     deltas: List<VersionDelta>,
     onDismiss: () -> Unit,
 ) {
-    AlertDialog(
+    RadiantDialog(
         onDismissRequest = onDismiss,
-        confirmButton = {
-            FilledTonalButton(
-                onClick = onDismiss,
-                colors = ButtonDefaults.filledTonalButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                ),
-            ) {
-                Text(stringResource(R.string.action_continue))
-            }
-        },
-        title = {
-            Text(
-                text = stringResource(R.string.manager_update_title),
-                textAlign = TextAlign.Center,
-            )
-        },
-        text = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = stringResource(R.string.manager_update_subtitle),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    deltas.forEach { delta ->
-                        DeltaCard(delta = delta)
-                    }
-                }
-            }
-        },
+        title = stringResource(R.string.manager_update_title),
         icon = {
             Icon(
                 painter = painterResource(R.drawable.ic_update),
                 contentDescription = null,
-                modifier = Modifier.size(36.dp),
+                modifier = Modifier.size(26.dp),
             )
         },
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = false,
-        ),
-    )
+        confirmText = stringResource(R.string.action_continue),
+        onConfirm = onDismiss,
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(stringResource(R.string.manager_update_subtitle))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                deltas.forEach { delta ->
+                    DeltaCard(delta = delta)
+                }
+            }
+        }
+    }
 }
 
 @Composable

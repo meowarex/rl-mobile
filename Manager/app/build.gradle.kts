@@ -23,13 +23,16 @@ val gitHasHasLocalChanges = providers.execIgnoreCode("git", "status", "-s").isNo
 
 android {
     namespace = "com.meowarex.rlmobile"
-    compileSdk = 36
+    // 37 is required to compile against compose 1.12.x. targetSdk deliberately stays at 36 —
+    // this only widens the API surface available at compile time, it does not opt the app in to
+    // Android 17's runtime behaviour changes.
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 24
         targetSdk = 36
-        versionCode = 10_03_00
-        versionName = "1.3.0"
+        versionCode = 10_05_02
+        versionName = "1.5.2"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -161,6 +164,7 @@ kotlin {
             "androidx.compose.foundation.ExperimentalFoundationApi",
             "androidx.compose.foundation.layout.ExperimentalLayoutApi",
             "androidx.compose.material3.ExperimentalMaterial3Api",
+            "androidx.compose.material3.ExperimentalMaterial3ExpressiveApi",
             "kotlin.time.ExperimentalTime",
             "kotlinx.serialization.ExperimentalSerializationApi",
         )

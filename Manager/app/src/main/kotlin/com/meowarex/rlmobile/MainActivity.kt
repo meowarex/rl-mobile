@@ -22,11 +22,15 @@ import com.meowarex.rlmobile.MainActivity.Companion.EXTRA_PACKAGE_NAME
 import com.meowarex.rlmobile.manager.*
 import com.meowarex.rlmobile.patcher.InstallMetadata
 import com.meowarex.rlmobile.ui.screens.home.HomeScreen
+import com.meowarex.rlmobile.ui.legacy.screens.home.HomeScreen as LegacyHomeScreen
 import com.meowarex.rlmobile.ui.screens.patching.PatchingScreen
+import com.meowarex.rlmobile.ui.legacy.screens.patching.PatchingScreen as LegacyPatchingScreen
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptions
 import com.meowarex.rlmobile.ui.screens.permissions.PermissionsModel
 import com.meowarex.rlmobile.ui.screens.permissions.PermissionsScreen
+import com.meowarex.rlmobile.ui.legacy.screens.permissions.PermissionsScreen as LegacyPermissionsScreen
 import com.meowarex.rlmobile.ui.theme.ManagerTheme
+import com.meowarex.rlmobile.ui.theme.UiStyle
 import com.meowarex.rlmobile.ui.widgets.updater.UpdaterDialog
 import com.meowarex.rlmobile.util.*
 import com.github.diamondminer88.zip.ZipReader
@@ -63,6 +67,7 @@ class MainActivity : ComponentActivity() {
 
             ManagerTheme(
                 theme = preferences.theme,
+                uiStyle = preferences.uiStyle,
                 dynamicColor = preferences.dynamicColor,
             ) {
                 if (BuildConfig.RELEASE) {
@@ -73,14 +78,20 @@ class MainActivity : ComponentActivity() {
                 CompositionLocalProvider(
                     LocalNavigatorSaver provides parcelableNavigatorSaver(),
                 ) {
+                    val legacyUi = preferences.uiStyle == UiStyle.Legacy
+
+                    key(legacyUi) {
                     Navigator(
-                        screen = HomeScreen(),
+                        screen = if (legacyUi) LegacyHomeScreen() else HomeScreen(),
                         onBackPressed = null,
                     ) { navigator ->
                         // Open the permissions screen whenever permissions are insufficient
                         LaunchedEffect(permissions.requiredPermsGranted) {
-                            if (!permissions.requiredPermsGranted)
-                                navigator.pushOnce(PermissionsScreen())
+                            if (!permissions.requiredPermsGranted) {
+                                navigator.pushOnce(
+                                    if (legacyUi) LegacyPermissionsScreen() else PermissionsScreen()
+                                )
+                            }
                         }
 
                         DisposableEffect(Unit) {
@@ -103,6 +114,7 @@ class MainActivity : ComponentActivity() {
                                 visibilityThreshold = IntOffset.VisibilityThreshold,
                             )
                         )
+                    }
                     }
 
                     overlays.Overlays()
@@ -184,7 +196,11 @@ class MainActivity : ComponentActivity() {
         val patchOptions = metadata?.options
             ?: PatchOptions.Default.copy(packageName = packageName)
 
-        return PatchingScreen(patchOptions)
+        return if (preferences.uiStyle == UiStyle.Legacy) {
+            LegacyPatchingScreen(patchOptions)
+        } else {
+            PatchingScreen(patchOptions)
+        }
     }
 
     companion object {

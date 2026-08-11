@@ -19,9 +19,7 @@ fun ComponentOptionsAppBar(
     TopAppBar(
         navigationIcon = { BackButton() },
         title = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp),
-            ) {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(stringResource(R.string.componentopts_screen_title, componentType.name))
                 Text(
                     text = stringResource(R.string.componentopts_screen_desc),

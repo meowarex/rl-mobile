@@ -16,6 +16,8 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
 import com.meowarex.rlmobile.ui.components.*
 import com.meowarex.rlmobile.ui.screens.componentopts.PatchComponent
 import com.meowarex.rlmobile.ui.screens.patching.PatchingScreen
@@ -252,12 +254,12 @@ fun PatchOptionsScreenContent(
                     description = stringResource(R.string.patchopts_custom_tidal_apk_desc),
                     modifier = Modifier.clickable(onClick = onSelectCustomTidalApk),
                 ) {
-                    FilledTonalButton(onClick = onSelectCustomTidalApk) {
-                        Text(
-                            text = customTidalApk?.version?.toString()
-                                ?: stringResource(R.string.componentopts_selected_none)
-                        )
-                    }
+                    RadiantButton(
+                        text = customTidalApk?.version?.toString()
+                            ?: stringResource(R.string.componentopts_selected_none),
+                        onClick = onSelectCustomTidalApk,
+                        size = RadiantButtonSize.Small,
+                    )
                 }
 
                 IconPatchOption(
@@ -266,12 +268,12 @@ fun PatchOptionsScreenContent(
                     description = stringResource(R.string.patchopts_custom_patches_desc),
                     modifier = Modifier.clickable(onClick = onSelectCustomPatches),
                 ) {
-                    FilledTonalButton(onClick = onSelectCustomPatches) {
-                        Text(
-                            text = customPatches?.version?.toString()
-                                ?: stringResource(R.string.componentopts_selected_none)
-                        )
-                    }
+                    RadiantButton(
+                        text = customPatches?.version?.toString()
+                            ?: stringResource(R.string.componentopts_selected_none),
+                        onClick = onSelectCustomPatches,
+                        size = RadiantButtonSize.Small,
+                    )
                 }
 
                 SwitchPatchOption(
@@ -285,18 +287,13 @@ fun PatchOptionsScreenContent(
 
             Spacer(Modifier.weight(1f))
 
-            FilledTonalButton(
+            MainActionButton(
+                text = stringResource(R.string.action_install),
+                icon = painterResource(R.drawable.ic_download),
                 enabled = isConfigValid,
                 onClick = onInstall,
-                colors = ButtonDefaults.filledTonalButtonColors(
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ),
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .align(Alignment.End),
-            ) {
-                Text(stringResource(R.string.action_install))
-            }
+                modifier = Modifier.padding(bottom = 10.dp),
+            )
         }
     }
 }
