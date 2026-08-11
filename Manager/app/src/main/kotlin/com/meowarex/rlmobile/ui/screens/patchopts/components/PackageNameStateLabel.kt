@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.ui.screens.patchopts.PackageNameState
+import com.meowarex.rlmobile.ui.theme.customColors
 
 @Composable
 fun PackageNameStateLabel(
@@ -39,7 +40,7 @@ fun PackageNameStateLabel(
             PackageNameState.Ok -> Triple(
                 R.string.patchopts_pkgname_ok,
                 R.drawable.ic_check_circle,
-                Color(0xFF59B463),
+                MaterialTheme.customColors.success,
             )
         }
 

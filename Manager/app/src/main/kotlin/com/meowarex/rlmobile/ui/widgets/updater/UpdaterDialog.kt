@@ -13,6 +13,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonStyle
+import com.meowarex.rlmobile.ui.components.radiant.RadiantDialog
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -25,79 +29,63 @@ fun UpdaterDialog(
     val downloadProgress by viewModel.progress.collectAsState()
     val downloadInProgress by remember { derivedStateOf { downloadProgress != null } }
 
-    AlertDialog(
-        confirmButton = {
-            FilledTonalButton(
-                onClick = viewModel::triggerUpdate,
-                colors = ButtonDefaults.filledTonalButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                ),
-            ) {
-                if (!isWorking) {
-                    Text(stringResource(R.string.action_update))
-                } else if (!downloadInProgress) {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.onSecondary,
-                        strokeWidth = 2.5.dp,
-                        modifier = Modifier.size(20.dp)
-                    )
-                } else {
-                    CircularProgressIndicator(
-                        progress = { downloadProgress ?: 1f },
-                        color = MaterialTheme.colorScheme.onSecondary,
-                        trackColor = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.6f),
-                        strokeWidth = 2.5.dp,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = viewModel::dismissDialog,
-                enabled = !isWorking,
-            ) {
-                Text(stringResource(R.string.action_dismiss))
-            }
-        },
+    RadiantDialog(
         onDismissRequest = {},
-        title = {
-            Text(stringResource(R.string.updater_title, viewModel.targetVersion ?: ""))
-        },
-        text = {
-            val uriHandler = LocalUriHandler.current
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(6.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text = stringResource(R.string.updater_body),
-                    textAlign = TextAlign.Center,
-                )
-
-                TextButton(
-                    onClick = { uriHandler.openUri(viewModel.targetReleaseUrl!!) }
-                ) {
-                    Text(
-                        text = stringResource(R.string.updater_open_github),
-                        textAlign = TextAlign.Center,
-                        textDecoration = TextDecoration.Underline,
-                    )
-                }
-            }
-        },
+        title = stringResource(R.string.updater_title, viewModel.targetVersion ?: ""),
         icon = {
             Icon(
-                painter = painterResource(R.drawable.ic_warning),
+                painter = painterResource(R.drawable.ic_update),
                 contentDescription = null,
-                modifier = Modifier.size(36.dp),
+                modifier = Modifier.size(26.dp),
             )
         },
-        properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false,
-        ),
-    )
+    ) {
+        val uriHandler = LocalUriHandler.current
+
+        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(stringResource(R.string.updater_body))
+
+            RadiantButton(
+                text = stringResource(R.string.updater_open_github),
+                onClick = { uriHandler.openUri(viewModel.targetReleaseUrl!!) },
+                style = RadiantButtonStyle.Ghost,
+                size = RadiantButtonSize.Small,
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.End),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth(),
+            ) {
+                RadiantButton(
+                    text = stringResource(R.string.action_dismiss),
+                    onClick = viewModel::dismissDialog,
+                    enabled = !isWorking,
+                    style = RadiantButtonStyle.Ghost,
+                    size = RadiantButtonSize.Small,
+                )
+
+                // update is running the confirm button is replaced by the progress readout
+                if (isWorking) {
+                    if (downloadInProgress) {
+                        CircularWavyProgressIndicator(
+                            progress = { downloadProgress ?: 1f },
+                            modifier = Modifier.size(34.dp),
+                        )
+                    } else {
+                        CircularWavyProgressIndicator(modifier = Modifier.size(34.dp))
+                    }
+                } else {
+                    RadiantButton(
+                        text = stringResource(R.string.action_update),
+                        onClick = viewModel::triggerUpdate,
+                        style = RadiantButtonStyle.Accent,
+                        size = RadiantButtonSize.Small,
+                    )
+                }
+            }
+        }
+    }
 }

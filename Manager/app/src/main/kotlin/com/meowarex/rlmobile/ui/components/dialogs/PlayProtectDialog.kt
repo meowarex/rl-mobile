@@ -13,11 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.*
 import com.meowarex.rlmobile.ui.theme.customColors
 
 @Composable
@@ -29,70 +28,58 @@ fun PlayProtectDialog(
     var neverShow by rememberSaveable { mutableStateOf(false) }
     val rememberedNeverShow by rememberUpdatedState(neverShow)
 
-    AlertDialog(
+    RadiantDialog(
         onDismissRequest = { onDismiss(rememberedNeverShow) },
-        dismissButton = {
-            FilledTonalButton(onClick = activity::launchPlayProtect) {
-                Text(stringResource(R.string.play_protect_warning_open_gpp))
-            }
-        },
-        confirmButton = {
-            FilledTonalButton(
-                onClick = { onDismiss(rememberedNeverShow) },
-                colors = ButtonDefaults.filledTonalButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                ),
-            ) {
-                Text(stringResource(R.string.play_protect_warning_ok))
-            }
-        },
+        title = stringResource(R.string.play_protect_warning_title),
         icon = {
             Icon(
                 painter = painterResource(R.drawable.ic_protect_warning),
                 tint = MaterialTheme.customColors.warning,
                 contentDescription = null,
-                modifier = Modifier.size(36.dp),
+                modifier = Modifier.size(28.dp),
             )
         },
-        title = { Text(stringResource(R.string.play_protect_warning_title)) },
-        text = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Text(stringResource(R.string.play_protect_warning_desc))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                    onClick = { neverShow = !rememberedNeverShow },
+                ),
             ) {
-                Text(
-                    text = stringResource(R.string.play_protect_warning_desc),
-                    textAlign = TextAlign.Center,
+                RadiantCheckbox(
+                    checked = neverShow,
+                    onCheckedChange = { neverShow = it },
                 )
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clickable(
-                            interactionSource = interactionSource,
-                            indication = null,
-                            onClick = { neverShow = !rememberedNeverShow },
-                        )
-                        .padding(end = 16.dp)
-                ) {
-                    Checkbox(
-                        checked = neverShow,
-                        onCheckedChange = { neverShow = it },
-                        interactionSource = interactionSource,
-                    )
-
-                    Text(stringResource(R.string.play_protect_warning_disable))
-                }
+                Text(stringResource(R.string.play_protect_warning_disable))
             }
-        },
-        properties = DialogProperties(
-            dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false,
-        ),
-        modifier = Modifier
-            .padding(25.dp),
-    )
+
+            // Both actions are equal, they share a row
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.End),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                RadiantButton(
+                    text = stringResource(R.string.play_protect_warning_open_gpp),
+                    onClick = activity::launchPlayProtect,
+                    style = RadiantButtonStyle.Glass,
+                    size = RadiantButtonSize.Small,
+                )
+                RadiantButton(
+                    text = stringResource(R.string.play_protect_warning_ok),
+                    onClick = { onDismiss(rememberedNeverShow) },
+                    style = RadiantButtonStyle.Accent,
+                    size = RadiantButtonSize.Small,
+                )
+            }
+        }
+    }
 }
 
 private fun Activity.launchPlayProtect() {

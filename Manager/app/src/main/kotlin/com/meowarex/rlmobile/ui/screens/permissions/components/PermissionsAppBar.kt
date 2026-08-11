@@ -9,37 +9,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantIconButton
 import com.meowarex.rlmobile.ui.screens.settings.SettingsScreen
 
 @Composable
 fun PermissionsAppBar() {
-    LargeTopAppBar(
-        title = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(start = 12.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.permissions_title),
-                    style = MaterialTheme.typography.displaySmall,
-                )
-                Text(
-                    text = stringResource(R.string.permissions_subtitle),
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurface.copy(.6f),
-                    ),
-                )
-            }
-        },
+    LargeFlexibleTopAppBar(
+        title = { Text(stringResource(R.string.permissions_title)) },
+        subtitle = { Text(stringResource(R.string.permissions_subtitle)) },
         actions = {
             val navigator = LocalNavigator.current
 
-            IconButton(onClick = { navigator?.push(SettingsScreen()) }) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_settings),
-                    contentDescription = stringResource(R.string.navigation_settings)
-                )
-            }
+            RadiantIconButton(
+                icon = painterResource(R.drawable.ic_settings),
+                contentDescription = stringResource(R.string.navigation_settings),
+                subtle = true,
+                onClick = { navigator?.push(SettingsScreen()) },
+            )
         }
     )
 }

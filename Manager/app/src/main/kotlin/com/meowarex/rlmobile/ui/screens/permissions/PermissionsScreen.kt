@@ -21,6 +21,9 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.ScreenTransition
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonStyle
 import com.meowarex.rlmobile.manager.InstallerSetting
 import com.meowarex.rlmobile.ui.components.TextDivider
 import com.meowarex.rlmobile.ui.components.settings.SettingsItem
@@ -122,18 +125,15 @@ fun PermissionsScreenContent(
                     text = { Text(stringResource(R.string.setting_installer)) },
                     secondaryText = { Text(stringResource(R.string.setting_installer_desc)) },
                     icon = { Icon(painterResource(R.drawable.ic_apk_install), null) },
-                    modifier = Modifier.clickable(onClick = openInstallersDialog),
+                    onClick = openInstallersDialog,
+                    modifier = Modifier.padding(horizontal = 16.dp),
                 ) {
-                    FilledTonalButton(onClick = openInstallersDialog) {
-                        Icon(
-                            painter = installer.icon(),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(20.dp)
-                                .padding(end = 6.dp),
-                        )
-                        Text(installer.title())
-                    }
+                    RadiantButton(
+                        text = installer.title(),
+                        icon = installer.icon(),
+                        onClick = openInstallersDialog,
+                        size = RadiantButtonSize.Small,
+                    )
                 }
             }
 
@@ -209,12 +209,12 @@ fun PermissionsScreenContent(
                         .fillMaxWidth()
                         .padding(top = 16.dp, end = 32.dp),
                 ) {
-                    FilledTonalButton(
+                    RadiantButton(
+                        text = stringResource(R.string.action_continue),
                         onClick = onContinue,
                         enabled = canContinue,
-                    ) {
-                        Text(stringResource(R.string.action_continue))
-                    }
+                        style = RadiantButtonStyle.Accent,
+                    )
                 }
             }
         }

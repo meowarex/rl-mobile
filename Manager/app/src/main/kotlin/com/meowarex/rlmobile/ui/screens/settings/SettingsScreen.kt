@@ -2,27 +2,31 @@ package com.meowarex.rlmobile.ui.screens.settings
 
 import android.os.Build
 import android.os.Parcelable
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
+import com.meowarex.rlmobile.ui.components.radiant.RadiantIconButton
 import com.meowarex.rlmobile.ui.components.BackButton
+import com.meowarex.rlmobile.ui.components.DangerActionButton
 import com.meowarex.rlmobile.ui.components.MainActionButton
 import com.meowarex.rlmobile.ui.components.settings.*
 import com.meowarex.rlmobile.ui.screens.settings.components.InstallersDialog
 import com.meowarex.rlmobile.ui.screens.settings.components.ThemeDialog
-import com.meowarex.rlmobile.ui.util.paddings.*
+import com.meowarex.rlmobile.ui.screens.settings.components.UiStyleDialog
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -45,6 +49,14 @@ class SettingsScreen : Screen, Parcelable {
             )
         }
 
+        if (model.showUiStyleDialog) {
+            UiStyleDialog(
+                current = preferences.uiStyle,
+                onDismiss = model::hideUiStyleDialog,
+                onConfirm = model::setUiStyle,
+            )
+        }
+
         if (model.showInstallersDialog) {
             InstallersDialog(
                 currentInstaller = preferences.installer,
@@ -61,166 +73,152 @@ class SettingsScreen : Screen, Parcelable {
                 )
             },
         ) { padding ->
-            LazyColumn(
-                contentPadding = padding
-                    .exclude(PaddingValuesSides.Horizontal + PaddingValuesSides.Top)
-                    .add(PaddingValues(bottom = 12.dp)),
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding.exclude(PaddingValuesSides.Bottom))
+                    .verticalScroll(rememberScrollState())
+                    .padding(padding),
             ) {
-                item(key = "HEADER_APPEARANCE", contentType = "DIVIDER") {
-                    SettingsHeader(stringResource(R.string.settings_header_appearance))
-                }
+                SettingsHeader(stringResource(R.string.settings_header_appearance))
 
-                item(key = "SETTING_THEME") {
+                SettingsGroup {
+                    val dynamicColorAvailable = Build.VERSION.SDK_INT >= 31
+                    val appearanceCount = if (dynamicColorAvailable) 4 else 3
+
                     SettingsItem(
-                        modifier = Modifier.clickable(onClick = model::showThemeDialog),
+                        position = groupPosition(0, appearanceCount),
+                        onClick = model::showThemeDialog,
                         icon = { Icon(painterResource(R.drawable.ic_brush), null) },
                         text = { Text(stringResource(R.string.setting_theme)) },
                         secondaryText = { Text(stringResource(R.string.setting_theme_desc)) }
                     ) {
-                        FilledTonalButton(onClick = model::showThemeDialog) {
-                            Text(preferences.theme.toDisplayName())
-                        }
+                        RadiantButton(
+                            text = preferences.theme.toDisplayName(),
+                            onClick = model::showThemeDialog,
+                            size = RadiantButtonSize.Small,
+                        )
                     }
-                }
 
-                // Material You theming on Android 12+
-                if (Build.VERSION.SDK_INT >= 31) {
-                    item(key = "SETTING_DYNAMIC_COLOR", contentType = "SETTING_SWITCH") {
+                    SettingsItem(
+                        position = groupPosition(1, appearanceCount),
+                        onClick = model::showUiStyleDialog,
+                        icon = { Icon(painterResource(R.drawable.ic_sparkle), null) },
+                        text = { Text(stringResource(R.string.setting_ui_style)) },
+                        secondaryText = { Text(stringResource(R.string.setting_ui_style_desc)) },
+                    ) {
+                        RadiantButton(
+                            text = preferences.uiStyle.toDisplayName(),
+                            onClick = model::showUiStyleDialog,
+                            size = RadiantButtonSize.Small,
+                        )
+                    }
+
+                    // Material You theming on Android 12+
+                    if (dynamicColorAvailable) {
                         SettingsSwitch(
                             label = stringResource(R.string.setting_dynamic_color),
                             secondaryLabel = stringResource(R.string.setting_dynamic_color_desc),
                             pref = preferences.dynamicColor,
+                            position = groupPosition(2, appearanceCount),
                             icon = { Icon(painterResource(R.drawable.ic_palette), null) },
                             onPrefChange = { preferences.dynamicColor = it },
                         )
                     }
-                }
 
-                item(key = "SETTING_AUTO_UPDATE_CHECK", contentType = "SETTING_SWITCH") {
                     SettingsSwitch(
                         label = stringResource(R.string.setting_auto_update_check),
                         secondaryLabel = stringResource(R.string.setting_auto_update_check_desc),
                         pref = preferences.autoUpdateCheck,
+                        position = groupPosition(appearanceCount - 1, appearanceCount),
                         icon = { Icon(painterResource(R.drawable.ic_update), null) },
                         onPrefChange = { model.setAutoUpdateCheck(it) },
                     )
                 }
 
-                item(key = "HEADER_INSTALL", contentType = "DIVIDER") {
-                    SettingsHeader(stringResource(R.string.settings_header_installation))
-                }
+                SettingsHeader(stringResource(R.string.settings_header_installation))
 
-                item(key = "SETTING_INSTALLER") {
+                SettingsGroup {
                     SettingsItem(
+                        position = GroupPosition.Top,
+                        onClick = model::showInstallersDialog,
                         text = { Text(stringResource(R.string.setting_installer)) },
                         secondaryText = { Text(stringResource(R.string.setting_installer_desc)) },
                         icon = { Icon(painterResource(R.drawable.ic_apk_install), null) },
-                        modifier = Modifier.clickable(onClick = model::showInstallersDialog),
                     ) {
-                        FilledTonalButton(onClick = model::showInstallersDialog) {
-                            Icon(
-                                painter = preferences.installer.icon(),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(20.dp)
-                                    .padding(end = 6.dp),
-                            )
-                            Text(preferences.installer.title())
-                        }
+                        RadiantButton(
+                            text = preferences.installer.title(),
+                            icon = preferences.installer.icon(),
+                            onClick = model::showInstallersDialog,
+                            size = RadiantButtonSize.Small,
+                        )
                     }
-                }
 
-                item(key = "SETTING_KEEP_APK", contentType = "SETTING_SWITCH") {
                     SettingsSwitch(
                         label = stringResource(R.string.setting_keep_patched_apks),
                         secondaryLabel = stringResource(R.string.setting_keep_patched_apks_desc),
                         icon = { Icon(painterResource(R.drawable.ic_delete_forever), null) },
                         pref = preferences.keepPatchedApks,
+                        position = GroupPosition.Bottom,
                         onPrefChange = { model.setKeepPatchedApks(it) },
                     )
                 }
 
-                if (preferences.keepPatchedApks) {
-                    item(key = "BUTTON_EXPORT_APK", contentType = "BUTTON") {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                ) {
+                    if (preferences.keepPatchedApks) {
                         MainActionButton(
                             text = stringResource(R.string.settings_export_apk),
                             icon = painterResource(R.drawable.ic_save),
                             enabled = model.patchedApkExists,
                             onClick = model::shareApk,
-                            modifier = Modifier
-                                .padding(start = 32.dp, end = 32.dp, top = 16.dp)
-                                .fillMaxWidth()
-                                .animateItem(),
                         )
                     }
-                }
 
-                item(key = "BUTTON_CACHE_CLEAR", contentType = "BUTTON") {
-                    MainActionButton(
+                    DangerActionButton(
                         text = stringResource(R.string.settings_clear_cache),
                         icon = painterResource(R.drawable.ic_delete_forever),
                         enabled = !clearedCache,
-                        colors = IconButtonDefaults.filledTonalIconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.error,
-                        ),
                         onClick = {
                             clearedCache = true
                             model.clearCache()
                         },
-                        modifier = Modifier
-                            .padding(start = 32.dp, end = 32.dp, top = 18.dp)
-                            .fillMaxWidth()
                     )
                 }
 
-                item(key = "HEADER_ADVANCED", contentType = "DIVIDER") {
-                    SettingsHeader(stringResource(R.string.settings_header_advanced))
-                }
+                SettingsHeader(stringResource(R.string.settings_header_advanced))
 
-                item(key = "SETTING_DEVMODE", contentType = "SETTING_SWITCH") {
+                SettingsGroup {
                     SettingsSwitch(
                         label = stringResource(R.string.setting_developer_options),
                         secondaryLabel = stringResource(R.string.setting_developer_options_desc),
                         pref = preferences.devMode,
+                        position = GroupPosition.Single,
                         icon = { Icon(painterResource(R.drawable.ic_code), null) },
                         onPrefChange = { preferences.devMode = it },
                     )
                 }
 
-                item(key = "HEADER_INFO", contentType = "DIVIDER") {
-                    SettingsHeader(stringResource(R.string.settings_header_info))
-                }
+                SettingsHeader(stringResource(R.string.settings_header_info))
 
-                item(key = "INFO") {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .padding(horizontal = 36.dp, vertical = 12.dp),
+                SettingsGroup {
+                    SettingsItem(
+                        position = GroupPosition.Single,
+                        onClick = model::copyInstallInfo,
+                        icon = { Icon(painterResource(R.drawable.ic_info), null) },
+                        text = { Text(stringResource(R.string.settings_header_info)) },
+                        secondaryText = { Text(model.installInfo) },
                     ) {
-                        Text(
-                            text = model.installInfo,
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onSurface.copy(0.6f),
-                            ),
+                        RadiantIconButton(
+                            icon = painterResource(R.drawable.ic_copy),
+                            contentDescription = stringResource(R.string.action_copy),
+                            onClick = model::copyInstallInfo,
                         )
-
-                        Spacer(Modifier.weight(1f, fill = true))
-
-                        IconButton(onClick = model::copyInstallInfo) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_copy),
-                                contentDescription = stringResource(R.string.action_copy),
-                                modifier = Modifier
-                                    .size(28.dp)
-                                    .alpha(.8f),
-                            )
-                        }
                     }
                 }
+
+                Spacer(Modifier.height(28.dp))
             }
         }
     }

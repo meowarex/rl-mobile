@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -17,6 +18,10 @@ import androidx.compose.ui.unit.sp
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.manager.*
 import com.meowarex.rlmobile.util.showToast
+import com.meowarex.rlmobile.ui.components.radiant.RadiantDialog
+import com.meowarex.rlmobile.ui.components.radiant.RadiantRadio
+import com.meowarex.rlmobile.ui.theme.radiantSurface
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.topjohnwu.superuser.Shell
 import org.koin.compose.koinInject
 
@@ -79,45 +84,43 @@ fun InstallersDialog(
         }
     }
 
-    AlertDialog(
+    RadiantDialog(
         onDismissRequest = onDismiss,
+        title = stringResource(R.string.setting_installer),
         icon = {
             Icon(
                 painter = painterResource(R.drawable.ic_apk_install),
                 contentDescription = null,
-                modifier = Modifier.size(32.dp),
+                modifier = Modifier.size(26.dp),
             )
         },
-        title = { Text(stringResource(R.string.setting_installer)) },
-        text = {
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                for (installer in InstallerSetting.entries) key(installer) {
-                    InstallerItem(
-                        installer = installer,
-                        selected = installer == selectedInstaller,
-                        enabled = when (installer) {
-                            InstallerSetting.PackageInstaller -> true
-                            InstallerSetting.Root -> true
-                            InstallerSetting.Intent -> true
-                            InstallerSetting.Shizuku -> shizukuAvailable
-                            InstallerSetting.Dhizuku -> dhizukuAvailable
-                        },
-                        onClick = { selectedInstaller = installer },
-                    )
-                }
-            }
+        confirmText = stringResource(R.string.action_apply),
+        onConfirm = {
+            onConfirm(selectedInstaller)
+            onDismiss()
         },
-        confirmButton = {
-            Button(
-                onClick = {
-                    onConfirm(selectedInstaller)
-                    onDismiss()
-                },
-            ) {
-                Text(stringResource(R.string.action_apply))
+        dismissText = stringResource(R.string.action_cancel),
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+        ) {
+            for (installer in InstallerSetting.entries) key(installer) {
+                InstallerItem(
+                    installer = installer,
+                    selected = installer == selectedInstaller,
+                    enabled = when (installer) {
+                        InstallerSetting.PackageInstaller -> true
+                        InstallerSetting.Root -> true
+                        InstallerSetting.Intent -> true
+                        InstallerSetting.Shizuku -> shizukuAvailable
+                        InstallerSetting.Dhizuku -> dhizukuAvailable
+                    },
+                    onClick = { selectedInstaller = installer },
+                )
             }
-        },
-    )
+        }
+    }
 }
 
 @Composable
@@ -128,49 +131,56 @@ private fun InstallerItem(
     onClick: () -> Unit,
 ) {
     val interactionSource = remember(::MutableInteractionSource)
+    val shape = RoundedCornerShape(16.dp)
 
     Row(
-        verticalAlignment = Alignment.Companion.CenterVertically,
-        modifier = Modifier.Companion
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .radiantSurface(shape = shape, active = selected)
+            .clip(shape)
             .clickable(
                 indication = null,
                 interactionSource = interactionSource,
+                enabled = enabled,
                 onClick = onClick,
             )
-            .clip(MaterialTheme.shapes.medium)
-            .padding(horizontal = 6.dp, vertical = 8.dp),
+            .alpha(if (enabled) 1f else 0.45f)
+            .padding(horizontal = 14.dp, vertical = 12.dp),
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.weight(1f),
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.Companion.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
                     painter = installer.icon(),
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(20.dp)
+                    tint = if (selected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    },
+                    modifier = Modifier.size(20.dp),
                 )
                 Text(
                     text = installer.title(),
-                    style = MaterialTheme.typography.labelLarge
-                        .copy(fontSize = 14.sp)
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
             Text(
                 text = installer.description(),
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = .6f),
-                ),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
-        Spacer(Modifier.Companion.weight(0.05f, true))
-
-        RadioButton(
+        RadiantRadio(
             selected = selected,
             enabled = enabled,
             onClick = onClick,

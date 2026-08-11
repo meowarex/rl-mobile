@@ -21,6 +21,8 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
 import com.meowarex.rlmobile.ui.screens.componentopts.components.*
 import com.meowarex.rlmobile.ui.util.ScreenWithResult
 import com.meowarex.rlmobile.ui.util.paddings.*
@@ -160,11 +162,11 @@ fun ComponentOptionsScreenContent(
                         .fillMaxWidth()
                         .padding(top = 10.dp),
                 ) {
-                    FilledTonalButton(
+                    RadiantButton(
+                        text = stringResource(R.string.action_confirm),
                         onClick = onBackPressed,
-                    ) {
-                        Text(stringResource(R.string.action_confirm))
-                    }
+                        size = RadiantButtonSize.Small,
+                    )
                 }
             }
         }
@@ -312,18 +314,16 @@ private fun ReleaseRow(
                 color = LocalContentColor.current.copy(alpha = 0.55f),
             )
         }
-        FilledTonalButton(
-            onClick = onImport,
-            enabled = !anyImporting,
-        ) {
-            if (importing) {
-                CircularProgressIndicator(
-                    strokeWidth = 2.dp,
-                    modifier = Modifier.size(16.dp),
-                )
-            } else {
-                Text(stringResource(R.string.action_install))
-            }
+        // Swap the button out for the indicator while this specific release imports
+        if (importing) {
+            CircularWavyProgressIndicator(modifier = Modifier.size(30.dp))
+        } else {
+            RadiantButton(
+                text = stringResource(R.string.action_install),
+                onClick = onImport,
+                enabled = !anyImporting,
+                size = RadiantButtonSize.Small,
+            )
         }
     }
 }

@@ -17,6 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantIconButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantRadio
 import com.meowarex.rlmobile.network.utils.SemVer
 import kotlin.time.Instant
 
@@ -65,15 +67,13 @@ fun PatchComponentCard(
 
         Spacer(Modifier.weight(1f, fill = true))
 
-        IconButton(
+        RadiantIconButton(
+            icon = painterResource(R.drawable.ic_delete_forever),
+            contentDescription = stringResource(R.string.action_delete),
+            tint = MaterialTheme.colorScheme.error,
+            subtle = true,
             onClick = onDelete,
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_delete_forever),
-                tint = MaterialTheme.colorScheme.error,
-                contentDescription = stringResource(R.string.action_delete),
-            )
-        }
+        )
     }
 }
 
@@ -103,7 +103,7 @@ fun PatchComponentCardBase(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(10.dp),
         ) {
-            RadioButton(
+            RadiantRadio(
                 selected = selected,
                 onClick = onSelect,
                 interactionSource = interaction,

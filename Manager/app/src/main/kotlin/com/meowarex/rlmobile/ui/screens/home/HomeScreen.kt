@@ -1,11 +1,12 @@
 package com.meowarex.rlmobile.ui.screens.home
 
 import android.os.Parcelable
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.activity.ComponentActivity
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,8 +30,13 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.meowarex.rlmobile.R
-import com.meowarex.rlmobile.ui.components.SegmentedButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonStyle
+import com.meowarex.rlmobile.ui.components.radiant.RadiantIconButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantCard
 import com.meowarex.rlmobile.ui.components.Tag
+import com.meowarex.rlmobile.ui.theme.radiantStyle
 import com.meowarex.rlmobile.ui.screens.about.AboutScreen
 import com.meowarex.rlmobile.ui.screens.home.components.CommitList
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionsScreen
@@ -41,6 +47,15 @@ import com.meowarex.rlmobile.util.*
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.koin.androidx.compose.koinViewModel
+
+// Connected group shapes (i'm pretty sure these are the segment control replacements, but i havent worked on this in months so fuck knows)
+private val ConnectedLeadingShape = RoundedCornerShape(
+    topStart = 20.dp, bottomStart = 20.dp, topEnd = 6.dp, bottomEnd = 6.dp,
+)
+private val ConnectedTrailingShape = RoundedCornerShape(
+    topStart = 6.dp, bottomStart = 6.dp, topEnd = 20.dp, bottomEnd = 20.dp,
+)
+private val ConnectedPressedShape = RoundedCornerShape(8.dp)
 
 @Parcelize
 class HomeScreen : Screen, Parcelable {
@@ -63,35 +78,37 @@ class HomeScreen : Screen, Parcelable {
 
         Scaffold(
             topBar = {
+                // Compact bar
                 TopAppBar(
-                    title = { Text(stringResource(R.string.navigation_home)) },
+                    title = { Text(stringResource(R.string.rlmobile)) },
                     actions = {
-                        IconButton(onClick = { model.refresh() }) {
-                            Icon(
-                                painterResource(R.drawable.ic_refresh),
-                                contentDescription = stringResource(R.string.navigation_refresh),
-                            )
-                        }
+                        RadiantIconButton(
+                            icon = painterResource(R.drawable.ic_refresh),
+                            contentDescription = stringResource(R.string.navigation_refresh),
+                            subtle = true,
+                            onClick = { model.refresh() },
+                        )
                         if (managerUpdateAvailable) {
-                            IconButton(onClick = updater::reopenDialog) {
-                                Icon(
-                                    painterResource(R.drawable.ic_update),
-                                    contentDescription = stringResource(R.string.action_update),
-                                )
-                            }
-                        }
-                        IconButton(onClick = { navigator.push(AboutScreen()) }) {
-                            Icon(
-                                painterResource(R.drawable.ic_info),
-                                contentDescription = stringResource(R.string.navigation_about),
+                            RadiantIconButton(
+                                icon = painterResource(R.drawable.ic_update),
+                                contentDescription = stringResource(R.string.action_update),
+                                accent = true,
+                                size = 40.dp,
+                                onClick = updater::reopenDialog,
                             )
                         }
-                        IconButton(onClick = { navigator.push(SettingsScreen()) }) {
-                            Icon(
-                                painterResource(R.drawable.ic_settings),
-                                contentDescription = stringResource(R.string.navigation_settings),
-                            )
-                        }
+                        RadiantIconButton(
+                            icon = painterResource(R.drawable.ic_info),
+                            contentDescription = stringResource(R.string.navigation_about),
+                            subtle = true,
+                            onClick = { navigator.push(AboutScreen()) },
+                        )
+                        RadiantIconButton(
+                            icon = painterResource(R.drawable.ic_settings),
+                            contentDescription = stringResource(R.string.navigation_settings),
+                            subtle = true,
+                            onClick = { navigator.push(SettingsScreen()) },
+                        )
                     },
                 )
             },
@@ -101,15 +118,17 @@ class HomeScreen : Screen, Parcelable {
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                     .padding(pv)
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp)
                     .fillMaxSize(),
             ) {
-                val state = model.state
-                when (state) {
+                when (val state = model.state) {
                     HomeState.Loading -> Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier.fillMaxSize(),
-                    ) { CircularProgressIndicator() }
+                    ) {
+                        // Expressive loader (a sequence of morphing polygons rather than a spinner.) [M3E is cool i guess]
+                        ContainedLoadingIndicator()
+                    }
 
                     is HomeState.Loaded -> HomeContent(
                         state = state,
@@ -153,6 +172,83 @@ private fun ColumnScope.HomeContent(
         ?.let { "v${it.name} (build ${it.code})" }
     val latestVersionName = state.latestTidalVersionCode?.let { "build $it" }
 
+    val patchesBehind = install != null && install.patchesUpToDate == false
+    val tidalBehind = install != null && install.tidalUpToDate == false
+
+    InstallHeroCard(
+        install = install,
+        currentVersionName = currentVersionName,
+        latestVersionName = latestVersionName,
+        patchesBehind = patchesBehind,
+        tidalBehind = tidalBehind,
+        onLaunch = onLaunch,
+        onInfo = onInfo,
+    )
+
+    val blockedByManagerUpdate = managerUpdateAvailable && (patchesBehind || tidalBehind)
+    val canLocalRepatch = install != null && state.offlineRepatchReady
+    val onlineEnabled = state.latestTidalVersionCode != null || install != null
+    val buttonEnabled = !blockedByManagerUpdate && (if (state.offline) canLocalRepatch else onlineEnabled)
+
+    val label = when {
+        blockedByManagerUpdate -> "Manager Update Required"
+        state.offline && install != null -> "Local Repatch"
+        state.offline -> "No Network"
+        install == null && state.latestTidalVersionCode == null -> "Loading…"
+        install == null -> "Install"
+        patchesBehind && tidalBehind -> "Update Patches & TIDAL"
+        patchesBehind -> "Update Patches"
+        tidalBehind -> "Update TIDAL"
+        else -> "Repatch"
+    }
+
+    // The main button (repatch or update button)
+    RadiantButton(
+        text = label,
+        icon = painterResource(
+            if (install == null) R.drawable.ic_download else R.drawable.ic_sparkle
+        ),
+        onClick = if (install == null) onInstall else onRepatch,
+        enabled = buttonEnabled,
+        style = RadiantButtonStyle.Accent,
+        size = RadiantButtonSize.Large,
+        fillWidth = true,
+    )
+
+    if (state.offline && install != null) {
+        Text(
+            text = "No Network Connection",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
+
+    RadiantCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f),
+    ) {
+        CommitList(commits = commits.collectAsLazyPagingItems())
+    }
+
+    Spacer(Modifier.height(4.dp))
+}
+
+/**
+ * The identity block: (what is installed & which build etc etc whatever)
+ */
+@Composable
+private fun InstallHeroCard(
+    install: InstallData?,
+    currentVersionName: String?,
+    latestVersionName: String?,
+    patchesBehind: Boolean,
+    tidalBehind: Boolean,
+    onLaunch: () -> Unit,
+    onInfo: () -> Unit,
+) {
     val fallbackPainter = if (install?.icon == null) {
         // R.mipmap.ic_launcher is an adaptive-icon XML on API 26+, which painterResource cannot decode.
         val context = LocalContext.current
@@ -163,113 +259,108 @@ private fun ColumnScope.HomeContent(
     } else null
 
     val iconPainter = install?.icon ?: fallbackPainter
-    if (iconPainter != null) {
-        Image(
-            painter = iconPainter,
-            contentDescription = null,
-            modifier = Modifier
-                .size(60.dp)
-                .clip(CircleShape),
-        )
-    }
 
-    Text(
-        text = install?.name ?: stringResource(R.string.app_name),
-        style = MaterialTheme.typography.titleLarge,
-    )
+    val hero = radiantStyle.heroCard
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        AnimatedVisibility(visible = currentVersionName != null) {
-            Text(
-                text = "Current: ${currentVersionName ?: "-"}",
-                style = MaterialTheme.typography.labelLarge,
-                color = LocalContentColor.current.copy(alpha = 0.5f),
-                textAlign = TextAlign.Center,
-            )
-        }
-        AnimatedVisibility(visible = latestVersionName != null) {
-            Text(
-                text = "Latest: ${latestVersionName ?: "-"}",
-                style = MaterialTheme.typography.labelLarge,
-                color = LocalContentColor.current.copy(alpha = 0.5f),
-                textAlign = TextAlign.Center,
-            )
-        }
-    }
-
-    val patchesBehind = install != null && install.patchesUpToDate == false
-    val tidalBehind = install != null && install.tidalUpToDate == false
-    AnimatedVisibility(visible = patchesBehind || tidalBehind) {
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            if (patchesBehind) Tag(text = "New Patches!")
-            if (tidalBehind) Tag(text = "TIDAL Update!")
-        }
-    }
-
-    val blockedByManagerUpdate = managerUpdateAvailable && (patchesBehind || tidalBehind)
-    val canLocalRepatch = install != null && state.offlineRepatchReady
-    val onlineEnabled = state.latestTidalVersionCode != null || install != null
-    val buttonEnabled = !blockedByManagerUpdate && (if (state.offline) canLocalRepatch else onlineEnabled)
-    Button(
-        onClick = if (install == null) onInstall else onRepatch,
-        enabled = buttonEnabled,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        val label = when {
-            blockedByManagerUpdate -> "Manager Update Required"
-            state.offline && install != null -> "Local Repatch"
-            state.offline -> "No Network"
-            install == null && state.latestTidalVersionCode == null -> "Loading…"
-            install == null -> "Install"
-            patchesBehind && tidalBehind -> "Update Patches & TIDAL"
-            patchesBehind -> "Update Patches"
-            tidalBehind -> "Update TIDAL"
-            else -> "Repatch"
-        }
-        Text(
-            text = label,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            modifier = Modifier
-                .basicMarquee()
-                .fillMaxWidth(),
-        )
-    }
-
-    if (state.offline && install != null) {
-        Text(
-            text = "No Network Connection",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
+    // Legacy keeps the original flat centred stack rather than wrapping it in a raised card. (thx claude)
+    HeroContainer(hero) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 6.dp),
-        )
-    }
-
-    AnimatedVisibility(visible = install != null) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
-            modifier = Modifier.clip(RoundedCornerShape(16.dp)),
+                .padding(horizontal = 18.dp, vertical = 18.dp),
         ) {
-            SegmentedButton(
-                icon = painterResource(R.drawable.ic_launch),
-                text = stringResource(R.string.action_launch),
-                onClick = onLaunch,
+            if (iconPainter != null) {
+                // Clipped to a 9-sided cookie rather than a circle — the app icon is the one place
+                // a non-rectilinear silhouette reads as deliberate instead of noisy. (thx claude again)
+                Image(
+                    painter = iconPainter,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(MaterialShapes.Cookie9Sided.toShape()),
+                )
+            }
+
+            Text(
+                text = install?.name ?: stringResource(R.string.app_name),
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
             )
-            SegmentedButton(
-                icon = painterResource(R.drawable.ic_info),
-                text = stringResource(R.string.action_open_info),
-                onClick = onInfo,
-            )
+
+            if (currentVersionName != null || latestVersionName != null) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    currentVersionName?.let {
+                        Text(
+                            text = "Current: $it",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                    latestVersionName?.let {
+                        Text(
+                            text = "Latest: $it",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+            }
+
+            AnimatedVisibility(visible = patchesBehind || tidalBehind) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (patchesBehind) Tag(
+                        text = "New Patches!",
+                        icon = painterResource(R.drawable.ic_sparkle),
+                    )
+                    if (tidalBehind) Tag(
+                        text = "TIDAL Update!",
+                        icon = painterResource(R.drawable.ic_update),
+                        tint = MaterialTheme.colorScheme.tertiary,
+                    )
+                }
+            }
+
+            AnimatedVisibility(visible = install != null) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    RadiantButton(
+                        text = stringResource(R.string.action_launch),
+                        icon = painterResource(R.drawable.ic_launch),
+                        onClick = onLaunch,
+                        modifier = Modifier.weight(1f),
+                    )
+                    RadiantButton(
+                        text = stringResource(R.string.action_open_info),
+                        icon = painterResource(R.drawable.ic_info),
+                        onClick = onInfo,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
         }
     }
+}
 
-    ElevatedCard(modifier = Modifier.fillMaxSize()) {
-        CommitList(commits = commits.collectAsLazyPagingItems())
+/**
+ * Wraps the home identity block in a raised card for Radiant (renders it inline for Legacy UI)
+ */
+@Composable
+private fun HeroContainer(
+    carded: Boolean,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    if (carded) {
+        RadiantCard(modifier = Modifier.fillMaxWidth(), content = content)
+    } else {
+        Column(modifier = Modifier.fillMaxWidth(), content = content)
     }
 }

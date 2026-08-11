@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.ui.components.Label
 import com.meowarex.rlmobile.ui.components.ResetToDefaultButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantIconButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantTextField
 
 @Composable
 fun TextPatchOption(
@@ -31,19 +33,13 @@ fun TextPatchOption(
         description = description,
         modifier = modifier,
     ) {
-        OutlinedTextField(
+        RadiantTextField(
             value = value,
             onValueChange = onValueChange,
             isError = valueIsError,
-            singleLine = true,
             enabled = locked != true,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                errorContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-            ),
-            trailingIcon = {
+            modifier = Modifier.padding(vertical = 4.dp),
+            trailing = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     if (locked != true) {
                         ResetToDefaultButton(
@@ -52,29 +48,22 @@ fun TextPatchOption(
                         )
                     }
                     if (locked != null) {
-                        IconButton(
+                        RadiantIconButton(
+                            icon = painterResource(
+                                if (locked) R.drawable.ic_lock else R.drawable.ic_lock_open,
+                            ),
+                            contentDescription = stringResource(
+                                if (locked) R.string.patchopts_field_unlock else R.string.patchopts_field_lock,
+                            ),
+                            tint = if (locked) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.onSurfaceVariant,
+                            subtle = true,
+                            size = 34.dp,
                             onClick = onLockClick,
-                            modifier = Modifier.size(32.dp),
-                        ) {
-                            Icon(
-                                painter = painterResource(
-                                    if (locked) R.drawable.ic_lock else R.drawable.ic_lock_open,
-                                ),
-                                contentDescription = stringResource(
-                                    if (locked) R.string.patchopts_field_unlock else R.string.patchopts_field_lock,
-                                ),
-                                tint = if (locked) MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.size(18.dp),
-                            )
-                        }
-                        Spacer(Modifier.width(8.dp))
+                        )
                     }
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
         )
 
         extra?.invoke(this)

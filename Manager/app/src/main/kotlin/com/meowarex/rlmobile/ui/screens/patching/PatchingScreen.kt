@@ -25,6 +25,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.meowarex.rlmobile.BuildConfig
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.patcher.steps.StepGroup
+import com.meowarex.rlmobile.ui.components.DangerActionButton
 import com.meowarex.rlmobile.ui.components.MainActionButton
 import com.meowarex.rlmobile.ui.components.Wakelock
 import com.meowarex.rlmobile.ui.components.dialogs.InstallerAbortDialog
@@ -130,6 +131,14 @@ class PatchingScreen(
                 modifier = Modifier
                     .padding(paddingValues.exclude(PaddingValuesSides.Bottom)),
             ) {
+                OverallProgressBar(
+                    steps = model.steps,
+                    state = state,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                )
+
                 LazyColumn(
                     state = listState,
                     verticalArrangement = Arrangement.spacedByLastAtBottom(0.dp),
@@ -178,9 +187,9 @@ class PatchingScreen(
                             TextBanner(
                                 text = stringResource(R.string.installer_banner_success),
                                 icon = painterResource(R.drawable.ic_check_circle),
-                                iconColor = Color(0xFF59B463),
-                                outlineColor = MaterialTheme.colorScheme.surfaceVariant,
-                                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                iconColor = MaterialTheme.customColors.success,
+                                outlineColor = null,
+                                containerColor = MaterialTheme.customColors.successContainer,
                                 modifier = Modifier
                                     .padding(bottom = VERTICAL_PADDING)
                                     .fillMaxWidth(),
@@ -249,13 +258,10 @@ class PatchingScreen(
                                     }
                                 }
 
-                                MainActionButton(
+                                DangerActionButton(
                                     text = stringResource(R.string.settings_clear_cache),
                                     icon = painterResource(R.drawable.ic_delete_forever),
                                     enabled = !cacheCleared,
-                                    colors = IconButtonDefaults.filledTonalIconButtonColors(
-                                        containerColor = MaterialTheme.colorScheme.error,
-                                    ),
                                     onClick = {
                                         cacheCleared = true
                                         model.clearCache()

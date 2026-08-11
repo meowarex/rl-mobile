@@ -1,4 +1,6 @@
-package com.meowarex.rlmobile.ui.components
+package com.meowarex.rlmobile.ui.legacy.components
+
+import com.meowarex.rlmobile.ui.components.*
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
