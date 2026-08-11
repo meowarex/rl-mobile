@@ -16,8 +16,12 @@ jobs:
       - uses: actions/checkout@v4
       - id: set
         run: |
+          # .version now holds the full semver (e.g. 1.0.0) and is bumped per release.
+          # It used to be a "0.3" prefix with github.run_number appended as the patch,
+          # which cannot express an exact 1.0.0. versionCode still tracks run_number,
+          # so it stays monotonic regardless of what versionName says.
           BASE=$(cat .version | tr -d '[:space:]')
-          echo "version=$BASE.${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "version=$BASE" >> $GITHUB_OUTPUT
 
   Build:
     needs: Version
