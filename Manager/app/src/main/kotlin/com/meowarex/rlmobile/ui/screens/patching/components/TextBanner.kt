@@ -29,10 +29,10 @@ fun TextBanner(
                 border(
                     width = 2.dp,
                     color = color,
-                    shape = MaterialTheme.shapes.medium,
+                    shape = MaterialTheme.shapes.large,
                 )
             }
-            .clip(MaterialTheme.shapes.medium)
+            .clip(MaterialTheme.shapes.large)
             .background(containerColor)
             .thenIf(onClick) { clickable(onClick = it) }
     ) {

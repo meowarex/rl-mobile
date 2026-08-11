@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.patcher.steps.base.Step
 import com.meowarex.rlmobile.patcher.steps.base.StepState
+import com.meowarex.rlmobile.ui.theme.radiantSurface
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
@@ -56,8 +57,12 @@ fun StepGroupCard(
 
     Column(
         modifier = modifier
+            .radiantSurface(
+                shape = MaterialTheme.shapes.large,
+                // running group lights its edge so the active stage is obvious
+                active = groupState == StepState.Running,
+            )
             .clip(MaterialTheme.shapes.large)
-            .background(MaterialTheme.colorScheme.surfaceContainerLow)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -101,7 +106,8 @@ fun StepGroupCard(
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background.copy(0.6f))
+                    // solid darker container cause opinions exist
+                    .background(MaterialTheme.colorScheme.surfaceContainerLowest)
                     .fillMaxWidth()
                     .padding(20.dp)
                     .padding(start = 4.dp)

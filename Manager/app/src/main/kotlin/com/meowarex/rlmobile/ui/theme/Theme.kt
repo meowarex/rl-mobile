@@ -11,14 +11,17 @@ import androidx.compose.ui.res.stringResource
 import com.meowarex.rlmobile.R
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ManagerTheme(
     theme: Theme = Theme.System,
-    dynamicColor: Boolean = true,
+    uiStyle: UiStyle = UiStyle.Radiant,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val dynamicColor = dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val useDynamicColor = dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val legacy = uiStyle == UiStyle.Legacy
 
     val isBlack = theme == Theme.Black
     val isDark = when (theme) {
@@ -27,15 +30,21 @@ fun ManagerTheme(
         Theme.Dark, Theme.Black -> true
     }
 
+    // Dynamic colour is opt-in, not the default. Radiant ships its own palette so the app looks
+    // like itself on every device instead of inheriting the wallpaper's tonal scheme.
+    // Legacy falls back to Material's own baseline schemes, which is what the app used before. (this is just a note to self cause subject to change)
     val baseScheme = when {
-        dynamicColor && isDark -> dynamicDarkColorScheme(context)
-        dynamicColor -> dynamicLightColorScheme(context)
-        isDark -> darkColorScheme()
-        else -> lightColorScheme()
+        useDynamicColor && isDark -> dynamicDarkColorScheme(context)
+        useDynamicColor -> dynamicLightColorScheme(context)
+        legacy && isDark -> darkColorScheme()
+        legacy -> lightColorScheme()
+        isDark -> RadiantDarkColorScheme
+        else -> RadiantLightColorScheme
     }
-    val colorScheme = when (isBlack) {
-        true -> baseScheme.toPitchBlack()
-        false -> baseScheme
+    val colorScheme = when {
+        !isBlack -> baseScheme
+        legacy -> baseScheme.toLegacyPitchBlack()
+        else -> baseScheme.toPitchBlack()
     }
     val customColors = when (isDark) {
         true -> DarkCustomColors
@@ -49,7 +58,7 @@ fun ManagerTheme(
 
     SideEffect {
         systemUiController.setSystemBarsColor(
-            color = colorScheme.background,
+            color = if (legacy) colorScheme.background else Color.Transparent,
             darkIcons = !isDark,
         )
         systemUiController.setNavigationBarColor(
@@ -57,12 +66,28 @@ fun ManagerTheme(
         )
     }
 
-    CompositionLocalProvider(LocalCustomColors provides customColors) {
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = ThemeTypography,
-            content = content,
-        )
+    CompositionLocalProvider(
+        LocalCustomColors provides customColors,
+        LocalRadiantStyle provides if (legacy) RadiantStyle.Legacy else RadiantStyle.Radiant,
+    ) {
+        if (legacy) {
+            // Plain MaterialTheme with stock shapes and the original type scale
+            MaterialTheme(
+                colorScheme = colorScheme,
+                shapes = Shapes(),
+                typography = LegacyTypography,
+                content = content,
+            )
+        } else {
+            MaterialExpressiveTheme(
+                colorScheme = colorScheme,
+                // Makes things springy and bouncy instead of shit
+                motionScheme = MotionScheme.expressive(),
+                shapes = ThemeShapes,
+                typography = ThemeTypography,
+                content = content,
+            )
+        }
     }
 }
 
@@ -93,12 +118,11 @@ enum class Theme {
     )
 }
 
-private fun ColorScheme.toPitchBlack(): ColorScheme {
-    return this.copy(
-        background = Color.Black,
-        surface = Color.Black,
-        surfaceVariant = Color.Black,
-        onBackground = Color.White,
-        onSurface = Color.White
-    )
-}
+/** The original AMOLED treatment left alone cause [UiStyle.Legacy]. */
+private fun ColorScheme.toLegacyPitchBlack(): ColorScheme = copy(
+    background = Color.Black,
+    surface = Color.Black,
+    surfaceVariant = Color.Black,
+    onBackground = Color.White,
+    onSurface = Color.White,
+)

@@ -6,6 +6,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import cafe.adriel.voyager.navigator.LocalNavigator
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantIconButton
 import com.meowarex.rlmobile.ui.components.BackButton
 import com.meowarex.rlmobile.ui.screens.settings.SettingsScreen
 
@@ -19,12 +20,12 @@ fun PatchOptionsAppBar(
         actions = {
             val navigator = LocalNavigator.current
 
-            IconButton(onClick = { navigator?.push(SettingsScreen()) }) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_settings),
-                    contentDescription = stringResource(R.string.navigation_settings)
-                )
-            }
+            RadiantIconButton(
+                icon = painterResource(R.drawable.ic_settings),
+                contentDescription = stringResource(R.string.navigation_settings),
+                subtle = true,
+                onClick = { navigator?.push(SettingsScreen()) },
+            )
         }
     )
 }

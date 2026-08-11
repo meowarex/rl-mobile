@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.navigator.Navigator
+import com.meowarex.rlmobile.ui.util.ScreenWithResult
 import com.github.diamondminer88.zip.ZipReader
 import com.meowarex.rlmobile.BuildConfig
 import com.meowarex.rlmobile.manager.PathManager
@@ -252,22 +253,24 @@ class PatchOptionsModel(
     var customPatches by mutableStateOf<PatchComponent?>(null)
         private set
 
-    fun selectCustomTidalApk(navigator: Navigator) = screenModelScope.launch {
-        customTidalApk = navigator.pushForResult(
-            ComponentOptionsScreen(
-                default = customTidalApk,
-                componentType = PatchComponent.Type.TidalApk,
-            )
-        )
+    // The picker screen is supplied by the caller so the Legacy UI can push its own component
+    // screen instead of the Radiant one. Defaults keep every existing call site unchanged. (claudes bug fix)
+    fun selectCustomTidalApk(
+        navigator: Navigator,
+        screen: (PatchComponent?) -> ScreenWithResult<PatchComponent?> = { default ->
+            ComponentOptionsScreen(default = default, componentType = PatchComponent.Type.TidalApk)
+        },
+    ) = screenModelScope.launch {
+        customTidalApk = navigator.pushForResult(screen(customTidalApk))
     }
 
-    fun selectCustomPatches(navigator: Navigator) = screenModelScope.launch {
-        customPatches = navigator.pushForResult(
-            ComponentOptionsScreen(
-                default = customPatches,
-                componentType = PatchComponent.Type.Patches,
-            )
-        )
+    fun selectCustomPatches(
+        navigator: Navigator,
+        screen: (PatchComponent?) -> ScreenWithResult<PatchComponent?> = { default ->
+            ComponentOptionsScreen(default = default, componentType = PatchComponent.Type.Patches)
+        },
+    ) = screenModelScope.launch {
+        customPatches = navigator.pushForResult(screen(customPatches))
         reloadSpecs(customPatches)
     }
 

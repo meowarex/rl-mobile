@@ -30,6 +30,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantDialog
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonStyle
+import com.meowarex.rlmobile.ui.components.radiant.RadiantIconButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantSegmented
+import com.meowarex.rlmobile.ui.components.radiant.RadiantSlider
+import com.meowarex.rlmobile.ui.components.radiant.RadiantSwitch
+import com.meowarex.rlmobile.ui.components.radiant.RadiantTextField
 import com.meowarex.rlmobile.ui.components.ResetToDefaultButton
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionLock
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
@@ -211,17 +220,14 @@ fun PatchAdvancedOptionsSheet(
                 }
             }
 
-            FilledTonalButton(
+            RadiantButton(
+                text = stringResource(R.string.action_done),
                 onClick = { dismiss() },
-                colors = ButtonDefaults.filledTonalButtonColors(
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ),
+                style = RadiantButtonStyle.Accent,
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(top = 4.dp),
-            ) {
-                Text(stringResource(R.string.action_done))
-            }
+            )
         }
     }
 
@@ -261,7 +267,7 @@ private fun ToggleOptionRow(
         )
 
         Box {
-            Switch(
+            RadiantSwitch(
                 checked = checked,
                 enabled = !locked,
                 onCheckedChange = onCheckedChange,
@@ -311,23 +317,20 @@ private fun SliderOptionRow(
                 color = MaterialTheme.colorScheme.primary,
             )
             if (steps > 0) {
-                IconButton(
+                RadiantIconButton(
+                    icon = painterResource(
+                        if (snap) R.drawable.ic_lock else R.drawable.ic_lock_open,
+                    ),
+                    contentDescription = stringResource(R.string.patchopts_toggle_snap),
+                    tint = if (snap) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.onSurfaceVariant,
+                    subtle = true,
+                    size = 32.dp,
                     onClick = {
                         snap = !snap
                         if (snap) onValueChange(snapToNearestStep(value, valueRange, steps))
                     },
-                    modifier = Modifier.size(32.dp),
-                ) {
-                    Icon(
-                        painter = painterResource(
-                            if (snap) R.drawable.ic_lock else R.drawable.ic_lock_open,
-                        ),
-                        contentDescription = stringResource(R.string.patchopts_toggle_snap),
-                        tint = if (snap) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(18.dp),
-                    )
-                }
+                )
             }
         }
 
@@ -340,18 +343,17 @@ private fun SliderOptionRow(
         // Locked -> native stepped slider (dots + snapping), left exactly as-is
         // Unlocked -> plain continuous slider with the trailing stop-indicator dot removed
         if (snap) {
-            Slider(
+            RadiantSlider(
                 value = value,
                 onValueChange = onValueChange,
                 valueRange = valueRange,
                 steps = steps,
             )
         } else {
-            Slider(
+            RadiantSlider(
                 value = value,
                 onValueChange = onValueChange,
                 valueRange = valueRange,
-                track = { SliderDefaults.Track(sliderState = it, drawStopIndicator = null) },
             )
         }
     }
@@ -395,16 +397,12 @@ private fun ChoiceOptionRow(
             val selectedLabel = entries.getOrNull(selectedIndex).orEmpty()
 
             Box(modifier = Modifier.fillMaxWidth()) {
-                OutlinedButton(
+                RadiantButton(
+                    text = selectedLabel,
                     onClick = { expanded = true },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(
-                        text = selectedLabel,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
+                    style = RadiantButtonStyle.Ghost,
+                    fillWidth = true,
+                )
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
@@ -423,25 +421,11 @@ private fun ChoiceOptionRow(
             }
             return@Column
         }
-        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-            entries.forEachIndexed { index, entry ->
-                SegmentedButton(
-                    selected = index == selectedIndex,
-                    onClick = { onSelect(index) },
-                    shape = SegmentedButtonDefaults.itemShape(index = index, count = entries.size),
-                    icon = {},
-                    label = {
-                        Text(
-                            text = entry,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.labelMedium,
-                        )
-                    },
-                )
-            }
-        }
+        RadiantSegmented(
+            options = entries,
+            selectedIndex = selectedIndex,
+            onSelect = onSelect,
+        )
     }
 }
 
@@ -488,25 +472,11 @@ private fun ColorOptionRow(
                 color = MaterialTheme.colorScheme.primary,
             )
         }
-        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-            presets.forEachIndexed { index, label ->
-                SegmentedButton(
-                    selected = index == selectedPreset,
-                    onClick = { onColorChange(presetColors[index]) },
-                    shape = SegmentedButtonDefaults.itemShape(index = index, count = presets.size),
-                    icon = {},
-                    label = {
-                        Text(
-                            text = label,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.labelMedium,
-                        )
-                    },
-                )
-            }
-        }
+        RadiantSegmented(
+            options = presets,
+            selectedIndex = selectedPreset,
+            onSelect = { index -> onColorChange(presetColors[index]) },
+        )
     }
 
     if (showPicker) {
@@ -542,52 +512,44 @@ private fun ColorPickerDialog(
     var hex by rememberSaveable(initialColor) { mutableStateOf(color.toRgbHex()) }
     val parsedHex = parseRgbHex(hex)
 
-    AlertDialog(
+    RadiantDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.patch_color_picker_title)) },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    ColorSwatch(color = parsedHex ?: color, modifier = Modifier.size(40.dp))
-                    OutlinedTextField(
-                        value = hex,
-                        onValueChange = { value ->
-                            hex = value
-                            parseRgbHex(value)?.let { color = it }
-                        },
-                        label = { Text(stringResource(R.string.patch_color_picker_hex)) },
-                        singleLine = true,
-                        isError = parsedHex == null,
-                        keyboardOptions = KeyboardOptions(
-                            capitalization = KeyboardCapitalization.Characters,
-                            keyboardType = KeyboardType.Ascii,
-                        ),
-                        supportingText = if (parsedHex == null) {
-                            { Text(stringResource(R.string.patch_color_picker_hex_error)) }
-                        } else null,
-                        modifier = Modifier.weight(1f),
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(
-                enabled = parsedHex != null,
-                onClick = { parsedHex?.let(onColorSelected) },
+        title = stringResource(R.string.patch_color_picker_title),
+        confirmText = stringResource(R.string.action_done),
+        onConfirm = { parsedHex?.let(onColorSelected) },
+        confirmEnabled = parsedHex != null,
+        dismissText = stringResource(R.string.action_cancel),
+        onDismissAction = onDismiss,
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Text(stringResource(R.string.action_done))
+                ColorSwatch(color = parsedHex ?: color, modifier = Modifier.size(44.dp))
+                RadiantTextField(
+                    value = hex,
+                    onValueChange = { value ->
+                        hex = value
+                        parseRgbHex(value)?.let { color = it }
+                    },
+                    placeholder = stringResource(R.string.patch_color_picker_hex),
+                    isError = parsedHex == null,
+                    modifier = Modifier.weight(1f),
+                )
             }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_cancel))
+
+            if (parsedHex == null) {
+                Text(
+                    text = stringResource(R.string.patch_color_picker_hex_error),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                )
             }
-        },
-    )
+        }
+    }
 }
+
 
 @Composable
 private fun OptionText(
@@ -641,7 +603,6 @@ private fun parseRgbHex(value: String): Int? {
     return (0xFF000000L or rgb).toInt()
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun OptionLockDialog(lock: OptionLock, onDismiss: () -> Unit) {
     val message = when (lock) {
@@ -650,33 +611,12 @@ private fun OptionLockDialog(lock: OptionLock, onDismiss: () -> Unit) {
         OptionLock.Free -> return
     }
 
-    BasicAlertDialog(onDismissRequest = onDismiss) {
-        Surface(
-            shape = MaterialTheme.shapes.large,
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            tonalElevation = 6.dp,
-        ) {
-            Column(
-                modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 20.dp, bottom = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.patch_opt_lock_title),
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                Text(
-                    text = AnnotatedString.fromHtml(message),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    TextButton(
-                        onClick = onDismiss,
-                        modifier = Modifier.align(Alignment.CenterEnd),
-                    ) {
-                        Text(stringResource(R.string.action_got_it))
-                    }
-                }
-            }
-        }
+    RadiantDialog(
+        onDismissRequest = onDismiss,
+        title = stringResource(R.string.patch_opt_lock_title),
+        confirmText = stringResource(R.string.action_got_it),
+        onConfirm = onDismiss,
+    ) {
+        Text(AnnotatedString.fromHtml(message))
     }
 }

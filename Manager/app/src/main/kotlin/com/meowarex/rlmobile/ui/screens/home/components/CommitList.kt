@@ -1,6 +1,8 @@
 package com.meowarex.rlmobile.ui.screens.home.components
 
 import androidx.compose.foundation.clickable
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -59,7 +61,11 @@ fun CommitList(commits: LazyPagingItems<GithubCommit>) {
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
             ) {
                 Text("Failed to load commits", style = MaterialTheme.typography.labelLarge, textAlign = TextAlign.Center)
-                Button(onClick = { commits.retry() }) { Text("Retry") }
+                RadiantButton(
+                    text = "Retry",
+                    onClick = { commits.retry() },
+                    size = RadiantButtonSize.Small,
+                )
             }
         }
     }

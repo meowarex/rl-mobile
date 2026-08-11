@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantIconButton
 
 @Composable
 fun PatchingAppBar(
@@ -13,12 +14,12 @@ fun PatchingAppBar(
     TopAppBar(
         title = { Text(stringResource(R.string.installer)) },
         navigationIcon = {
-            IconButton(onClick = onBack) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_back),
-                    contentDescription = stringResource(R.string.navigation_back),
-                )
-            }
+            RadiantIconButton(
+                icon = painterResource(R.drawable.ic_back),
+                contentDescription = stringResource(R.string.navigation_back),
+                subtle = true,
+                onClick = onBack,
+            )
         }
     )
 }

@@ -13,6 +13,7 @@ import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.di.ActivityProvider
 import com.meowarex.rlmobile.manager.*
 import com.meowarex.rlmobile.ui.theme.Theme
+import com.meowarex.rlmobile.ui.theme.UiStyle
 import com.meowarex.rlmobile.updatechecker.UpdateCheckWorker
 import com.meowarex.rlmobile.util.*
 
@@ -29,6 +30,8 @@ class SettingsModel(
     var showThemeDialog by mutableStateOf(false)
         private set
     var showInstallersDialog by mutableStateOf(false)
+        private set
+    var showUiStyleDialog by mutableStateOf(false)
         private set
 
     fun showThemeDialog() {
@@ -47,8 +50,20 @@ class SettingsModel(
         showInstallersDialog = false
     }
 
+    fun showUiStyleDialog() {
+        showUiStyleDialog = true
+    }
+
+    fun hideUiStyleDialog() {
+        showUiStyleDialog = false
+    }
+
     fun setTheme(theme: Theme) {
         preferences.theme = theme
+    }
+
+    fun setUiStyle(style: UiStyle) {
+        preferences.uiStyle = style
     }
 
     fun setInstaller(installer: InstallerSetting) {

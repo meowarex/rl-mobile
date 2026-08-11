@@ -85,7 +85,7 @@ fun AboutScreenContent(state: State<AboutScreenState>) {
                 AboutScreenState.Loading -> item(key = "CONTRIBUTIONS_LOADING") {
                     Box(
                         contentAlignment = Alignment.Center,
-                        content = { CircularProgressIndicator() },
+                        content = { LoadingIndicator() },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 38.dp),

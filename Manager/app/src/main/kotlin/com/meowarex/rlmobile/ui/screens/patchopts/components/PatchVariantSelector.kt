@@ -1,14 +1,10 @@
 package com.meowarex.rlmobile.ui.screens.patchopts.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
+import com.meowarex.rlmobile.ui.components.radiant.RadiantSegmented
 import com.meowarex.rlmobile.ui.screens.patchopts.EffectiveVariant
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PatchVariantSelector(
     variants: List<EffectiveVariant>,
@@ -16,29 +12,14 @@ fun PatchVariantSelector(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    SingleChoiceSegmentedButtonRow(
-        modifier = modifier.fillMaxWidth(),
-    ) {
-        variants.forEachIndexed { index, variant ->
-            SegmentedButton(
-                selected = index == selectedIndex,
-                enabled = variant.enabled,
-                onClick = { if (variant.enabled) onSelect(index) },
-                shape = SegmentedButtonDefaults.itemShape(
-                    index = index,
-                    count = variants.size,
-                ),
-                icon = {},
-                label = {
-                    Text(
-                        text = variant.title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.labelMedium,
-                    )
-                },
-            )
-        }
-    }
+    // Variants are mutually exclusive, so this reads as one recessed track with a floating accent
+    // pill rather than Material's row of connected outlined buttons.
+    RadiantSegmented(
+        options = variants.map { it.title },
+        selectedIndex = selectedIndex,
+        onSelect = { index ->
+            if (variants.getOrNull(index)?.enabled == true) onSelect(index)
+        },
+        modifier = modifier,
+    )
 }

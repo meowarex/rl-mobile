@@ -1,13 +1,11 @@
 package com.meowarex.rlmobile.ui.components
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonStyle
 
 @Composable
 fun MainActionButton(
@@ -15,35 +13,33 @@ fun MainActionButton(
     icon: Painter,
     onClick: () -> Unit,
     enabled: Boolean = true,
-    colors: IconButtonColors = IconButtonDefaults.filledTonalIconButtonColors(
-        containerColor = MaterialTheme.colorScheme.primary,
-    ),
+    style: RadiantButtonStyle = RadiantButtonStyle.Accent,
     modifier: Modifier = Modifier,
-) {
-    FilledTonalIconButton(
-        shape = MaterialTheme.shapes.medium,
-        colors = colors,
-        onClick = onClick,
-        enabled = enabled,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(46.dp),
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                painter = icon,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp),
-            )
+) = RadiantButton(
+    text = text,
+    icon = icon,
+    onClick = onClick,
+    enabled = enabled,
+    style = style,
+    size = RadiantButtonSize.Large,
+    fillWidth = true,
+    modifier = modifier,
+)
 
-            Text(
-                text = text,
-                style = MaterialTheme.typography.labelLarge,
-                textAlign = TextAlign.Center,
-            )
-        }
-    }
-}
+@Composable
+fun DangerActionButton(
+    text: String,
+    icon: Painter,
+    onClick: () -> Unit,
+    enabled: Boolean = true,
+    modifier: Modifier = Modifier,
+) = RadiantButton(
+    text = text,
+    icon = icon,
+    onClick = onClick,
+    enabled = enabled,
+    style = RadiantButtonStyle.Danger,
+    size = RadiantButtonSize.Large,
+    fillWidth = true,
+    modifier = modifier,
+)

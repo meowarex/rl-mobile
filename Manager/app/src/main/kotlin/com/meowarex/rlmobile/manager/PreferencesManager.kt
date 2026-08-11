@@ -4,11 +4,14 @@ import android.content.SharedPreferences
 import androidx.compose.runtime.Stable
 import com.meowarex.rlmobile.manager.base.BasePreferenceManager
 import com.meowarex.rlmobile.ui.theme.Theme
+import com.meowarex.rlmobile.ui.theme.UiStyle
 
 @Stable
 class PreferencesManager(preferences: SharedPreferences) : BasePreferenceManager(preferences) {
     var theme by enumPreference("theme", Theme.System)
-    var dynamicColor by booleanPreference("dynamic_color", true)
+    var uiStyle by enumPreference("ui_style", UiStyle.Radiant)
+    // Off by default — Radiant ships its own palette. Opting in hands theming back to Monet.
+    var dynamicColor by booleanPreference("dynamic_color", false)
     var devMode by booleanPreference("dev_mode", false)
     var installer by enumPreference<InstallerSetting>("installer", InstallerSetting.PackageInstaller)
     var keepPatchedApks by booleanPreference("keep_patched_apks", false)

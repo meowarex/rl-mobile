@@ -7,7 +7,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -15,7 +14,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.patcher.steps.base.StepState
-import kotlin.math.floor
+import com.meowarex.rlmobile.ui.theme.customColors
 import kotlin.math.roundToInt
 
 @Composable
@@ -40,12 +39,11 @@ fun StepStateIcon(
             )
 
             StepState.Running -> {
-                val strokeWidth = Dp(floor(size.value / 10) + 1)
-
                 if (stepProgress > .05f) {
-                    CircularProgressIndicator(
+                    // Determinate work gets the wavy indicator — the amplitude of the wave is
+                    // what distinguishes "actively moving" from a stalled determinate arc. (claudes idea)
+                    CircularWavyProgressIndicator(
                         progress = { animatedProgress },
-                        strokeWidth = strokeWidth,
                         modifier = Modifier
                             .size(size)
                             .semantics { contentDescription = "${(stepProgress * 100).roundToInt()}%" },
@@ -53,9 +51,7 @@ fun StepStateIcon(
                 } else {
                     val description = stringResource(R.string.status_ongoing)
 
-                    // Infinite spinner
-                    CircularProgressIndicator(
-                        strokeWidth = strokeWidth,
+                    CircularWavyProgressIndicator(
                         modifier = Modifier
                             .size(size)
                             .semantics { contentDescription = description },
@@ -66,7 +62,7 @@ fun StepStateIcon(
             StepState.Success -> Icon(
                 painter = painterResource(R.drawable.ic_check_circle),
                 contentDescription = stringResource(R.string.status_success),
-                tint = Color(0xFF59B463),
+                tint = MaterialTheme.customColors.success,
                 modifier = Modifier.size(size)
             )
 
@@ -80,7 +76,7 @@ fun StepStateIcon(
             StepState.Skipped -> Icon(
                 painter = painterResource(R.drawable.ic_check_circle),
                 contentDescription = stringResource(R.string.status_skipped),
-                tint = Color(0xFFAEAEAE),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(size)
             )
         }

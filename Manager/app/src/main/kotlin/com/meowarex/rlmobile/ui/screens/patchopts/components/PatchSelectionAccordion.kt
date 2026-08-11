@@ -26,6 +26,12 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
+import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
+import com.meowarex.rlmobile.ui.components.radiant.RadiantSwitch
+import com.meowarex.rlmobile.ui.components.radiant.RadiantDialog
+import com.meowarex.rlmobile.ui.theme.radiantSurface
+import com.meowarex.rlmobile.ui.theme.glassSurface
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchLock
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionState
@@ -64,8 +70,8 @@ fun PatchSelectionAccordion(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.large)
-            .background(MaterialTheme.colorScheme.surfaceContainerLow),
+            .radiantSurface(shape = MaterialTheme.shapes.large)
+            .clip(MaterialTheme.shapes.large),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -113,7 +119,7 @@ fun PatchSelectionAccordion(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.background.copy(0.4f))
+                    .background(MaterialTheme.colorScheme.surfaceContainerLowest)
                     .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
                 Text(
@@ -140,13 +146,8 @@ fun PatchSelectionAccordion(
                         modifier = if (carded) {
                             Modifier
                                 .fillMaxWidth()
+                                .glassSurface(MaterialTheme.shapes.medium)
                                 .clip(MaterialTheme.shapes.medium)
-                                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.07f))
-                                .border(
-                                    width = 1.5.dp,
-                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.55f),
-                                    shape = MaterialTheme.shapes.medium,
-                                )
                                 .padding(horizontal = 12.dp, vertical = 4.dp)
                         } else {
                             Modifier.fillMaxWidth()
@@ -245,27 +246,13 @@ private fun AdvancedOptionsButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    FilledTonalButton(
+    RadiantButton(
+        text = stringResource(R.string.patchopts_advanced_button) + if (modified) " •" else "",
+        icon = painterResource(R.drawable.ic_tune),
         onClick = onClick,
+        size = RadiantButtonSize.Small,
         modifier = modifier,
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_tune),
-            contentDescription = null,
-            modifier = Modifier.size(18.dp),
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(stringResource(R.string.patchopts_advanced_button))
-        if (modified) {
-            Spacer(Modifier.width(8.dp))
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary),
-            )
-        }
-    }
+    )
 }
 
 @Composable
@@ -300,7 +287,7 @@ private fun InlineToggleRow(
                 modifier = Modifier.alpha(.7f),
             )
         }
-        Switch(
+        RadiantSwitch(
             checked = checked,
             onCheckedChange = onCheckedChange,
             interactionSource = interactionSource,
@@ -351,7 +338,7 @@ private fun PatchSwitchRow(
         }
 
         Box {
-            Switch(
+            RadiantSwitch(
                 checked = checked,
                 enabled = !isLocked,
                 onCheckedChange = onCheckedChange,
@@ -398,33 +385,12 @@ private fun PatchLockDialog(
         PatchLock.Free -> return
     }
 
-    BasicAlertDialog(onDismissRequest = onDismiss) {
-        Surface(
-            shape = MaterialTheme.shapes.large,
-            color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            tonalElevation = 6.dp,
-        ) {
-            Column(
-                modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 20.dp, bottom = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Text(
-                    text = stringResource(titleRes),
-                    style = MaterialTheme.typography.titleLarge,
-                )
-                Text(
-                    text = AnnotatedString.fromHtml(stringResource(msgRes, blockerTitle)),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    TextButton(
-                        onClick = onDismiss,
-                        modifier = Modifier.align(Alignment.CenterEnd),
-                    ) {
-                        Text(stringResource(R.string.action_got_it))
-                    }
-                }
-            }
-        }
+    RadiantDialog(
+        onDismissRequest = onDismiss,
+        title = stringResource(titleRes),
+        confirmText = stringResource(R.string.action_got_it),
+        onConfirm = onDismiss,
+    ) {
+        Text(AnnotatedString.fromHtml(stringResource(msgRes, blockerTitle)))
     }
 }

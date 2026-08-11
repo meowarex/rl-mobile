@@ -4,13 +4,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import com.meowarex.rlmobile.ui.components.radiant.RadiantSwitch
 
 @Composable
 fun SwitchPatchOption(
@@ -39,7 +39,7 @@ fun SwitchPatchOption(
                 role = Role.Switch,
             ),
     ) {
-        Switch(
+        RadiantSwitch(
             checked = value,
             enabled = enabled,
             onCheckedChange = onValueChange,

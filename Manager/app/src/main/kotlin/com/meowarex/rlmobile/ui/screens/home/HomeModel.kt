@@ -211,6 +211,14 @@ class HomeModel(
         return createPrefilledPatchOptsScreen(current.packageName)
     }
 
+    /**
+     * The prefilled options behind [createRepatchScreen] without the Screen wrapper (needed for legacy ui)
+     */
+    fun createRepatchOptions(): PatchOptions? {
+        val current = (state as? HomeState.Loaded)?.install ?: return null
+        return prefilledPatchOptions(current.packageName)
+    }
+
     fun openApp(packageName: String) {
         val launchIntent = application.packageManager.getLaunchIntentForPackage(packageName)
         if (launchIntent != null) {
@@ -228,11 +236,12 @@ class HomeModel(
         application.startActivity(launchIntent)
     }
 
-    fun createPrefilledPatchOptsScreen(packageName: String): PatchOptionsScreen {
-        val patchOptions = loadInstallMetadata(packageName)?.options
+    fun createPrefilledPatchOptsScreen(packageName: String): PatchOptionsScreen =
+        PatchOptionsScreen(prefilledOptions = prefilledPatchOptions(packageName))
+
+    fun prefilledPatchOptions(packageName: String): PatchOptions =
+        loadInstallMetadata(packageName)?.options
             ?: PatchOptions.Default.copy(packageName = packageName)
-        return PatchOptionsScreen(prefilledOptions = patchOptions)
-    }
 
     private fun loadInstallMetadata(packageName: String): InstallMetadata? = try {
         val applicationInfo = application.packageManager.getApplicationInfo(packageName, 0)
