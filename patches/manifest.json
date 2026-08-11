@@ -78,6 +78,15 @@
         },
         {
           "type": "toggle",
+          "key": "synthesize",
+          "title": "WIP | AI Generate Syllables",
+          "description": "[Only works with API results] - Generates Syllable timings from Line timings using a self trained AI model ",
+          "default": false,
+          "inline": true,
+          "token": "RL_SYNTHESIZE"
+        },
+        {
+          "type": "toggle",
           "key": "context_aware",
           "title": "Context Aware Lyrics",
           "description": "Display voice context cues (adlibs and duet singers get displayed seperately)",

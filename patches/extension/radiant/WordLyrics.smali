@@ -1010,11 +1010,7 @@
 
     new-array v9, v8, [Ljava/lang/String;
 
-    const-string v10, "text"
-
-    const-string v11, ""
-
-    invoke-virtual {v6, v10, v11}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    invoke-static {v6}, Lradiant/WordLyrics;->lineText(Lorg/json/JSONObject;)Ljava/lang/String;
 
     move-result-object v10
 
@@ -1238,11 +1234,7 @@
 
     :bs_single
     # Treat the line as one syllable
-    const-string v8, "text"
-
-    const-string v9, ""
-
-    invoke-virtual {v5, v8, v9}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    invoke-static {v5}, Lradiant/WordLyrics;->lineText(Lorg/json/JSONObject;)Ljava/lang/String;
 
     move-result-object v8
 
@@ -1349,6 +1341,22 @@
 # MARKER: RL API user settings
 # Baked in by the Manager's options
 # CTX bits: 0x1 adlibs, 0x2 singers
+
+# Ask the API to invent syllable timings
+.method public static synthesizeOn()Z
+    .locals 2
+
+    const v0, __RL_SYNTHESIZE__
+
+    const/4 v1, 0x0
+
+    if-eqz v0, :off
+
+    const/4 v1, 0x1
+
+    :off
+    return v1
+.end method
 
 # Is context aware switched on
 # The mode bits alone can't say "off"

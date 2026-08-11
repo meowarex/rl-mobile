@@ -690,6 +690,17 @@
 
     invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
+    invoke-static {}, Lradiant/WordLyrics;->synthesizeOn()Z
+
+    move-result v0
+
+    if-eqz v0, :no_synthesize
+
+    const-string v0, "&synthesize=true"
+
+    invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    :no_synthesize
     invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
     move-result-object v2
