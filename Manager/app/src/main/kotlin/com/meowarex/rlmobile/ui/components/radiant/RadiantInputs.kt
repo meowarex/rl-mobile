@@ -114,7 +114,7 @@ fun RadiantTextField(
 }
 
 /**
- * Slider with a gradient and glow.
+ * Slider. (i prefer the old on tbh so i reverted it back <3)
  */
 @Composable
 fun RadiantSlider(
@@ -124,12 +124,10 @@ fun RadiantSlider(
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     steps: Int = 0,
     enabled: Boolean = true,
+    showStopIndicator: Boolean = true,
     onValueChangeFinished: (() -> Unit)? = null,
 ) {
-    val scheme = MaterialTheme.colorScheme
-    val interaction = remember(::MutableInteractionSource)
-
-    if (radiantStyle.native) {
+    if (showStopIndicator) {
         Slider(
             value = value,
             onValueChange = onValueChange,
@@ -139,51 +137,18 @@ fun RadiantSlider(
             enabled = enabled,
             modifier = modifier,
         )
-        return
+    } else {
+        Slider(
+            value = value,
+            onValueChange = onValueChange,
+            onValueChangeFinished = onValueChangeFinished,
+            valueRange = valueRange,
+            steps = steps,
+            enabled = enabled,
+            modifier = modifier,
+            track = { SliderDefaults.Track(sliderState = it, drawStopIndicator = null) },
+        )
     }
-
-    Slider(
-        value = value,
-        onValueChange = onValueChange,
-        onValueChangeFinished = onValueChangeFinished,
-        valueRange = valueRange,
-        steps = steps,
-        enabled = enabled,
-        interactionSource = interaction,
-        modifier = modifier,
-        track = { state ->
-            val fraction = if (valueRange.endInclusive > valueRange.start) {
-                ((state.value - valueRange.start) / (valueRange.endInclusive - valueRange.start))
-                    .coerceIn(0f, 1f)
-            } else 0f
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(6.dp)
-                    .clip(CircleShape)
-                    .background(scheme.surfaceContainerHighest),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth(fraction)
-                        .fillMaxHeight()
-                        .clip(CircleShape)
-                        .background(accentBrush),
-                )
-            }
-        },
-        thumb = {
-            Box(
-                modifier = Modifier
-                    .glow(scheme.primary, 10.dp, CircleShape, alpha = 0.6f)
-                    .size(20.dp)
-                    .clip(CircleShape)
-                    .background(scheme.onPrimary, CircleShape)
-                    .border(3.dp, scheme.primary, CircleShape),
-            )
-        },
-    )
 }
 
 /**
@@ -270,37 +235,3 @@ fun RadiantSegmented(
 }
 
 /** something.. */
-@Composable
-fun RadiantLabeledSlider(
-    label: String,
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    modifier: Modifier = Modifier,
-    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
-    steps: Int = 0,
-    trailingText: String? = null,
-) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.weight(1f),
-            )
-            if (trailingText != null) {
-                Text(
-                    text = trailingText,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
-        }
-        RadiantSlider(
-            value = value,
-            onValueChange = onValueChange,
-            valueRange = valueRange,
-            steps = steps,
-        )
-    }
-}

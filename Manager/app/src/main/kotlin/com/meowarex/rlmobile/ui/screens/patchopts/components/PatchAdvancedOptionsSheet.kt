@@ -354,6 +354,7 @@ private fun SliderOptionRow(
                 value = value,
                 onValueChange = onValueChange,
                 valueRange = valueRange,
+                showStopIndicator = false,
             )
         }
     }

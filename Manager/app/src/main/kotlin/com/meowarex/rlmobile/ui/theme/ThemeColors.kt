@@ -33,13 +33,13 @@ private val Rose80 = Color(0xFFFFAFCC)
 private val Rose90 = Color(0xFFFFD9E4)
 private val Rose95 = Color(0xFFFFECF1)
 
-// ── Violet (secondary) ───────────────────────────────────────────────────────
-private val Violet10 = Color(0xFF25004E)
-private val Violet20 = Color(0xFF3D177A)
-private val Violet30 = Color(0xFF553194)
-private val Violet40 = Color(0xFF6E4BAF)
-private val Violet80 = Color(0xFFD6BBFF)
-private val Violet90 = Color(0xFFECDCFF)
+// ── Dusty rose (secondary) ───────────────────────────────────────────────────
+private val DustyRose10 = Color(0xFF2B0D18)
+private val DustyRose20 = Color(0xFF43202B)
+private val DustyRose30 = Color(0xFF5C3541)
+private val DustyRose40 = Color(0xFF774C58)
+private val DustyRose80 = Color(0xFFE4BCC8)
+private val DustyRose90 = Color(0xFFF5DCE4)
 
 // ── Aqua (tertiary) ──────────────────────────────────────────────────────────
 private val Aqua10 = Color(0xFF00201F)
@@ -89,10 +89,10 @@ val RadiantDarkColorScheme: ColorScheme = darkColorScheme(
     onPrimaryContainer = Rose90,
     inversePrimary = Rose40,
 
-    secondary = Violet80,
-    onSecondary = Violet20,
-    secondaryContainer = Violet30,
-    onSecondaryContainer = Violet90,
+    secondary = DustyRose80,
+    onSecondary = DustyRose20,
+    secondaryContainer = DustyRose30,
+    onSecondaryContainer = DustyRose90,
 
     tertiary = Aqua80,
     onTertiary = Aqua20,
@@ -134,10 +134,10 @@ val RadiantLightColorScheme: ColorScheme = lightColorScheme(
     onPrimaryContainer = Rose10,
     inversePrimary = Rose80,
 
-    secondary = Violet40,
+    secondary = DustyRose40,
     onSecondary = Neutral100,
-    secondaryContainer = Violet90,
-    onSecondaryContainer = Violet10,
+    secondaryContainer = DustyRose90,
+    onSecondaryContainer = DustyRose10,
 
     tertiary = Aqua40,
     onTertiary = Neutral100,
