@@ -1,6 +1,6 @@
 --- a/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
-@@ -107,6 +107,104 @@
+@@ -107,6 +107,103 @@
  .end method
  
  
@@ -123,7 +123,7 @@
      invoke-virtual {p0}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->N()Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/n;
 --- a/h4/a.smali
 +++ b/h4/a.smali
-@@ -931,3 +931,32 @@
+@@ -931,3 +931,31 @@
  .end method
 +
 +.method public final q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V

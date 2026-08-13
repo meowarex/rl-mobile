@@ -246,19 +246,19 @@
 
     if-eqz p7, :draw_alpha
 
-    # 30% threshold
+    # row width * 3
     mul-int/lit8 v8, v7, 0x3
 
+    # / 10 = 30% of row width (30% threshold)
     div-int/lit8 v8, v8, 0xa
 
     if-lt v5, v8, :disarm
-
-    const/4 v8, 0x1
 
     invoke-virtual {p3}, Landroidx/recyclerview/widget/RecyclerView$ViewHolder;->getBindingAdapterPosition()I
 
     move-result v8
 
+    # RecyclerView.NO_POSITION.
     const/4 v9, -0x1
 
     if-ne v8, v9, :resolve_action
@@ -280,11 +280,30 @@
 
     iput v8, p0, Lradiant/SwipeToQueue;->pendingPosition:I
 
+    iget-object v8, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+
     iput-object v10, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+
+    if-nez v8, :draw_alpha
+
+    # HapticFeedbackConstants.CLOCK_TICK
+    const/4 v8, 0x4
+
+    invoke-virtual {v0, v8}, Landroid/view/View;->performHapticFeedback(I)Z
 
     goto :draw_alpha
 
     :disarm
+    iget-object v8, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+
+    if-eqz v8, :clear_pending
+
+    # HapticFeedbackConstants.CLOCK_TICK
+    const/4 v8, 0x4
+
+    invoke-virtual {v0, v8}, Landroid/view/View;->performHapticFeedback(I)Z
+
+    :clear_pending
     const/4 v8, 0x0
 
     iput-object v8, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
@@ -294,19 +313,23 @@
     :draw_alpha
     if-lez v7, :draw_background
 
-    const/16 v8, 0xf8
+    mul-int/lit8 v8, v7, 0x3
 
-    mul-int/2addr v8, v5
+    div-int/lit8 v8, v8, 0xa
 
-    div-int/2addr v8, v7
+    const/16 v9, 0x40
 
-    const/16 v9, 0x1f
+    mul-int/2addr v9, v5
 
-    invoke-static {v8, v9}, Ljava/lang/Math;->min(II)I
+    div-int/2addr v9, v8
+
+    const/16 v8, 0x40
+
+    invoke-static {v9, v8}, Ljava/lang/Math;->min(II)I
 
     move-result v8
 
-    add-int/lit16 v8, v8, 0xe0
+    add-int/lit16 v8, v8, 0xbf
 
     invoke-virtual {v6, v8}, Landroid/graphics/drawable/Drawable;->setAlpha(I)V
 
