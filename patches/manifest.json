@@ -432,8 +432,26 @@
         "radiant/SwipeToQueue.smali"
       ],
       "title": "Swipe to Queue",
-      "description": "Swipe (left only for now) on tracks (in library/my tracks only for now) to add them to the play queue.",
-      "default": false
+      "description": "Swipe on tracks (in library/my tracks only for now) to add them to the play queue.",
+      "default": false,
+      "advancedOptions": [
+        {
+          "type": "choice",
+          "key": "swipe_direction",
+          "title": "Swipe Direction",
+          "description": "Choose direction of the swipe gesture",
+          "entries": [
+            "Left",
+            "Right"
+          ],
+          "values": [
+            "0x4",
+            "0x8"
+          ],
+          "defaultIndex": 0,
+          "token": "RL_SWIPE_TO_QUEUE_DIRECTION"
+        }
+      ]
     },
     {
       "id": "LyricsProgressPill",

@@ -36,8 +36,8 @@
 
     const/4 v0, 0x0
 
-    # ItemTouchHelper.LEFT
-    const/4 v1, 0x4
+    # ItemTouchHelper.LEFT (0x4) or ItemTouchHelper.RIGHT (0x8)
+    const/16 v1, __RL_SWIPE_TO_QUEUE_DIRECTION__
 
     invoke-direct {p0, v0, v1}, Landroidx/recyclerview/widget/ItemTouchHelper$SimpleCallback;-><init>(II)V
 
@@ -169,7 +169,7 @@
 
     if-eqz v0, :not_swipeable
 
-    const/4 v0, 0x4
+    const/16 v0, __RL_SWIPE_TO_QUEUE_DIRECTION__
 
     return v0
 
@@ -196,13 +196,26 @@
 
     int-to-float v0, v0
 
-    cmpg-float v0, v11, v0
+    const/16 v8, __RL_SWIPE_TO_QUEUE_DIRECTION__
 
-    if-gez v0, :not_left
+    const/4 v9, 0x4
+
+    if-ne v8, v9, :expect_right
+
+    cmpg-float v8, v11, v0
+
+    if-gez v8, :wrong_direction
 
     goto :clear_active
 
-    :not_left
+    :expect_right
+    cmpl-float v8, v11, v0
+
+    if-lez v8, :wrong_direction
+
+    goto :clear_active
+
+    :wrong_direction
 
     if-eqz p7, :done
 
@@ -216,6 +229,20 @@
 
     iget-object v0, p3, Landroidx/recyclerview/widget/RecyclerView$ViewHolder;->itemView:Landroid/view/View;
 
+    invoke-virtual {v0}, Landroid/view/View;->getTop()I
+
+    move-result v3
+
+    invoke-virtual {v0}, Landroid/view/View;->getBottom()I
+
+    move-result v4
+
+    const/16 v8, __RL_SWIPE_TO_QUEUE_DIRECTION__
+
+    const/4 v9, 0x4
+
+    if-ne v8, v9, :right_bounds
+
     invoke-virtual {v0}, Landroid/view/View;->getRight()I
 
     move-result v1
@@ -224,13 +251,18 @@
 
     add-int/2addr v2, v1
 
-    invoke-virtual {v0}, Landroid/view/View;->getTop()I
+    goto :bounds_ready
 
-    move-result v3
+    :right_bounds
+    invoke-virtual {v0}, Landroid/view/View;->getLeft()I
 
-    invoke-virtual {v0}, Landroid/view/View;->getBottom()I
+    move-result v2
 
-    move-result v4
+    float-to-int v1, v11
+
+    add-int/2addr v1, v2
+
+    :bounds_ready
 
     sub-int v5, v1, v2
 
@@ -359,6 +391,12 @@
 
     div-int/lit8 v9, v9, 0x2
 
+    const/16 v10, __RL_SWIPE_TO_QUEUE_DIRECTION__
+
+    const/4 v11, 0x4
+
+    if-ne v10, v11, :right_icon
+
     sub-int v10, v1, v9
 
     sub-int v11, v10, v7
@@ -372,6 +410,23 @@
     invoke-static {v10, v11}, Ljava/lang/Math;->max(II)I
 
     move-result v10
+
+    goto :icon_positioned
+
+    :right_icon
+    add-int v10, v2, v9
+
+    sub-int v11, v5, v7
+
+    div-int/lit8 v11, v11, 0x2
+
+    add-int/2addr v11, v2
+
+    invoke-static {v11, v10}, Ljava/lang/Math;->min(II)I
+
+    move-result v10
+
+    :icon_positioned
 
     add-int v11, v10, v7
 
