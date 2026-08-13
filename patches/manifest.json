@@ -423,6 +423,19 @@
       "default": false
     },
     {
+      "id": "SwipeToQueue",
+      "order": 39,
+      "fileNames": [
+        "swipe-to-queue.patch"
+      ],
+      "extensionFiles": [
+        "radiant/SwipeToQueue.smali"
+      ],
+      "title": "Swipe to Queue",
+      "description": "Swipe (left only for now) on tracks (in library/my tracks only for now) to add them to the play queue.",
+      "default": false
+    },
+    {
       "id": "LyricsProgressPill",
       "order": 40,
       "fileNames": [

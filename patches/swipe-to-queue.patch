@@ -1,0 +1,157 @@
+--- a/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
++++ b/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
+@@ -107,6 +107,104 @@
+ .end method
+ 
+ 
++.method public final Y(ILcom/aspiro/wamp/model/FavoriteTrack;)Z
++    .locals 3
++
++    # reject unavailable tracks
++    if-eqz p2, :not_eligible
++
++    iget-object v0, p0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->d:Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/g0;
++
++    if-eqz v0, :not_eligible
++
++    invoke-virtual {v0, p1}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/g0;->b(I)Lcom/aspiro/wamp/model/FavoriteTrack;
++
++    move-result-object v1
++
++    if-eqz v1, :not_eligible
++
++    invoke-virtual {p2}, Lcom/aspiro/wamp/model/MediaItem;->getId()I
++
++    move-result v2
++
++    invoke-virtual {v1}, Lcom/aspiro/wamp/model/MediaItem;->getId()I
++
++    move-result p1
++
++    if-ne v2, p1, :not_eligible
++
++    iget-object v0, p0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->f:Lcom/aspiro/wamp/model/AvailabilityInteractor;
++
++    if-eqz v0, :not_eligible
++
++    invoke-interface {v0, v1}, Lcom/aspiro/wamp/model/AvailabilityInteractor;->getAvailability(Lcom/aspiro/wamp/model/MediaItem;)Lcom/aspiro/wamp/model/Availability$MediaItem;
++
++    move-result-object v0
++
++    invoke-virtual {v0}, Lcom/aspiro/wamp/model/Availability$MediaItem;->isAvailable()Z
++
++    move-result v0
++
++    if-eqz v0, :not_eligible
++
++    const/4 v0, 0x1
++
++    return v0
++
++    :not_eligible
++    const/4 v0, 0x0
++
++    return v0
++.end method
++
++.method public final Z(ILcom/aspiro/wamp/model/FavoriteTrack;)V
++    .locals 5
++
++    invoke-virtual {p0, p1, p2}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->Y(ILcom/aspiro/wamp/model/FavoriteTrack;)Z
++
++    move-result p1
++
++    if-eqz p1, :done
++
++    # accepts a Source, wrap the swiped track.
++    iget-object p1, p0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->d:Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/g0;
++
++    if-eqz p1, :done
++
++    iget-object v0, p1, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/g0;->m:Lcom/tidal/android/navigation/NavigationInfo;
++
++    invoke-static {v0}, Lcom/aspiro/wamp/playqueue/source/model/b;->m(Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/playqueue/source/model/MyItemsSource;
++
++    move-result-object v4
++
++    invoke-virtual {v4, p2}, Lcom/aspiro/wamp/playqueue/source/model/Source;->addSourceItem(Lcom/aspiro/wamp/model/MediaItem;)V
++
++    iget-object v3, p1, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/g0;->k:Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
++
++    iget-object v0, p0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->b:Lx40/a;
++
++    instance-of p1, v0, Lh4/a;
++
++    if-eqz p1, :done
++
++    check-cast v0, Lh4/a;
++
++    invoke-virtual {p0}, Landroidx/fragment/app/Fragment;->getActivity()Landroidx/fragment/app/FragmentActivity;
++
++    move-result-object v1
++
++    if-eqz v1, :done
++
++    move-object v2, p2
++
++    invoke-virtual/range {v0 .. v4}, Lh4/a;->q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
++
++    :done
++    return-void
++.end method
++
++
+ # virtual methods
+ .method public final M()Ln8/b;
+     .locals 1
+@@ -2265,9 +2418,16 @@
+     iput-object p0, p1, Lo4/g;->e:Lo4/g$e;
+
+     .line 224
+     .line 225
+     iput p2, p1, Lo4/g;->b:I
++    iget-object p1, p0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->l:Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/m;
++
++    invoke-virtual {p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
++
++    iget-object p1, p1, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/m;->f:Landroidx/recyclerview/widget/RecyclerView;
++
++    invoke-static {p0, p1}, Lradiant/SwipeToQueue;->install(Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;Landroidx/recyclerview/widget/RecyclerView;)V
+
+     .line 226
+     .line 227
+     invoke-virtual {p0}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->N()Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/n;
+--- a/h4/a.smali
++++ b/h4/a.smali
+@@ -931,3 +931,32 @@
+ .end method
++
++.method public final q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
++    .locals 2
++
++    iget-object v0, p0, Lh4/a;->n:Lcom/aspiro/wamp/contextmenu/menu/track/TrackContextMenu$a;
++
++    check-cast v0, Lcom/aspiro/wamp/contextmenu/menu/track/d;
++
++    iget-object v0, v0, Lcom/aspiro/wamp/contextmenu/menu/track/d;->a:Lcom/aspiro/wamp/contextmenu/menu/track/c;
++
++    iget-object v0, v0, Lcom/aspiro/wamp/contextmenu/menu/track/c;->b:Ldagger/internal/j;
++
++    invoke-interface {v0}, Lql0/a;->get()Ljava/lang/Object;
++
++    move-result-object v0
++
++    check-cast v0, Lm3/f$a;
++
++    invoke-interface {v0, p2, p3, p4}, Lm3/f$a;->a(Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Lm3/f;
++
++    move-result-object v0
++
++    # call add to queue method
++    invoke-virtual {v0, p1}, Lm3/f;->b(Landroidx/fragment/app/FragmentActivity;)V
++
++    return-void
++.end method
++
+ 
+ .method public final o(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Credit;Lcom/tidal/android/navigation/NavigationInfo;)V
