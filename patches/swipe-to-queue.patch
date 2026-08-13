@@ -1,6 +1,6 @@
 --- a/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
-@@ -107,6 +107,103 @@
+@@ -107,6 +107,118 @@
  .end method
  
  
@@ -55,13 +55,15 @@
 +.end method
 +
 +.method public final Z(ILcom/aspiro/wamp/model/FavoriteTrack;)V
-+    .locals 5
++    .locals 6
++
++    move v5, p1
 +
 +    invoke-virtual {p0, p1, p2}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->Y(ILcom/aspiro/wamp/model/FavoriteTrack;)Z
 +
-+    move-result p1
++    move-result v0
 +
-+    if-eqz p1, :done
++    if-eqz v0, :done
 +
 +    # accepts a Source, wrap the swiped track.
 +    iget-object p1, p0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->d:Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/g0;
@@ -94,7 +96,20 @@
 +
 +    move-object v2, p2
 +
-+    invoke-virtual/range {v0 .. v4}, Lh4/a;->q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
++    invoke-virtual/range {v0 .. v4}, Lh4/a;->q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
++
++    move-result v0
++
++    if-nez v0, :done
++
++    # if nothing is playing, call row click handler to play the track directly instead of adding it to queue
++    iget-object v0, p0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->l:Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/m;
++
++    if-eqz v0, :done
++
++    iget-object v0, v0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/m;->f:Landroidx/recyclerview/widget/RecyclerView;
++
++    invoke-virtual {p0, v0, v5, v0}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->w(Landroidx/recyclerview/widget/RecyclerView;ILandroid/view/View;)V
 +
 +    :done
 +    return-void
@@ -123,19 +138,19 @@
      invoke-virtual {p0}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->N()Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/n;
 --- a/h4/a.smali
 +++ b/h4/a.smali
-@@ -931,3 +931,31 @@
+@@ -931,3 +931,49 @@
  .end method
 +
-+.method public final q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
-+    .locals 2
++.method public final q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
++    .locals 3
 +
 +    iget-object v0, p0, Lh4/a;->n:Lcom/aspiro/wamp/contextmenu/menu/track/TrackContextMenu$a;
 +
 +    check-cast v0, Lcom/aspiro/wamp/contextmenu/menu/track/d;
 +
-+    iget-object v0, v0, Lcom/aspiro/wamp/contextmenu/menu/track/d;->a:Lcom/aspiro/wamp/contextmenu/menu/track/c;
++    iget-object v1, v0, Lcom/aspiro/wamp/contextmenu/menu/track/d;->a:Lcom/aspiro/wamp/contextmenu/menu/track/c;
 +
-+    iget-object v0, v0, Lcom/aspiro/wamp/contextmenu/menu/track/c;->b:Ldagger/internal/j;
++    iget-object v0, v1, Lcom/aspiro/wamp/contextmenu/menu/track/c;->b:Ldagger/internal/j;
 +
 +    invoke-interface {v0}, Lql0/a;->get()Ljava/lang/Object;
 +
@@ -147,10 +162,28 @@
 +
 +    move-result-object v0
 +
-+    # call add to queue method
++    iget-object v2, v0, Lm3/f;->j:Lcom/aspiro/wamp/playqueue/g1;
++
++    invoke-virtual {v2}, Lcom/aspiro/wamp/playqueue/g1;->a()Lcom/aspiro/wamp/player/d;
++
++    move-result-object v2
++
++    invoke-virtual {v2}, Lcom/aspiro/wamp/player/d;->b()Lcom/aspiro/wamp/model/MediaItemParent;
++
++    move-result-object v2
++
++    if-eqz v2, :empty_queue
++
 +    invoke-virtual {v0, p1}, Lm3/f;->b(Landroidx/fragment/app/FragmentActivity;)V
 +
-+    return-void
++    const/4 v0, 0x1
++
++    return v0
++
++    :empty_queue
++    const/4 v0, 0x0
++
++    return v0
 +.end method
 +
  
