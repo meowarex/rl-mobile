@@ -138,7 +138,7 @@
      invoke-virtual {p0}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->N()Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/n;
 --- a/h4/a.smali
 +++ b/h4/a.smali
-@@ -931,3 +931,49 @@
+@@ -931,1 +931,46 @@
  .end method
 +
 +.method public final q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
@@ -185,6 +185,116 @@
 +
 +    return v0
 +.end method
+--- a/com/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/ItemTouchHelperCallbackImpl.smali
++++ b/com/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/ItemTouchHelperCallbackImpl.smali
+@@ -31,6 +31,10 @@
+ 
+ .field public g:I
+ 
++.field public final h:Landroid/graphics/drawable/Drawable;
++
++.field public i:Z
 +
  
- .method public final o(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Credit;Lcom/tidal/android/navigation/NavigationInfo;)V
+ # direct methods
+ .method public constructor <init>(Landroid/content/Context;Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/a;Lcom/aspiro/wamp/nowplaying/view/playqueue/l;)V
+@@ -55,6 +59,26 @@
+ 
+     .line 10
+     .line 11
++    # trash icon
++    sget p2, Lcom/aspiro/wamp/R$drawable;->ic_delete:I
++
++    invoke-virtual {p1, p2}, Landroid/content/Context;->getDrawable(I)Landroid/graphics/drawable/Drawable;
++
++    move-result-object p2
++
++    if-eqz p2, :store_remove_icon
++
++    invoke-virtual {p2}, Landroid/graphics/drawable/Drawable;->mutate()Landroid/graphics/drawable/Drawable;
++
++    move-result-object p2
++
++    const/4 p3, -0x1
++
++    invoke-virtual {p2, p3}, Landroid/graphics/drawable/Drawable;->setTint(I)V
++
++    :store_remove_icon
++    iput-object p2, p0, Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/ItemTouchHelperCallbackImpl;->h:Landroid/graphics/drawable/Drawable;
++
+     new-instance p2, Landroid/graphics/drawable/ColorDrawable;
+ 
+     .line 12
+@@ -377,6 +401,10 @@
+     .line 5
+     .line 6
+     .line 7
++    const/4 v0, 0x0
++
++    iput-boolean v0, p0, Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/ItemTouchHelperCallbackImpl;->i:Z
++
+     iget-object v0, p0, Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/ItemTouchHelperCallbackImpl;->d:Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/ItemTouchHelperCallbackImpl$ActionType;
+ 
+     .line 8
+@@ -844,7 +872,7 @@
+ 
+     .line 32
+     .line 33
+-    const/4 v1, 0x4
++    const/16 v1, __RL_SWIPE_TO_QUEUE_DIRECTION__
+ 
+     .line 34
+     :cond_1
+@@ -896,7 +924,23 @@
+ .end method
+ 
++.method public getSwipeEscapeVelocity(F)F
++    .locals 1
++    # Float.MAX_VALUE
++    const v0, 0x7f7fffff
++
++    return v0
++.end method
++
++.method public getSwipeThreshold(Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)F
++    .locals 1
++    # 0.3f
++    const v0, 0x3e99999a
++
++    return v0
++.end method
++
+ .method public final onChildDraw(Landroid/graphics/Canvas;Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;FFIZ)V
+-    .locals 2
++    .locals 8
+ 
+     .line 1
+     invoke-virtual {p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+@@ -916,6 +960,16 @@
+     .line 10
+     invoke-super/range {p0 .. p7}, Landroidx/recyclerview/widget/ItemTouchHelper$Callback;->onChildDraw(Landroid/graphics/Canvas;Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;FFIZ)V
+ 
++    move-object/from16 v0, p0
++    move-object/from16 v1, p1
++    move-object/from16 v2, p3
++    move/from16 v3, p4
++    move/from16 v4, p6
++    move/from16 v5, p7
++    invoke-static/range {v0 .. v5}, Lradiant/QueueSwipeRemove;->draw(Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/ItemTouchHelperCallbackImpl;Landroid/graphics/Canvas;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;FIZ)V
++
++    goto :cond_0
++
+     .line 11
+     .line 12
+     .line 13
+--- a/com/aspiro/wamp/nowplaying/view/playqueue/l.smali
++++ b/com/aspiro/wamp/nowplaying/view/playqueue/l.smali
+@@ -983,6 +983,8 @@
+     .line 121
+     move-result-object p1
+ 
++    invoke-static {p1}, Lradiant/QueueSwipeRemove;->setRemoveDuration(Landroidx/recyclerview/widget/RecyclerView;)V
++
+     .line 122
+     new-instance p2, Landroidx/recyclerview/widget/LinearLayoutManager;
+ 

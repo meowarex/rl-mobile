@@ -429,7 +429,8 @@
         "swipe-to-queue.patch"
       ],
       "extensionFiles": [
-        "radiant/SwipeToQueue.smali"
+        "radiant/SwipeToQueue.smali",
+        "radiant/QueueSwipeRemove.smali"
       ],
       "title": "Swipe to Queue",
       "description": "Swipe on tracks (in library/my tracks only for now) to add them to the play queue.",
