@@ -436,10 +436,11 @@
         "radiant/swipe/QueueExecutor.smali",
         "radiant/swipe/FavoriteTracksResolver.smali",
         "radiant/swipe/DynamicTrackResolver.smali",
-        "radiant/swipe/MyAlbumsResolver.smali"
+        "radiant/swipe/MyAlbumsResolver.smali",
+        "radiant/swipe/MyPlaylistsResolver.smali"
       ],
       "title": "Swipe to Queue",
-      "description": "Swipe on tracks/albums to add them to the play queue.",
+      "description": "Swipe on tracks/albums/playlists to add them to the play queue.",
       "default": false,
       "advancedOptions": [
         {

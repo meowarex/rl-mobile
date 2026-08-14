@@ -117,6 +117,88 @@
     return v0
 .end method
 
+.method public static playlist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+    .locals 4
+
+    if-eqz p0, :done
+
+    if-eqz p1, :done
+
+    invoke-virtual {p1}, Lcom/aspiro/wamp/model/Playlist;->getNumberOfItems()I
+
+    move-result v0
+
+    if-lez v0, :done
+
+    :unwrap_context
+    instance-of v0, p0, Landroidx/fragment/app/FragmentActivity;
+
+    if-nez v0, :has_activity
+
+    instance-of v0, p0, Landroid/content/ContextWrapper;
+
+    if-eqz v0, :done
+
+    move-object v0, p0
+
+    check-cast v0, Landroid/content/ContextWrapper;
+
+    invoke-virtual {v0}, Landroid/content/ContextWrapper;->getBaseContext()Landroid/content/Context;
+
+    move-result-object v0
+
+    if-eq v0, p0, :done
+
+    move-object p0, v0
+
+    goto :unwrap_context
+
+    :has_activity
+    invoke-static {}, Lcom/aspiro/wamp/App$a;->a()Lcom/aspiro/wamp/App;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lcom/aspiro/wamp/App;->e()Le5/c;
+
+    move-result-object v0
+
+    check-cast v0, Le5/z$n2;
+
+    invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
+
+    move-result v1
+
+    if-eqz v1, :play
+
+    iget-object v1, v0, Le5/z$n2;->w8:Ldagger/internal/f;
+
+    invoke-interface {v1}, Lql0/a;->get()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Lcom/aspiro/wamp/contextmenu/item/playlist/h$a;
+
+    invoke-interface {v1, p1, p2, p3}, Lcom/aspiro/wamp/contextmenu/item/playlist/h$a;->a(Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/contextmenu/item/playlist/h;
+
+    move-result-object p2
+
+    check-cast p0, Landroidx/fragment/app/FragmentActivity;
+
+    invoke-virtual {p2, p0}, Lcom/aspiro/wamp/contextmenu/item/playlist/h;->b(Landroidx/fragment/app/FragmentActivity;)V
+
+    goto :done
+
+    :play
+    invoke-virtual {v0}, Le5/z$n2;->y3()Lcom/aspiro/wamp/playback/k0;
+
+    move-result-object p0
+
+    invoke-virtual {p0, p1, p3}, Lcom/aspiro/wamp/playback/k0;->c(Lcom/aspiro/wamp/model/Playlist;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    :done
+    return-void
+.end method
+
 .method public static track(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
     .locals 2
 

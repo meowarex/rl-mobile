@@ -161,6 +161,17 @@
      .line 24
      .line 25
      .line 26
+--- a/com/aspiro/wamp/mycollection/subpages/playlists/myplaylists/MyPlaylistsView.smali
++++ b/com/aspiro/wamp/mycollection/subpages/playlists/myplaylists/MyPlaylistsView.smali
+@@ -1297,6 +1297,8 @@
+     .line 23
+     invoke-static {p1, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
+
++    invoke-static {p0, p2}, Lradiant/swipe/MyPlaylistsResolver;->install(Lcom/aspiro/wamp/mycollection/subpages/playlists/myplaylists/MyPlaylistsView;Landroidx/recyclerview/widget/RecyclerView;)V
++
+     .line 24
+     .line 25
+     .line 26
 --- a/androidx/recyclerview/widget/ItemTouchHelper$2.smali
 +++ b/androidx/recyclerview/widget/ItemTouchHelper$2.smali
 @@ -773,7 +773,11 @@
