@@ -5,7 +5,7 @@
 # static fields
 .field public static volatile currentAlbumId:I
 
-# 0 = Static, 1 = Animated (always rotate), 2 = Playback (follow live play state)
+# 2 = Stock (TIDAL's blurred cover, follows live play state), 3 = Kawarp (AGSL shader)
 .field public static volatile mode:I
 
 # Live play state from the mini-player (t.c PlayState = Playing)
@@ -69,26 +69,6 @@
     move-result-object v0
 
     sput-object v0, Lradiant/HomeBackdrop;->coverUuidState:Landroidx/compose/runtime/MutableState;
-
-    return-void
-.end method
-
-.method public static setModeStatic()V
-    .locals 1
-
-    const/4 v0, 0x0
-
-    sput v0, Lradiant/HomeBackdrop;->mode:I
-
-    return-void
-.end method
-
-.method public static setModeAnimated()V
-    .locals 1
-
-    const/4 v0, 0x1
-
-    sput v0, Lradiant/HomeBackdrop;->mode:I
 
     return-void
 .end method

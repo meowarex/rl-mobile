@@ -94,6 +94,24 @@ Each patch file targets a specific class via its `--- a/` header — the filenam
 - Comment EACH patch line on the end with a simple 1-5 word description of what it does/or is for
 - Make sure the patch file name is descriptive of what it does
 
+### The Kawarp extension (generated smali)
+
+`patches/extension/radiant/Kawarp.smali` and `patches/extension/dev/kawarp/KawarpEngine.smali`
+are **generated — don't hand-edit them**. The engine comes from the
+[Kawarp-AGSL](https://github.com/meowarex/kawarp-agsl) library, which the build tooling expects
+cloned inside `tools/` (the clone is gitignored):
+
+```bash
+git clone https://github.com/meowarex/kawarp-agsl tools/kawarp-agsl
+```
+
+To change the TIDAL glue, edit `tools/kawarp-build/src/radiant/Kawarp.java`; to change the
+effect itself, PR the Kawarp-AGSL repo. Then regenerate and commit the refreshed smali:
+
+```bash
+./tools/kawarp-build/build.sh
+```
+
 ### Submitting
 Fork the repo, add your patch to `patches/`, and open a PR describing what it changes and why.
 - Patch PR should be prefixed with `[patch]` in the title

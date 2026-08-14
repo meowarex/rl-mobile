@@ -14,17 +14,16 @@
         "DebugMenuUnlock"
       ],
       "disables": [
-        "LyricsDisableCover",
-        "LyricsReplaceLyricsButton",
-        "LyricsReplaceShareButton",
         "LyricsRlApi",
-        "LyricsKeepControlsVisible",
         "PlayerBackdrop",
         "QualityBadgeColors",
         "PlayerMovePlayingFrom",
         "PlayerOneHanded",
         "LyricsProgressPill",
-        "MiniPlayerRedesign"
+        "LyricsDisableCover",
+        "LyricsReplaceLyricsButton",
+        "LyricsReplaceShareButton",
+        "LyricsKeepControlsVisible"
       ]
     },
     {
@@ -119,36 +118,29 @@
       "order": 30,
       "fileNames": [],
       "title": "Player Backdrop",
-      "description": "Lets you fully adjust how the player backdrop blur looks and behaves",
+      "description": "Swap the player backdrop for the Kawarp shader, or fine-tune TIDAL's own blurred cover",
       "default": true,
-      "defaultVariantIndex": 2,
+      "defaultVariantIndex": 1,
       "variants": [
         {
-          "title": "Static",
-          "fileNames": [
-            "player-backdrop-static.patch"
-          ],
-          "extensionFiles": [
-            "radiant/BackdropFx.smali"
-          ]
-        },
-        {
-          "title": "Animated",
-          "fileNames": [
-            "player-backdrop-animated.patch"
-          ],
-          "extensionFiles": [
-            "radiant/BackdropFx.smali"
-          ]
-        },
-        {
-          "title": "Playback",
+          "title": "Tidal",
           "fileNames": [
             "player-backdrop-playback.patch"
           ],
           "extensionFiles": [
             "radiant/BackdropFx.smali"
           ]
+        },
+        {
+          "title": "Radiant",
+          "fileNames": [
+            "player-backdrop-kawarp.patch"
+          ],
+          "extensionFiles": [
+            "radiant/Kawarp.smali",
+            "dev/kawarp/KawarpEngine.smali"
+          ],
+          "minSdk": 33
         }
       ],
       "advancedOptions": [
@@ -166,7 +158,8 @@
           "encode": {
             "kind": "int",
             "scale": 1.0
-          }
+          },
+          "requiresVariant": 0
         },
         {
           "type": "slider",
@@ -182,7 +175,8 @@
           "encode": {
             "kind": "floatBits",
             "scale": 0.02
-          }
+          },
+          "requiresVariant": 0
         },
         {
           "type": "slider",
@@ -198,7 +192,8 @@
           "encode": {
             "kind": "floatBits",
             "scale": 0.02
-          }
+          },
+          "requiresVariant": 0
         },
         {
           "type": "slider",
@@ -214,7 +209,170 @@
           "encode": {
             "kind": "floatBits",
             "scale": 0.02
-          }
+          },
+          "requiresVariant": 0
+        },
+        {
+          "type": "toggle",
+          "key": "kawarp_reactive",
+          "title": "Playback Reactive",
+          "description": "Cover shader reacts to playback state by freezing/resuming",
+          "default": true,
+          "token": "RL_KW_REACTIVE",
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_blur",
+          "title": "Blur Passes",
+          "description": "Kawase blur passes, higher is softer but costs more GPU",
+          "default": 5,
+          "min": 1,
+          "max": 40,
+          "steps": 38,
+          "displayAsPercent": false,
+          "token": "RL_KW_BLUR",
+          "encode": {
+            "kind": "int",
+            "scale": 1.0
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_warp",
+          "title": "Warp Intensity",
+          "description": "Strength of the fluidity effect",
+          "default": 100,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_KW_WARP",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_speed",
+          "title": "Animation Speed",
+          "description": "How fast the backdrop flows",
+          "default": 175,
+          "min": 0,
+          "max": 500,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_KW_SPEED",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_scale",
+          "title": "Backdrop Scale",
+          "description": "Zoom level of the effect",
+          "default": 100,
+          "min": 10,
+          "max": 400,
+          "steps": 12,
+          "displayAsPercent": true,
+          "token": "RL_KW_SCALE",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_contrast",
+          "title": "Contrast",
+          "description": "Contrast of the backdrop",
+          "default": 125,
+          "min": 0,
+          "max": 300,
+          "steps": 11,
+          "displayAsPercent": true,
+          "token": "RL_KW_CONTRAST",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_saturation",
+          "title": "Saturation",
+          "description": "Colour intensity of the backdrop",
+          "default": 125,
+          "min": 0,
+          "max": 400,
+          "steps": 15,
+          "displayAsPercent": true,
+          "token": "RL_KW_SAT",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_brightness",
+          "title": "Brightness",
+          "description": "The value of Brightness applied to the backdrop",
+          "default": 100,
+          "min": 0,
+          "max": 200,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_KW_BRIGHT",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_darken",
+          "title": "Auto Darken Bright Covers",
+          "description": "Prevents bright covers from making text unreadable",
+          "default": 80,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": true,
+          "token": "RL_KW_DARKEN",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.01
+          },
+          "requiresVariant": 1
+        },
+        {
+          "type": "slider",
+          "key": "kawarp_dither",
+          "title": "Dithering",
+          "description": "Breaks up color banding in smooth gradients",
+          "default": 15,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": false,
+          "token": "RL_KW_DITHER",
+          "encode": {
+            "kind": "floatBits",
+            "scale": 0.001
+          },
+          "requiresVariant": 1
         },
         {
           "type": "toggle",

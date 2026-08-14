@@ -27,3 +27,6 @@ Reference/
 !tidal-apk/*.apk
 !tidal-apk/*.apkm
 tidal-apk/*/
+
+# Kawarp-AGSL library (CLONE HERE! the build tooling in tools/kawarp-build expects it)
+tools/kawarp-agsl

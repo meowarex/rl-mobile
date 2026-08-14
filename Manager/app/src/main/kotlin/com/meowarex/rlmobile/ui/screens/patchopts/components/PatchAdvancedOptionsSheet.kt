@@ -43,6 +43,7 @@ import com.meowarex.rlmobile.ui.components.ResetToDefaultButton
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionLock
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionState
+import com.meowarex.rlmobile.ui.screens.patchopts.hiddenForVariant
 import com.meowarex.rlmobile.ui.screens.patchopts.optionLock
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchSpec
 import kotlinx.coroutines.launch
@@ -115,6 +116,8 @@ fun PatchAdvancedOptionsSheet(
                 when {
                     option is OptionSpec.Toggle && option.inline -> false
                     option is OptionSpec.Toggle && option.requiresOption in parentKeys -> false
+                    // Options belonging to another variant are hidden, not greyed out.
+                    option.hiddenForVariant(selectedVariant) -> false
                     else -> true
                 }
             }

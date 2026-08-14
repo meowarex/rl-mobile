@@ -1,0 +1,79 @@
+--- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
+@@ -4613,8 +4613,10 @@
+ 
+     move-object/from16 v25, v10
+ 
++    invoke-static {}, Lradiant/HomeBackdrop;->setModeKawarp()V    # RL: mirror the mode to Cover Everywhere
++
+     .line 171
+-    invoke-static/range {v16 .. v26}, Lcom/tidal/android/feature/playerscreen/ui/composables/p3;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
++    invoke-static/range {v16 .. v26}, Lradiant/Kawarp;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+ 
+     const/4 v4, 0x0
+ 
+--- a/com/tidal/android/core/ui/composable/c0.smali
++++ b/com/tidal/android/core/ui/composable/c0.smali
+@@ -16,7 +16,9 @@
+     move-result p0
+ 
+     .line 5
+-    invoke-virtual {p2, p0}, Landroid/view/Window;->setNavigationBarColor(I)V
++    const/4 v3, 0x0    # RL: force transparent nav bar so the AGSL backdrop shows through (was p0 = extracted BG color; luminance below still uses p0 for icon light/dark)
++
++    invoke-virtual {p2, v3}, Landroid/view/Window;->setNavigationBarColor(I)V
+ 
+     .line 6
+     .line 7
+--- a/radiant/HomeBackdrop.smali
++++ b/radiant/HomeBackdrop.smali
+@@ -83,6 +83,16 @@
+     return-void
+ .end method
+ 
++.method public static setModeKawarp()V
++    .locals 1
++
++    const/4 v0, 0x3
++
++    sput v0, Lradiant/HomeBackdrop;->mode:I
++
++    return-void
++.end method
++
+ # from the mini-player state ctor (t.<init>) whenever play state changes.
+ .method public static onPlayState(Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerContract$PlayState;)V
+     .locals 2
+@@ -363,8 +373,13 @@
+ 
+     const/4 v11, 0x2
+ 
++    if-eq v10, v11, :rl_live_play
++
++    const/4 v11, 0x3    # RL: Kawarp follows live play state as well
++
+     if-ne v10, v11, :rl_mode_done
+ 
++    :rl_live_play
+     sget-object v10, Lradiant/HomeBackdrop;->isPlayingState:Landroidx/compose/runtime/MutableState;
+ 
+     invoke-interface {v10}, Landroidx/compose/runtime/State;->getValue()Ljava/lang/Object;
+@@ -378,6 +393,18 @@
+     move-result v10
+ 
+     :rl_mode_done
++    # RL: Kawarp renders its own AGSL backdrop rather than TIDAL's blurred cover
++    sget v11, Lradiant/HomeBackdrop;->mode:I
++
++    const/4 v12, 0x3
++
++    if-ne v11, v12, :rl_native_backdrop
++
++    invoke-static {v8, v9, v10, v13, v0}, Lradiant/Kawarp;->render(ILjava/lang/String;ZLandroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;)V
++
++    goto :skip
++
++    :rl_native_backdrop
+     const/4 v11, 0x0    # v11 = isSeeking = false
+ 
+     const/4 v12, 0x0    # v12 = progress callback = null (unused while not seeking)
