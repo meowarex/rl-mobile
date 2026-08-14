@@ -5,9 +5,6 @@
 # static fields
 .field public static volatile currentAlbumId:I
 
-# 2 = Stock (TIDAL's blurred cover, follows live play state), 3 = Kawarp (AGSL shader)
-.field public static volatile mode:I
-
 # Live play state from the mini-player (t.c PlayState = Playing)
 .field public static isPlayingState:Landroidx/compose/runtime/MutableState;
     .annotation system Ldalvik/annotation/Signature;
@@ -38,10 +35,6 @@
 
     sput v0, Lradiant/HomeBackdrop;->currentAlbumId:I
 
-    const/4 v0, 0x2
-
-    sput v0, Lradiant/HomeBackdrop;->mode:I
-
     sget-object v0, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
 
     const/4 v1, 0x0
@@ -69,16 +62,6 @@
     move-result-object v0
 
     sput-object v0, Lradiant/HomeBackdrop;->coverUuidState:Landroidx/compose/runtime/MutableState;
-
-    return-void
-.end method
-
-.method public static setModePlayback()V
-    .locals 1
-
-    const/4 v0, 0x2
-
-    sput v0, Lradiant/HomeBackdrop;->mode:I
 
     return-void
 .end method
@@ -358,13 +341,7 @@
 
     move-object v9, v1    # v9 = cover uuid
 
-    # v10 = isPlaying, mirrored from the Player Backdrop variant
-    sget v10, Lradiant/HomeBackdrop;->mode:I
-
-    const/4 v11, 0x2
-
-    if-ne v10, v11, :rl_mode_done
-
+    # v10 = isPlaying, straight from the live mini-player state (both modes follow it)
     sget-object v10, Lradiant/HomeBackdrop;->isPlayingState:Landroidx/compose/runtime/MutableState;
 
     invoke-interface {v10}, Landroidx/compose/runtime/State;->getValue()Ljava/lang/Object;
@@ -377,7 +354,6 @@
 
     move-result v10
 
-    :rl_mode_done
     const/4 v11, 0x0    # v11 = isSeeking = false
 
     const/4 v12, 0x0    # v12 = progress callback = null (unused while not seeking)
