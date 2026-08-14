@@ -430,10 +430,16 @@
       ],
       "extensionFiles": [
         "radiant/SwipeToQueue.smali",
-        "radiant/QueueSwipeRemove.smali"
+        "radiant/QueueSwipeRemove.smali",
+        "radiant/swipe/QueueRequest.smali",
+        "radiant/swipe/QueueRowResolver.smali",
+        "radiant/swipe/QueueExecutor.smali",
+        "radiant/swipe/FavoriteTracksResolver.smali",
+        "radiant/swipe/DynamicTrackResolver.smali",
+        "radiant/swipe/MyAlbumsResolver.smali"
       ],
       "title": "Swipe to Queue",
-      "description": "Swipe on tracks (in library/my tracks only for now) to add them to the play queue.",
+      "description": "Swipe on tracks/albums to add them to the play queue.",
       "default": false,
       "advancedOptions": [
         {

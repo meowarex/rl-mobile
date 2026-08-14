@@ -2,7 +2,7 @@
 +++ b/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
 @@ -107,6 +107,118 @@
  .end method
- 
+
  
 +.method public final Y(ILcom/aspiro/wamp/model/FavoriteTrack;)Z
 +    .locals 3
@@ -131,11 +131,61 @@
 +
 +    iget-object p1, p1, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/m;->f:Landroidx/recyclerview/widget/RecyclerView;
 +
-+    invoke-static {p0, p1}, Lradiant/SwipeToQueue;->install(Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;Landroidx/recyclerview/widget/RecyclerView;)V
++    invoke-static {p0, p1}, Lradiant/swipe/FavoriteTracksResolver;->install(Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;Landroidx/recyclerview/widget/RecyclerView;)V
 
      .line 226
      .line 227
      invoke-virtual {p0}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->N()Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/n;
+--- a/p7/a.smali
++++ b/p7/a.smali
+@@ -33,3 +33,11 @@
+ .end method
+
++.method public b(Landroidx/recyclerview/widget/RecyclerView;)V
++    .locals 0
++
++    invoke-static {p1}, Lradiant/swipe/DynamicTrackResolver;->install(Landroidx/recyclerview/widget/RecyclerView;)V
++
++    return-void
++.end method
++
+ .method public final c(Ljava/lang/Object;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)V
+--- a/com/aspiro/wamp/mycollection/subpages/albums/myalbums/MyAlbumsView.smali
++++ b/com/aspiro/wamp/mycollection/subpages/albums/myalbums/MyAlbumsView.smali
+@@ -1286,6 +1286,8 @@
+     .line 23
+     invoke-static {v0, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
+
++    invoke-static {p0, p2}, Lradiant/swipe/MyAlbumsResolver;->install(Lcom/aspiro/wamp/mycollection/subpages/albums/myalbums/MyAlbumsView;Landroidx/recyclerview/widget/RecyclerView;)V
++
+     .line 24
+     .line 25
+     .line 26
+--- a/androidx/recyclerview/widget/ItemTouchHelper$2.smali
++++ b/androidx/recyclerview/widget/ItemTouchHelper$2.smali
+@@ -773,7 +773,11 @@
+     const/4 v5, 0x1
+
+     .line 54
+-    if-eq p1, v5, :cond_9
++    if-ne p1, v5, :rl_not_explicit_release
++    iget-object v6, v2, Landroidx/recyclerview/widget/ItemTouchHelper;->mCallback:Landroidx/recyclerview/widget/ItemTouchHelper$Callback;
++    invoke-static {v6, v5}, Lradiant/SwipeToQueue;->setReleaseAllowed(Landroidx/recyclerview/widget/ItemTouchHelper$Callback;Z)V
++    goto :cond_9
++    :rl_not_explicit_release
+
+     .line 55
+     .line 56
+@@ -867,6 +871,9 @@
+
+     .line 97
+     :cond_6
++    const/4 v6, 0x0
++    iget-object v1, v2, Landroidx/recyclerview/widget/ItemTouchHelper;->mCallback:Landroidx/recyclerview/widget/ItemTouchHelper$Callback;
++    invoke-static {v1, v6}, Lradiant/SwipeToQueue;->setReleaseAllowed(Landroidx/recyclerview/widget/ItemTouchHelper$Callback;Z)V
+     iget-object p1, v2, Landroidx/recyclerview/widget/ItemTouchHelper;->mVelocityTracker:Landroid/view/VelocityTracker;
+
+     .line 98
 --- a/h4/a.smali
 +++ b/h4/a.smali
 @@ -931,1 +931,46 @@

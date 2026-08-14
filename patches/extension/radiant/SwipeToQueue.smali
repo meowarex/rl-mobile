@@ -10,13 +10,13 @@
 # instance fields
 .field private final background:Landroid/graphics/drawable/ColorDrawable;
 
-.field private final fragment:Ljava/lang/ref/WeakReference;
-
 .field private final icon:Landroid/graphics/drawable/Drawable;
 
-.field private pendingPosition:I
+.field private pendingRequest:Lradiant/swipe/QueueRequest;
 
-.field private pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+.field private releaseAllowed:Z
+
+.field private final resolver:Lradiant/swipe/QueueRowResolver;
 
 # direct methods
 .method static constructor <clinit>()V
@@ -31,7 +31,7 @@
     return-void
 .end method
 
-.method private constructor <init>(Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;Landroidx/recyclerview/widget/RecyclerView;)V
+.method private constructor <init>(Landroidx/recyclerview/widget/RecyclerView;Lradiant/swipe/QueueRowResolver;)V
     .locals 3
 
     const/4 v0, 0x0
@@ -41,13 +41,9 @@
 
     invoke-direct {p0, v0, v1}, Landroidx/recyclerview/widget/ItemTouchHelper$SimpleCallback;-><init>(II)V
 
-    new-instance v0, Ljava/lang/ref/WeakReference;
+    iput-object p2, p0, Lradiant/SwipeToQueue;->resolver:Lradiant/swipe/QueueRowResolver;
 
-    invoke-direct {v0, p1}, Ljava/lang/ref/WeakReference;-><init>(Ljava/lang/Object;)V
-
-    iput-object v0, p0, Lradiant/SwipeToQueue;->fragment:Ljava/lang/ref/WeakReference;
-
-    invoke-virtual {p2}, Landroid/view/View;->getContext()Landroid/content/Context;
+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
 
     move-result-object v0
 
@@ -85,7 +81,7 @@
     return-void
 .end method
 
-.method public static install(Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;Landroidx/recyclerview/widget/RecyclerView;)V
+.method public static install(Landroidx/recyclerview/widget/RecyclerView;Lradiant/swipe/QueueRowResolver;)V
     .locals 4
 
     if-eqz p0, :done
@@ -94,7 +90,7 @@
 
     sget-object v0, Lradiant/SwipeToQueue;->installed:Ljava/util/WeakHashMap;
 
-    invoke-virtual {v0, p1}, Ljava/util/WeakHashMap;->containsKey(Ljava/lang/Object;)Z
+    invoke-virtual {v0, p0}, Ljava/util/WeakHashMap;->containsKey(Ljava/lang/Object;)Z
 
     move-result v1
 
@@ -102,17 +98,32 @@
 
     sget-object v1, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
 
-    invoke-virtual {v0, p1, v1}, Ljava/util/WeakHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    invoke-virtual {v0, p0, v1}, Ljava/util/WeakHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
 
     new-instance v0, Lradiant/SwipeToQueue;
 
-    invoke-direct {v0, p0, p1}, Lradiant/SwipeToQueue;-><init>(Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;Landroidx/recyclerview/widget/RecyclerView;)V
+    invoke-direct {v0, p0, p1}, Lradiant/SwipeToQueue;-><init>(Landroidx/recyclerview/widget/RecyclerView;Lradiant/swipe/QueueRowResolver;)V
 
     new-instance v1, Landroidx/recyclerview/widget/ItemTouchHelper;
 
     invoke-direct {v1, v0}, Landroidx/recyclerview/widget/ItemTouchHelper;-><init>(Landroidx/recyclerview/widget/ItemTouchHelper$Callback;)V
 
-    invoke-virtual {v1, p1}, Landroidx/recyclerview/widget/ItemTouchHelper;->attachToRecyclerView(Landroidx/recyclerview/widget/RecyclerView;)V
+    invoke-virtual {v1, p0}, Landroidx/recyclerview/widget/ItemTouchHelper;->attachToRecyclerView(Landroidx/recyclerview/widget/RecyclerView;)V
+
+    :done
+    return-void
+.end method
+
+.method public static setReleaseAllowed(Landroidx/recyclerview/widget/ItemTouchHelper$Callback;Z)V
+    .locals 1
+
+    instance-of v0, p0, Lradiant/SwipeToQueue;
+
+    if-eqz v0, :done
+
+    check-cast p0, Lradiant/SwipeToQueue;
+
+    iput-boolean p1, p0, Lradiant/SwipeToQueue;->releaseAllowed:Z
 
     :done
     return-void
@@ -120,52 +131,17 @@
 
 # virtual methods
 .method public getSwipeDirs(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)I
-    .locals 4
+    .locals 2
 
-    iget-object v0, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+    iget-object v0, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
 
     if-nez v0, :not_swipeable
 
-    instance-of v0, p2, Ln8/d;
+    iget-object v0, p0, Lradiant/SwipeToQueue;->resolver:Lradiant/swipe/QueueRowResolver;
 
-    if-eqz v0, :not_swipeable
+    invoke-interface {v0, p1, p2}, Lradiant/swipe/QueueRowResolver;->resolve(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/swipe/QueueRequest;
 
-    invoke-virtual {p2}, Landroidx/recyclerview/widget/RecyclerView$ViewHolder;->getBindingAdapterPosition()I
-
-    move-result v0
-
-    const/4 v1, -0x1
-
-    if-ne v0, v1, :has_position
-
-    const/4 v0, 0x0
-
-    return v0
-
-    :has_position
-    check-cast p2, Ln8/d;
-
-    iget-object v1, p2, Ln8/d;->f:Lcom/aspiro/wamp/model/MediaItem;
-
-    instance-of v2, v1, Lcom/aspiro/wamp/model/FavoriteTrack;
-
-    if-eqz v2, :not_swipeable
-
-    iget-object v2, p0, Lradiant/SwipeToQueue;->fragment:Ljava/lang/ref/WeakReference;
-
-    invoke-virtual {v2}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
-
-    move-result-object v2
-
-    check-cast v2, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;
-
-    if-eqz v2, :not_swipeable
-
-    check-cast v1, Lcom/aspiro/wamp/model/FavoriteTrack;
-
-    invoke-virtual {v2, v0, v1}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->Y(ILcom/aspiro/wamp/model/FavoriteTrack;)Z
-
-    move-result v0
+    move-result-object v0
 
     if-eqz v0, :not_swipeable
 
@@ -221,7 +197,7 @@
 
     const/4 v0, 0x0
 
-    iput-object v0, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+    iput-object v0, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
 
     goto :done
 
@@ -286,37 +262,19 @@
 
     if-lt v5, v8, :disarm
 
-    invoke-virtual {p3}, Landroidx/recyclerview/widget/RecyclerView$ViewHolder;->getBindingAdapterPosition()I
+    iget-object v8, p0, Lradiant/SwipeToQueue;->resolver:Lradiant/swipe/QueueRowResolver;
 
-    move-result v8
+    iget-object v10, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
 
-    # RecyclerView.NO_POSITION.
-    const/4 v9, -0x1
+    if-nez v10, :draw_alpha
 
-    if-ne v8, v9, :resolve_action
+    invoke-interface {v8, p2, p3}, Lradiant/swipe/QueueRowResolver;->resolve(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/swipe/QueueRequest;
 
-    goto :draw_alpha
+    move-result-object v10
 
-    :resolve_action
-    move-object v9, p3
+    if-eqz v10, :draw_alpha
 
-    check-cast v9, Ln8/d;
-
-    iget-object v10, v9, Ln8/d;->f:Lcom/aspiro/wamp/model/MediaItem;
-
-    instance-of v11, v10, Lcom/aspiro/wamp/model/FavoriteTrack;
-
-    if-eqz v11, :draw_alpha
-
-    check-cast v10, Lcom/aspiro/wamp/model/FavoriteTrack;
-
-    iput v8, p0, Lradiant/SwipeToQueue;->pendingPosition:I
-
-    iget-object v8, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
-
-    iput-object v10, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
-
-    if-nez v8, :draw_alpha
+    iput-object v10, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
 
     # HapticFeedbackConstants.CLOCK_TICK
     const/4 v8, 0x4
@@ -326,7 +284,7 @@
     goto :draw_alpha
 
     :disarm
-    iget-object v8, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+    iget-object v8, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
 
     if-eqz v8, :clear_pending
 
@@ -338,7 +296,7 @@
     :clear_pending
     const/4 v8, 0x0
 
-    iput-object v8, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+    iput-object v8, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
 
     goto :draw_alpha
 
@@ -491,34 +449,36 @@
 
     const/4 v0, 0x0
 
-    iput-object v0, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+    iput-object v0, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
 
     goto :dispatch
 
     :release
     if-nez p2, :dispatch
 
-    iget v0, p0, Lradiant/SwipeToQueue;->pendingPosition:I
-
-    iget-object v1, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+    iget-boolean v0, p0, Lradiant/SwipeToQueue;->releaseAllowed:Z
 
     const/4 v2, 0x0
 
-    iput-object v2, p0, Lradiant/SwipeToQueue;->pendingTrack:Lcom/aspiro/wamp/model/FavoriteTrack;
+    iput-boolean v2, p0, Lradiant/SwipeToQueue;->releaseAllowed:Z
+
+    iget-object v1, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
+
+    iput-object v2, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
+
+    if-eqz v0, :dispatch
 
     if-eqz v1, :dispatch
 
-    iget-object v2, p0, Lradiant/SwipeToQueue;->fragment:Ljava/lang/ref/WeakReference;
+    iget-object v2, p0, Lradiant/SwipeToQueue;->resolver:Lradiant/swipe/QueueRowResolver;
 
-    invoke-virtual {v2}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+    invoke-interface {v2, v1}, Lradiant/swipe/QueueRowResolver;->isValid(Lradiant/swipe/QueueRequest;)Z
 
-    move-result-object v2
+    move-result v0
 
-    check-cast v2, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;
+    if-eqz v0, :dispatch
 
-    if-eqz v2, :dispatch
-
-    invoke-virtual {v2, v0, v1}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->Z(ILcom/aspiro/wamp/model/FavoriteTrack;)V
+    invoke-interface {v2, v1}, Lradiant/swipe/QueueRowResolver;->execute(Lradiant/swipe/QueueRequest;)V
 
     :dispatch
     invoke-super {p0, p1, p2}, Landroidx/recyclerview/widget/ItemTouchHelper$SimpleCallback;->onSelectedChanged(Landroidx/recyclerview/widget/RecyclerView$ViewHolder;I)V
