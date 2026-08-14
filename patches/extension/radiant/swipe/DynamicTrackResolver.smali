@@ -371,25 +371,6 @@
     return-void
 .end method
 
-.method public isValid(Lradiant/swipe/QueueRequest;)Z
-    .locals 1
-
-    invoke-direct {p0, p1}, Lradiant/swipe/DynamicTrackResolver;->currentTrack(Lradiant/swipe/QueueRequest;)Lcom/aspiro/wamp/model/Track;
-
-    move-result-object p1
-
-    if-eqz p1, :invalid
-
-    const/4 p1, 0x1
-
-    return p1
-
-    :invalid
-    const/4 p1, 0x0
-
-    return p1
-.end method
-
 .method public resolve(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/swipe/QueueRequest;
     .locals 5
 
@@ -455,6 +436,8 @@
     check-cast p1, Lo6/b;
 
     iget-object v0, p1, Lo6/b;->c:Lo6/b$a;
+
+    if-eqz v0, :invalid
 
     iget v0, v0, Lo6/b$a;->d:I
 

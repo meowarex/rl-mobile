@@ -1,6 +1,6 @@
 --- a/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
-@@ -107,6 +107,118 @@
+@@ -107,6 +107,124 @@
  .end method
 
  
@@ -69,6 +69,12 @@
 +    iget-object p1, p0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->d:Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/g0;
 +
 +    if-eqz p1, :done
++
++    invoke-virtual {p1, v5}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/g0;->b(I)Lcom/aspiro/wamp/model/FavoriteTrack;
++
++    move-result-object p2
++
++    if-eqz p2, :done
 +
 +    iget-object v0, p1, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/g0;->m:Lcom/tidal/android/navigation/NavigationInfo;
 +

@@ -74,6 +74,8 @@
 
     div-int/lit8 v8, v8, 0xa
 
+    if-lez v8, :draw_background
+
     if-eqz p5, :draw_alpha
 
     if-lt v5, v8, :below_threshold

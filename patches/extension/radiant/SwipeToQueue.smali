@@ -260,6 +260,8 @@
     # / 10 = 30% of row width (30% threshold)
     div-int/lit8 v8, v8, 0xa
 
+    if-lez v8, :disarm
+
     if-lt v5, v8, :disarm
 
     iget-object v8, p0, Lradiant/SwipeToQueue;->resolver:Lradiant/swipe/QueueRowResolver;
@@ -306,6 +308,8 @@
     mul-int/lit8 v8, v7, 0x3
 
     div-int/lit8 v8, v8, 0xa
+
+    if-lez v8, :draw_background
 
     const/16 v9, 0x40
 
@@ -470,15 +474,9 @@
 
     if-eqz v1, :dispatch
 
-    iget-object v2, p0, Lradiant/SwipeToQueue;->resolver:Lradiant/swipe/QueueRowResolver;
+    iget-object v0, p0, Lradiant/SwipeToQueue;->resolver:Lradiant/swipe/QueueRowResolver;
 
-    invoke-interface {v2, v1}, Lradiant/swipe/QueueRowResolver;->isValid(Lradiant/swipe/QueueRequest;)Z
-
-    move-result v0
-
-    if-eqz v0, :dispatch
-
-    invoke-interface {v2, v1}, Lradiant/swipe/QueueRowResolver;->execute(Lradiant/swipe/QueueRequest;)V
+    invoke-interface {v0, v1}, Lradiant/swipe/QueueRowResolver;->execute(Lradiant/swipe/QueueRequest;)V
 
     :dispatch
     invoke-super {p0, p1, p2}, Landroidx/recyclerview/widget/ItemTouchHelper$SimpleCallback;->onSelectedChanged(Landroidx/recyclerview/widget/RecyclerView$ViewHolder;I)V
