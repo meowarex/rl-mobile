@@ -1,6 +1,7 @@
 package com.meowarex.rlmobile.ui.screens.patchopts
 
 import android.content.Context
+import android.os.Build
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import kotlinx.serialization.SerialName
@@ -49,7 +50,13 @@ data class VariantSpec(
     val fileNames: List<String> = emptyList(),
     val extensionFiles: List<String> = emptyList(),
     val enabled: Boolean = true,
-)
+    /**
+     * Hidden from the picker on devices below this API level (AGSL needs 33)
+     */
+    val minSdk: Int = 0,
+) {
+    val supportedHere: Boolean get() = Build.VERSION.SDK_INT >= minSdk
+}
 
 /** A single advanced option. Discriminated by `"type"` in JSON. */
 @Serializable
@@ -101,6 +108,8 @@ sealed interface OptionSpec {
         val token: String? = null,
         /** How the chosen value becomes the smali literal that replaces the token. */
         val encode: SmaliEncode? = null,
+        /** Hidden unless this variant index is the selected one. */
+        val requiresVariant: Int? = null,
     ) : OptionSpec {
         val valueRange: ClosedFloatingPointRange<Float> get() = min..max
     }
@@ -187,7 +196,9 @@ fun PatchSpec.effectiveVariants(isOptionOn: (OptionSpec.Toggle) -> Boolean): Lis
         }
     }
     return variants.mapIndexedNotNull { index, variant ->
-        if (index in hidden) null
+        // Everything downstream (variantIndex -> resolveVariantIndex) picks from this list, so
+        // dropping an unsupported variant here also keeps the patcher from ever applying it.
+        if (index in hidden || !variant.supportedHere) null
         else EffectiveVariant(index, relabel[index] ?: variant.title, variant.enabled)
     }
 }
@@ -205,6 +216,20 @@ fun PatchSpec.resolveVariantIndex(stored: Int, isOptionOn: (OptionSpec.Toggle) -
         ?: visible.firstOrNull { it.enabled }?.originalIndex
         ?: visible.first().originalIndex
 }
+
+/**
+ * The variant this option belongs to
+ */
+val OptionSpec.variantGate: Int?
+    get() = when (this) {
+        is OptionSpec.Toggle -> requiresVariant
+        is OptionSpec.Slider -> requiresVariant
+        is OptionSpec.Choice -> null
+        is OptionSpec.Color -> null
+    }
+
+fun OptionSpec.hiddenForVariant(selectedVariant: Int): Boolean =
+    variantGate.let { it != null && it != selectedVariant }
 
 sealed interface OptionLock {
     data object Free : OptionLock
