@@ -9,6 +9,8 @@ import android.view.Choreographer;
 import androidx.compose.foundation.layout.SizeKt;
 import androidx.compose.foundation.layout.SpacerKt;
 import androidx.compose.runtime.Composer;
+import androidx.compose.runtime.MutableIntState;
+import androidx.compose.runtime.SnapshotIntStateKt;
 import androidx.compose.runtime.MutableState;
 import androidx.compose.runtime.SnapshotStateKt;
 import androidx.compose.ui.Modifier;
@@ -56,9 +58,12 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
 
     private static final ExecutorService LOADER = Executors.newSingleThreadExecutor();
 
-    /** Bumped every frame so the draw lambda's snapshot read invalidates the draw phase. */
-    private static final MutableState frameState =
-        SnapshotStateKt.mutableStateOf$default(Integer.valueOf(0), null, 2, null);
+    /**
+     * Bumped every frame so the draw lambda's snapshot read invalidates the draw phase.
+     * An int state rather than MutableState<Integer>: this ticks at 60 Hz, and boxing here
+     * would allocate an Integer per frame for nothing.
+     */
+    private static final MutableIntState frameState = SnapshotIntStateKt.mutableIntStateOf(0);
     /** Flips true on any shader failure; read during composition so we recompose onto p3.a. */
     private static final MutableState fallbackState =
         SnapshotStateKt.mutableStateOf$default(Boolean.FALSE, null, 2, null);
@@ -186,7 +191,7 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
         frameScheduled = false;
         // Nothing has drawn for a while: the backdrop is off-screen, so stop burning frames.
         if (SystemClock.uptimeMillis() - lastDrawUptime > IDLE_STOP_MS) return;
-        frameState.setValue(Integer.valueOf(++frameTick));
+        frameState.setIntValue(++frameTick);
         schedule();
     }
 
@@ -203,7 +208,7 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
 
     private static void draw(DrawScope scope) {
         // Snapshot read: this is what ties the draw phase to the frame clock.
-        frameState.getValue();
+        frameState.getIntValue();
         lastDrawUptime = SystemClock.uptimeMillis();
         schedule();
 

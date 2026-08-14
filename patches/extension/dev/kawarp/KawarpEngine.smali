@@ -34,11 +34,11 @@
 
 .field private volatile coverToken:I
 
-.field private volatile darkenBrightness:F
-
 .field private volatile dithering:F
 
 .field private lastFrameUptime:J
+
+.field private volatile nextDarken:F
 
 .field private volatile nextShader:Landroid/graphics/BitmapShader;
 
@@ -49,6 +49,8 @@
 .field private volatile playbackReactive:Z
 
 .field private volatile playing:Z
+
+.field private volatile prevDarken:F
 
 .field private volatile prevShader:Landroid/graphics/BitmapShader;
 
@@ -155,7 +157,9 @@
 
     iput-object v1, p0, Ldev/kawarp/KawarpEngine;->paint:Landroid/graphics/Paint;
 
-    iput v0, p0, Ldev/kawarp/KawarpEngine;->darkenBrightness:F
+    iput v0, p0, Ldev/kawarp/KawarpEngine;->prevDarken:F
+
+    iput v0, p0, Ldev/kawarp/KawarpEngine;->nextDarken:F
 
     iput v0, p0, Ldev/kawarp/KawarpEngine;->speedFactor:F
 
@@ -163,7 +167,7 @@
 
     move-result v0
 
-    if-eqz v0, :cond_55
+    if-eqz v0, :cond_57
 
     new-instance v0, Landroid/graphics/RuntimeShader;
 
@@ -175,7 +179,7 @@
 
     return-void
 
-    :cond_55
+    :cond_57
     new-instance v0, Ljava/lang/IllegalStateException;
 
     const-string v1, "KawarpEngine needs API 33+ (AGSL)"
@@ -738,11 +742,15 @@
 
     iput-object v1, v0, Ldev/kawarp/KawarpEngine;->nextShader:Landroid/graphics/BitmapShader;
 
+    iget v1, v0, Ldev/kawarp/KawarpEngine;->nextDarken:F
+
+    iput v1, v0, Ldev/kawarp/KawarpEngine;->prevDarken:F
+
     invoke-direct {v0, v12}, Ldev/kawarp/KawarpEngine;->brightnessFor(F)F
 
     move-result v1
 
-    iput v1, v0, Ldev/kawarp/KawarpEngine;->darkenBrightness:F
+    iput v1, v0, Ldev/kawarp/KawarpEngine;->nextDarken:F
 
     invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
 
@@ -760,19 +768,19 @@
 
     iget-object v0, p0, Ldev/kawarp/KawarpEngine;->nextShader:Landroid/graphics/BitmapShader;
 
-    if-eqz v0, :cond_ee
+    if-eqz v0, :cond_f5
 
     const/4 v1, 0x0
 
     cmpg-float v2, p2, v1
 
-    if-lez v2, :cond_ee
+    if-lez v2, :cond_f5
 
     cmpg-float v2, p3, v1
 
     if-gtz v2, :cond_f
 
-    goto/16 :goto_ee
+    goto/16 :goto_f5
 
     :cond_f
     invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
@@ -976,17 +984,27 @@
 
     invoke-virtual {v0, v1, v2}, Landroid/graphics/RuntimeShader;->setFloatUniform(Ljava/lang/String;F)V
 
-    iget-object v0, p0, Ldev/kawarp/KawarpEngine;->shader:Landroid/graphics/RuntimeShader;
+    iget v0, p0, Ldev/kawarp/KawarpEngine;->prevDarken:F
 
-    iget v1, p0, Ldev/kawarp/KawarpEngine;->brightness:F
+    iget v1, p0, Ldev/kawarp/KawarpEngine;->nextDarken:F
 
-    iget v2, p0, Ldev/kawarp/KawarpEngine;->darkenBrightness:F
+    iget v2, p0, Ldev/kawarp/KawarpEngine;->prevDarken:F
 
-    mul-float/2addr v1, v2
+    sub-float/2addr v1, v2
 
-    const-string v2, "uBright"
+    mul-float/2addr v1, v6
 
-    invoke-virtual {v0, v2, v1}, Landroid/graphics/RuntimeShader;->setFloatUniform(Ljava/lang/String;F)V
+    add-float/2addr v0, v1
+
+    iget-object v1, p0, Ldev/kawarp/KawarpEngine;->shader:Landroid/graphics/RuntimeShader;
+
+    iget v2, p0, Ldev/kawarp/KawarpEngine;->brightness:F
+
+    mul-float/2addr v2, v0
+
+    const-string v0, "uBright"
+
+    invoke-virtual {v1, v0, v2}, Landroid/graphics/RuntimeShader;->setFloatUniform(Ljava/lang/String;F)V
 
     iget-object v0, p0, Ldev/kawarp/KawarpEngine;->shader:Landroid/graphics/RuntimeShader;
 
@@ -1020,8 +1038,8 @@
 
     return p1
 
-    :cond_ee
-    :goto_ee
+    :cond_f5
+    :goto_f5
     const/4 p1, 0x0
 
     return p1
