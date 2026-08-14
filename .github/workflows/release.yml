@@ -6,6 +6,8 @@ on:
       - main
     paths-ignore:
       - "**/*.md"
+  # Lets a release be re-run by hand from the Actions tab if a push event is ever missed.
+  workflow_dispatch:
 
 jobs:
   Version:
@@ -22,6 +24,16 @@ jobs:
           # so it stays monotonic regardless of what versionName says.
           BASE=$(cat .version | tr -d '[:space:]')
           echo "version=$BASE" >> $GITHUB_OUTPUT
+
+          # Releasing onto an existing tag silently overwrites that release's assets, so a
+          # forgotten .version bump replaces history instead of publishing. Fail loudly instead.
+          # ls-remote, not rev-parse: actions/checkout does not fetch tags by default,
+          # so a local lookup would always miss and the guard would never fire.
+          if git ls-remote --exit-code --tags origin "refs/tags/v$BASE" >/dev/null 2>&1; then
+            echo "::error::Tag v$BASE already exists - bump .version before releasing." \
+              "Re-running this workflow as-is would overwrite the v$BASE release assets."
+            exit 1
+          fi
 
   Build:
     needs: Version

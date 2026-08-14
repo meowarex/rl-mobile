@@ -22,7 +22,7 @@
 
 .field private static frameScheduled:Z
 
-.field private static final frameState:Landroidx/compose/runtime/MutableState;
+.field private static final frameState:Landroidx/compose/runtime/MutableIntState;
 
 .field private static frameTick:I
 
@@ -53,23 +53,19 @@
 
     const/4 v0, 0x0
 
-    invoke-static {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    invoke-static {v0}, Landroidx/compose/runtime/SnapshotIntStateKt;->mutableIntStateOf(I)Landroidx/compose/runtime/MutableIntState;
 
     move-result-object v1
 
-    const/4 v2, 0x0
-
-    const/4 v3, 0x2
-
-    invoke-static {v1, v2, v3, v2}, Landroidx/compose/runtime/SnapshotStateKt;->mutableStateOf$default(Ljava/lang/Object;Landroidx/compose/runtime/SnapshotMutationPolicy;ILjava/lang/Object;)Landroidx/compose/runtime/MutableState;
-
-    move-result-object v1
-
-    sput-object v1, Lradiant/Kawarp;->frameState:Landroidx/compose/runtime/MutableState;
+    sput-object v1, Lradiant/Kawarp;->frameState:Landroidx/compose/runtime/MutableIntState;
 
     sget-object v1, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
 
-    invoke-static {v1, v2, v3, v2}, Landroidx/compose/runtime/SnapshotStateKt;->mutableStateOf$default(Ljava/lang/Object;Landroidx/compose/runtime/SnapshotMutationPolicy;ILjava/lang/Object;)Landroidx/compose/runtime/MutableState;
+    const/4 v2, 0x2
+
+    const/4 v3, 0x0
+
+    invoke-static {v1, v3, v2, v3}, Landroidx/compose/runtime/SnapshotStateKt;->mutableStateOf$default(Ljava/lang/Object;Landroidx/compose/runtime/SnapshotMutationPolicy;ILjava/lang/Object;)Landroidx/compose/runtime/MutableState;
 
     move-result-object v1
 
@@ -77,7 +73,7 @@
 
     new-instance v1, Lradiant/Kawarp;
 
-    invoke-direct {v1, v2, v0}, Lradiant/Kawarp;-><init>(Ljava/lang/String;I)V
+    invoke-direct {v1, v3, v0}, Lradiant/Kawarp;-><init>(Ljava/lang/String;I)V
 
     sput-object v1, Lradiant/Kawarp;->DRAW:Lradiant/Kawarp;
 
@@ -107,9 +103,9 @@
 .method private static draw(Landroidx/compose/ui/graphics/drawscope/DrawScope;)V
     .registers 6
 
-    sget-object v0, Lradiant/Kawarp;->frameState:Landroidx/compose/runtime/MutableState;
+    sget-object v0, Lradiant/Kawarp;->frameState:Landroidx/compose/runtime/MutableIntState;
 
-    invoke-interface {v0}, Landroidx/compose/runtime/MutableState;->getValue()Ljava/lang/Object;
+    invoke-interface {v0}, Landroidx/compose/runtime/MutableIntState;->getIntValue()I
 
     invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
 
@@ -610,7 +606,7 @@
     return-void
 
     :cond_11
-    sget-object p1, Lradiant/Kawarp;->frameState:Landroidx/compose/runtime/MutableState;
+    sget-object p1, Lradiant/Kawarp;->frameState:Landroidx/compose/runtime/MutableIntState;
 
     sget p2, Lradiant/Kawarp;->frameTick:I
 
@@ -618,11 +614,7 @@
 
     sput p2, Lradiant/Kawarp;->frameTick:I
 
-    invoke-static {p2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
-
-    move-result-object p2
-
-    invoke-interface {p1, p2}, Landroidx/compose/runtime/MutableState;->setValue(Ljava/lang/Object;)V
+    invoke-interface {p1, p2}, Landroidx/compose/runtime/MutableIntState;->setIntValue(I)V
 
     invoke-static {}, Lradiant/Kawarp;->schedule()V
 

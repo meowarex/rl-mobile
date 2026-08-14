@@ -1,12 +1,10 @@
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
-@@ -4433,6 +4433,10 @@
+@@ -4433,6 +4433,8 @@
  
      move-object/from16 v25, v10
  
 +    sget-object v16, Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;->DARK_BLUR:Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;    # RL: force native Blur player background
-+
-+    invoke-static {}, Lradiant/HomeBackdrop;->setModePlayback()V    # RL: mirror rotation to Cover Everywhere
 +
      .line 171
      invoke-static/range {v16 .. v26}, Lcom/tidal/android/feature/playerscreen/ui/composables/p3;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
