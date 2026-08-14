@@ -152,7 +152,7 @@
  .method public final c(Ljava/lang/Object;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)V
 --- a/com/aspiro/wamp/mycollection/subpages/albums/myalbums/MyAlbumsView.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/albums/myalbums/MyAlbumsView.smali
-@@ -1286,6 +1286,8 @@
+@@ -559,6 +559,8 @@
      .line 23
      invoke-static {v0, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
 
@@ -163,11 +163,23 @@
      .line 26
 --- a/com/aspiro/wamp/mycollection/subpages/playlists/myplaylists/MyPlaylistsView.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/playlists/myplaylists/MyPlaylistsView.smali
-@@ -1297,6 +1297,8 @@
+@@ -581,6 +581,8 @@
      .line 23
      invoke-static {p1, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
 
 +    invoke-static {p0, p2}, Lradiant/swipe/MyPlaylistsResolver;->install(Lcom/aspiro/wamp/mycollection/subpages/playlists/myplaylists/MyPlaylistsView;Landroidx/recyclerview/widget/RecyclerView;)V
++
+     .line 24
+     .line 25
+     .line 26
+--- a/com/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView.smali
++++ b/com/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView.smali
+@@ -556,6 +556,8 @@
+     .line 22
+     .line 23
+     invoke-static {p1, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
+
++    invoke-static {p0, p2}, Lradiant/swipe/MyMixesAndRadioResolver;->install(Lcom/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView;Landroidx/recyclerview/widget/RecyclerView;)V
 +
      .line 24
      .line 25

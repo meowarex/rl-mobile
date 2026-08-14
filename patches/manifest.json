@@ -437,7 +437,8 @@
         "radiant/swipe/FavoriteTracksResolver.smali",
         "radiant/swipe/DynamicTrackResolver.smali",
         "radiant/swipe/MyAlbumsResolver.smali",
-        "radiant/swipe/MyPlaylistsResolver.smali"
+        "radiant/swipe/MyPlaylistsResolver.smali",
+        "radiant/swipe/MyMixesAndRadioResolver.smali"
       ],
       "title": "Swipe to Queue",
       "description": "Swipe on tracks/albums/playlists to add them to the play queue",
