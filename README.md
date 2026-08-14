@@ -116,6 +116,20 @@ effect itself, PR the Kawarp-AGSL repo. Then regenerate and commit the refreshed
 Fork the repo, add your patch to `patches/`, and open a PR describing what it changes and why.
 - Patch PR should be prefixed with `[patch]` in the title
 
+## Licence
+
+**GPL-3.0** — see `LICENSE`.
+
+Plain English: use it, change it, share it, even sell it. But if you distribute it (or a fork),
+you must ship the source under the GPL too — **no closed-source forks**, and per GPL-3 §5(a) a
+modified version has to carry a prominent notice saying it was modified and when.
+
+"Radiant Lyrics" is the project's name — please pick your own for a fork, so users can tell
+them apart.
+
+Third-party components and their licences are listed in `THIRD-PARTY.md`. The TIDAL app itself
+is not covered by this licence and remains the property of its owners.
+
 ## Credits
 
 Inrixia — TidaLuna framework
