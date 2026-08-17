@@ -377,3 +377,55 @@
      .line 122
      new-instance p2, Landroidx/recyclerview/widget/LinearLayoutManager;
  
+--- a/com/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView.smali
++++ b/com/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView.smali
+@@ -1176,6 +1176,8 @@
+     .line 69
+     .line 70
+     .line 71
+     invoke-static {v0, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
+
++    invoke-static {p0, p2}, Lradiant/swipe/SearchAlbumsResolver;->install(Lcom/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView;Landroidx/recyclerview/widget/RecyclerView;)V
++
+     .line 72
+     .line 73
+     .line 74
+--- a/com/aspiro/wamp/playlist/ui/fragment/PlaylistFragment.smali
++++ b/com/aspiro/wamp/playlist/ui/fragment/PlaylistFragment.smali
+@@ -5193,6 +5193,8 @@
+     .line 127
+     .line 128
+     .line 129
+     invoke-static {v1, p1}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
+
++    invoke-static {p1}, Lradiant/swipe/PlaylistItemsResolver;->install(Lcom/aspiro/wamp/playlist/ui/items/PlaylistItemCollectionView;)V
++
+     .line 130
+     .line 131
+     .line 132
+--- a/com/aspiro/wamp/search/v2/UnifiedSearchView.smali
++++ b/com/aspiro/wamp/search/v2/UnifiedSearchView.smali
+@@ -1596,6 +1596,8 @@
+     .line 60
+     .line 61
+     .line 62
+     invoke-static {v0, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
+
++    invoke-static {p0, p2}, Lradiant/swipe/UnifiedSearchResolver;->install(Lcom/aspiro/wamp/search/v2/UnifiedSearchView;Landroidx/recyclerview/widget/RecyclerView;)V
++
+     .line 63
+     .line 64
+     .line 65
+--- a/com/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView.smali
++++ b/com/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView.smali
+@@ -1204,6 +1204,8 @@
+     .line 69
+     .line 70
+     .line 71
+     invoke-static {v0, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
+
++    invoke-static {p0, p2}, Lradiant/swipe/SearchPlaylistsResolver;->install(Lcom/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView;Landroidx/recyclerview/widget/RecyclerView;)V
++
+     .line 72
+     .line 73
+     .line 74
