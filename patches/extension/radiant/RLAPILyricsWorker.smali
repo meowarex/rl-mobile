@@ -375,7 +375,7 @@
 .end method
 
 .method public static parseLines(Ljava/lang/String;)Ljava/util/ArrayList;
-    .locals 11
+    .locals 13
 
     :try_start
     new-instance v0, Lorg/json/JSONObject;
@@ -466,6 +466,46 @@
 
     double-to-long v7, v7
 
+    # Prefer the first syllable time
+    const-string v6, "syllabus"
+
+    invoke-virtual {v4, v6}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+
+    move-result-object v6
+
+    if-eqz v6, :no_syl
+
+    invoke-virtual {v6}, Lorg/json/JSONArray;->length()I
+
+    move-result v9
+
+    if-eqz v9, :no_syl
+
+    const/4 v9, 0x0
+
+    invoke-virtual {v6, v9}, Lorg/json/JSONArray;->optJSONObject(I)Lorg/json/JSONObject;
+
+    move-result-object v6
+
+    if-eqz v6, :no_syl
+
+    const-string v9, "time"
+
+    const-wide/16 v11, -0x1
+
+    invoke-virtual {v6, v9, v11, v12}, Lorg/json/JSONObject;->optLong(Ljava/lang/String;J)J
+
+    move-result-wide v11
+
+    const-wide/16 v9, 0x0
+
+    cmp-long v6, v11, v9
+
+    if-ltz v6, :no_syl
+
+    move-wide v7, v11
+
+    :no_syl
     new-instance v4, Lcom/tidal/android/feature/playerscreen/ui/f;
 
     invoke-direct {v4, v5, v7, v8}, Lcom/tidal/android/feature/playerscreen/ui/f;-><init>(Ljava/lang/String;J)V

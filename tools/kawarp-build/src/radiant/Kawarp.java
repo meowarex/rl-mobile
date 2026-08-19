@@ -1,9 +1,11 @@
 package radiant;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.Choreographer;
 
 import androidx.compose.foundation.layout.SizeKt;
@@ -18,15 +20,17 @@ import androidx.compose.ui.draw.DrawModifierKt;
 import androidx.compose.ui.geometry.Size;
 import androidx.compose.ui.graphics.AndroidCanvas_androidKt;
 import androidx.compose.ui.graphics.drawscope.DrawScope;
+import androidx.compose.ui.platform.AndroidCompositionLocals_androidKt;
+
+import coil.request.CachePolicy;
 
 import com.tidal.android.feature.playerscreen.ui.composables.p3;
 import com.tidal.android.feature.playerscreen.ui.model.PlayerBackgroundStyle;
+import com.tidal.android.image.coil.base.CoilImageLoader;
+import com.tidal.android.image.core.b;
 
 import dev.kawarp.KawarpEngine;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,17 +39,10 @@ import java.util.concurrent.Executors;
  *
  * The engine (shader, blur pipeline, settings, crossfade) lives in the Kawarp-AGSL library
  * (cloned at tools/kawarp-agsl) and is compiled into this bundle by tools/kawarp-build/build.sh;
- * this class only holds what is TIDAL/Compose-specific:
- * the patched-in composable entry points, cover fetching by TIDAL uuid, the Choreographer ->
- * snapshot-state frame clock, the Manager's option tokens, and the fallback to TIDAL's own
- * blurred backdrop.
- *
- * One class on purpose (its own draw lambda, frame callback and loader) - see the engine's
- * class doc for the dex-injection constraints.
+ * this class only holds what is TIDAL/Compose-specific
  */
-public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallback {
+public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallback, b0.c {
 
-    private static final String TAG = "RLKawarp";
     /** Stop the frame loop once nothing has drawn for this long (player left / backgrounded). */
     private static final long IDLE_STOP_MS = 500L;
 
@@ -69,26 +66,31 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
         SnapshotStateKt.mutableStateOf$default(Boolean.FALSE, null, 2, null);
 
     /** The shared instance render passes to drawBehind (also serves as the frame callback). */
-    private static final Kawarp DRAW = new Kawarp(null, 0);
+    private static final Kawarp DRAW = new Kawarp(0, null, 0);
 
     private static KawarpEngine engine;
+    /** TIDAL's application-scoped Coil loader and the context its requests are built with. */
+    private static volatile coil.f loader;
+    private static volatile Context appContext;
     private static volatile String requestedUuid;
     private static volatile int loadToken;
 
     private static long lastDrawUptime;
-    private static boolean frameScheduled, loggedDraw;
+    private static boolean frameScheduled;
     private static int frameTick;
 
-    /** Set when this instance is a queued cover load; null/0 on the shared DRAW instance. */
+    /** Set when this instance is a queued cover load; 0/null/0 on the shared DRAW instance. */
+    private final int albumId;
     private final String uuid;
     private final int token;
 
-    private Kawarp(String uuid, int token) {
+    private Kawarp(int albumId, String uuid, int token) {
+        this.albumId = albumId;
         this.uuid = uuid;
         this.token = token;
     }
 
-    
+
     // Composition
 
 
@@ -106,17 +108,37 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
     public static void render(int albumId, String coverUuid, boolean isPlaying,
                               Modifier modifier, Composer composer) {
         composer.startReplaceGroup(0x52415750);
+        attach(composer);
         boolean ok = !((Boolean) fallbackState.getValue()).booleanValue() && ensureEngine();
         if (!ok) {
             // No (working) AGSL here - fall back to TIDAL's own blurred backdrop.
             p3.a(albumId, coverUuid, isPlaying, false, null, modifier, composer, 0);
         } else {
             engine.setPlaying(isPlaying);
-            request(coverUuid);
+            request(albumId, coverUuid);
             Modifier m = DrawModifierKt.drawBehind(SizeKt.fillMaxSize(modifier, 1.0f), DRAW);
             SpacerKt.Spacer(m, composer, 0);
         }
         composer.endReplaceGroup();
+    }
+
+    /**
+     * Grab the app's image loader the same way TIDAL's composables do (yd0.c)
+     */
+    private static void attach(Composer composer) {
+        if (loader != null) return;
+        try {
+            Object local = composer.consume(AndroidCompositionLocals_androidKt.getLocalContext());
+            if (!(local instanceof Context)) return;
+            Context app = ((Context) local).getApplicationContext();
+            if (!(app instanceof ce0.b.a)) return;
+            Object tidalLoader = ((ce0.b.a) app).a().a();
+            if (!(tidalLoader instanceof CoilImageLoader)) return;
+            appContext = app;
+            loader = ((CoilImageLoader) tidalLoader).a;
+        } catch (Throwable t) {
+            // No loader -> request() never runs and the backdrop simply stays on the last cover.
+        }
     }
 
     /** Engine construction compiles the AGSL so this doubles as the support probe. */
@@ -138,52 +160,69 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
             engine = e;
             return true;
         } catch (Throwable t) {
-            Log.i(TAG, "AGSL rejected, staying on the native backdrop: " + t);
-            fallbackState.setValue(Boolean.TRUE);
+            fallbackState.setValue(Boolean.TRUE);      // AGSL rejected: stay on the native backdrop
             return false;
         }
     }
 
-    
-    // Cover loading (Runnable on LOADER)
-    
 
-    private static void request(String coverUuid) {
+    // Cover loading: a queued Kawarp is both the LOADER task and the request's Coil Target
+
+
+    private static void request(int albumId, String coverUuid) {
         if (coverUuid == null || coverUuid.length() == 0 || coverUuid.equals(requestedUuid)) return;
+        if (loader == null) return;             // attach() failed; retried next composition
         requestedUuid = coverUuid;
-        LOADER.execute(new Kawarp(coverUuid, ++loadToken));
+        LOADER.execute(new Kawarp(albumId, coverUuid, ++loadToken));
     }
 
+    /**
+     * TIDAL's own backdrop request (PlayerBackgroundKt.rememberBlurredArtwork)
+     */
     public void run() {
-        HttpURLConnection connection = null;
         try {
-            // Same URL shape TIDAL itself builds in he0.a; 640 is plenty ahead of a 128 downscale.
-            URL url = new URL("https://resources.tidal.com/images/"
-                + uuid.replace('-', '/') + "/640x640.jpg");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(10000);
-            connection.setReadTimeout(15000);
-            InputStream stream = connection.getInputStream();
-            Bitmap source;
-            try {
-                source = BitmapFactory.decodeStream(stream);
-            } finally {
-                stream.close();
-            }
-            if (source == null || token != loadToken) return;
-            engine.setCover(source);
-            source.recycle();
-            Log.i(TAG, "cover submitted: " + uuid);
+            xd0.g tidal = new xd0.g(appContext, new b.a(String.valueOf(albumId), uuid),
+                null, null, false, null, null, false);
+            coil.request.h.a req = coil.request.h.a(com.tidal.android.image.coil.c.a(tidal, null));
+            coil.request.b d = req.b;
+            req.b = new coil.request.b(d.a, d.b, d.c, d.d, d.e, d.f, d.g, d.h,
+                d.i, d.j, CachePolicy.DISABLED);
+            req.d = this;
+            loader.b(req.a());
         } catch (Throwable t) {
-            Log.i(TAG, "cover load failed: " + t);
-            // Let the next track (or a re-entry into the player) retry this cover.
-            if (token == loadToken) requestedUuid = null;
-        } finally {
-            if (connection != null) connection.disconnect();
+            fail();
         }
     }
 
-   
+    /** Target.onSuccess */
+    public void a(Drawable drawable) {
+        if (token != loadToken) return; // user skipped on
+        Bitmap cover = toBitmap(drawable);
+        if (cover == null) { fail(); return; }
+        // setCover copies, the bitmap stays Coil's (memory cache)
+        engine.setCover(cover);
+    }
+
+    /** Target.onStart - nothing to show while loading. */
+    public void b(Drawable placeholder) {}
+
+    /** Target.onError - not in any of TIDAL's stores. */
+    public void d(Drawable error) { fail(); }
+
+    private void fail() {
+        if (token == loadToken) requestedUuid = null;
+    }
+
+    private static Bitmap toBitmap(Drawable d) {
+        if (d == null) return null;
+        if (d instanceof BitmapDrawable) return ((BitmapDrawable) d).getBitmap();
+        Bitmap out = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
+        d.setBounds(0, 0, 256, 256);
+        d.draw(new Canvas(out));
+        return out;
+    }
+
+
     // Frame loop
 
 
@@ -215,16 +254,11 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
         long packed = scope.getSizeNHjbRc();
         float width = Size.getWidthImpl(packed);
         float height = Size.getHeightImpl(packed);
-        if (!loggedDraw) {
-            loggedDraw = true;
-            Log.i(TAG, "first draw: " + width + "x" + height + " ready=" + engine.isReady());
-        }
         try {
             engine.draw(AndroidCanvas_androidKt.getNativeCanvas(scope.getDrawContext().getCanvas()),
                 width, height);
         } catch (Throwable t) {
-            Log.i(TAG, "AGSL draw failed, falling back: " + t);
-            fallbackState.setValue(Boolean.TRUE);
+            fallbackState.setValue(Boolean.TRUE);      // AGSL draw failed: recompose onto p3.a
         }
     }
 }
