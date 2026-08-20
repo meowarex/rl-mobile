@@ -39,10 +39,14 @@ class RadiantLyricsGithubService(
     /**
      * Fetches manager self-update releases.
      */
-    suspend fun getManagerReleases(): ApiResponse<List<GithubRelease>> =
+    suspend fun getManagerReleases(force: Boolean = false): ApiResponse<List<GithubRelease>> =
         http.request {
             url("https://api.github.com/repos/${BuildConfig.PATCHES_REPO_OWNER}/${BuildConfig.PATCHES_REPO_NAME}/releases")
-            header(HttpHeaders.CacheControl, "public, max-age=60, s-maxage=60")
+            if (force) {
+                header(HttpHeaders.CacheControl, "no-cache")
+            } else {
+                header(HttpHeaders.CacheControl, "public, max-age=60, s-maxage=60")
+            }
         }
 
     /**
@@ -66,10 +70,18 @@ class RadiantLyricsGithubService(
     /**
      * Fetches a page of commits (paginated). Used by the Home screen's commit list.
      */
-    suspend fun getCommits(page: Int, perPage: Int = 30): ApiResponse<List<com.meowarex.rlmobile.network.models.GithubCommit>> =
+    suspend fun getCommits(
+        page: Int,
+        perPage: Int = 30,
+        force: Boolean = false,
+    ): ApiResponse<List<com.meowarex.rlmobile.network.models.GithubCommit>> =
         http.request {
             url("https://api.github.com/repos/${BuildConfig.PATCHES_REPO_OWNER}/${BuildConfig.PATCHES_REPO_NAME}/commits?per_page=$perPage&page=${page + 1}")
-            header(HttpHeaders.CacheControl, "public, max-age=120, s-maxage=120")
+            if (force) {
+                header(HttpHeaders.CacheControl, "no-cache")
+            } else {
+                header(HttpHeaders.CacheControl, "public, max-age=120, s-maxage=120")
+            }
         }
 
     companion object {

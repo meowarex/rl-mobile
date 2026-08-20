@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalContext
@@ -57,6 +58,8 @@ class HomeScreen : Screen, Parcelable {
         val activity = LocalContext.current as ComponentActivity
         val updater = koinViewModel<UpdaterViewModel>(viewModelStoreOwner = activity)
         val managerUpdateAvailable = updater.targetVersion != null
+        val refreshing = model.refreshing
+        val refreshAngle = rememberRefreshAngle()
 
         LifecycleResumeEffect(Unit) {
             model.refresh(delay = true)
@@ -68,10 +71,19 @@ class HomeScreen : Screen, Parcelable {
                 TopAppBar(
                     title = { Text(stringResource(R.string.navigation_home)) },
                     actions = {
-                        IconButton(onClick = { model.refresh() }) {
+                        IconButton(
+                            onClick = {
+                                model.refresh(force = true)
+                                updater.checkForUpdates(force = true)
+                            },
+                            enabled = !refreshing,
+                        ) {
                             Icon(
                                 painterResource(R.drawable.ic_refresh),
                                 contentDescription = stringResource(R.string.navigation_refresh),
+                                modifier = Modifier.graphicsLayer {
+                                    rotationZ = if (refreshing) refreshAngle() else 0f
+                                },
                             )
                         }
                         if (managerUpdateAvailable) {

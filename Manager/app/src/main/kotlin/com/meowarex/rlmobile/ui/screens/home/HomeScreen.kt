@@ -3,6 +3,11 @@ package com.meowarex.rlmobile.ui.screens.home
 import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -70,6 +76,8 @@ class HomeScreen : Screen, Parcelable {
         val activity = LocalContext.current as ComponentActivity
         val updater = koinViewModel<UpdaterViewModel>(viewModelStoreOwner = activity)
         val managerUpdateAvailable = updater.targetVersion != null
+        val refreshing = model.refreshing
+        val refreshAngle = rememberRefreshAngle()
 
         LifecycleResumeEffect(Unit) {
             model.refresh(delay = true)
@@ -86,7 +94,14 @@ class HomeScreen : Screen, Parcelable {
                             icon = painterResource(R.drawable.ic_refresh),
                             contentDescription = stringResource(R.string.navigation_refresh),
                             subtle = true,
-                            onClick = { model.refresh() },
+                            enabled = !refreshing,
+                            onClick = {
+                                model.refresh(force = true)
+                                updater.checkForUpdates(force = true)
+                            },
+                            modifier = Modifier.graphicsLayer {
+                                rotationZ = if (refreshing) refreshAngle() else 0f
+                            },
                         )
                         if (managerUpdateAvailable) {
                             RadiantIconButton(
@@ -363,4 +378,19 @@ private fun HeroContainer(
     } else {
         Column(modifier = Modifier.fillMaxWidth(), content = content)
     }
+}
+
+/**
+ * Refresh Spinner thing
+ */
+@Composable
+internal fun rememberRefreshAngle(): () -> Float {
+    val transition = rememberInfiniteTransition(label = "RefreshSpin")
+    val angle by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 360f,
+        animationSpec = infiniteRepeatable(tween(900, easing = LinearEasing)),
+        label = "RefreshSpinAngle",
+    )
+    return { angle }
 }
