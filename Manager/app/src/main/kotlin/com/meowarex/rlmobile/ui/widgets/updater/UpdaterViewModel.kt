@@ -37,17 +37,29 @@ class UpdaterViewModel(
         field = MutableStateFlow(null)
     val isWorking: StateFlow<Boolean>
         field = MutableStateFlow(false)
+    val isChecking: StateFlow<Boolean>
+        field = MutableStateFlow(false)
 
     private var targetApkUrl: String? = null
 
     init {
-        viewModelScope.launchIO {
-            try {
-                fetchInfo()
-            } catch (t: Throwable) {
-                Log.e(BuildConfig.TAG, "Failed to check for updates!", t)
-                mainThread { application.showToast(R.string.updater_check_fail) }
-            }
+        checkForUpdates()
+    }
+
+    /**
+     * Re-runs the update check
+     */
+    fun checkForUpdates(force: Boolean = false) = viewModelScope.launchIO {
+        if (!isChecking.compareAndSet(expect = false, update = true))
+            return@launchIO
+
+        try {
+            fetchInfo(force)
+        } catch (t: Throwable) {
+            Log.e(BuildConfig.TAG, "Failed to check for updates!", t)
+            mainThread { application.showToast(R.string.updater_check_fail) }
+        } finally {
+            isChecking.value = false
         }
     }
 
@@ -142,14 +154,14 @@ class UpdaterViewModel(
      * then finds the latest release based on the largest semantic version extracted from the tag name (`v1.0.0`),
      * and populates the state to show to the user.
      */
-    private suspend fun fetchInfo() {
+    private suspend fun fetchInfo(force: Boolean = false) {
         Log.d(BuildConfig.TAG, "Checking for updates...")
 
         val currentVersion = SemVer.parseOrNull(BuildConfig.VERSION_NAME)
             ?: throw Error("Failed to parse current app version")
 
         // Fetch releases from GitHub (60s local cache)
-        val releases = github.getManagerReleases().getOrThrow()
+        val releases = github.getManagerReleases(force).getOrThrow()
 
         // Find the latest release by parsed version
         val (version, release, apkUrl) = releases
@@ -171,12 +183,14 @@ class UpdaterViewModel(
             return
         }
 
-        Log.d(BuildConfig.TAG, "Found an update! $targetVersion $targetApkUrl")
+        Log.d(BuildConfig.TAG, "Found an update! $version $apkUrl")
+        val newVersion = version.toString()
         mainThread {
+            val alreadyKnown = targetVersion == newVersion
             targetReleaseUrl = release.htmlUrl
-            targetVersion = version.toString()
+            targetVersion = newVersion
             targetApkUrl = apkUrl
-            showDialog = true
+            if (!alreadyKnown) showDialog = true
         }
     }
 

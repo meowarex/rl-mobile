@@ -7,6 +7,8 @@ import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
 
 class CommitsPagingSource(
     private val github: RadiantLyricsGithubService,
+    /** Bypasses the http response cache */
+    private val force: Boolean = false,
 ) : PagingSource<Int, GithubCommit>() {
     private val seenShas = mutableSetOf<String>()
     private val seenTitles = mutableSetOf<String>()
@@ -19,7 +21,8 @@ class CommitsPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GithubCommit> {
         val page = params.key ?: 0
-        return when (val r = github.getCommits(page)) {
+        // Only the first page skips the cache
+        return when (val r = github.getCommits(page, force = force && page == 0)) {
             is ApiResponse.Success -> LoadResult.Page(
                 data = r.data.filter { commit ->
                     val title = commit.commit.message.lineSequence().first().trim()

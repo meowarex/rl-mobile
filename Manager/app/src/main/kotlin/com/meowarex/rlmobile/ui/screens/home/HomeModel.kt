@@ -34,6 +34,9 @@ import com.meowarex.rlmobile.ui.util.TidalVersion
 import com.meowarex.rlmobile.ui.widgets.managerupdate.VersionDelta
 import com.meowarex.rlmobile.util.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
@@ -53,9 +56,22 @@ class HomeModel(
     var managerUpdateDeltas by mutableStateOf<List<VersionDelta>?>(null)
         private set
 
-    val commits = Pager(PagingConfig(pageSize = 30)) {
-        CommitsPagingSource(github)
-    }.flow.cachedIn(screenModelScope)
+    /** Whether a user-initiated refresh is currently in flight */
+    var refreshing by mutableStateOf(false)
+        private set
+
+    // Bumped by every forced refresh, which restarts the pager with a fresh (cache-skipping) source.
+    // Without this the commit list would stay pinned to whatever it loaded on process start.
+    private val commitsGeneration = MutableStateFlow(0)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val commits = commitsGeneration
+        .flatMapLatest { generation ->
+            Pager(PagingConfig(pageSize = 30)) {
+                CommitsPagingSource(github, force = generation > 0)
+            }.flow
+        }
+        .cachedIn(screenModelScope)
 
     private val refreshingLock = Mutex()
     private var remoteDataJson: RLBuildInfo? = null
@@ -164,7 +180,10 @@ class HomeModel(
         )
     }
 
-    fun refresh(delay: Boolean = false) = screenModelScope.launchIO {
+    /**
+     * @param delay Waits a moment before starting
+     */
+    fun refresh(delay: Boolean = false, force: Boolean = false) = screenModelScope.launchIO {
         if (refreshingLock.isLocked) return@launchIO
         if (delay) {
             delay(250)
@@ -172,26 +191,32 @@ class HomeModel(
         }
 
         refreshingLock.withLock {
-            val pkg = fetchInstalled()
-            // Skip the remote fetch entirely when offline
-            val online = application.isOnline()
-            if (online) {
-                val remote = async(Dispatchers.IO) { if (remoteDataJson == null) fetchRemoteData() }
-                remote.await()
-            }
+            if (force) mainThread { refreshing = true }
+            try {
+                val pkg = fetchInstalled()
+                // Skip the remote fetch entirely when offline
+                val online = application.isOnline()
+                if (online && (force || remoteDataJson == null)) {
+                    fetchRemoteData(force)
+                }
+                // Offline the reload would only replace the visible list with a load error
+                if (force && online) commitsGeneration.update { it + 1 }
 
-            val install = pkg?.toInstallData()
-            val latest = remoteDataJson?.tidalVersionCode
-            val offlineRepatchReady = hasOfflineRepatchAssets()
+                val install = pkg?.toInstallData()
+                val latest = remoteDataJson?.tidalVersionCode
+                val offlineRepatchReady = hasOfflineRepatchAssets()
 
-            mainThread {
-                state = HomeState.Loaded(
-                    install = install,
-                    latestTidalVersionCode = latest,
-                    offline = !online,
-                    offlineRepatchReady = offlineRepatchReady,
-                )
-                maybeCheckManagerUpdate(pkg)
+                mainThread {
+                    state = HomeState.Loaded(
+                        install = install,
+                        latestTidalVersionCode = latest,
+                        offline = !online,
+                        offlineRepatchReady = offlineRepatchReady,
+                    )
+                    maybeCheckManagerUpdate(pkg)
+                }
+            } finally {
+                if (force) mainThread { refreshing = false }
             }
         }
     }
@@ -283,9 +308,9 @@ class HomeModel(
             paths.hasCachedSmaliPatches(info.data.patchesVersion)
     }
 
-    private suspend fun fetchRemoteData() {
+    private suspend fun fetchRemoteData(force: Boolean = false) {
         val release = try {
-            github.getLatestRelease().fold(
+            github.getLatestRelease(force).fold(
                 success = { it },
                 fail = { Log.w(BuildConfig.TAG, "Failed to fetch latest release", it); return },
             )
@@ -299,7 +324,7 @@ class HomeModel(
             ?.browserDownloadUrl
             ?: return
 
-        github.getBuildInfo(dataJsonUrl).fold(
+        github.getBuildInfo(dataJsonUrl, force).fold(
             success = { remoteDataJson = it },
             fail = { Log.w(BuildConfig.TAG, "Failed to fetch build info", it) },
         )
