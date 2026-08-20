@@ -458,7 +458,17 @@
         "radiant/swipe/ViewAllTrackQueue.smali",
         "radiant/swipe/ComposeSearchQueueEvent.smali",
         "radiant/swipe/ComposeSearchQueueAction.smali",
-        "radiant/swipe/ComposeSearchQueue.smali"
+        "radiant/swipe/ComposeSearchQueue.smali",
+        "radiant/swipe/FeedResolver.smali",
+        "radiant/swipe/ArtistTrackCreditsQueueEvent.smali",
+        "radiant/swipe/ArtistTrackCreditsQueueAction.smali",
+        "radiant/swipe/ArtistTrackCreditsQueue.smali",
+        "radiant/swipe/DynamicMediaQueueEvent.smali",
+        "radiant/swipe/CompactGridMediaQueueAction.smali",
+        "radiant/swipe/VerticalMediaQueueAction.smali",
+        "radiant/swipe/PublicPlaylistQueueAction.smali",
+        "radiant/swipe/DynamicMediaQueue.smali",
+        "radiant/swipe/SuggestionsResolver.smali"
       ],
       "title": "Swipe to Queue",
       "description": "Swipe on tracks/albums/playlists to add them to the play queue",

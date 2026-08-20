@@ -448,11 +448,11 @@
 
     cmpg-float v5, v2, v4
 
-    if-gez v5, :axis_ready
+    if-ltz v5, :axis_ready
 
     cmpg-float v5, v3, v4
 
-    if-ltz v5, :done
+    if-gez v5, :done
 
     :axis_ready
     cmpg-float v5, v2, v3
