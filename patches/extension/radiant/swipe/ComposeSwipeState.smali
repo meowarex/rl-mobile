@@ -33,7 +33,7 @@
 
 .field icon:Landroid/graphics/drawable/Drawable;
 
-.field green:I
+.field backgroundColor:I
 
 
 # direct methods
@@ -606,13 +606,9 @@
     :load_resources
     iput-object v0, p0, Lradiant/swipe/ComposeSwipeState;->context:Landroid/content/Context;
 
-    sget v1, Lcom/aspiro/wamp/R$color;->green:I
+    const v1, __RL_SWIPE_TO_QUEUE_COLOR__
 
-    invoke-virtual {v0, v1}, Landroid/content/Context;->getColor(I)I
-
-    move-result v1
-
-    iput v1, p0, Lradiant/swipe/ComposeSwipeState;->green:I
+    iput v1, p0, Lradiant/swipe/ComposeSwipeState;->backgroundColor:I
 
     sget v1, Lcom/aspiro/wamp/R$drawable;->ic_add_to_queue_last:I
 

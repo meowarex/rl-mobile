@@ -489,6 +489,13 @@
           ],
           "defaultIndex": 0,
           "token": "RL_SWIPE_TO_QUEUE_DIRECTION"
+        },
+        {
+          "type": "color",
+          "key": "background_color",
+          "title": "Background Color",
+          "default": -14749031,
+          "token": "RL_SWIPE_TO_QUEUE_COLOR"
         }
       ]
     },

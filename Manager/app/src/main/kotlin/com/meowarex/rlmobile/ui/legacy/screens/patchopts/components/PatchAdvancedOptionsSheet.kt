@@ -212,6 +212,7 @@ fun PatchAdvancedOptionsSheet(
                     is OptionSpec.Color -> ColorOptionRow(
                         title = option.title,
                         color = state.color(patch, option),
+                        defaultColor = option.default,
                         onColorChange = { state.setColor(patch, option, it) },
                     )
                 }
@@ -455,17 +456,24 @@ private fun ChoiceOptionRow(
 private fun ColorOptionRow(
     title: String,
     color: Int,
+    defaultColor: Int,
     onColorChange: (Int) -> Unit,
 ) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
     val selectedColor = color.withOpaqueAlpha()
     val materialYouColor = MaterialTheme.colorScheme.primary.toArgb().withOpaqueAlpha()
+    val opaqueDefault = defaultColor.withOpaqueAlpha()
+    val defaultLabel = if (opaqueDefault == TIDAL_GREEN) {
+        stringResource(R.string.patch_color_green)
+    } else {
+        stringResource(R.string.patch_waze_color_waze_default)
+    }
     val presets = listOf(
-        stringResource(R.string.patch_waze_color_waze_default),
+        defaultLabel,
         stringResource(R.string.patch_waze_color_tidal_cyan),
         stringResource(R.string.patch_waze_color_material_you),
     )
-    val presetColors = listOf(WAZE_DEFAULT, TIDAL_CYAN, materialYouColor)
+    val presetColors = listOf(opaqueDefault, TIDAL_CYAN, materialYouColor)
     val selectedPreset = presetColors.indexOf(selectedColor)
 
     Column(
@@ -628,7 +636,7 @@ private fun formatSliderValue(option: OptionSpec.Slider, value: Float): String {
 }
 
 private const val OPAQUE_ALPHA = -0x1000000
-private const val WAZE_DEFAULT = -16747037 // #ff0075e3
+private const val TIDAL_GREEN = -14749031 // #ff1ef299
 private const val TIDAL_CYAN = -14549268 // #ff21feec
 
 private fun Int.withOpaqueAlpha(): Int = (this and 0x00FFFFFF) or OPAQUE_ALPHA

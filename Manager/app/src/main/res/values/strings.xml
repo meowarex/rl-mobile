@@ -305,6 +305,7 @@
   <string name="patch_waze_browse_root_title">Media Menu</string>
   <string name="patch_waze_accent_color_title">Accent Color</string>
   <string name="patch_waze_color_waze_default">Waze Default</string>
+  <string name="patch_color_green">Green</string>
   <string name="patch_waze_color_tidal_cyan">TIDAL Cyan</string>
   <string name="patch_waze_color_material_you">Material You</string>
   <string name="patch_waze_root_auto">Auto Menu</string>

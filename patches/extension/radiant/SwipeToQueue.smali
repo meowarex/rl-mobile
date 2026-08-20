@@ -49,11 +49,7 @@
 
     new-instance v1, Landroid/graphics/drawable/ColorDrawable;
 
-    sget v2, Lcom/aspiro/wamp/R$color;->green:I
-
-    invoke-virtual {v0, v2}, Landroid/content/Context;->getColor(I)I
-
-    move-result v2
+    const v2, __RL_SWIPE_TO_QUEUE_COLOR__
 
     invoke-direct {v1, v2}, Landroid/graphics/drawable/ColorDrawable;-><init>(I)V
 

@@ -108,7 +108,7 @@
     :exposure_ready
     invoke-virtual {v7, v9, v1, v10, v4}, Landroid/graphics/Canvas;->clipRect(FFFF)Z
 
-    iget v11, v5, Lradiant/swipe/ComposeSwipeState;->green:I
+    iget v11, v5, Lradiant/swipe/ComposeSwipeState;->backgroundColor:I
 
     invoke-virtual {v7, v11}, Landroid/graphics/Canvas;->drawColor(I)V
 
