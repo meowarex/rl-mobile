@@ -3,22 +3,20 @@
 
 
 # static fields
-.field public static final colorState:Landroidx/compose/runtime/MutableState; # player bg color
+.field public static final colorFlow:Lkotlinx/coroutines/flow/MutableStateFlow; # player bg color
 
 
 # direct methods
 .method static constructor <clinit>()V
-    .locals 2
+    .locals 1
 
     const/4 v0, 0x0
 
-    const/4 v1, 0x2
-
-    invoke-static {v0, v0, v1, v0}, Landroidx/compose/runtime/SnapshotStateKt;->mutableStateOf$default(Ljava/lang/Object;Landroidx/compose/runtime/SnapshotMutationPolicy;ILjava/lang/Object;)Landroidx/compose/runtime/MutableState;
+    invoke-static {v0}, Lkotlinx/coroutines/flow/StateFlowKt;->MutableStateFlow(Ljava/lang/Object;)Lkotlinx/coroutines/flow/MutableStateFlow;
 
     move-result-object v0
 
-    sput-object v0, Lradiant/MiniPlayerBackground;->colorState:Landroidx/compose/runtime/MutableState;
+    sput-object v0, Lradiant/MiniPlayerBackground;->colorFlow:Lkotlinx/coroutines/flow/MutableStateFlow;
 
     return-void
 .end method
@@ -42,9 +40,19 @@
 
     invoke-interface {p2, v0}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V
 
-    sget-object v0, Lradiant/MiniPlayerBackground;->colorState:Landroidx/compose/runtime/MutableState;
+    sget-object v0, Lradiant/MiniPlayerBackground;->colorFlow:Lkotlinx/coroutines/flow/MutableStateFlow;
 
-    invoke-interface {v0}, Landroidx/compose/runtime/MutableState;->getValue()Ljava/lang/Object; # read player color
+    const/4 v1, 0x0
+
+    const/4 v3, 0x0
+
+    const/4 v4, 0x1
+
+    invoke-static {v0, v1, p2, v3, v4}, Landroidx/compose/runtime/SnapshotStateKt;->collectAsState(Lkotlinx/coroutines/flow/StateFlow;Lkotlin/coroutines/h;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Landroidx/compose/runtime/State;->getValue()Ljava/lang/Object;
 
     move-result-object v0
 
@@ -131,9 +139,9 @@
     move-exception p0
 
     :set_color
-    sget-object p0, Lradiant/MiniPlayerBackground;->colorState:Landroidx/compose/runtime/MutableState;
+    sget-object p0, Lradiant/MiniPlayerBackground;->colorFlow:Lkotlinx/coroutines/flow/MutableStateFlow;
 
-    invoke-interface {p0, v0}, Landroidx/compose/runtime/MutableState;->setValue(Ljava/lang/Object;)V
+    invoke-interface {p0, v0}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
 
     return-void
 .end method
