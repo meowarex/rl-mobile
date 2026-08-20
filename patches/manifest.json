@@ -426,7 +426,8 @@
       "id": "SwipeToQueue",
       "order": 39,
       "fileNames": [
-        "swipe-to-queue.patch"
+        "swipe-to-queue.patch",
+        "swipe-to-queue-compose.patch"
       ],
       "extensionFiles": [
         "radiant/SwipeToQueue.smali",
@@ -442,7 +443,22 @@
         "radiant/swipe/SearchAlbumsResolver.smali",
         "radiant/swipe/SearchPlaylistsResolver.smali",
         "radiant/swipe/PlaylistItemsResolver.smali",
-        "radiant/swipe/UnifiedSearchResolver.smali"
+        "radiant/swipe/UnifiedSearchResolver.smali",
+        "radiant/swipe/ComposeSwipeAction.smali",
+        "radiant/swipe/ComposeSwipeState.smali",
+        "radiant/swipe/ComposeSwipeState$Gesture.smali",
+        "radiant/swipe/ComposeSwipeState$Draw.smali",
+        "radiant/swipe/ComposeSwipeState$ResetAnimator.smali",
+        "radiant/swipe/ComposeTapGuard.smali",
+        "radiant/swipe/AlbumItemQueueAction.smali",
+        "radiant/swipe/DynamicTrackQueueEvent.smali",
+        "radiant/swipe/DynamicTrackQueueAction.smali",
+        "radiant/swipe/DynamicTrackQueue.smali",
+        "radiant/swipe/ViewAllTrackQueueAction.smali",
+        "radiant/swipe/ViewAllTrackQueue.smali",
+        "radiant/swipe/ComposeSearchQueueEvent.smali",
+        "radiant/swipe/ComposeSearchQueueAction.smali",
+        "radiant/swipe/ComposeSearchQueue.smali"
       ],
       "title": "Swipe to Queue",
       "description": "Swipe on tracks/albums/playlists to add them to the play queue",

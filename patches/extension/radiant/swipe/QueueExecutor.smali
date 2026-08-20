@@ -9,8 +9,6 @@
 
     const/4 v0, 0x0
 
-    if-eqz p0, :done
-
     if-eqz p1, :done
 
     invoke-static {}, Lcom/aspiro/wamp/App$a;->a()Lcom/aspiro/wamp/App;
@@ -39,6 +37,31 @@
 
     if-eqz p4, :done
 
+    :unwrap_context
+    instance-of v2, p0, Landroidx/fragment/app/FragmentActivity;
+
+    if-nez v2, :has_activity
+
+    instance-of v2, p0, Landroid/content/ContextWrapper;
+
+    if-eqz v2, :done
+
+    move-object v2, p0
+
+    check-cast v2, Landroid/content/ContextWrapper;
+
+    invoke-virtual {v2}, Landroid/content/ContextWrapper;->getBaseContext()Landroid/content/Context;
+
+    move-result-object v2
+
+    if-eq v2, p0, :done
+
+    move-object p0, v2
+
+    goto :unwrap_context
+
+    :has_activity
+
     iget-object v2, p4, Lh4/a;->b:Lo3/a$a;
 
     invoke-interface {v2, p1, p2, p3}, Lo3/a$a;->a(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lo3/a;
@@ -50,10 +73,6 @@
     invoke-interface {v2, p1, p2, p3}, Lc3/i$a;->a(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lc3/i;
 
     move-result-object p1
-
-    instance-of p2, p0, Landroidx/fragment/app/FragmentActivity;
-
-    if-eqz p2, :done
 
     check-cast p0, Landroidx/fragment/app/FragmentActivity;
 
@@ -122,9 +141,15 @@
 
     const/4 v0, 0x0
 
-    if-eqz p0, :done
-
     if-eqz p1, :done
+
+    invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
+
+    move-result v1
+
+    if-eqz v1, :play
+
+    if-eqz p4, :done
 
     :unwrap_context
     instance-of v1, p0, Landroidx/fragment/app/FragmentActivity;
@@ -150,13 +175,6 @@
     goto :unwrap_context
 
     :has_activity
-    invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
-
-    move-result v1
-
-    if-eqz v1, :play
-
-    if-eqz p4, :done
 
     iget-object v1, p4, Lh4/a;->h:Lu3/a$a;
 
@@ -208,8 +226,6 @@
 .method public static playlist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
     .locals 4
 
-    if-eqz p0, :done
-
     if-eqz p1, :done
 
     invoke-virtual {p1}, Lcom/aspiro/wamp/model/Playlist;->getNumberOfItems()I
@@ -218,30 +234,6 @@
 
     if-lez v0, :done
 
-    :unwrap_context
-    instance-of v0, p0, Landroidx/fragment/app/FragmentActivity;
-
-    if-nez v0, :has_activity
-
-    instance-of v0, p0, Landroid/content/ContextWrapper;
-
-    if-eqz v0, :done
-
-    move-object v0, p0
-
-    check-cast v0, Landroid/content/ContextWrapper;
-
-    invoke-virtual {v0}, Landroid/content/ContextWrapper;->getBaseContext()Landroid/content/Context;
-
-    move-result-object v0
-
-    if-eq v0, p0, :done
-
-    move-object p0, v0
-
-    goto :unwrap_context
-
-    :has_activity
     invoke-static {}, Lcom/aspiro/wamp/App$a;->a()Lcom/aspiro/wamp/App;
 
     move-result-object v0
@@ -257,6 +249,31 @@
     move-result v1
 
     if-eqz v1, :play
+
+    :unwrap_context
+    instance-of v1, p0, Landroidx/fragment/app/FragmentActivity;
+
+    if-nez v1, :has_activity
+
+    instance-of v1, p0, Landroid/content/ContextWrapper;
+
+    if-eqz v1, :done
+
+    move-object v1, p0
+
+    check-cast v1, Landroid/content/ContextWrapper;
+
+    invoke-virtual {v1}, Landroid/content/ContextWrapper;->getBaseContext()Landroid/content/Context;
+
+    move-result-object v1
+
+    if-eq v1, p0, :done
+
+    move-object p0, v1
+
+    goto :unwrap_context
+
+    :has_activity
 
     iget-object v1, v0, Le5/z$n2;->w8:Ldagger/internal/f;
 

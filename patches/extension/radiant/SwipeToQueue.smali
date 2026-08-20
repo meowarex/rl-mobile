@@ -130,6 +130,14 @@
 .end method
 
 # virtual methods
+.method public getAnimationDuration(Landroidx/recyclerview/widget/RecyclerView;IFF)J
+    .locals 2
+
+    const-wide/16 v0, 0x50
+
+    return-wide v0
+.end method
+
 .method public getSwipeDirs(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)I
     .locals 2
 

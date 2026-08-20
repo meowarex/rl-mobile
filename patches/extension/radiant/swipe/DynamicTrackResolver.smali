@@ -11,6 +11,136 @@
 
 
 # direct methods
+.method private currentAlbumRow(Lradiant/swipe/QueueRequest;)Lu5/b$a;
+    .locals 9
+
+    if-eqz p1, :invalid
+
+    iget-object v0, p1, Lradiant/swipe/QueueRequest;->media:Ljava/lang/Object;
+
+    instance-of v1, v0, Lu5/b$a;
+
+    if-eqz v1, :invalid
+
+    check-cast v0, Lu5/b$a;
+
+    iget-object v1, p0, Lradiant/swipe/DynamicTrackResolver;->recycler:Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v1}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Landroidx/recyclerview/widget/RecyclerView;
+
+    if-eqz v1, :invalid
+
+    invoke-virtual {v1}, Landroidx/recyclerview/widget/RecyclerView;->getAdapter()Landroidx/recyclerview/widget/RecyclerView$Adapter;
+
+    move-result-object v2
+
+    instance-of v1, v2, Lcom/tidal/android/core/adapterdelegate/c;
+
+    if-eqz v1, :invalid
+
+    check-cast v2, Lcom/tidal/android/core/adapterdelegate/c;
+
+    invoke-virtual {v2}, Landroidx/recyclerview/widget/ListAdapter;->getCurrentList()Ljava/util/List;
+
+    move-result-object v2
+
+    iget v3, p1, Lradiant/swipe/QueueRequest;->position:I
+
+    if-gez v3, :check_size
+
+    goto :invalid
+
+    :check_size
+    invoke-interface {v2}, Ljava/util/List;->size()I
+
+    move-result v4
+
+    if-lt v3, v4, :read_row
+
+    goto :invalid
+
+    :read_row
+    invoke-interface {v2, v3}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    instance-of v3, v2, Lu5/b$a;
+
+    if-eqz v3, :invalid
+
+    check-cast v2, Lu5/b$a;
+
+    iget-object v3, v0, Lu5/b$a;->a:Lu5/b$a$a;
+
+    iget-object v4, v2, Lu5/b$a;->a:Lu5/b$a$a;
+
+    if-ne v3, v4, :invalid
+
+    iget-wide v3, v0, Lu5/b$a;->b:J
+
+    iget-wide v5, v2, Lu5/b$a;->b:J
+
+    cmp-long v7, v3, v5
+
+    if-nez v7, :invalid
+
+    iget-object v3, v0, Lu5/b$a;->c:Lu5/b$a$b;
+
+    iget-object v4, v2, Lu5/b$a;->c:Lu5/b$a$b;
+
+    if-eqz v3, :invalid
+
+    if-eqz v4, :invalid
+
+    iget v5, v3, Lu5/b$a$b;->r:I
+
+    iget v6, v4, Lu5/b$a$b;->r:I
+
+    iget v7, p1, Lradiant/swipe/QueueRequest;->id:I
+
+    if-ne v5, v7, :invalid
+
+    if-ne v6, v7, :invalid
+
+    iget-object v5, v3, Lu5/b$a$b;->s:Ljava/lang/String;
+
+    iget-object v6, v4, Lu5/b$a$b;->s:Ljava/lang/String;
+
+    if-eq v5, v6, :module_valid
+
+    if-eqz v5, :invalid
+
+    invoke-virtual {v5, v6}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v5
+
+    if-eqz v5, :invalid
+
+    :module_valid
+    iget-object v5, v4, Lu5/b$a$b;->g:Lcom/aspiro/wamp/model/Availability;
+
+    invoke-interface {v5}, Lcom/aspiro/wamp/model/Availability;->isAvailable()Z
+
+    move-result v5
+
+    if-eqz v5, :invalid
+
+    iget-boolean v5, v4, Lu5/b$a$b;->p:Z
+
+    if-nez v5, :invalid
+
+    return-object v2
+
+    :invalid
+    const/4 v0, 0x0
+
+    return-object v0
+.end method
+
 .method private constructor <init>(Landroidx/recyclerview/widget/RecyclerView;)V
     .locals 1
 
@@ -234,6 +364,96 @@
     return-object v0
 .end method
 
+.method private resolveAlbum(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/swipe/QueueRequest;
+    .locals 5
+
+    iget-object v0, p0, Lradiant/swipe/DynamicTrackResolver;->recycler:Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v0}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v0
+
+    if-ne v0, p1, :invalid
+
+    invoke-virtual {p2}, Landroidx/recyclerview/widget/RecyclerView$ViewHolder;->getBindingAdapterPosition()I
+
+    move-result p2
+
+    const/4 v0, -0x1
+
+    if-ne p2, v0, :has_position
+
+    goto :invalid
+
+    :has_position
+    invoke-virtual {p1}, Landroidx/recyclerview/widget/RecyclerView;->getAdapter()Landroidx/recyclerview/widget/RecyclerView$Adapter;
+
+    move-result-object p1
+
+    instance-of v0, p1, Lcom/tidal/android/core/adapterdelegate/c;
+
+    if-eqz v0, :invalid
+
+    check-cast p1, Lcom/tidal/android/core/adapterdelegate/c;
+
+    invoke-virtual {p1}, Landroidx/recyclerview/widget/ListAdapter;->getCurrentList()Ljava/util/List;
+
+    move-result-object p1
+
+    if-gez p2, :check_size
+
+    goto :invalid
+
+    :check_size
+    invoke-interface {p1}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-lt p2, v0, :read_row
+
+    goto :invalid
+
+    :read_row
+    invoke-interface {p1, p2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object p1
+
+    instance-of v0, p1, Lu5/b$a;
+
+    if-eqz v0, :invalid
+
+    check-cast p1, Lu5/b$a;
+
+    iget-object v0, p1, Lu5/b$a;->c:Lu5/b$a$b;
+
+    if-eqz v0, :invalid
+
+    iget-object v1, v0, Lu5/b$a$b;->g:Lcom/aspiro/wamp/model/Availability;
+
+    invoke-interface {v1}, Lcom/aspiro/wamp/model/Availability;->isAvailable()Z
+
+    move-result v1
+
+    if-eqz v1, :invalid
+
+    iget-boolean v1, v0, Lu5/b$a$b;->p:Z
+
+    if-nez v1, :invalid
+
+    iget v0, v0, Lu5/b$a$b;->r:I
+
+    new-instance v1, Lradiant/swipe/QueueRequest;
+
+    invoke-direct {v1, p2, p1, v0}, Lradiant/swipe/QueueRequest;-><init>(ILjava/lang/Object;I)V
+
+    return-object v1
+
+    :invalid
+    const/4 p1, 0x0
+
+    return-object p1
+.end method
+
 .method public static install(Landroidx/recyclerview/widget/RecyclerView;)V
     .locals 1
 
@@ -254,6 +474,43 @@
 .method public execute(Lradiant/swipe/QueueRequest;)V
     .locals 8
 
+    iget-object v0, p1, Lradiant/swipe/QueueRequest;->media:Ljava/lang/Object;
+
+    instance-of v1, v0, Lu5/b$a;
+
+    if-eqz v1, :dynamic_track
+
+    invoke-direct {p0, p1}, Lradiant/swipe/DynamicTrackResolver;->currentAlbumRow(Lradiant/swipe/QueueRequest;)Lu5/b$a;
+
+    move-result-object v0
+
+    if-eqz v0, :done
+
+    new-instance v1, Lradiant/swipe/AlbumItemQueueAction;
+
+    invoke-direct {v1, v0}, Lradiant/swipe/AlbumItemQueueAction;-><init>(Lu5/b$a;)V
+
+    iget-object v2, p0, Lradiant/swipe/DynamicTrackResolver;->recycler:Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v2}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Landroidx/recyclerview/widget/RecyclerView;
+
+    if-eqz v2, :done
+
+    invoke-virtual {v2}, Landroid/view/View;->getContext()Landroid/content/Context;
+
+    move-result-object v2
+
+    invoke-virtual {v1, v2}, Lradiant/swipe/AlbumItemQueueAction;->setContext(Landroid/content/Context;)V
+
+    invoke-virtual {v1}, Lradiant/swipe/AlbumItemQueueAction;->invoke()Ljava/lang/Object;
+
+    return-void
+
+    :dynamic_track
     invoke-direct {p0, p1}, Lradiant/swipe/DynamicTrackResolver;->currentRow(Lradiant/swipe/QueueRequest;)Lo6/b;
 
     move-result-object v0
@@ -374,6 +631,17 @@
 .method public resolve(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/swipe/QueueRequest;
     .locals 5
 
+    instance-of v0, p2, Lv6/e$a;
+
+    if-eqz v0, :dynamic_holder
+
+    invoke-direct {p0, p1, p2}, Lradiant/swipe/DynamicTrackResolver;->resolveAlbum(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/swipe/QueueRequest;
+
+    move-result-object p1
+
+    return-object p1
+
+    :dynamic_holder
     instance-of v0, p2, Lp7/a$a;
 
     if-eqz v0, :invalid
