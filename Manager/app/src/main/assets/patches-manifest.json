@@ -534,16 +534,14 @@
           "type": "color",
           "key": "background_color",
           "title": "Add to Queue Color",
-          "default": -14748953,
-          "defaultLabel": "Cyan",
+          "default": -14408663,
           "token": "RL_SWIPE_TO_QUEUE_ADD_COLOR"
         },
         {
           "type": "color",
           "key": "play_next_color",
           "title": "Play Next Color",
-          "default": -14749031,
-          "defaultLabel": "Green",
+          "default": -14408663,
           "token": "RL_SWIPE_TO_QUEUE_PLAY_NEXT_COLOR"
         }
       ]

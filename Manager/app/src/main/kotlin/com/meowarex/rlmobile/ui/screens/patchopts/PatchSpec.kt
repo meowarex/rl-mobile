@@ -138,7 +138,6 @@ sealed interface OptionSpec {
         override val title: String = "",
         override val description: String = "",
         val default: Int = 0,
-        val defaultLabel: String? = null,
         /** Placeholder name (without the surrounding `__`) baked into the `.patch`/extension files. */
         val token: String? = null,
     ) : OptionSpec

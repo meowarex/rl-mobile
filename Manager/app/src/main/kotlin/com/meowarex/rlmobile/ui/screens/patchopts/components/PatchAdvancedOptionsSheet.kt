@@ -230,7 +230,6 @@ fun PatchAdvancedOptionsSheet(
                         title = option.title,
                         color = state.color(patch, option),
                         defaultColor = option.default,
-                        manifestDefaultLabel = option.defaultLabel,
                         onColorChange = { state.setColor(patch, option, it) },
                     )
                 }
@@ -455,22 +454,33 @@ private fun ColorOptionRow(
     title: String,
     color: Int,
     defaultColor: Int,
-    manifestDefaultLabel: String?,
     onColorChange: (Int) -> Unit,
 ) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
     val selectedColor = color.withOpaqueAlpha()
-    val materialYouColor = MaterialTheme.colorScheme.primary.toArgb().withOpaqueAlpha()
-    val opaqueDefault = defaultColor.withOpaqueAlpha()
-    val defaultLabel = manifestDefaultLabel ?: if (opaqueDefault == TIDAL_GREEN) {
-        stringResource(R.string.patch_color_green)
-    } else stringResource(R.string.patch_waze_color_waze_default)
-    val presets = listOf(
-        defaultLabel,
-        stringResource(R.string.patch_waze_color_tidal_cyan),
-        stringResource(R.string.patch_waze_color_material_you),
-    )
-    val presetColors = listOf(opaqueDefault, TIDAL_CYAN, materialYouColor)
+    val isNeutralPalette = defaultColor.withOpaqueAlpha() == NEUTRAL
+    val presets = if (isNeutralPalette) {
+        listOf(
+            stringResource(R.string.patch_color_neutral),
+            stringResource(R.string.patch_color_green),
+            stringResource(R.string.patch_color_cyan),
+        )
+    } else {
+        listOf(
+            stringResource(R.string.patch_waze_color_waze_default),
+            stringResource(R.string.patch_waze_color_tidal_cyan),
+            stringResource(R.string.patch_waze_color_material_you),
+        )
+    }
+    val presetColors = if (isNeutralPalette) {
+        listOf(NEUTRAL, GREEN, CYAN)
+    } else {
+        listOf(
+            defaultColor.withOpaqueAlpha(),
+            TIDAL_CYAN,
+            MaterialTheme.colorScheme.primary.toArgb().withOpaqueAlpha(),
+        )
+    }
     val selectedPreset = presetColors.indexOf(selectedColor)
 
     Column(
@@ -497,6 +507,12 @@ private fun ColorOptionRow(
                 text = selectedColor.toRgbHex(),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
+            )
+            Icon(
+                painter = painterResource(R.drawable.ic_edit),
+                contentDescription = stringResource(R.string.patch_color_edit),
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(18.dp),
             )
         }
         RadiantSegmented(
@@ -611,7 +627,9 @@ private fun formatSliderValue(option: OptionSpec.Slider, value: Float): String {
 }
 
 private const val OPAQUE_ALPHA = -0x1000000
-private const val TIDAL_GREEN = -14749031 // #ff1ef299
+private const val NEUTRAL = -14408663 // #ff242429
+private const val GREEN = -14749031 // #ff1ef299
+private const val CYAN = -14748953 // #ff1ef2e7
 private const val TIDAL_CYAN = -14549268 // #ff21feec
 
 private fun Int.withOpaqueAlpha(): Int = (this and 0x00FFFFFF) or OPAQUE_ALPHA
