@@ -152,7 +152,9 @@
 
 # virtual methods
 .method public execute(Lradiant/swipe/QueueRequest;)V
-    .locals 7
+    .locals 8
+
+    iget v7, p1, Lradiant/swipe/QueueRequest;->action:I
 
     invoke-direct {p0, p1}, Lradiant/swipe/MyMixesAndRadioResolver;->current(Lradiant/swipe/QueueRequest;)Lve/a;
 
@@ -194,12 +196,24 @@
 
     invoke-direct {v5, v6}, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;-><init>(Ljava/lang/String;)V
 
-    iget-object v6, v1, Lpe/f;->b:Lcom/tidal/android/navigation/NavigationInfo;
+    iget-object p0, v1, Lpe/f;->b:Lcom/tidal/android/navigation/NavigationInfo;
 
-    invoke-static {v3, v4, v5, v6, v2}, Lradiant/swipe/QueueExecutor;->mix(Landroid/content/Context;Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
+    const/4 v1, 0x1
+
+    if-ne v7, v1, :append
+
+    invoke-static {v3, v4, v5, p0, v2}, Lradiant/swipe/QueueExecutor;->playNextMix(Landroid/content/Context;Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
 
     move-result-object p1
 
+    goto :retain
+
+    :append
+    invoke-static {v3, v4, v5, p0, v2}, Lradiant/swipe/QueueExecutor;->mix(Landroid/content/Context;Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
+
+    move-result-object p1
+
+    :retain
     if-eqz p1, :done
 
     iget-object v0, v0, Lcom/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView;->h:Lio/reactivex/disposables/CompositeDisposable;

@@ -180,7 +180,7 @@
 
 
 # virtual methods
-.method public invoke()Ljava/lang/Object;
+.method public invoke(I)Ljava/lang/Object;
     .locals 4
 
     iget-object v0, p0, Lradiant/swipe/ComposeSearchQueueAction;->callback:Lam0/l;
@@ -201,12 +201,24 @@
 
     new-instance p0, Lradiant/swipe/ComposeSearchQueueEvent;
 
-    invoke-direct {p0, v1, v2, v3}, Lradiant/swipe/ComposeSearchQueueEvent;-><init>(Landroid/content/Context;Ljava/lang/String;I)V
+    invoke-direct {p0, v1, v2, v3, p1}, Lradiant/swipe/ComposeSearchQueueEvent;-><init>(Landroid/content/Context;Ljava/lang/String;II)V
 
     invoke-interface {v0, p0}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
 
     :done
     sget-object v0, Lkotlin/u;->a:Lkotlin/u;
+
+    return-object v0
+.end method
+
+.method public invoke()Ljava/lang/Object;
+    .locals 1
+
+    const/4 v0, 0x2
+
+    invoke-virtual {p0, v0}, Lradiant/swipe/ComposeSearchQueueAction;->invoke(I)Ljava/lang/Object;
+
+    move-result-object v0
 
     return-object v0
 .end method

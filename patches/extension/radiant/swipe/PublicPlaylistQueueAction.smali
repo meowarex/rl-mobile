@@ -39,8 +39,8 @@
 
 
 # virtual methods
-.method public invoke()Ljava/lang/Object;
-    .locals 6
+.method public invoke(I)Ljava/lang/Object;
+    .locals 7
 
     iget-object v0, p0, Lradiant/swipe/PublicPlaylistQueueAction;->callback:Lam0/l;
 
@@ -62,7 +62,9 @@
 
     const/4 v5, 0x3
 
-    invoke-direct/range {v0 .. v5}, Lradiant/swipe/DynamicMediaQueueEvent;-><init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+    move v6, p1
+
+    invoke-direct/range {v0 .. v6}, Lradiant/swipe/DynamicMediaQueueEvent;-><init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)V
 
     iget-object v1, p0, Lradiant/swipe/PublicPlaylistQueueAction;->callback:Lam0/l;
 
@@ -70,6 +72,18 @@
 
     :done
     sget-object v0, Lkotlin/u;->a:Lkotlin/u;
+
+    return-object v0
+.end method
+
+.method public invoke()Ljava/lang/Object;
+    .locals 1
+
+    const/4 v0, 0x2
+
+    invoke-virtual {p0, v0}, Lradiant/swipe/PublicPlaylistQueueAction;->invoke(I)Ljava/lang/Object;
+
+    move-result-object v0
 
     return-object v0
 .end method

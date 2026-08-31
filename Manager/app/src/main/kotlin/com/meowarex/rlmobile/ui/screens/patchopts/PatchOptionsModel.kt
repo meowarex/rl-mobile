@@ -179,7 +179,12 @@ class PatchOptionsModel(
 
     fun setChoiceValue(spec: PatchSpec, option: OptionSpec.Choice, index: Int) {
         if (index !in option.entries.indices) return
-        optionInts = optionInts + (keyOf(spec, option) to index)
+        val selectedKey = keyOf(spec, option)
+        optionInts = normalizeChoiceSelections(
+            specs = listOf(spec),
+            values = optionInts + (selectedKey to index),
+            preferredKey = selectedKey,
+        )
     }
 
     fun colorValue(spec: PatchSpec, option: OptionSpec.Color): Int =
@@ -204,7 +209,14 @@ class PatchOptionsModel(
         val prefix = "${spec.id}/"
         optionBools = optionBools.filterKeys { !it.startsWith(prefix) }
         optionFloats = optionFloats.filterKeys { !it.startsWith(prefix) }
-        optionInts = optionInts.filterKeys { !it.startsWith(prefix) }
+        optionInts = normalizeChoiceSelections(
+            specs = listOf(spec),
+            values = optionInts.filterKeys { !it.startsWith(prefix) },
+        )
+    }
+
+    private fun normalizeChoiceSelections(specs: List<PatchSpec>) {
+        optionInts = normalizeChoiceSelections(specs, optionInts)
     }
 
     val optionState: PatchOptionState = PatchOptionState(
@@ -282,6 +294,7 @@ class PatchOptionsModel(
         val loaded = if (component == null) builtinSpecs else loadManifestSpecs(component) ?: builtinSpecs
         mainThread {
             specs = loaded
+            normalizeChoiceSelections(loaded)
             validatePatchSelection()
             specsLoading = false
         }
@@ -351,6 +364,7 @@ class PatchOptionsModel(
             ?: loadCachedReleaseManifestSpecs() ?: builtinSpecs
         mainThread {
             specs = loaded
+            normalizeChoiceSelections(loaded)
             validatePatchSelection()
             specsLoading = false
         }
@@ -415,6 +429,7 @@ class PatchOptionsModel(
     }
 
     init {
+        normalizeChoiceSelections(specs)
         validatePatchSelection()
         screenModelScope.launchBlock { fetchPkgNameState() }
         // Default source is the latest release's manifest; custom selections drive themselves.

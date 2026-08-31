@@ -303,7 +303,7 @@
 
 # virtual methods
 .method public execute(Lradiant/swipe/QueueRequest;)V
-    .locals 4
+    .locals 7
 
     invoke-direct {p0, p1}, Lradiant/swipe/SuggestionsResolver;->current(Lradiant/swipe/QueueRequest;)Lcom/aspiro/wamp/model/SuggestedMediaItem$SuggestedTrack;
 
@@ -311,18 +311,75 @@
 
     if-eqz v0, :done
 
-    iget-object v0, p0, Lradiant/swipe/SuggestionsResolver;->host:Ljava/lang/ref/WeakReference;
-
-    invoke-virtual {v0}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
-
-    move-result-object v0
-
     invoke-direct {p0}, Lradiant/swipe/SuggestionsResolver;->viewModel()Lcom/aspiro/wamp/nowplaying/view/suggestions/l;
 
     move-result-object v1
 
     if-eqz v1, :done
 
+    iget v2, p1, Lradiant/swipe/QueueRequest;->action:I
+
+    const/4 v3, 0x1
+
+    if-ne v2, v3, :default_action
+
+    invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
+
+    move-result v2
+
+    if-eqz v2, :default_action
+
+    invoke-virtual {v0}, Lcom/aspiro/wamp/model/SuggestedMediaItem$SuggestedTrack;->getMediaItem()Lcom/aspiro/wamp/model/Track;
+
+    move-result-object v2
+
+    invoke-virtual {v2}, Lcom/aspiro/wamp/model/MediaItem;->getId()I
+
+    move-result v3
+
+    invoke-static {v3}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
+
+    move-result-object v3
+
+    new-instance v4, Lcom/aspiro/wamp/model/MediaItemParent;
+
+    invoke-direct {v4, v2}, Lcom/aspiro/wamp/model/MediaItemParent;-><init>(Lcom/aspiro/wamp/model/MediaItem;)V
+
+    invoke-static {v4}, Lkotlin/collections/u;->h(Ljava/lang/Object;)Ljava/util/List;
+
+    move-result-object v4
+
+    check-cast v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/a1;
+
+    iget-object v5, v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/a1;->j:Lcom/tidal/android/navigation/NavigationInfo;
+
+    invoke-static {v3, v4, v5}, Lcom/aspiro/wamp/playqueue/source/model/b;->p(Ljava/lang/String;Ljava/util/List;Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/playqueue/source/model/ItemSource;
+
+    move-result-object v6
+
+    new-instance v4, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
+
+    const-string v3, "suggestions"
+
+    invoke-direct {v4, v3}, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;-><init>(Ljava/lang/String;)V
+
+    iget-object v0, p0, Lradiant/swipe/SuggestionsResolver;->host:Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v0}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Landroidx/fragment/app/Fragment;
+
+    invoke-virtual {v0}, Landroidx/fragment/app/Fragment;->getContext()Landroid/content/Context;
+
+    move-result-object v0
+
+    invoke-static {v0, v2, v4, v6}, Lradiant/swipe/QueueExecutor;->playNextTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+
+    goto :done
+
+    :default_action
     iget p1, p1, Lradiant/swipe/QueueRequest;->position:I
 
     invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z

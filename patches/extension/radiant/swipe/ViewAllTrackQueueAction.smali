@@ -31,7 +31,7 @@
 
 
 # virtual methods
-.method public invoke()Ljava/lang/Object;
+.method public invoke(I)Ljava/lang/Object;
     .locals 5
 
     iget-object v0, p0, Lradiant/swipe/ViewAllTrackQueueAction;->callback:Lam0/l;
@@ -52,7 +52,7 @@
 
     invoke-static {v3}, Lradiant/swipe/ViewAllTrackQueue;->setContext(Landroid/content/Context;)V
 
-    invoke-static {v1, v2}, Lradiant/swipe/ViewAllTrackQueue;->marker(J)Ljava/lang/String;
+    invoke-static {v1, v2, p1}, Lradiant/swipe/ViewAllTrackQueue;->marker(JI)Ljava/lang/String;
 
     move-result-object v3
 
@@ -76,6 +76,18 @@
 
     :done
     sget-object v0, Lkotlin/u;->a:Lkotlin/u;
+
+    return-object v0
+.end method
+
+.method public invoke()Ljava/lang/Object;
+    .locals 1
+
+    const/4 v0, 0x2
+
+    invoke-virtual {p0, v0}, Lradiant/swipe/ViewAllTrackQueueAction;->invoke(I)Ljava/lang/Object;
+
+    move-result-object v0
 
     return-object v0
 .end method

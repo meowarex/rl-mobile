@@ -63,7 +63,9 @@
 
     check-cast v2, Lcom/aspiro/wamp/model/FavoriteTrack;
 
-    invoke-virtual {v0, v1, v2}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->Z(ILcom/aspiro/wamp/model/FavoriteTrack;)V
+    iget p1, p1, Lradiant/swipe/QueueRequest;->action:I
+
+    invoke-virtual {v0, v1, v2, p1}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->Z(ILcom/aspiro/wamp/model/FavoriteTrack;I)V
 
     :done
     return-void

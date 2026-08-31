@@ -476,26 +476,75 @@
       "advancedOptions": [
         {
           "type": "choice",
-          "key": "swipe_direction",
-          "title": "Swipe Direction",
-          "description": "Choose direction of the swipe gesture",
+          "key": "left_action",
+          "title": "Left Swipe Action",
+          "description": "Choose the action for a left swipe",
           "entries": [
-            "Left",
-            "Right"
+            "Disabled",
+            "Play next",
+            "Add to queue"
+          ],
+          "values": [
+            "0x0",
+            "0x1",
+            "0x2"
+          ],
+          "defaultIndex": 2,
+          "distinctFrom": "right_action",
+          "token": "RL_SWIPE_TO_QUEUE_LEFT_ACTION"
+        },
+        {
+          "type": "choice",
+          "key": "right_action",
+          "title": "Right Swipe Action",
+          "description": "Choose the action for a right swipe",
+          "entries": [
+            "Disabled",
+            "Play next",
+            "Add to queue"
+          ],
+          "values": [
+            "0x0",
+            "0x1",
+            "0x2"
+          ],
+          "defaultIndex": 0,
+          "distinctFrom": "left_action",
+          "token": "RL_SWIPE_TO_QUEUE_RIGHT_ACTION"
+        },
+        {
+          "type": "choice",
+          "key": "remove_direction",
+          "title": "Remove Track from Queue",
+          "description": "Choose the swipe direction used to remove items from the play queue",
+          "entries": [
+            "Left swipe",
+            "Right swipe",
+            "Both"
           ],
           "values": [
             "0x4",
-            "0x8"
+            "0x8",
+            "0xc"
           ],
           "defaultIndex": 0,
-          "token": "RL_SWIPE_TO_QUEUE_DIRECTION"
+          "token": "RL_SWIPE_TO_QUEUE_REMOVE_DIRECTION"
         },
         {
           "type": "color",
           "key": "background_color",
-          "title": "Background Color",
+          "title": "Add to Queue Color",
+          "default": -14748953,
+          "defaultLabel": "Cyan",
+          "token": "RL_SWIPE_TO_QUEUE_ADD_COLOR"
+        },
+        {
+          "type": "color",
+          "key": "play_next_color",
+          "title": "Play Next Color",
           "default": -14749031,
-          "token": "RL_SWIPE_TO_QUEUE_COLOR"
+          "defaultLabel": "Green",
+          "token": "RL_SWIPE_TO_QUEUE_PLAY_NEXT_COLOR"
         }
       ]
     },

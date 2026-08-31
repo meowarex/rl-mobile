@@ -10,5 +10,8 @@
 .method public abstract invoke()Ljava/lang/Object;
 .end method
 
+.method public abstract invoke(I)Ljava/lang/Object;
+.end method
+
 .method public abstract setContext(Landroid/content/Context;)V
 .end method

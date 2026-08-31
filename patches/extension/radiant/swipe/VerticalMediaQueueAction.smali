@@ -198,12 +198,12 @@
 
 
 # virtual methods
-.method public invoke()Ljava/lang/Object;
-    .locals 7
+.method public invoke(I)Ljava/lang/Object;
+    .locals 8
 
-    iget-object v6, p0, Lradiant/swipe/VerticalMediaQueueAction;->callback:Lam0/l;
+    iget-object v7, p0, Lradiant/swipe/VerticalMediaQueueAction;->callback:Lam0/l;
 
-    if-eqz v6, :done
+    if-eqz v7, :done
 
     iget-object v4, p0, Lradiant/swipe/VerticalMediaQueueAction;->itemId:Ljava/lang/String;
 
@@ -245,15 +245,29 @@
 
     iget-object v3, p0, Lradiant/swipe/VerticalMediaQueueAction;->moduleUuid:Ljava/lang/String;
 
-    invoke-direct/range {v0 .. v5}, Lradiant/swipe/DynamicMediaQueueEvent;-><init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+    move v6, p1
+
+    invoke-direct/range {v0 .. v6}, Lradiant/swipe/DynamicMediaQueueEvent;-><init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)V
 
     move-object v1, v0
 
     :emit
-    invoke-interface {v6, v1}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    invoke-interface {v7, v1}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
 
     :done
     sget-object v0, Lkotlin/u;->a:Lkotlin/u;
+
+    return-object v0
+.end method
+
+.method public invoke()Ljava/lang/Object;
+    .locals 1
+
+    const/4 v0, 0x2
+
+    invoke-virtual {p0, v0}, Lradiant/swipe/VerticalMediaQueueAction;->invoke(I)Ljava/lang/Object;
+
+    move-result-object v0
 
     return-object v0
 .end method

@@ -39,8 +39,8 @@
 
 
 # virtual methods
-.method public invoke()Ljava/lang/Object;
-    .locals 7
+.method public invoke(I)Ljava/lang/Object;
+    .locals 8
 
     iget-wide v1, p0, Lradiant/swipe/DynamicTrackQueueAction;->trackId:J
 
@@ -73,15 +73,29 @@
 
     iget-wide v4, p0, Lradiant/swipe/DynamicTrackQueueAction;->trackId:J
 
-    invoke-direct/range {v0 .. v5}, Lradiant/swipe/DynamicTrackQueueEvent;-><init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;J)V
+    move v6, p1
+
+    invoke-direct/range {v0 .. v6}, Lradiant/swipe/DynamicTrackQueueEvent;-><init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;JI)V
 
     :emit
-    iget-object v6, p0, Lradiant/swipe/DynamicTrackQueueAction;->callback:Lam0/l;
+    iget-object v7, p0, Lradiant/swipe/DynamicTrackQueueAction;->callback:Lam0/l;
 
-    invoke-interface {v6, v0}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
+    invoke-interface {v7, v0}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;
 
     :done
     sget-object v0, Lkotlin/u;->a:Lkotlin/u;
+
+    return-object v0
+.end method
+
+.method public invoke()Ljava/lang/Object;
+    .locals 1
+
+    const/4 v0, 0x2
+
+    invoke-virtual {p0, v0}, Lradiant/swipe/DynamicTrackQueueAction;->invoke(I)Ljava/lang/Object;
+
+    move-result-object v0
 
     return-object v0
 .end method

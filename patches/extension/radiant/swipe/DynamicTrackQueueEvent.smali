@@ -7,6 +7,8 @@
 
 
 # instance fields
+.field public final action:I
+
 .field public final context:Landroid/content/Context;
 
 .field public final moduleUuid:Ljava/lang/String;
@@ -17,7 +19,7 @@
 
 
 # direct methods
-.method public constructor <init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;J)V
+.method public constructor <init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;JI)V
     .locals 0
 
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
@@ -29,6 +31,8 @@
     iput-object p3, p0, Lradiant/swipe/DynamicTrackQueueEvent;->moduleUuid:Ljava/lang/String;
 
     iput-wide p4, p0, Lradiant/swipe/DynamicTrackQueueEvent;->trackId:J
+
+    iput p6, p0, Lradiant/swipe/DynamicTrackQueueEvent;->action:I
 
     return-void
 .end method

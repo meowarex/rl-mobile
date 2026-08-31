@@ -2,8 +2,17 @@
 .super Ljava/lang/Object;
 .source "QueueRequest.smali"
 
+# static fields
+.field public static final ACTION_NONE:I = 0x0
+
+.field public static final ACTION_PLAY_NEXT:I = 0x1
+
+.field public static final ACTION_ADD_TO_QUEUE:I = 0x2
+
 
 # instance fields
+.field public action:I
+
 .field public final id:I
 
 .field public final media:Ljava/lang/Object;

@@ -41,7 +41,7 @@
 
 
 # virtual methods
-.method public invoke()Ljava/lang/Object;
+.method public invoke(I)Ljava/lang/Object;
     .locals 10
 
     iget-object v0, p0, Lradiant/swipe/AlbumItemQueueAction;->callback:Lu5/b$a$a;
@@ -166,10 +166,31 @@
 
     invoke-virtual {v6, v7}, Lcom/aspiro/wamp/playqueue/source/model/Source;->addSourceItem(Lcom/aspiro/wamp/model/MediaItem;)V
 
+    const/4 v8, 0x1
+
+    if-ne p1, v8, :append_track
+
+    invoke-static {v3, v7, v5, v6}, Lradiant/swipe/QueueExecutor;->playNextTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+
+    goto :done
+
+    :append_track
     invoke-static {v3, v7, v5, v6}, Lradiant/swipe/QueueExecutor;->track(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
 
     :done
     sget-object v0, Lkotlin/u;->a:Lkotlin/u;
+
+    return-object v0
+.end method
+
+.method public invoke()Ljava/lang/Object;
+    .locals 1
+
+    const/4 v0, 0x2
+
+    invoke-virtual {p0, v0}, Lradiant/swipe/AlbumItemQueueAction;->invoke(I)Ljava/lang/Object;
+
+    move-result-object v0
 
     return-object v0
 .end method

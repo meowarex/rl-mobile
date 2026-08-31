@@ -333,6 +333,8 @@
 
     iget-object v1, p0, Lradiant/swipe/FeedResolver;->fragment:Ljava/lang/ref/WeakReference;
 
+    iget p0, p1, Lradiant/swipe/QueueRequest;->action:I
+
     invoke-virtual {v1}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
 
     move-result-object v1
@@ -408,6 +410,15 @@
 
     check-cast v7, Lcom/aspiro/wamp/model/Playlist;
 
+    const/4 v0, 0x1
+
+    if-ne p0, v0, :append_playlist
+
+    invoke-static {v3, v7, p1, v5}, Lradiant/swipe/QueueExecutor;->playNextPlaylist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    goto :done
+
+    :append_playlist
     invoke-static {v3, v7, p1, v5}, Lradiant/swipe/QueueExecutor;->playlist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
 
     goto :done
@@ -427,6 +438,17 @@
 
     check-cast v7, Lcom/aspiro/wamp/model/Album;
 
+    const/4 v0, 0x1
+
+    if-ne p0, v0, :append_album
+
+    invoke-static {v3, v7, p1, v5, v6}, Lradiant/swipe/QueueExecutor;->playNextAlbum(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
+
+    move-result-object v7
+
+    goto :retain
+
+    :append_album
     invoke-static {v3, v7, p1, v5, v6}, Lradiant/swipe/QueueExecutor;->album(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
 
     move-result-object v7
@@ -436,6 +458,17 @@
     :queue_mix
     check-cast v7, Lcom/aspiro/wamp/mix/model/Mix;
 
+    const/4 v0, 0x1
+
+    if-ne p0, v0, :append_mix
+
+    invoke-static {v3, v7, p1, v5, v6}, Lradiant/swipe/QueueExecutor;->playNextMix(Landroid/content/Context;Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
+
+    move-result-object v7
+
+    goto :retain
+
+    :append_mix
     invoke-static {v3, v7, p1, v5, v6}, Lradiant/swipe/QueueExecutor;->mix(Landroid/content/Context;Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
 
     move-result-object v7

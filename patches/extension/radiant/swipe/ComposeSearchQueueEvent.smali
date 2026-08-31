@@ -17,6 +17,8 @@
 
 
 # instance fields
+.field public final action:I
+
 .field public final context:Landroid/content/Context;
 
 .field public final id:Ljava/lang/String;
@@ -25,7 +27,7 @@
 
 
 # direct methods
-.method public constructor <init>(Landroid/content/Context;Ljava/lang/String;I)V
+.method public constructor <init>(Landroid/content/Context;Ljava/lang/String;II)V
     .locals 0
 
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
@@ -35,6 +37,8 @@
     iput-object p2, p0, Lradiant/swipe/ComposeSearchQueueEvent;->id:Ljava/lang/String;
 
     iput p3, p0, Lradiant/swipe/ComposeSearchQueueEvent;->type:I
+
+    iput p4, p0, Lradiant/swipe/ComposeSearchQueueEvent;->action:I
 
     return-void
 .end method

@@ -161,6 +161,7 @@ fun RadiantSegmented(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    disabledIndices: Set<Int> = emptySet(),
 ) {
     if (radiantStyle.native) {
         SingleChoiceSegmentedButtonRow(modifier = modifier.fillMaxWidth()) {
@@ -168,7 +169,7 @@ fun RadiantSegmented(
                 SegmentedButton(
                     selected = index == selectedIndex,
                     onClick = { onSelect(index) },
-                    enabled = enabled,
+                    enabled = enabled && index !in disabledIndices,
                     shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size),
                     icon = {},
                     label = { Text(text = label, maxLines = 1) },
@@ -196,6 +197,7 @@ fun RadiantSegmented(
     ) {
         options.forEachIndexed { index, label ->
             val selected = index == selectedIndex
+            val segmentEnabled = enabled && index !in disabledIndices
             val pillShape = RoundedCornerShape(13.dp)
             val alpha by animateFloatAsState(
                 targetValue = if (selected) 1f else 0f,
@@ -218,7 +220,7 @@ fun RadiantSegmented(
                         } else Modifier
                     )
                     .clickable(
-                        enabled = enabled,
+                        enabled = segmentEnabled,
                         role = Role.RadioButton,
                         onClick = { onSelect(index) },
                     ),
@@ -226,7 +228,11 @@ fun RadiantSegmented(
                 Text(
                     text = label,
                     style = MaterialTheme.typography.labelLarge,
-                    color = if (selected) scheme.onPrimary else scheme.onSurfaceVariant,
+                    color = when {
+                        selected -> scheme.onPrimary
+                        segmentEnabled -> scheme.onSurfaceVariant
+                        else -> scheme.onSurface.copy(alpha = 0.38f)
+                    },
                     maxLines = 1,
                 )
             }

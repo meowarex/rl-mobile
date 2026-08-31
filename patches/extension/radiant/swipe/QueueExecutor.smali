@@ -4,6 +4,41 @@
 
 
 # direct methods
+.method private static activity(Landroid/content/Context;)Landroidx/fragment/app/FragmentActivity;
+    .locals 1
+
+    :unwrap
+    instance-of v0, p0, Landroidx/fragment/app/FragmentActivity;
+
+    if-nez v0, :ready
+
+    instance-of v0, p0, Landroid/content/ContextWrapper;
+
+    if-eqz v0, :invalid
+
+    check-cast p0, Landroid/content/ContextWrapper;
+
+    invoke-virtual {p0}, Landroid/content/ContextWrapper;->getBaseContext()Landroid/content/Context;
+
+    move-result-object v0
+
+    if-eq v0, p0, :invalid
+
+    move-object p0, v0
+
+    goto :unwrap
+
+    :ready
+    check-cast p0, Landroidx/fragment/app/FragmentActivity;
+
+    return-object p0
+
+    :invalid
+    const/4 p0, 0x0
+
+    return-object p0
+.end method
+
 .method public static album(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
     .locals 8
 
@@ -302,6 +337,210 @@
 
     :done
     return-void
+.end method
+
+.method public static playNextAlbum(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
+    .locals 3
+
+    const/4 v0, 0x0
+
+    if-eqz p1, :done
+
+    invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
+
+    move-result v1
+
+    if-eqz v1, :play
+
+    if-eqz p4, :done
+
+    invoke-static {p0}, Lradiant/swipe/QueueExecutor;->activity(Landroid/content/Context;)Landroidx/fragment/app/FragmentActivity;
+
+    move-result-object p0
+
+    if-eqz p0, :done
+
+    iget-object v1, p4, Lh4/a;->b:Lo3/a$a;
+
+    invoke-interface {v1, p1, p2, p3}, Lo3/a$a;->a(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lo3/a;
+
+    move-result-object v1
+
+    iget-object v1, v1, Lo3/a;->d:Lc3/l$a;
+
+    invoke-interface {v1, p1, p2, p3}, Lc3/l$a;->a(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lc3/l;
+
+    move-result-object p1
+
+    invoke-virtual {p1, p0}, Lc3/l;->b(Landroidx/fragment/app/FragmentActivity;)V
+
+    goto :done
+
+    :play
+    invoke-static {p0, p1, p2, p3, p4}, Lradiant/swipe/QueueExecutor;->album(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
+
+    move-result-object v0
+
+    :done
+    return-object v0
+.end method
+
+.method public static playNextMix(Landroid/content/Context;Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
+    .locals 2
+
+    const/4 v0, 0x0
+
+    if-eqz p1, :done
+
+    invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
+
+    move-result v1
+
+    if-eqz v1, :play
+
+    if-eqz p4, :done
+
+    invoke-static {p0}, Lradiant/swipe/QueueExecutor;->activity(Landroid/content/Context;)Landroidx/fragment/app/FragmentActivity;
+
+    move-result-object p0
+
+    if-eqz p0, :done
+
+    iget-object v1, p4, Lh4/a;->h:Lu3/a$a;
+
+    invoke-interface {v1, p1, p2, p3}, Lu3/a$a;->a(Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lu3/a;
+
+    move-result-object v1
+
+    iget-object v1, v1, Lu3/a;->d:Lj3/q$a;
+
+    invoke-interface {v1, p1, p2, p3}, Lj3/q$a;->a(Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lj3/q;
+
+    move-result-object p1
+
+    invoke-virtual {p1, p0}, Lj3/q;->b(Landroidx/fragment/app/FragmentActivity;)V
+
+    goto :done
+
+    :play
+    invoke-static {p0, p1, p2, p3, p4}, Lradiant/swipe/QueueExecutor;->mix(Landroid/content/Context;Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
+
+    move-result-object v0
+
+    :done
+    return-object v0
+.end method
+
+.method public static playNextPlaylist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+    .locals 2
+
+    if-eqz p1, :done
+
+    invoke-virtual {p1}, Lcom/aspiro/wamp/model/Playlist;->getNumberOfItems()I
+
+    move-result v0
+
+    if-lez v0, :done
+
+    invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
+
+    move-result v0
+
+    if-eqz v0, :play
+
+    invoke-static {p0}, Lradiant/swipe/QueueExecutor;->activity(Landroid/content/Context;)Landroidx/fragment/app/FragmentActivity;
+
+    move-result-object p0
+
+    if-eqz p0, :done
+
+    invoke-static {}, Lcom/aspiro/wamp/App$a;->a()Lcom/aspiro/wamp/App;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lcom/aspiro/wamp/App;->e()Le5/c;
+
+    move-result-object v0
+
+    check-cast v0, Le5/z$n2;
+
+    iget-object v0, v0, Le5/z$n2;->v8:Ldagger/internal/f;
+
+    invoke-interface {v0}, Lql0/a;->get()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/aspiro/wamp/contextmenu/item/playlist/u$a;
+
+    invoke-interface {v0, p1, p2, p3}, Lcom/aspiro/wamp/contextmenu/item/playlist/u$a;->a(Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/contextmenu/item/playlist/u;
+
+    move-result-object p1
+
+    invoke-virtual {p1, p0}, Lcom/aspiro/wamp/contextmenu/item/playlist/u;->b(Landroidx/fragment/app/FragmentActivity;)V
+
+    goto :done
+
+    :play
+    invoke-static {p0, p1, p2, p3}, Lradiant/swipe/QueueExecutor;->playlist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    :done
+    return-void
+.end method
+
+.method public static playNextTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+    .locals 2
+
+    const/4 v0, 0x0
+
+    if-eqz p1, :done
+
+    invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
+
+    move-result v1
+
+    if-eqz v1, :play
+
+    invoke-static {p0}, Lradiant/swipe/QueueExecutor;->activity(Landroid/content/Context;)Landroidx/fragment/app/FragmentActivity;
+
+    move-result-object p0
+
+    if-eqz p0, :done
+
+    invoke-static {}, Lcom/aspiro/wamp/App$a;->a()Lcom/aspiro/wamp/App;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Lcom/aspiro/wamp/App;->e()Le5/c;
+
+    move-result-object v1
+
+    check-cast v1, Le5/z$n2;
+
+    iget-object v1, v1, Le5/z$n2;->K9:Ldagger/internal/f;
+
+    invoke-interface {v1}, Lql0/a;->get()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Lm3/i$a;
+
+    invoke-interface {v1, p1, p2, p3}, Lm3/i$a;->a(Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Lm3/i;
+
+    move-result-object p1
+
+    invoke-virtual {p1, p0}, Lm3/i;->b(Landroidx/fragment/app/FragmentActivity;)V
+
+    const/4 v0, 0x1
+
+    goto :done
+
+    :play
+    invoke-static {p0, p1, p2, p3}, Lradiant/swipe/QueueExecutor;->track(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+
+    move-result v0
+
+    :done
+    return v0
 .end method
 
 .method public static track(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z

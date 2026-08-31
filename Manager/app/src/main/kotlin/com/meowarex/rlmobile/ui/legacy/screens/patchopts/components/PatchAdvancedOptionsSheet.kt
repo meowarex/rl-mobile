@@ -166,6 +166,11 @@ fun PatchAdvancedOptionsSheet(
                                                     title = choice.title,
                                                     entries = choice.entries,
                                                     selectedIndex = state.choice(patch, choice),
+                                                    forceDropdown = choice.forceDropdown,
+                                                    disabledIndices = patch.conflictingChoices(choice)
+                                                        .map { state.choice(patch, it) }
+                                                        .filter { it != 0 }
+                                                        .toSet(),
                                                     onSelect = { state.setChoice(patch, choice, it) },
                                                 )
                                             }
@@ -205,6 +210,11 @@ fun PatchAdvancedOptionsSheet(
                                 title = option.title,
                                 entries = option.entries,
                                 selectedIndex = state.choice(patch, option),
+                                forceDropdown = option.forceDropdown,
+                                disabledIndices = patch.conflictingChoices(option)
+                                    .map { state.choice(patch, it) }
+                                    .filter { it != 0 }
+                                    .toSet(),
                                 onSelect = { state.setChoice(patch, option, it) },
                             )
                         }
@@ -213,6 +223,7 @@ fun PatchAdvancedOptionsSheet(
                         title = option.title,
                         color = state.color(patch, option),
                         defaultColor = option.default,
+                        manifestDefaultLabel = option.defaultLabel,
                         onColorChange = { state.setColor(patch, option, it) },
                     )
                 }
@@ -382,6 +393,8 @@ private fun ChoiceOptionRow(
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
     title: String = "",
+    forceDropdown: Boolean = false,
+    disabledIndices: Set<Int> = emptySet(),
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -397,7 +410,7 @@ private fun ChoiceOptionRow(
                 textAlign = TextAlign.Center,
             )
         }
-        if (entries.size > 3) {
+        if (forceDropdown || entries.size > 3) {
             var expanded by rememberSaveable { mutableStateOf(false) }
             val selectedLabel = entries.getOrNull(selectedIndex).orEmpty()
 
@@ -420,6 +433,7 @@ private fun ChoiceOptionRow(
                     entries.forEachIndexed { index, entry ->
                         DropdownMenuItem(
                             text = { Text(entry) },
+                            enabled = index !in disabledIndices,
                             onClick = {
                                 onSelect(index)
                                 expanded = false
@@ -435,6 +449,7 @@ private fun ChoiceOptionRow(
                 SegmentedButton(
                     selected = index == selectedIndex,
                     onClick = { onSelect(index) },
+                    enabled = index !in disabledIndices,
                     shape = SegmentedButtonDefaults.itemShape(index = index, count = entries.size),
                     icon = {},
                     label = {
@@ -457,17 +472,16 @@ private fun ColorOptionRow(
     title: String,
     color: Int,
     defaultColor: Int,
+    manifestDefaultLabel: String?,
     onColorChange: (Int) -> Unit,
 ) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
     val selectedColor = color.withOpaqueAlpha()
     val materialYouColor = MaterialTheme.colorScheme.primary.toArgb().withOpaqueAlpha()
     val opaqueDefault = defaultColor.withOpaqueAlpha()
-    val defaultLabel = if (opaqueDefault == TIDAL_GREEN) {
+    val defaultLabel = manifestDefaultLabel ?: if (opaqueDefault == TIDAL_GREEN) {
         stringResource(R.string.patch_color_green)
-    } else {
-        stringResource(R.string.patch_waze_color_waze_default)
-    }
+    } else stringResource(R.string.patch_waze_color_waze_default)
     val presets = listOf(
         defaultLabel,
         stringResource(R.string.patch_waze_color_tidal_cyan),

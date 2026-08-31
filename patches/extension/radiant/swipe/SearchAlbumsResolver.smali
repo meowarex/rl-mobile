@@ -122,6 +122,8 @@
 .method public execute(Lradiant/swipe/QueueRequest;)V
     .locals 7
 
+    iget v6, p1, Lradiant/swipe/QueueRequest;->action:I
+
     invoke-direct {p0, p1}, Lradiant/swipe/SearchAlbumsResolver;->current(Lradiant/swipe/QueueRequest;)Lzc/a;
 
     move-result-object p1
@@ -158,12 +160,24 @@
 
     iget-object v5, v1, Lld/c;->d:Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
 
-    iget-object v6, v1, Lld/c;->c:Lcom/tidal/android/navigation/NavigationInfo;
+    iget-object p0, v1, Lld/c;->c:Lcom/tidal/android/navigation/NavigationInfo;
 
-    invoke-static {v3, v4, v5, v6, v2}, Lradiant/swipe/QueueExecutor;->album(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
+    const/4 v1, 0x1
+
+    if-ne v6, v1, :append
+
+    invoke-static {v3, v4, v5, p0, v2}, Lradiant/swipe/QueueExecutor;->playNextAlbum(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
 
     move-result-object p1
 
+    goto :retain
+
+    :append
+    invoke-static {v3, v4, v5, p0, v2}, Lradiant/swipe/QueueExecutor;->album(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
+
+    move-result-object p1
+
+    :retain
     if-eqz p1, :done
 
     iget-object v0, v0, Lcom/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView;->g:Lio/reactivex/disposables/CompositeDisposable;

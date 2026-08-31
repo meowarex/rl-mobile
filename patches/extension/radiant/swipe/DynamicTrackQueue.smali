@@ -162,6 +162,17 @@
 
     invoke-virtual {v9, v7}, Lcom/aspiro/wamp/playqueue/source/model/Source;->addSourceItem(Lcom/aspiro/wamp/model/MediaItem;)V
 
+    iget v0, p1, Lradiant/swipe/DynamicTrackQueueEvent;->action:I
+
+    const/4 v2, 0x1
+
+    if-ne v0, v2, :append
+
+    invoke-static {v1, v7, v8, v9}, Lradiant/swipe/QueueExecutor;->playNextTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+
+    goto :done
+
+    :append
     invoke-static {v1, v7, v8, v9}, Lradiant/swipe/QueueExecutor;->track(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
 
     :done

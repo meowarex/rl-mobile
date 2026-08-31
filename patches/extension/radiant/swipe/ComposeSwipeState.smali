@@ -31,9 +31,9 @@
 
 .field final draw:Lradiant/swipe/ComposeSwipeState$Draw;
 
-.field icon:Landroid/graphics/drawable/Drawable;
+.field addIcon:Landroid/graphics/drawable/Drawable;
 
-.field backgroundColor:I
+.field playNextIcon:Landroid/graphics/drawable/Drawable;
 
 
 # direct methods
@@ -135,6 +135,36 @@
 
 
 # virtual methods
+.method actionForOffset(F)I
+    .locals 2
+
+    const/4 v0, 0x0
+
+    int-to-float v0, v0
+
+    cmpg-float v1, p1, v0
+
+    if-ltz v1, :left
+
+    cmpl-float p1, p1, v0
+
+    if-gtz p1, :right
+
+    const/4 p1, 0x0
+
+    return p1
+
+    :left
+    const/16 p1, __RL_SWIPE_TO_QUEUE_LEFT_ACTION__
+
+    return p1
+
+    :right
+    const/16 p1, __RL_SWIPE_TO_QUEUE_RIGHT_ACTION__
+
+    return p1
+.end method
+
 .method animateReset()V
     .locals 7
 
@@ -336,14 +366,14 @@
 
     move-result v0
 
-    invoke-virtual {p0, v0}, Lradiant/swipe/ComposeSwipeState;->isCorrectDirection(F)Z
+    invoke-virtual {p0, v0}, Lradiant/swipe/ComposeSwipeState;->actionForOffset(F)I
 
-    move-result v0
+    move-result v2
 
     goto :complete_ready
 
     :not_complete
-    const/4 v0, 0x0
+    const/4 v2, 0x0
 
     :complete_ready
     const/4 v1, 0x0
@@ -358,7 +388,7 @@
 
     invoke-virtual {p0}, Lradiant/swipe/ComposeSwipeState;->animateReset()V
 
-    if-eqz v0, :done
+    if-eqz v2, :done
 
     invoke-static {}, Lradiant/swipe/ComposeTapGuard;->suppressAfterSwipe()V
 
@@ -366,7 +396,7 @@
 
     if-eqz v0, :done
 
-    invoke-interface {v0}, Lradiant/swipe/ComposeSwipeAction;->invoke()Ljava/lang/Object;
+    invoke-interface {v0, v2}, Lradiant/swipe/ComposeSwipeAction;->invoke(I)Ljava/lang/Object;
 
     goto :done
 
@@ -380,28 +410,13 @@
 .end method
 
 .method isCorrectDirection(F)Z
-    .locals 3
+    .locals 1
 
-    const/16 v0, __RL_SWIPE_TO_QUEUE_DIRECTION__
+    invoke-virtual {p0, p1}, Lradiant/swipe/ComposeSwipeState;->actionForOffset(F)I
 
-    const/4 v1, 0x4
+    move-result v0
 
-    const/4 v2, 0x0
-
-    if-ne v0, v1, :expect_right
-
-    cmpg-float v0, p1, v2
-
-    if-gez v0, :wrong
-
-    const/4 v0, 0x1
-
-    return v0
-
-    :expect_right
-    cmpl-float v0, p1, v2
-
-    if-lez v0, :wrong
+    if-eqz v0, :wrong
 
     const/4 v0, 0x1
 
@@ -606,10 +621,6 @@
     :load_resources
     iput-object v0, p0, Lradiant/swipe/ComposeSwipeState;->context:Landroid/content/Context;
 
-    const v1, __RL_SWIPE_TO_QUEUE_COLOR__
-
-    iput v1, p0, Lradiant/swipe/ComposeSwipeState;->backgroundColor:I
-
     sget v1, Lcom/aspiro/wamp/R$drawable;->ic_add_to_queue_last:I
 
     invoke-virtual {v0, v1}, Landroid/content/Context;->getDrawable(I)Landroid/graphics/drawable/Drawable;
@@ -627,7 +638,26 @@
     invoke-virtual {v1, v2}, Landroid/graphics/drawable/Drawable;->setTint(I)V
 
     :store_icon
-    iput-object v1, p0, Lradiant/swipe/ComposeSwipeState;->icon:Landroid/graphics/drawable/Drawable;
+    iput-object v1, p0, Lradiant/swipe/ComposeSwipeState;->addIcon:Landroid/graphics/drawable/Drawable;
+
+    sget v1, Lcom/aspiro/wamp/R$drawable;->ic_play_next:I
+
+    invoke-virtual {v0, v1}, Landroid/content/Context;->getDrawable(I)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v1
+
+    if-eqz v1, :store_play_next_icon
+
+    invoke-virtual {v1}, Landroid/graphics/drawable/Drawable;->mutate()Landroid/graphics/drawable/Drawable;
+
+    move-result-object v1
+
+    const/4 v2, -0x1
+
+    invoke-virtual {v1, v2}, Landroid/graphics/drawable/Drawable;->setTint(I)V
+
+    :store_play_next_icon
+    iput-object v1, p0, Lradiant/swipe/ComposeSwipeState;->playNextIcon:Landroid/graphics/drawable/Drawable;
 
     :context_ready
     if-eqz p1, :enabled_ready

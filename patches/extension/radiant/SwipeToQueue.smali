@@ -8,9 +8,13 @@
 
 
 # instance fields
-.field private final background:Landroid/graphics/drawable/ColorDrawable;
+.field private final addBackground:Landroid/graphics/drawable/ColorDrawable;
 
-.field private final icon:Landroid/graphics/drawable/Drawable;
+.field private final addIcon:Landroid/graphics/drawable/Drawable;
+
+.field private final playNextBackground:Landroid/graphics/drawable/ColorDrawable;
+
+.field private final playNextIcon:Landroid/graphics/drawable/Drawable;
 
 .field private pendingRequest:Lradiant/swipe/QueueRequest;
 
@@ -32,12 +36,26 @@
 .end method
 
 .method private constructor <init>(Landroidx/recyclerview/widget/RecyclerView;Lradiant/swipe/QueueRowResolver;)V
-    .locals 3
+    .locals 4
 
     const/4 v0, 0x0
 
-    # ItemTouchHelper.LEFT (0x4) or ItemTouchHelper.RIGHT (0x8)
-    const/16 v1, __RL_SWIPE_TO_QUEUE_DIRECTION__
+    const/4 v1, 0x0
+
+    const/16 v2, __RL_SWIPE_TO_QUEUE_LEFT_ACTION__
+
+    if-eqz v2, :check_right
+
+    or-int/lit8 v1, v1, 0x4
+
+    :check_right
+    const/16 v2, __RL_SWIPE_TO_QUEUE_RIGHT_ACTION__
+
+    if-eqz v2, :directions_ready
+
+    or-int/lit8 v1, v1, 0x8
+
+    :directions_ready
 
     invoke-direct {p0, v0, v1}, Landroidx/recyclerview/widget/ItemTouchHelper$SimpleCallback;-><init>(II)V
 
@@ -49,11 +67,19 @@
 
     new-instance v1, Landroid/graphics/drawable/ColorDrawable;
 
-    const v2, __RL_SWIPE_TO_QUEUE_COLOR__
+    const v2, __RL_SWIPE_TO_QUEUE_ADD_COLOR__
 
     invoke-direct {v1, v2}, Landroid/graphics/drawable/ColorDrawable;-><init>(I)V
 
-    iput-object v1, p0, Lradiant/SwipeToQueue;->background:Landroid/graphics/drawable/ColorDrawable;
+    iput-object v1, p0, Lradiant/SwipeToQueue;->addBackground:Landroid/graphics/drawable/ColorDrawable;
+
+    new-instance v1, Landroid/graphics/drawable/ColorDrawable;
+
+    const v2, __RL_SWIPE_TO_QUEUE_PLAY_NEXT_COLOR__
+
+    invoke-direct {v1, v2}, Landroid/graphics/drawable/ColorDrawable;-><init>(I)V
+
+    iput-object v1, p0, Lradiant/SwipeToQueue;->playNextBackground:Landroid/graphics/drawable/ColorDrawable;
 
     sget v1, Lcom/aspiro/wamp/R$drawable;->ic_add_to_queue_last:I
 
@@ -72,7 +98,30 @@
     invoke-virtual {v0, v1}, Landroid/graphics/drawable/Drawable;->setTint(I)V
 
     :store_icon
-    iput-object v0, p0, Lradiant/SwipeToQueue;->icon:Landroid/graphics/drawable/Drawable;
+    iput-object v0, p0, Lradiant/SwipeToQueue;->addIcon:Landroid/graphics/drawable/Drawable;
+
+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
+
+    move-result-object v0
+
+    sget v1, Lcom/aspiro/wamp/R$drawable;->ic_play_next:I
+
+    invoke-virtual {v0, v1}, Landroid/content/Context;->getDrawable(I)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v0
+
+    if-eqz v0, :store_play_next_icon
+
+    invoke-virtual {v0}, Landroid/graphics/drawable/Drawable;->mutate()Landroid/graphics/drawable/Drawable;
+
+    move-result-object v0
+
+    const/4 v1, -0x1
+
+    invoke-virtual {v0, v1}, Landroid/graphics/drawable/Drawable;->setTint(I)V
+
+    :store_play_next_icon
+    iput-object v0, p0, Lradiant/SwipeToQueue;->playNextIcon:Landroid/graphics/drawable/Drawable;
 
     return-void
 .end method
@@ -135,7 +184,7 @@
 .end method
 
 .method public getSwipeDirs(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)I
-    .locals 2
+    .locals 3
 
     iget-object v0, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
 
@@ -149,7 +198,22 @@
 
     if-eqz v0, :not_swipeable
 
-    const/16 v0, __RL_SWIPE_TO_QUEUE_DIRECTION__
+    const/4 v0, 0x0
+
+    const/16 v1, __RL_SWIPE_TO_QUEUE_LEFT_ACTION__
+
+    if-eqz v1, :check_right
+
+    or-int/lit8 v0, v0, 0x4
+
+    :check_right
+    const/16 v1, __RL_SWIPE_TO_QUEUE_RIGHT_ACTION__
+
+    if-eqz v1, :directions_ready
+
+    or-int/lit8 v0, v0, 0x8
+
+    :directions_ready
 
     return v0
 
@@ -176,22 +240,26 @@
 
     int-to-float v0, v0
 
-    const/16 v8, __RL_SWIPE_TO_QUEUE_DIRECTION__
-
-    const/4 v9, 0x4
-
-    if-ne v8, v9, :expect_right
-
     cmpg-float v8, v11, v0
 
-    if-gez v8, :wrong_direction
+    if-ltz v8, :left_action
 
-    goto :clear_active
-
-    :expect_right
     cmpl-float v8, v11, v0
 
-    if-lez v8, :wrong_direction
+    if-gtz v8, :right_action
+
+    goto :wrong_direction
+
+    :left_action
+    const/16 v8, __RL_SWIPE_TO_QUEUE_LEFT_ACTION__
+
+    goto :action_ready
+
+    :right_action
+    const/16 v8, __RL_SWIPE_TO_QUEUE_RIGHT_ACTION__
+
+    :action_ready
+    if-eqz v8, :wrong_direction
 
     goto :clear_active
 
@@ -217,11 +285,13 @@
 
     move-result v4
 
-    const/16 v8, __RL_SWIPE_TO_QUEUE_DIRECTION__
+    const/4 v8, 0x0
 
-    const/4 v9, 0x4
+    int-to-float v8, v8
 
-    if-ne v8, v9, :right_bounds
+    cmpg-float v8, v11, v8
+
+    if-gez v8, :right_bounds
 
     invoke-virtual {v0}, Landroid/view/View;->getRight()I
 
@@ -248,7 +318,34 @@
 
     if-lez v5, :done
 
-    iget-object v6, p0, Lradiant/SwipeToQueue;->background:Landroid/graphics/drawable/ColorDrawable;
+    const/4 v8, 0x0
+
+    int-to-float v8, v8
+
+    cmpg-float v8, v11, v8
+
+    if-ltz v8, :draw_left_background
+
+    const/16 v8, __RL_SWIPE_TO_QUEUE_RIGHT_ACTION__
+
+    goto :background_action_ready
+
+    :draw_left_background
+    const/16 v8, __RL_SWIPE_TO_QUEUE_LEFT_ACTION__
+
+    :background_action_ready
+    const/4 v9, 0x1
+
+    if-ne v8, v9, :add_background
+
+    iget-object v6, p0, Lradiant/SwipeToQueue;->playNextBackground:Landroid/graphics/drawable/ColorDrawable;
+
+    goto :background_ready
+
+    :add_background
+    iget-object v6, p0, Lradiant/SwipeToQueue;->addBackground:Landroid/graphics/drawable/ColorDrawable;
+
+    :background_ready
 
     invoke-virtual {v6, v2, v3, v1, v4}, Landroid/graphics/drawable/Drawable;->setBounds(IIII)V
 
@@ -279,6 +376,24 @@
     move-result-object v10
 
     if-eqz v10, :draw_alpha
+
+    const/4 v9, 0x0
+
+    int-to-float v9, v9
+
+    cmpg-float v9, v11, v9
+
+    if-ltz v9, :stamp_left_action
+
+    const/16 v9, __RL_SWIPE_TO_QUEUE_RIGHT_ACTION__
+
+    goto :stamp_action
+
+    :stamp_left_action
+    const/16 v9, __RL_SWIPE_TO_QUEUE_LEFT_ACTION__
+
+    :stamp_action
+    iput v9, v10, Lradiant/swipe/QueueRequest;->action:I
 
     iput-object v10, p0, Lradiant/SwipeToQueue;->pendingRequest:Lradiant/swipe/QueueRequest;
 
@@ -334,7 +449,34 @@
     :draw_background
     invoke-virtual {v6, p1}, Landroid/graphics/drawable/ColorDrawable;->draw(Landroid/graphics/Canvas;)V
 
-    iget-object v6, p0, Lradiant/SwipeToQueue;->icon:Landroid/graphics/drawable/Drawable;
+    const/4 v8, 0x0
+
+    int-to-float v8, v8
+
+    cmpg-float v8, v11, v8
+
+    if-ltz v8, :draw_left_icon
+
+    const/16 v8, __RL_SWIPE_TO_QUEUE_RIGHT_ACTION__
+
+    goto :icon_action_ready
+
+    :draw_left_icon
+    const/16 v8, __RL_SWIPE_TO_QUEUE_LEFT_ACTION__
+
+    :icon_action_ready
+    const/4 v9, 0x1
+
+    if-ne v8, v9, :draw_add_icon
+
+    iget-object v6, p0, Lradiant/SwipeToQueue;->playNextIcon:Landroid/graphics/drawable/Drawable;
+
+    goto :icon_ready
+
+    :draw_add_icon
+    iget-object v6, p0, Lradiant/SwipeToQueue;->addIcon:Landroid/graphics/drawable/Drawable;
+
+    :icon_ready
 
     if-eqz v6, :done
 
@@ -357,11 +499,13 @@
 
     div-int/lit8 v9, v9, 0x2
 
-    const/16 v10, __RL_SWIPE_TO_QUEUE_DIRECTION__
+    const/4 v10, 0x0
 
-    const/4 v11, 0x4
+    int-to-float v10, v10
 
-    if-ne v10, v11, :right_icon
+    cmpg-float v10, v11, v10
+
+    if-gez v10, :right_icon
 
     sub-int v10, v1, v9
 

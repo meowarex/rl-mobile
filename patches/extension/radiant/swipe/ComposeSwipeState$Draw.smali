@@ -82,11 +82,9 @@
 
     move-result v8
 
-    const/16 v9, __RL_SWIPE_TO_QUEUE_DIRECTION__
+    cmpg-float v9, v6, v1
 
-    const/4 v10, 0x4
-
-    if-ne v9, v10, :right_exposure
+    if-gez v9, :right_exposure
 
     add-float v9, v3, v6
 
@@ -108,11 +106,41 @@
     :exposure_ready
     invoke-virtual {v7, v9, v1, v10, v4}, Landroid/graphics/Canvas;->clipRect(FFFF)Z
 
-    iget v11, v5, Lradiant/swipe/ComposeSwipeState;->backgroundColor:I
+    invoke-virtual {v5, v6}, Lradiant/swipe/ComposeSwipeState;->actionForOffset(F)I
+
+    move-result v11
+
+    const/4 v12, 0x1
+
+    if-ne v11, v12, :add_color
+
+    const v11, __RL_SWIPE_TO_QUEUE_PLAY_NEXT_COLOR__
+
+    goto :color_ready
+
+    :add_color
+    const v11, __RL_SWIPE_TO_QUEUE_ADD_COLOR__
+
+    :color_ready
 
     invoke-virtual {v7, v11}, Landroid/graphics/Canvas;->drawColor(I)V
 
-    iget-object v11, v5, Lradiant/swipe/ComposeSwipeState;->icon:Landroid/graphics/drawable/Drawable;
+    invoke-virtual {v5, v6}, Lradiant/swipe/ComposeSwipeState;->actionForOffset(F)I
+
+    move-result v11
+
+    const/4 v12, 0x1
+
+    if-ne v11, v12, :add_icon
+
+    iget-object v11, v5, Lradiant/swipe/ComposeSwipeState;->playNextIcon:Landroid/graphics/drawable/Drawable;
+
+    goto :icon_ready
+
+    :add_icon
+    iget-object v11, v5, Lradiant/swipe/ComposeSwipeState;->addIcon:Landroid/graphics/drawable/Drawable;
+
+    :icon_ready
 
     if-eqz v11, :background_done
 
@@ -134,11 +162,13 @@
 
     move-result v14
 
-    const/16 v15, __RL_SWIPE_TO_QUEUE_DIRECTION__
+    const/4 v15, 0x0
 
-    const/4 v1, 0x4
+    int-to-float v15, v15
 
-    if-ne v15, v1, :right_icon
+    cmpg-float v15, v6, v15
+
+    if-gez v15, :right_icon
 
     int-to-float v1, v12
 

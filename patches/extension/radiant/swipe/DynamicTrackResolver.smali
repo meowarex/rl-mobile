@@ -472,7 +472,9 @@
 
 # virtual methods
 .method public execute(Lradiant/swipe/QueueRequest;)V
-    .locals 8
+    .locals 9
+
+    iget v8, p1, Lradiant/swipe/QueueRequest;->action:I
 
     iget-object v0, p1, Lradiant/swipe/QueueRequest;->media:Ljava/lang/Object;
 
@@ -506,7 +508,7 @@
 
     invoke-virtual {v1, v2}, Lradiant/swipe/AlbumItemQueueAction;->setContext(Landroid/content/Context;)V
 
-    invoke-virtual {v1}, Lradiant/swipe/AlbumItemQueueAction;->invoke()Ljava/lang/Object;
+    invoke-virtual {v1, v8}, Lradiant/swipe/AlbumItemQueueAction;->invoke(I)Ljava/lang/Object;
 
     return-void
 
@@ -622,6 +624,15 @@
 
     move-result-object v5
 
+    const/4 v0, 0x1
+
+    if-ne v8, v0, :append_track
+
+    invoke-static {v5, v1, v3, v4}, Lradiant/swipe/QueueExecutor;->playNextTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+
+    goto :done
+
+    :append_track
     invoke-static {v5, v1, v3, v4}, Lradiant/swipe/QueueExecutor;->track(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
 
     :done

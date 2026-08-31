@@ -1,6 +1,6 @@
 --- a/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
-@@ -107,6 +107,124 @@
+@@ -107,6 +107,143 @@
  .end method
 
  
@@ -54,7 +54,7 @@
 +    return v0
 +.end method
 +
-+.method public final Z(ILcom/aspiro/wamp/model/FavoriteTrack;)V
++.method public final Z(ILcom/aspiro/wamp/model/FavoriteTrack;I)V
 +    .locals 6
 +
 +    move v5, p1
@@ -102,9 +102,28 @@
 +
 +    move-object v2, p2
 +
++    const/4 p1, 0x1
++
++    if-ne p3, p1, :rl_favorite_append
++
++    invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
++    move-result p1
++    if-nez p1, :rl_favorite_play_next
++    const/4 v0, 0x0
++    goto :rl_favorite_result
++    :rl_favorite_play_next
++    invoke-static {v1, v2, v3, v4}, Lradiant/swipe/QueueExecutor;->playNextTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
++
++    move-result v0
++
++    goto :rl_favorite_result
++
++    :rl_favorite_append
 +    invoke-virtual/range {v0 .. v4}, Lh4/a;->q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
 +
 +    move-result v0
++
++    :rl_favorite_result
 +
 +    if-nez v0, :done
 +
@@ -125,7 +144,7 @@
  # virtual methods
  .method public final M()Ln8/b;
      .locals 1
-@@ -2265,9 +2418,16 @@
+@@ -2265,9 +2437,16 @@
      iput-object p0, p1, Lo4/g;->e:Lo4/g$e;
 
      .line 224
@@ -334,7 +353,7 @@
      .line 32
      .line 33
 -    const/4 v1, 0x4
-+    const/16 v1, __RL_SWIPE_TO_QUEUE_DIRECTION__
++    const/16 v1, __RL_SWIPE_TO_QUEUE_REMOVE_DIRECTION__
  
      .line 34
      :cond_1
@@ -393,7 +412,7 @@
  
 --- a/com/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView.smali
-@@ -1176,6 +1176,8 @@
+@@ -1176,8 +1176,10 @@
      .line 69
      .line 70
      .line 71
@@ -406,7 +425,7 @@
      .line 74
 --- a/com/aspiro/wamp/playlist/ui/fragment/PlaylistFragment.smali
 +++ b/com/aspiro/wamp/playlist/ui/fragment/PlaylistFragment.smali
-@@ -5193,6 +5193,8 @@
+@@ -5193,8 +5193,10 @@
      .line 127
      .line 128
      .line 129
@@ -419,7 +438,7 @@
      .line 132
 --- a/com/aspiro/wamp/search/v2/UnifiedSearchView.smali
 +++ b/com/aspiro/wamp/search/v2/UnifiedSearchView.smali
-@@ -1596,6 +1596,8 @@
+@@ -1596,8 +1596,10 @@
      .line 60
      .line 61
      .line 62
@@ -432,7 +451,7 @@
      .line 65
 --- a/com/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView.smali
-@@ -1204,6 +1204,8 @@
+@@ -1204,8 +1204,10 @@
      .line 69
      .line 70
      .line 71
@@ -458,7 +477,7 @@
      .line 41
 --- a/com/aspiro/wamp/nowplaying/view/suggestions/o0.smali
 +++ b/com/aspiro/wamp/nowplaying/view/suggestions/o0.smali
-@@ -876,8 +876,10 @@
+@@ -876,7 +876,9 @@
      .line 96
      invoke-virtual {v0, p2}, Landroidx/recyclerview/widget/RecyclerView;->setAdapter(Landroidx/recyclerview/widget/RecyclerView$Adapter;)V
 

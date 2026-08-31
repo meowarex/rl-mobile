@@ -8,6 +8,8 @@
 
 
 # instance fields
+.field public final action:I
+
 .field public final context:Landroid/content/Context;
 
 .field public final itemId:Ljava/lang/String;
@@ -20,7 +22,7 @@
 
 
 # direct methods
-.method public constructor <init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+.method public constructor <init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)V
     .locals 0
 
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
@@ -34,6 +36,8 @@
     iput-object p4, p0, Lradiant/swipe/DynamicMediaQueueEvent;->itemId:Ljava/lang/String;
 
     iput p5, p0, Lradiant/swipe/DynamicMediaQueueEvent;->mediaType:I
+
+    iput p6, p0, Lradiant/swipe/DynamicMediaQueueEvent;->action:I
 
     return-void
 .end method

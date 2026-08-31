@@ -125,6 +125,8 @@ sealed interface OptionSpec {
         val defaultIndex: Int = 0,
         val values: List<String> = emptyList(),
         val requiresOption: String? = null,
+        val forceDropdown: Boolean = false,
+        val distinctFrom: String? = null,
         val token: String? = null,
     ) : OptionSpec
 
@@ -136,6 +138,7 @@ sealed interface OptionSpec {
         override val title: String = "",
         override val description: String = "",
         val default: Int = 0,
+        val defaultLabel: String? = null,
         /** Placeholder name (without the surrounding `__`) baked into the `.patch`/extension files. */
         val token: String? = null,
     ) : OptionSpec
@@ -230,6 +233,41 @@ val OptionSpec.variantGate: Int?
 
 fun OptionSpec.hiddenForVariant(selectedVariant: Int): Boolean =
     variantGate.let { it != null && it != selectedVariant }
+
+fun PatchSpec.conflictingChoices(option: OptionSpec.Choice): List<OptionSpec.Choice> =
+    advancedOptions.filterIsInstance<OptionSpec.Choice>().filter { other ->
+        other.key != option.key &&
+                (option.distinctFrom == other.key || other.distinctFrom == option.key)
+    }
+
+internal fun normalizeChoiceSelections(
+    specs: List<PatchSpec>,
+    values: Map<String, Int>,
+    preferredKey: String? = null,
+): Map<String, Int> {
+    val normalized = values.toMutableMap()
+    for (spec in specs) {
+        val choices = spec.advancedOptions.filterIsInstance<OptionSpec.Choice>()
+        fun fullKey(option: OptionSpec.Choice) = "${spec.id}/${option.key}"
+        fun selected(option: OptionSpec.Choice): Int =
+            (normalized[fullKey(option)] ?: option.defaultIndex)
+                .coerceIn(0, option.entries.lastIndex.coerceAtLeast(0))
+
+        for (leftIndex in choices.indices) {
+            val left = choices[leftIndex]
+            for (rightIndex in leftIndex + 1 until choices.size) {
+                val right = choices[rightIndex]
+                if (left.distinctFrom != right.key && right.distinctFrom != left.key) continue
+                val selected = selected(left)
+                if (selected == 0 || selected != selected(right)) continue
+
+                val loser = if (preferredKey == fullKey(right)) left else right
+                normalized[fullKey(loser)] = 0
+            }
+        }
+    }
+    return if (normalized == values) values else normalized
+}
 
 sealed interface OptionLock {
     data object Free : OptionLock

@@ -157,6 +157,8 @@
 .method public execute(Lradiant/swipe/QueueRequest;)V
     .locals 6
 
+    iget v5, p1, Lradiant/swipe/QueueRequest;->action:I
+
     invoke-direct {p0, p1}, Lradiant/swipe/MyPlaylistsResolver;->current(Lradiant/swipe/QueueRequest;)Lcf/b;
 
     move-result-object p1
@@ -185,9 +187,18 @@
 
     iget-object v4, v1, Lhf/c;->e:Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
 
-    iget-object v5, v1, Lhf/c;->d:Lcom/tidal/android/navigation/NavigationInfo;
+    iget-object p0, v1, Lhf/c;->d:Lcom/tidal/android/navigation/NavigationInfo;
 
-    invoke-static {v2, v3, v4, v5}, Lradiant/swipe/QueueExecutor;->playlist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+    const/4 v0, 0x1
+
+    if-ne v5, v0, :append
+
+    invoke-static {v2, v3, v4, p0}, Lradiant/swipe/QueueExecutor;->playNextPlaylist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    goto :done
+
+    :append
+    invoke-static {v2, v3, v4, p0}, Lradiant/swipe/QueueExecutor;->playlist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
 
     :done
     return-void
