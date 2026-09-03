@@ -50,6 +50,10 @@
 
     iget-object v2, p0, Lradiant/swipe/AlbumItemQueueAction;->moduleId:Ljava/lang/String;
 
+    const/4 v3, 0x3
+
+    if-eq p1, v3, :active_queue
+
     invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
 
     move-result v3
@@ -168,9 +172,18 @@
 
     const/4 v8, 0x1
 
-    if-ne p1, v8, :append_track
+    if-ne p1, v8, :check_add_to_playlist
 
     invoke-static {v3, v7, v5, v6}, Lradiant/swipe/QueueExecutor;->playNextTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+
+    goto :done
+
+    :check_add_to_playlist
+    const/4 v8, 0x3
+
+    if-ne p1, v8, :append_track
+
+    invoke-static {v3, v7, v5, v6}, Lradiant/swipe/QueueExecutor;->addToPlaylistTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
 
     goto :done
 

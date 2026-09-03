@@ -162,6 +162,10 @@
 
     iget-object p0, v1, Lfd/c;->c:Lcom/tidal/android/navigation/NavigationInfo;
 
+    const/4 v1, 0x3
+
+    if-eq v6, v1, :add_to_playlist
+
     const/4 v1, 0x1
 
     if-ne v6, v1, :append
@@ -176,6 +180,13 @@
     invoke-static {v3, v4, v5, p0, v2}, Lradiant/swipe/QueueExecutor;->album(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
 
     move-result-object p1
+
+    goto :retain
+
+    :add_to_playlist
+    invoke-static {v3, v4, v5, p0, v2}, Lradiant/swipe/QueueExecutor;->addToPlaylistAlbum(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)V
+
+    goto :done
 
     :retain
     if-eqz p1, :done

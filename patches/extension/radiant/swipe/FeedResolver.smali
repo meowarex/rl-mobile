@@ -410,6 +410,10 @@
 
     check-cast v7, Lcom/aspiro/wamp/model/Playlist;
 
+    const/4 v0, 0x3
+
+    if-eq p0, v0, :add_to_playlist_playlist
+
     const/4 v0, 0x1
 
     if-ne p0, v0, :append_playlist
@@ -420,6 +424,11 @@
 
     :append_playlist
     invoke-static {v3, v7, p1, v5}, Lradiant/swipe/QueueExecutor;->playlist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    goto :done
+
+    :add_to_playlist_playlist
+    invoke-static {v3, v7, p1, v5}, Lradiant/swipe/QueueExecutor;->addToPlaylistPlaylist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
 
     goto :done
 
@@ -438,6 +447,10 @@
 
     check-cast v7, Lcom/aspiro/wamp/model/Album;
 
+    const/4 v0, 0x3
+
+    if-eq p0, v0, :add_to_playlist_album
+
     const/4 v0, 0x1
 
     if-ne p0, v0, :append_album
@@ -455,8 +468,17 @@
 
     goto :retain
 
+    :add_to_playlist_album
+    invoke-static {v3, v7, p1, v5, v6}, Lradiant/swipe/QueueExecutor;->addToPlaylistAlbum(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)V
+
+    goto :done
+
     :queue_mix
     check-cast v7, Lcom/aspiro/wamp/mix/model/Mix;
+
+    const/4 v0, 0x3
+
+    if-eq p0, v0, :add_to_playlist_mix
 
     const/4 v0, 0x1
 
@@ -472,6 +494,13 @@
     invoke-static {v3, v7, p1, v5, v6}, Lradiant/swipe/QueueExecutor;->mix(Landroid/content/Context;Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
 
     move-result-object v7
+
+    goto :retain
+
+    :add_to_playlist_mix
+    invoke-static {v3, v7, p1, v5, v6}, Lradiant/swipe/QueueExecutor;->addToPlaylistMix(Landroid/content/Context;Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)V
+
+    goto :done
 
     :retain
     if-eqz v7, :done

@@ -119,6 +119,15 @@
     goto :color_ready
 
     :add_color
+    const/4 v12, 0x3
+
+    if-ne v11, v12, :add_to_queue_color
+
+    const v11, __RL_SWIPE_TO_QUEUE_ADD_TO_PLAYLIST_COLOR__
+
+    goto :color_ready
+
+    :add_to_queue_color
     const v11, __RL_SWIPE_TO_QUEUE_ADD_COLOR__
 
     :color_ready
@@ -138,6 +147,15 @@
     goto :icon_ready
 
     :add_icon
+    const/4 v12, 0x3
+
+    if-ne v11, v12, :add_to_queue_icon
+
+    iget-object v11, v5, Lradiant/swipe/ComposeSwipeState;->addToPlaylistIcon:Landroid/graphics/drawable/Drawable;
+
+    goto :icon_ready
+
+    :add_to_queue_icon
     iget-object v11, v5, Lradiant/swipe/ComposeSwipeState;->addIcon:Landroid/graphics/drawable/Drawable;
 
     :icon_ready

@@ -193,6 +193,10 @@
 
     iget-object p0, v1, Lzf/c;->c:Lcom/tidal/android/navigation/NavigationInfo;
 
+    const/4 v0, 0x3
+
+    if-eq v6, v0, :add_to_playlist
+
     const/4 v0, 0x1
 
     if-ne v6, v0, :append
@@ -203,6 +207,11 @@
 
     :append
     invoke-static {v2, v3, v4, p0}, Lradiant/swipe/QueueExecutor;->playlist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    goto :done
+
+    :add_to_playlist
+    invoke-static {v2, v3, v4, p0}, Lradiant/swipe/QueueExecutor;->addToPlaylistPlaylist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
 
     :done
     return-void

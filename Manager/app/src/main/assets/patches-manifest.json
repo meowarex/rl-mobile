@@ -471,25 +471,27 @@
         "radiant/swipe/SuggestionsResolver.smali"
       ],
       "title": "Swipe to Queue",
-      "description": "Swipe on tracks/albums/playlists to add them to the play queue",
+      "description": "Swipe on tracks/albums/playlists to add them to the play queue (and more actions)",
       "default": false,
       "advancedOptions": [
         {
           "type": "choice",
           "key": "left_action",
           "title": "Left Swipe Action",
-          "description": "Choose the action for a left swipe",
           "entries": [
             "Disabled",
             "Play next",
-            "Add to queue"
+            "Add to queue",
+            "Add to playlist"
           ],
           "values": [
             "0x0",
             "0x1",
-            "0x2"
+            "0x2",
+            "0x3"
           ],
           "defaultIndex": 2,
+          "inline": true,
           "distinctFrom": "right_action",
           "token": "RL_SWIPE_TO_QUEUE_LEFT_ACTION"
         },
@@ -497,18 +499,20 @@
           "type": "choice",
           "key": "right_action",
           "title": "Right Swipe Action",
-          "description": "Choose the action for a right swipe",
           "entries": [
             "Disabled",
             "Play next",
-            "Add to queue"
+            "Add to queue",
+            "Add to playlist"
           ],
           "values": [
             "0x0",
             "0x1",
-            "0x2"
+            "0x2",
+            "0x3"
           ],
           "defaultIndex": 0,
+          "inline": true,
           "distinctFrom": "left_action",
           "token": "RL_SWIPE_TO_QUEUE_RIGHT_ACTION"
         },
@@ -516,11 +520,10 @@
           "type": "choice",
           "key": "remove_direction",
           "title": "Remove Track from Queue",
-          "description": "Choose the swipe direction used to remove items from the play queue",
           "entries": [
             "Left swipe",
             "Right swipe",
-            "Both"
+            "Both directions"
           ],
           "values": [
             "0x4",
@@ -528,6 +531,8 @@
             "0xc"
           ],
           "defaultIndex": 0,
+          "forceDropdown": true,
+          "inline": true,
           "token": "RL_SWIPE_TO_QUEUE_REMOVE_DIRECTION"
         },
         {
@@ -543,6 +548,13 @@
           "title": "Play Next Color",
           "default": -14408663,
           "token": "RL_SWIPE_TO_QUEUE_PLAY_NEXT_COLOR"
+        },
+        {
+          "type": "color",
+          "key": "add_to_playlist_color",
+          "title": "Add to Playlist Color",
+          "default": -14408663,
+          "token": "RL_SWIPE_TO_QUEUE_ADD_TO_PLAYLIST_COLOR"
         }
       ]
     },

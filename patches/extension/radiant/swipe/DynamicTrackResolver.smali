@@ -525,6 +525,10 @@
 
     if-eqz v1, :done
 
+    const/4 v2, 0x3
+
+    if-eq v8, v2, :append
+
     invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
 
     move-result v2
@@ -626,9 +630,18 @@
 
     const/4 v0, 0x1
 
-    if-ne v8, v0, :append_track
+    if-ne v8, v0, :check_add_to_playlist
 
     invoke-static {v5, v1, v3, v4}, Lradiant/swipe/QueueExecutor;->playNextTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+
+    goto :done
+
+    :check_add_to_playlist
+    const/4 v0, 0x3
+
+    if-ne v8, v0, :append_track
+
+    invoke-static {v5, v1, v3, v4}, Lradiant/swipe/QueueExecutor;->addToPlaylistTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
 
     goto :done
 

@@ -9,6 +9,8 @@
 
 .field public static final ACTION_ADD_TO_QUEUE:I = 0x2
 
+.field public static final ACTION_ADD_TO_PLAYLIST:I = 0x3
+
 
 # instance fields
 .field public action:I

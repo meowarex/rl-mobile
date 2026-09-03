@@ -126,6 +126,8 @@ sealed interface OptionSpec {
         val values: List<String> = emptyList(),
         val requiresOption: String? = null,
         val forceDropdown: Boolean = false,
+        /** Render inline in the patch card instead of inside the advanced sheet */
+        val inline: Boolean = false,
         val distinctFrom: String? = null,
         val token: String? = null,
     ) : OptionSpec
@@ -142,6 +144,13 @@ sealed interface OptionSpec {
         val token: String? = null,
     ) : OptionSpec
 }
+
+val OptionSpec.isInline: Boolean
+    get() = when (this) {
+        is OptionSpec.Toggle -> inline
+        is OptionSpec.Choice -> inline
+        is OptionSpec.Slider, is OptionSpec.Color -> false
+    }
 
 @Serializable
 enum class EncodeKind {

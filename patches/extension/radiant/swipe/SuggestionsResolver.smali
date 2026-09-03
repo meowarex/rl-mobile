@@ -319,6 +319,10 @@
 
     iget v2, p1, Lradiant/swipe/QueueRequest;->action:I
 
+    const/4 v3, 0x3
+
+    if-eq v2, v3, :track_action
+
     const/4 v3, 0x1
 
     if-ne v2, v3, :default_action
@@ -329,6 +333,7 @@
 
     if-eqz v2, :default_action
 
+    :track_action
     invoke-virtual {v0}, Lcom/aspiro/wamp/model/SuggestedMediaItem$SuggestedTrack;->getMediaItem()Lcom/aspiro/wamp/model/Track;
 
     move-result-object v2
@@ -375,7 +380,18 @@
 
     move-result-object v0
 
+    iget p1, p1, Lradiant/swipe/QueueRequest;->action:I
+
+    const/4 v3, 0x3
+
+    if-eq p1, v3, :add_to_playlist
+
     invoke-static {v0, v2, v4, v6}, Lradiant/swipe/QueueExecutor;->playNextTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+
+    goto :done
+
+    :add_to_playlist
+    invoke-static {v0, v2, v4, v6}, Lradiant/swipe/QueueExecutor;->addToPlaylistTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
 
     goto :done
 

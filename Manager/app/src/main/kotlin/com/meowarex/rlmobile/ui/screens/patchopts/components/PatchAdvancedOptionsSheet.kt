@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
 import com.meowarex.rlmobile.ui.components.radiant.RadiantDialog
+import com.meowarex.rlmobile.ui.components.radiant.RadiantDropdown
 import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
 import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonStyle
 import com.meowarex.rlmobile.ui.components.radiant.RadiantIconButton
@@ -45,6 +46,7 @@ import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionState
 import com.meowarex.rlmobile.ui.screens.patchopts.conflictingChoices
 import com.meowarex.rlmobile.ui.screens.patchopts.hiddenForVariant
+import com.meowarex.rlmobile.ui.screens.patchopts.isInline
 import com.meowarex.rlmobile.ui.screens.patchopts.optionLock
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchSpec
 import kotlinx.coroutines.launch
@@ -110,12 +112,12 @@ fun PatchAdvancedOptionsSheet(
 
             val parentKeys = patch.advancedOptions
                 .filterIsInstance<OptionSpec.Toggle>()
-                .filter { !it.inline }
+                .filter { !it.isInline }
                 .map { it.key }
                 .toSet()
             val sheetOptions = patch.advancedOptions.filter { option ->
                 when {
-                    option is OptionSpec.Toggle && option.inline -> false
+                    option.isInline -> false
                     option is OptionSpec.Toggle && option.requiresOption in parentKeys -> false
                     // Options belonging to another variant are hidden, not greyed out.
                     option.hiddenForVariant(selectedVariant) -> false
@@ -128,7 +130,7 @@ fun PatchAdvancedOptionsSheet(
                     is OptionSpec.Toggle -> {
                         val toggleOn = state.toggle(patch, option)
                         val gatedChoices = patch.advancedOptions.filterIsInstance<OptionSpec.Choice>()
-                            .filter { it.requiresOption == option.key }
+                            .filter { it.requiresOption == option.key && !it.isInline }
                         val gatedToggles = patch.advancedOptions.filterIsInstance<OptionSpec.Toggle>()
                             .filter { it.requiresOption == option.key && !it.inline }
                         val hasSubOptions = gatedChoices.isNotEmpty() || gatedToggles.isNotEmpty()
@@ -171,6 +173,7 @@ fun PatchAdvancedOptionsSheet(
                                             key(choice.key) {
                                                 ChoiceOptionRow(
                                                     title = choice.title,
+                                                    description = choice.description,
                                                     entries = choice.entries,
                                                     selectedIndex = state.choice(patch, choice),
                                                     forceDropdown = choice.forceDropdown,
@@ -215,6 +218,7 @@ fun PatchAdvancedOptionsSheet(
                         if (option.requiresOption == null) {
                             ChoiceOptionRow(
                                 title = option.title,
+                                description = option.description,
                                 entries = option.entries,
                                 selectedIndex = state.choice(patch, option),
                                 forceDropdown = option.forceDropdown,
@@ -388,11 +392,12 @@ private fun snapToNearestStep(
 }
 
 @Composable
-private fun ChoiceOptionRow(
+internal fun ChoiceOptionRow(
     entries: List<String>,
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
     title: String = "",
+    description: String = "",
     forceDropdown: Boolean = false,
     disabledIndices: Set<Int> = emptySet(),
     modifier: Modifier = Modifier,
@@ -400,44 +405,28 @@ private fun ChoiceOptionRow(
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(6.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
     ) {
         if (title.isNotEmpty()) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.titleSmall,
+            )
+        }
+        if (description.isNotEmpty()) {
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
             )
         }
         if (forceDropdown || entries.size > 3) {
-            var expanded by rememberSaveable { mutableStateOf(false) }
-            val selectedLabel = entries.getOrNull(selectedIndex).orEmpty()
-
-            Box(modifier = Modifier.fillMaxWidth()) {
-                RadiantButton(
-                    text = selectedLabel,
-                    onClick = { expanded = true },
-                    style = RadiantButtonStyle.Ghost,
-                    fillWidth = true,
-                )
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    entries.forEachIndexed { index, entry ->
-                        DropdownMenuItem(
-                            text = { Text(entry) },
-                            enabled = index !in disabledIndices,
-                            onClick = {
-                                onSelect(index)
-                                expanded = false
-                            },
-                        )
-                    }
-                }
-            }
+            RadiantDropdown(
+                options = entries,
+                selectedIndex = selectedIndex,
+                onSelect = onSelect,
+                disabledIndices = disabledIndices,
+            )
             return@Column
         }
         RadiantSegmented(

@@ -158,9 +158,18 @@
 
     const/4 v2, 0x1
 
-    if-ne v0, v2, :append
+    if-ne v0, v2, :check_add_to_playlist
 
     invoke-static {v1, v7, v8, v9}, Lradiant/swipe/QueueExecutor;->playNextTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+
+    goto :done
+
+    :check_add_to_playlist
+    const/4 v2, 0x3
+
+    if-ne v0, v2, :append
+
+    invoke-static {v1, v7, v8, v9}, Lradiant/swipe/QueueExecutor;->addToPlaylistTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
 
     goto :done
 

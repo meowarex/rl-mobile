@@ -1,6 +1,6 @@
 --- a/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment.smali
-@@ -107,6 +107,143 @@
+@@ -107,6 +107,154 @@
  .end method
 
  
@@ -102,6 +102,10 @@
 +
 +    move-object v2, p2
 +
++    const/4 p1, 0x3
++
++    if-eq p3, p1, :rl_favorite_add_to_playlist
++
 +    const/4 p1, 0x1
 +
 +    if-ne p3, p1, :rl_favorite_append
@@ -122,6 +126,13 @@
 +    invoke-virtual/range {v0 .. v4}, Lh4/a;->q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
 +
 +    move-result v0
++
++    goto :rl_favorite_result
++
++    :rl_favorite_add_to_playlist
++    invoke-static {v1, v2, v3, v4}, Lradiant/swipe/QueueExecutor;->addToPlaylistTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
++
++    goto :done
 +
 +    :rl_favorite_result
 +
@@ -144,7 +155,7 @@
  # virtual methods
  .method public final M()Ln8/b;
      .locals 1
-@@ -2265,9 +2437,16 @@
+@@ -2265,9 +2448,16 @@
      iput-object p0, p1, Lo4/g;->e:Lo4/g$e;
 
      .line 224

@@ -3,26 +3,49 @@ package com.meowarex.rlmobile.ui.components.radiant
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.rememberTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
+import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.ui.theme.*
 
 /**
@@ -110,6 +133,151 @@ fun RadiantTextField(
         }
 
         trailing?.invoke()
+    }
+}
+
+/**
+ * Dropdown
+ */
+@Composable
+fun RadiantDropdown(
+    options: List<String>,
+    selectedIndex: Int,
+    onSelect: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    disabledIndices: Set<Int> = emptySet(),
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val visibilityState = remember { MutableTransitionState(false) }
+    visibilityState.targetState = expanded
+    val transition = rememberTransition(visibilityState, label = "Dropdown")
+    val progress by transition.animateFloat(
+        transitionSpec = { tween(durationMillis = 160, easing = FastOutSlowInEasing) },
+        label = "DropdownProgress",
+    ) {
+        if (it) 1f else 0f
+    }
+    val scheme = MaterialTheme.colorScheme
+    val selectedLabel = options.getOrNull(selectedIndex).orEmpty()
+    val shape = if (radiantStyle.native) MaterialTheme.shapes.extraSmall else RoundedCornerShape(16.dp)
+    var anchorWidthPx by remember { mutableIntStateOf(0) }
+    val anchorWidth = with(LocalDensity.current) { anchorWidthPx.toDp() }
+    val positionProvider = MenuDefaults.rememberDropdownMenuPopupPositionProvider(
+        dropdownMenuAnchorPosition = MenuAnchorPosition.Below,
+        offset = DpOffset(0.dp, 6.dp),
+    )
+    Box(modifier = modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onSizeChanged { anchorWidthPx = it.width }
+                .background(scheme.surfaceContainerLowest.copy(alpha = 0.8f), shape)
+                .then(
+                    if (radiantStyle.native) Modifier.border(1.dp, scheme.outline, shape)
+                    else Modifier.border(
+                        RadiantDesign.Hairline,
+                        hairlineBrush(scheme.onSurface, RadiantDesign.BORDER_ALPHA * 1.5f),
+                        shape,
+                    )
+                )
+                .clip(shape)
+                .clickable(enabled = enabled, role = Role.Button) { expanded = !expanded }
+                .alpha(if (enabled) 1f else 0.45f)
+                .heightIn(min = 52.dp)
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+        ) {
+            Text(
+                text = selectedLabel,
+                style = MaterialTheme.typography.bodyLarge,
+                color = scheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+            Icon(
+                painter = painterResource(R.drawable.ic_arrow_down_small),
+                contentDescription = null,
+                modifier = Modifier.rotate(180f * progress),
+            )
+        }
+
+        if (
+            anchorWidthPx > 0 &&
+            (visibilityState.currentState || visibilityState.targetState || transition.isRunning)
+        ) {
+            Popup(
+                popupPositionProvider = positionProvider,
+                onDismissRequest = { expanded = false },
+                properties = PopupProperties(focusable = true),
+            ) {
+                Surface(
+                    modifier = Modifier
+                        .width(anchorWidth)
+                        .graphicsLayer {
+                            alpha = progress
+                            scaleX = 0.92f + 0.08f * progress
+                            scaleY = 0.92f + 0.08f * progress
+                            transformOrigin = positionProvider.transformOrigin
+                        },
+                    shape = shape,
+                    color = scheme.surfaceContainer,
+                    tonalElevation = 0.dp,
+                    shadowElevation = 8.dp,
+                    border = BorderStroke(
+                        RadiantDesign.Hairline,
+                        scheme.onSurface.copy(alpha = RadiantDesign.BORDER_ALPHA * 2f),
+                    ),
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .heightIn(max = 320.dp)
+                            .verticalScroll(rememberScrollState())
+                            .padding(vertical = 6.dp),
+                    ) {
+                        options.forEachIndexed { index, option ->
+                            val selected = index == selectedIndex
+                            val itemEnabled = enabled && index !in disabledIndices
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = option,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                },
+                                trailingIcon = {
+                                    RadiantRadio(
+                                        selected = selected,
+                                        onClick = null,
+                                        enabled = itemEnabled,
+                                    )
+                                },
+                                enabled = itemEnabled,
+                                onClick = {
+                                    onSelect(index)
+                                    expanded = false
+                                },
+                                modifier = Modifier
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .semantics {
+                                        this.selected = selected
+                                        role = Role.RadioButton
+                                    }
+                                    .then(
+                                        if (selected) Modifier.background(scheme.primary.copy(alpha = 0.1f))
+                                        else Modifier
+                                    ),
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

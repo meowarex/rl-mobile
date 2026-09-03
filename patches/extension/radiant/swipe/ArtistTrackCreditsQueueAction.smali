@@ -44,6 +44,10 @@
 
     iget-wide v1, p0, Lradiant/swipe/ArtistTrackCreditsQueueAction;->trackId:J
 
+    const/4 v0, 0x3
+
+    if-eq p1, v0, :active_queue
+
     invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
 
     move-result v0

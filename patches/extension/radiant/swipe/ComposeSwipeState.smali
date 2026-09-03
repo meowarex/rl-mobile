@@ -33,6 +33,8 @@
 
 .field addIcon:Landroid/graphics/drawable/Drawable;
 
+.field addToPlaylistIcon:Landroid/graphics/drawable/Drawable;
+
 .field playNextIcon:Landroid/graphics/drawable/Drawable;
 
 
@@ -658,6 +660,25 @@
 
     :store_play_next_icon
     iput-object v1, p0, Lradiant/swipe/ComposeSwipeState;->playNextIcon:Landroid/graphics/drawable/Drawable;
+
+    sget v1, Lcom/aspiro/wamp/R$drawable;->ic_add_to_playlist:I
+
+    invoke-virtual {v0, v1}, Landroid/content/Context;->getDrawable(I)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v1
+
+    if-eqz v1, :store_add_to_playlist_icon
+
+    invoke-virtual {v1}, Landroid/graphics/drawable/Drawable;->mutate()Landroid/graphics/drawable/Drawable;
+
+    move-result-object v1
+
+    const/4 v2, -0x1
+
+    invoke-virtual {v1, v2}, Landroid/graphics/drawable/Drawable;->setTint(I)V
+
+    :store_add_to_playlist_icon
+    iput-object v1, p0, Lradiant/swipe/ComposeSwipeState;->addToPlaylistIcon:Landroid/graphics/drawable/Drawable;
 
     :context_ready
     if-eqz p1, :enabled_ready

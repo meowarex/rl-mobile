@@ -39,6 +39,132 @@
     return-object p0
 .end method
 
+.method public static addToPlaylistAlbum(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)V
+    .locals 2
+
+    if-eqz p1, :done
+
+    if-eqz p2, :done
+
+    if-eqz p4, :done
+
+    invoke-static {p0}, Lradiant/swipe/QueueExecutor;->activity(Landroid/content/Context;)Landroidx/fragment/app/FragmentActivity;
+
+    move-result-object p0
+
+    if-eqz p0, :done
+
+    iget-object v0, p4, Lh4/a;->b:Lo3/a$a;
+
+    if-eqz v0, :done
+
+    invoke-interface {v0, p1, p2, p3}, Lo3/a$a;->a(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lo3/a;
+
+    move-result-object v0
+
+    if-eqz v0, :done
+
+    iget-object v0, v0, Lo3/a;->l:Lcom/aspiro/wamp/module/album/AlbumProvider;
+
+    if-eqz v0, :done
+
+    new-instance v1, Lc3/h;
+
+    invoke-direct {v1, p1, v0, p2, p3}, Lc3/h;-><init>(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/module/album/AlbumProvider;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    invoke-virtual {v1, p0}, Lc3/h;->b(Landroidx/fragment/app/FragmentActivity;)V
+
+    :done
+    return-void
+.end method
+
+.method public static addToPlaylistMix(Landroid/content/Context;Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)V
+    .locals 1
+
+    if-eqz p1, :done
+
+    if-eqz p2, :done
+
+    if-eqz p4, :done
+
+    invoke-static {p0}, Lradiant/swipe/QueueExecutor;->activity(Landroid/content/Context;)Landroidx/fragment/app/FragmentActivity;
+
+    move-result-object p0
+
+    if-eqz p0, :done
+
+    iget-object v0, p4, Lh4/a;->h:Lu3/a$a;
+
+    if-eqz v0, :done
+
+    invoke-interface {v0, p1, p2, p3}, Lu3/a$a;->a(Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lu3/a;
+
+    move-result-object v0
+
+    if-eqz v0, :done
+
+    iget-object v0, v0, Lu3/a;->j:Lj3/k$a;
+
+    if-eqz v0, :done
+
+    invoke-interface {v0, p1, p2, p3}, Lj3/k$a;->a(Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lj3/k;
+
+    move-result-object v0
+
+    if-eqz v0, :done
+
+    invoke-virtual {v0, p0}, Lj3/k;->b(Landroidx/fragment/app/FragmentActivity;)V
+
+    :done
+    return-void
+.end method
+
+.method public static addToPlaylistPlaylist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+    .locals 1
+
+    if-eqz p1, :done
+
+    if-eqz p2, :done
+
+    invoke-static {p0}, Lradiant/swipe/QueueExecutor;->activity(Landroid/content/Context;)Landroidx/fragment/app/FragmentActivity;
+
+    move-result-object p0
+
+    if-eqz p0, :done
+
+    new-instance v0, Lcom/aspiro/wamp/contextmenu/item/playlist/f;
+
+    invoke-direct {v0, p1, p2, p3}, Lcom/aspiro/wamp/contextmenu/item/playlist/f;-><init>(Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    invoke-virtual {v0, p0}, Lcom/aspiro/wamp/contextmenu/item/playlist/f;->b(Landroidx/fragment/app/FragmentActivity;)V
+
+    :done
+    return-void
+.end method
+
+.method public static addToPlaylistTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
+    .locals 1
+
+    if-eqz p1, :done
+
+    if-eqz p2, :done
+
+    invoke-static {p0}, Lradiant/swipe/QueueExecutor;->activity(Landroid/content/Context;)Landroidx/fragment/app/FragmentActivity;
+
+    move-result-object p0
+
+    if-eqz p0, :done
+
+    new-instance v0, Lm3/d;
+
+    invoke-direct {v0, p1, p2, p3}, Lm3/d;-><init>(Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
+
+    invoke-virtual {v0, p0}, Lm3/d;->b(Landroidx/fragment/app/FragmentActivity;)V
+
+    :done
+    return-void
+.end method
+
 .method public static album(Landroid/content/Context;Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;Lh4/a;)Lio/reactivex/disposables/Disposable;
     .locals 8
 

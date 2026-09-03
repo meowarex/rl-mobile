@@ -260,10 +260,15 @@
     check-cast v2, Lcom/aspiro/wamp/playlist/ui/items/PlaylistItemCollectionView;
     if-eqz v2, :done
 
+    const/4 v3, 0x3
+
+    if-eq v8, v3, :build_source
+
     invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
     move-result v3
     if-eqz v3, :play
 
+    :build_source
     instance-of v3, v0, Lcom/aspiro/wamp/playlist/viewmodel/item/SuggestedTrackViewModel;
     if-eqz v3, :append_member
 
@@ -303,6 +308,10 @@
     :append
     invoke-virtual {v2}, Landroid/view/View;->getContext()Landroid/content/Context;
     move-result-object v3
+    const/4 v0, 0x3
+
+    if-eq v8, v0, :add_to_playlist
+
     const/4 v0, 0x1
 
     if-ne v8, v0, :append_track
@@ -313,6 +322,10 @@
 
     :append_track
     invoke-static {v3, v1, v6, v7}, Lradiant/swipe/QueueExecutor;->track(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
+    goto :done
+
+    :add_to_playlist
+    invoke-static {v3, v1, v6, v7}, Lradiant/swipe/QueueExecutor;->addToPlaylistTrack(Landroid/content/Context;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)V
     goto :done
 
     :play

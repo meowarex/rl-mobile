@@ -213,6 +213,10 @@
 
     if-eqz v5, :done
 
+    const/4 v1, 0x3
+
+    if-eq p1, v1, :queue_event
+
     const/4 v1, 0x4
 
     if-ne v5, v1, :queue_event

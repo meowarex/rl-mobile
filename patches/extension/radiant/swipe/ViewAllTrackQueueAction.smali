@@ -40,12 +40,17 @@
 
     iget-wide v1, p0, Lradiant/swipe/ViewAllTrackQueueAction;->trackId:J
 
+    const/4 v3, 0x3
+
+    if-eq p1, v3, :queue_event
+
     invoke-static {}, Lradiant/swipe/QueueExecutor;->hasActiveQueue()Z
 
     move-result v3
 
     if-eqz v3, :play_existing
 
+    :queue_event
     iget-object v3, p0, Lradiant/swipe/ViewAllTrackQueueAction;->context:Landroid/content/Context;
 
     if-eqz v3, :done

@@ -12,6 +12,10 @@
 
 .field private final addIcon:Landroid/graphics/drawable/Drawable;
 
+.field private final addToPlaylistBackground:Landroid/graphics/drawable/ColorDrawable;
+
+.field private final addToPlaylistIcon:Landroid/graphics/drawable/Drawable;
+
 .field private final playNextBackground:Landroid/graphics/drawable/ColorDrawable;
 
 .field private final playNextIcon:Landroid/graphics/drawable/Drawable;
@@ -81,6 +85,14 @@
 
     iput-object v1, p0, Lradiant/SwipeToQueue;->playNextBackground:Landroid/graphics/drawable/ColorDrawable;
 
+    new-instance v1, Landroid/graphics/drawable/ColorDrawable;
+
+    const v2, __RL_SWIPE_TO_QUEUE_ADD_TO_PLAYLIST_COLOR__
+
+    invoke-direct {v1, v2}, Landroid/graphics/drawable/ColorDrawable;-><init>(I)V
+
+    iput-object v1, p0, Lradiant/SwipeToQueue;->addToPlaylistBackground:Landroid/graphics/drawable/ColorDrawable;
+
     sget v1, Lcom/aspiro/wamp/R$drawable;->ic_add_to_queue_last:I
 
     invoke-virtual {v0, v1}, Landroid/content/Context;->getDrawable(I)Landroid/graphics/drawable/Drawable;
@@ -122,6 +134,29 @@
 
     :store_play_next_icon
     iput-object v0, p0, Lradiant/SwipeToQueue;->playNextIcon:Landroid/graphics/drawable/Drawable;
+
+    invoke-virtual {p1}, Landroid/view/View;->getContext()Landroid/content/Context;
+
+    move-result-object v0
+
+    sget v1, Lcom/aspiro/wamp/R$drawable;->ic_add_to_playlist:I
+
+    invoke-virtual {v0, v1}, Landroid/content/Context;->getDrawable(I)Landroid/graphics/drawable/Drawable;
+
+    move-result-object v0
+
+    if-eqz v0, :store_add_to_playlist_icon
+
+    invoke-virtual {v0}, Landroid/graphics/drawable/Drawable;->mutate()Landroid/graphics/drawable/Drawable;
+
+    move-result-object v0
+
+    const/4 v1, -0x1
+
+    invoke-virtual {v0, v1}, Landroid/graphics/drawable/Drawable;->setTint(I)V
+
+    :store_add_to_playlist_icon
+    iput-object v0, p0, Lradiant/SwipeToQueue;->addToPlaylistIcon:Landroid/graphics/drawable/Drawable;
 
     return-void
 .end method
@@ -343,6 +378,15 @@
     goto :background_ready
 
     :add_background
+    const/4 v9, 0x3
+
+    if-ne v8, v9, :add_to_queue_background
+
+    iget-object v6, p0, Lradiant/SwipeToQueue;->addToPlaylistBackground:Landroid/graphics/drawable/ColorDrawable;
+
+    goto :background_ready
+
+    :add_to_queue_background
     iget-object v6, p0, Lradiant/SwipeToQueue;->addBackground:Landroid/graphics/drawable/ColorDrawable;
 
     :background_ready
@@ -474,6 +518,15 @@
     goto :icon_ready
 
     :draw_add_icon
+    const/4 v9, 0x3
+
+    if-ne v8, v9, :draw_add_to_queue_icon
+
+    iget-object v6, p0, Lradiant/SwipeToQueue;->addToPlaylistIcon:Landroid/graphics/drawable/Drawable;
+
+    goto :icon_ready
+
+    :draw_add_to_queue_icon
     iget-object v6, p0, Lradiant/SwipeToQueue;->addIcon:Landroid/graphics/drawable/Drawable;
 
     :icon_ready
