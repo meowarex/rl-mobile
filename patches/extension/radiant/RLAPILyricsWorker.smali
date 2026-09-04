@@ -63,7 +63,7 @@
 
     iget-object v1, p0, Lradiant/RLAPILyricsWorker;->vm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
 
-    iget-object v2, v1, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;
+    iget-object v2, v1, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 P
 
     sget-object v3, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
 
@@ -82,15 +82,15 @@
 
     if-ne v0, v1, :not_current
 
-    iget-object v1, v0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->a:Lbi/e;
+    iget-object v1, v0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->a:Lbi/e;    # MARKER: R8 Lbi/e; a
 
-    invoke-interface {v1}, Lbi/e;->getCurrentItem()Lcom/aspiro/wamp/playqueue/u0;
+    invoke-interface {v1}, Lbi/e;->getCurrentItem()Lcom/aspiro/wamp/playqueue/u0;    # MARKER: R8 Lbi/e; Lcom/aspiro/wamp/playqueue/u0;
 
     move-result-object v1
 
     if-eqz v1, :not_current
 
-    invoke-interface {v1}, Lcom/aspiro/wamp/playqueue/u0;->getMediaItem()Lcom/aspiro/wamp/model/MediaItem;
+    invoke-interface {v1}, Lcom/aspiro/wamp/playqueue/u0;->getMediaItem()Lcom/aspiro/wamp/model/MediaItem;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/u0;
 
     move-result-object v1
 
@@ -506,9 +506,9 @@
     move-wide v7, v11
 
     :no_syl
-    new-instance v4, Lcom/tidal/android/feature/playerscreen/ui/f;
+    new-instance v4, Lcom/tidal/android/feature/playerscreen/ui/f;    # MARKER: R8 Lcom/tidal/android/feature/playerscreen/ui/f;
 
-    invoke-direct {v4, v5, v7, v8}, Lcom/tidal/android/feature/playerscreen/ui/f;-><init>(Ljava/lang/String;J)V
+    invoke-direct {v4, v5, v7, v8}, Lcom/tidal/android/feature/playerscreen/ui/f;-><init>(Ljava/lang/String;J)V    # MARKER: R8 Lcom/tidal/android/feature/playerscreen/ui/f;
 
     invoke-virtual {v2, v4}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
 
@@ -855,9 +855,9 @@
 
     iget-object v4, p0, Lradiant/RLAPILyricsWorker;->vm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
 
-    iget-object v5, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->O:Lkotlinx/coroutines/flow/MutableStateFlow;
+    iget-object v5, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->O:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 O
 
-    invoke-static {v3}, Lvn0/a;->c(Ljava/lang/Iterable;)Lvn0/b;
+    invoke-static {v3}, Lvn0/a;->c(Ljava/lang/Iterable;)Lvn0/b;    # MARKER: R8 Lvn0/a; Lvn0/b; c
 
     move-result-object v6
 
@@ -868,13 +868,13 @@
     const-string v7, ""
 
     :have_id
-    new-instance v8, Lcom/tidal/android/feature/playerscreen/ui/g$c;
+    new-instance v8, Lcom/tidal/android/feature/playerscreen/ui/g$c;    # MARKER: R8 Lcom/tidal/android/feature/playerscreen/ui/g$c;
 
     const/4 v9, -0x1
 
     const/4 v10, 0x0
 
-    invoke-direct {v8, v7, v6, v9, v10}, Lcom/tidal/android/feature/playerscreen/ui/g$c;-><init>(Ljava/lang/String;Lvn0/b;IZ)V
+    invoke-direct {v8, v7, v6, v9, v10}, Lcom/tidal/android/feature/playerscreen/ui/g$c;-><init>(Ljava/lang/String;Lvn0/b;IZ)V    # MARKER: R8 Lcom/tidal/android/feature/playerscreen/ui/g$c; Lvn0/b;
 
     const-string v6, "publishing g$c -> K=true (O=true if sticky) N=g$c"
 
@@ -886,7 +886,7 @@
 
     sput-boolean v6, Lradiant/RLAPILyricsHook;->isRlState:Z
 
-    iget-object v6, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->K:Lkotlinx/coroutines/flow/MutableStateFlow;
+    iget-object v6, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->K:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 K
 
     sget-object v7, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
 
@@ -902,7 +902,7 @@
 
     :open_lyrics
 
-    iget-object v6, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;
+    iget-object v6, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 P
 
     invoke-interface {v6, v7}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
 

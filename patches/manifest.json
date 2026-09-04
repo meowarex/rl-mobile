@@ -423,6 +423,142 @@
       "default": false
     },
     {
+      "id": "SwipeToQueue",
+      "order": 39,
+      "fileNames": [
+        "swipe-to-queue.patch",
+        "swipe-to-queue-compose.patch"
+      ],
+      "extensionFiles": [
+        "radiant/gestures/queue/SwipeToQueue.smali",
+        "radiant/gestures/queue/QueueSwipeRemove.smali",
+        "radiant/gestures/queue/QueueRequest.smali",
+        "radiant/gestures/queue/QueueRowResolver.smali",
+        "radiant/gestures/queue/QueueExecutor.smali",
+        "radiant/gestures/queue/FavoriteTracksResolver.smali",
+        "radiant/gestures/queue/DynamicTrackResolver.smali",
+        "radiant/gestures/queue/MyAlbumsResolver.smali",
+        "radiant/gestures/queue/MyPlaylistsResolver.smali",
+        "radiant/gestures/queue/MyMixesAndRadioResolver.smali",
+        "radiant/gestures/queue/SearchAlbumsResolver.smali",
+        "radiant/gestures/queue/SearchPlaylistsResolver.smali",
+        "radiant/gestures/queue/PlaylistItemsResolver.smali",
+        "radiant/gestures/queue/UnifiedSearchResolver.smali",
+        "radiant/gestures/queue/ComposeSwipeAction.smali",
+        "radiant/gestures/queue/ComposeSwipeState.smali",
+        "radiant/gestures/queue/ComposeSwipeState$Gesture.smali",
+        "radiant/gestures/queue/ComposeSwipeState$Draw.smali",
+        "radiant/gestures/queue/ComposeSwipeState$ResetAnimator.smali",
+        "radiant/gestures/queue/ComposeTapGuard.smali",
+        "radiant/gestures/queue/AlbumItemQueueAction.smali",
+        "radiant/gestures/queue/DynamicTrackQueueEvent.smali",
+        "radiant/gestures/queue/DynamicTrackQueueAction.smali",
+        "radiant/gestures/queue/DynamicTrackQueue.smali",
+        "radiant/gestures/queue/ViewAllTrackQueueAction.smali",
+        "radiant/gestures/queue/ViewAllTrackQueue.smali",
+        "radiant/gestures/queue/ComposeSearchQueueEvent.smali",
+        "radiant/gestures/queue/ComposeSearchQueueAction.smali",
+        "radiant/gestures/queue/ComposeSearchQueue.smali",
+        "radiant/gestures/queue/FeedResolver.smali",
+        "radiant/gestures/queue/ArtistTrackCreditsQueueEvent.smali",
+        "radiant/gestures/queue/ArtistTrackCreditsQueueAction.smali",
+        "radiant/gestures/queue/ArtistTrackCreditsQueue.smali",
+        "radiant/gestures/queue/DynamicMediaQueueEvent.smali",
+        "radiant/gestures/queue/CompactGridMediaQueueAction.smali",
+        "radiant/gestures/queue/VerticalMediaQueueAction.smali",
+        "radiant/gestures/queue/PublicPlaylistQueueAction.smali",
+        "radiant/gestures/queue/DynamicMediaQueue.smali",
+        "radiant/gestures/queue/SuggestionsResolver.smali"
+      ],
+      "title": "Swipe to Queue",
+      "description": "Swipe on tracks/albums/playlists to add them to the play queue (and more actions)",
+      "default": false,
+      "advancedOptions": [
+        {
+          "type": "choice",
+          "key": "left_action",
+          "title": "Left Swipe Action",
+          "entries": [
+            "Disabled",
+            "Play next",
+            "Add to queue",
+            "Add to playlist"
+          ],
+          "values": [
+            "0x0",
+            "0x1",
+            "0x2",
+            "0x3"
+          ],
+          "defaultIndex": 2,
+          "inline": true,
+          "distinctFrom": "right_action",
+          "token": "RL_SWIPE_TO_QUEUE_LEFT_ACTION"
+        },
+        {
+          "type": "choice",
+          "key": "right_action",
+          "title": "Right Swipe Action",
+          "entries": [
+            "Disabled",
+            "Play next",
+            "Add to queue",
+            "Add to playlist"
+          ],
+          "values": [
+            "0x0",
+            "0x1",
+            "0x2",
+            "0x3"
+          ],
+          "defaultIndex": 0,
+          "inline": true,
+          "distinctFrom": "left_action",
+          "token": "RL_SWIPE_TO_QUEUE_RIGHT_ACTION"
+        },
+        {
+          "type": "choice",
+          "key": "remove_direction",
+          "title": "Remove Track from Queue",
+          "entries": [
+            "Left swipe",
+            "Right swipe",
+            "Both directions"
+          ],
+          "values": [
+            "0x4",
+            "0x8",
+            "0xc"
+          ],
+          "defaultIndex": 0,
+          "forceDropdown": true,
+          "inline": true,
+          "token": "RL_SWIPE_TO_QUEUE_REMOVE_DIRECTION"
+        },
+        {
+          "type": "color",
+          "key": "background_color",
+          "title": "Add to Queue Color",
+          "default": -14408663,
+          "token": "RL_SWIPE_TO_QUEUE_ADD_COLOR"
+        },
+        {
+          "type": "color",
+          "key": "play_next_color",
+          "title": "Play Next Color",
+          "default": -14408663,
+          "token": "RL_SWIPE_TO_QUEUE_PLAY_NEXT_COLOR"
+        },
+        {
+          "type": "color",
+          "key": "add_to_playlist_color",
+          "title": "Add to Playlist Color",
+          "default": -14408663,
+          "token": "RL_SWIPE_TO_QUEUE_ADD_TO_PLAYLIST_COLOR"
+        }
+      ]
+    },
+    {
       "id": "LyricsProgressPill",
       "order": 40,
       "fileNames": [
@@ -542,14 +678,14 @@
             "lyrics-gesture-scroll-guard.patch"
           ],
           "extensionFiles": [
-            "radiant/gestures/MiniPlayerGestures.smali",
-            "radiant/gestures/MiniPlayerGestures$Gesture.smali",
-            "radiant/gestures/MiniPlayerGestures$FeedbackLayer.smali",
-            "radiant/gestures/MiniPlayerGestures$FeedbackResetAnimator.smali",
-            "radiant/gestures/MiniPlayerGestures$RootGesture.smali",
-            "radiant/gestures/MiniPlayerGestures$ApplyPending.smali",
-            "radiant/gestures/LyricsDrag.smali",
-            "radiant/gestures/LyricsDrag$Guard.smali"
+            "radiant/gestures/miniplayer/MiniPlayerGestures.smali",
+            "radiant/gestures/miniplayer/MiniPlayerGestures$Gesture.smali",
+            "radiant/gestures/miniplayer/MiniPlayerGestures$FeedbackLayer.smali",
+            "radiant/gestures/miniplayer/MiniPlayerGestures$FeedbackResetAnimator.smali",
+            "radiant/gestures/miniplayer/MiniPlayerGestures$RootGesture.smali",
+            "radiant/gestures/miniplayer/MiniPlayerGestures$ApplyPending.smali",
+            "radiant/gestures/lyrics/LyricsDrag.smali",
+            "radiant/gestures/lyrics/LyricsDrag$Guard.smali"
           ]
         },
         {
@@ -579,11 +715,11 @@
             "mini-player-left-right-gesture.patch"
           ],
           "extensionFiles": [
-            "radiant/gestures/MiniPlayerTrackGestures.smali",
-            "radiant/gestures/MiniPlayerTrackGestures$Gesture.smali",
-            "radiant/gestures/MiniPlayerTrackGestures$OffsetLayer.smali",
-            "radiant/gestures/MiniPlayerTrackGestures$ResetAnimator.smali",
-            "radiant/gestures/MiniPlayerTrackGestures$TextDraw.smali",
+            "radiant/gestures/miniplayer/MiniPlayerTrackGestures.smali",
+            "radiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture.smali",
+            "radiant/gestures/miniplayer/MiniPlayerTrackGestures$OffsetLayer.smali",
+            "radiant/gestures/miniplayer/MiniPlayerTrackGestures$ResetAnimator.smali",
+            "radiant/gestures/miniplayer/MiniPlayerTrackGestures$TextDraw.smali",
             "com/tidal/android/feature/appscaffold/ui/r$c.smali"
           ]
         }

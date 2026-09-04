@@ -85,15 +85,15 @@
     return-object p0
 .end method
 
-.method public static style(ILq20/c2;)Lq20/c2;
+.method public static style(ILq20/c2;)Lq20/c2;    # MARKER: R8 Lq20/c2;
     .registers 16
 
     invoke-static {p0}, Lradiant/QualityBadge;->textArgb(I)I
 
     move-result v0
-    new-instance v1, Lf20/a;
-    invoke-direct {v1, v0}, Lf20/a;-><init>(I)V
-    new-instance v0, Lf20/d;
+    new-instance v1, Lf20/a;    # MARKER: R8 Lf20/a;
+    invoke-direct {v1, v0}, Lf20/a;-><init>(I)V    # MARKER: R8 Lf20/a;
+    new-instance v0, Lf20/d;    # MARKER: R8 Lf20/d;
     const/4 v2, 0x0
     const/4 v3, 0x0
     const/4 v4, 0x0
@@ -107,7 +107,7 @@
     const/4 v12, 0x0
     const/16 v13, 0xffe
     const/4 v14, 0x0
-    invoke-direct/range {v0 .. v14}, Lf20/d;-><init>(Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+    invoke-direct/range {v0 .. v14}, Lf20/d;-><init>(Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;Lf20/a;ILkotlin/jvm/internal/DefaultConstructorMarker;)V    # MARKER: R8 Lf20/d; Lf20/a;
 
     move-object v9, v0
     move-object/from16 v0, p1
@@ -118,7 +118,7 @@
     const/4 v5, 0x0
     const/16 v6, 0x1d
     const/4 v7, 0x0
-    invoke-static/range {v0 .. v7}, Lq20/c2;->g(Lq20/c2;Lq20/s4;Lf20/d;Lcom/squareup/ui/market/core/text/MarketTextAlignment;Lcom/squareup/ui/market/core/text/MarketTextTransform;Lq20/r4;ILjava/lang/Object;)Lq20/c2;
+    invoke-static/range {v0 .. v7}, Lq20/c2;->g(Lq20/c2;Lq20/s4;Lf20/d;Lcom/squareup/ui/market/core/text/MarketTextAlignment;Lcom/squareup/ui/market/core/text/MarketTextTransform;Lq20/r4;ILjava/lang/Object;)Lq20/c2;    # MARKER: R8 Lq20/c2; Lq20/s4; Lf20/d; Lq20/r4; g
     move-result-object p0
     return-object p0
 .end method

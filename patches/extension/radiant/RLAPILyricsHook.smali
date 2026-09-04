@@ -223,7 +223,7 @@
     return-void
 
     :rl_new_track
-    iget-object v5, p0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;
+    iget-object v5, p0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 P
 
     invoke-interface {v5}, Lkotlinx/coroutines/flow/MutableStateFlow;->getValue()Ljava/lang/Object;
 
@@ -243,7 +243,7 @@
 
     if-eq p0, v6, :store_keep_open
 
-    iget-object v7, v6, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;
+    iget-object v7, v6, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 P
 
     invoke-interface {v7}, Lkotlinx/coroutines/flow/MutableStateFlow;->getValue()Ljava/lang/Object;
 

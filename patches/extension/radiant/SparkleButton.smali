@@ -4,7 +4,7 @@
 
 
 # direct methods
-.method public static final a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Lam0/a;)V
+.method public static final a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Lam0/a;)V    # MARKER: R8 Lam0/a;
     .locals 21
     .annotation build Landroidx/compose/runtime/Composable;
     .end annotation
@@ -94,11 +94,11 @@
     invoke-static {v2, v3, v4, v5}, Landroidx/compose/runtime/ComposerKt;->traceEventStart(IIILjava/lang/String;)V
 
     :cond_3
-    sget-object v2, Lcom/squareup/ui/market/core/theme/k;->e:Lcom/squareup/ui/market/core/theme/k$a;
+    sget-object v2, Lcom/squareup/ui/market/core/theme/k;->e:Lcom/squareup/ui/market/core/theme/k$a;    # MARKER: R8 Lcom/squareup/ui/market/core/theme/k; Lcom/squareup/ui/market/core/theme/k$a; e
 
     const/4 v4, 0x6
 
-    invoke-static {v2, v11, v4}, Lcom/squareup/ui/market/core/theme/z;->t(Lcom/squareup/ui/market/core/theme/k$a;Landroidx/compose/runtime/Composer;I)Lcom/squareup/ui/market/core/theme/MarketStylesheet;
+    invoke-static {v2, v11, v4}, Lcom/squareup/ui/market/core/theme/z;->t(Lcom/squareup/ui/market/core/theme/k$a;Landroidx/compose/runtime/Composer;I)Lcom/squareup/ui/market/core/theme/MarketStylesheet;    # MARKER: R8 Lcom/squareup/ui/market/core/theme/z; Lcom/squareup/ui/market/core/theme/k$a; t
 
     move-result-object v15
 
@@ -131,7 +131,7 @@
 
     const/16 v18, 0x0
 
-    invoke-static/range {v15 .. v20}, Lcom/squareup/ui/market/components/MarketIconButtonKt;->P(Lcom/squareup/ui/market/core/theme/MarketStylesheet;Lcom/squareup/ui/market/core/components/properties/IconButton$Size;Lcom/squareup/ui/market/core/components/properties/IconButton$Rank;Lcom/squareup/ui/market/core/components/properties/IconButton$Variant;ILjava/lang/Object;)Lq20/u1;
+    invoke-static/range {v15 .. v20}, Lcom/squareup/ui/market/components/MarketIconButtonKt;->P(Lcom/squareup/ui/market/core/theme/MarketStylesheet;Lcom/squareup/ui/market/core/components/properties/IconButton$Size;Lcom/squareup/ui/market/core/components/properties/IconButton$Rank;Lcom/squareup/ui/market/core/components/properties/IconButton$Variant;ILjava/lang/Object;)Lq20/u1;    # MARKER: R8 Lq20/u1; P
 
     move-result-object v4
 
@@ -140,7 +140,7 @@
     :cond_5
     move-object v9, v4
 
-    check-cast v9, Lq20/u1;
+    check-cast v9, Lq20/u1;    # MARKER: R8 Lq20/u1;
 
     sget v2, Lcom/tidal/android/feature/playerscreen/ui/R$string;->lyrics:I
 
@@ -150,7 +150,7 @@
 
     move v4, v3
 
-    invoke-static {v14}, Lcom/tidal/android/feature/playerscreen/ui/composables/anim/BouncePressKt;->a(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+    invoke-static {v14}, Lcom/tidal/android/feature/playerscreen/ui/composables/anim/BouncePressKt;->a(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;    # MARKER: R8 a
 
     move-result-object v3
 
@@ -172,7 +172,7 @@
 
     const/4 v8, 0x0
 
-    invoke-static/range {v1 .. v13}, Lcom/squareup/ui/market/components/MarketIconButtonKt;->b(Lam0/a;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLcom/squareup/ui/market/components/n;Lam0/a;Ljava/lang/String;Lq20/u1;Lam0/p;Landroidx/compose/runtime/Composer;II)V
+    invoke-static/range {v1 .. v13}, Lcom/squareup/ui/market/components/MarketIconButtonKt;->b(Lam0/a;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLcom/squareup/ui/market/components/n;Lam0/a;Ljava/lang/String;Lq20/u1;Lam0/p;Landroidx/compose/runtime/Composer;II)V    # MARKER: R8 Lam0/a; Lcom/squareup/ui/market/components/n; Lq20/u1; Lam0/p; b
 
     invoke-static {}, Landroidx/compose/runtime/ComposerKt;->isTraceInProgress()Z
 

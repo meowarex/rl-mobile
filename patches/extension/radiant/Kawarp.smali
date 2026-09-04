@@ -2,10 +2,10 @@
 .super Ljava/lang/Object;
 
 # interfaces
-.implements Lam0/l;
+.implements Lam0/l;    # MARKER: R8 Lam0/l;
 .implements Ljava/lang/Runnable;
 .implements Landroid/view/Choreographer$FrameCallback;
-.implements Lb0/c;
+.implements Lb0/c;    # MARKER: R8 Lb0/c;
 
 
 # static fields
@@ -31,7 +31,7 @@
 
 .field private static volatile loadToken:I
 
-.field private static volatile loader:Lcoil/f;
+.field private static volatile loader:Lcoil/f;    # MARKER: R8 Lcoil/f;
 
 .field private static volatile requestedUuid:Ljava/lang/String;
 
@@ -100,7 +100,7 @@
 .method private static attach(Landroidx/compose/runtime/Composer;)V
     .registers 3
 
-    sget-object v0, Lradiant/Kawarp;->loader:Lcoil/f;
+    sget-object v0, Lradiant/Kawarp;->loader:Lcoil/f;    # MARKER: R8 Lcoil/f;
 
     if-eqz v0, :cond_5
 
@@ -129,7 +129,7 @@
 
     move-result-object p0
 
-    instance-of v0, p0, Lce0/b$a;
+    instance-of v0, p0, Lce0/b$a;    # MARKER: R8 Lce0/b$a;
 
     if-nez v0, :cond_1d
 
@@ -138,13 +138,13 @@
     :cond_1d
     move-object v0, p0
 
-    check-cast v0, Lce0/b$a;
+    check-cast v0, Lce0/b$a;    # MARKER: R8 Lce0/b$a;
 
-    invoke-interface {v0}, Lce0/b$a;->a()Lce0/b;
+    invoke-interface {v0}, Lce0/b$a;->a()Lce0/b;    # MARKER: R8 Lce0/b$a; Lce0/b; a
 
     move-result-object v0
 
-    invoke-interface {v0}, Lce0/b;->a()Lxd0/e;
+    invoke-interface {v0}, Lce0/b;->a()Lxd0/e;    # MARKER: R8 Lce0/b; Lxd0/e; a
 
     move-result-object v0
 
@@ -159,9 +159,9 @@
 
     check-cast v0, Lcom/tidal/android/image/coil/base/CoilImageLoader;
 
-    iget-object p0, v0, Lcom/tidal/android/image/coil/base/CoilImageLoader;->a:Lcoil/f;
+    iget-object p0, v0, Lcom/tidal/android/image/coil/base/CoilImageLoader;->a:Lcoil/f;    # MARKER: R8 Lcoil/f; a
 
-    sput-object p0, Lradiant/Kawarp;->loader:Lcoil/f;
+    sput-object p0, Lradiant/Kawarp;->loader:Lcoil/f;    # MARKER: R8 Lcoil/f;
     :try_end_35
     .catchall {:try_start_5 .. :try_end_35} :catchall_36
 
@@ -174,7 +174,7 @@
     return-void
 .end method
 
-.method public static b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+.method public static b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V    # MARKER: R8 Lam0/a;
     .registers 11
 
     invoke-static {p3, p4, p5, p8, p9}, Lradiant/Kawarp;->render(ILjava/lang/String;ZLandroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;)V
@@ -471,7 +471,7 @@
 
     sget-object p1, Lradiant/Kawarp;->DRAW:Lradiant/Kawarp;
 
-    invoke-static {p0, p1}, Landroidx/compose/ui/draw/DrawModifierKt;->drawBehind(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;
+    invoke-static {p0, p1}, Landroidx/compose/ui/draw/DrawModifierKt;->drawBehind(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
 
     move-result-object p0
 
@@ -500,7 +500,7 @@
 
     move-object v6, p4
 
-    invoke-static/range {v0 .. v7}, Lcom/tidal/android/feature/playerscreen/ui/composables/p3;->a(ILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+    invoke-static/range {v0 .. v7}, Lcom/tidal/android/feature/playerscreen/ui/composables/p3;->a(ILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V    # MARKER: R8 Lcom/tidal/android/feature/playerscreen/ui/composables/p3; Lam0/a; a
 
     :goto_42
     invoke-interface {v6}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V
@@ -530,7 +530,7 @@
     goto :goto_28
 
     :cond_11
-    sget-object v0, Lradiant/Kawarp;->loader:Lcoil/f;
+    sget-object v0, Lradiant/Kawarp;->loader:Lcoil/f;    # MARKER: R8 Lcoil/f;
 
     if-nez v0, :cond_16
 
@@ -725,7 +725,7 @@
 
     invoke-static {p1}, Lradiant/Kawarp;->draw(Landroidx/compose/ui/graphics/drawscope/DrawScope;)V
 
-    sget-object p1, Lkotlin/u;->a:Lkotlin/u;
+    sget-object p1, Lkotlin/u;->a:Lkotlin/u;    # MARKER: R8 Lkotlin/u;
 
     return-object p1
 .end method
@@ -734,11 +734,11 @@
     .registers 15
 
     :try_start_0
-    new-instance v0, Lxd0/g;
+    new-instance v0, Lxd0/g;    # MARKER: R8 Lxd0/g;
 
     sget-object v1, Lradiant/Kawarp;->appContext:Landroid/content/Context;
 
-    new-instance v2, Lcom/tidal/android/image/core/b$a;
+    new-instance v2, Lcom/tidal/android/image/core/b$a;    # MARKER: R8 Lcom/tidal/android/image/core/b$a;
 
     iget v3, p0, Lradiant/Kawarp;->albumId:I
 
@@ -748,7 +748,7 @@
 
     iget-object v4, p0, Lradiant/Kawarp;->uuid:Ljava/lang/String;
 
-    invoke-direct {v2, v3, v4}, Lcom/tidal/android/image/core/b$a;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    invoke-direct {v2, v3, v4}, Lcom/tidal/android/image/core/b$a;-><init>(Ljava/lang/String;Ljava/lang/String;)V    # MARKER: R8 Lcom/tidal/android/image/core/b$a;
 
     const/4 v7, 0x0
 
@@ -762,57 +762,57 @@
 
     const/4 v6, 0x0
 
-    invoke-direct/range {v0 .. v8}, Lxd0/g;-><init>(Landroid/content/Context;Lcom/tidal/android/image/core/b;Lcom/tidal/android/image/core/b$h$a;Lcom/tidal/android/image/core/b$h$a;ZLjava/util/List;Lxd0/f;Z)V
+    invoke-direct/range {v0 .. v8}, Lxd0/g;-><init>(Landroid/content/Context;Lcom/tidal/android/image/core/b;Lcom/tidal/android/image/core/b$h$a;Lcom/tidal/android/image/core/b$h$a;ZLjava/util/List;Lxd0/f;Z)V    # MARKER: R8 Lxd0/g; Lcom/tidal/android/image/core/b; Lcom/tidal/android/image/core/b$h$a; Lxd0/f;
 
     const/4 v1, 0x0
 
-    invoke-static {v0, v1}, Lcom/tidal/android/image/coil/c;->a(Lxd0/g;Landroidx/compose/ui/layout/ContentScale;)Lcoil/request/h;
+    invoke-static {v0, v1}, Lcom/tidal/android/image/coil/c;->a(Lxd0/g;Landroidx/compose/ui/layout/ContentScale;)Lcoil/request/h;    # MARKER: R8 Lcom/tidal/android/image/coil/c; Lxd0/g; Lcoil/request/h; a
 
     move-result-object v0
 
-    invoke-static {v0}, Lcoil/request/h;->a(Lcoil/request/h;)Lcoil/request/h$a;
+    invoke-static {v0}, Lcoil/request/h;->a(Lcoil/request/h;)Lcoil/request/h$a;    # MARKER: R8 Lcoil/request/h; Lcoil/request/h$a; a
 
     move-result-object v0
 
-    iget-object v1, v0, Lcoil/request/h$a;->b:Lcoil/request/b;
+    iget-object v1, v0, Lcoil/request/h$a;->b:Lcoil/request/b;    # MARKER: R8 Lcoil/request/h$a; Lcoil/request/b; b
 
-    new-instance v2, Lcoil/request/b;
+    new-instance v2, Lcoil/request/b;    # MARKER: R8 Lcoil/request/b;
 
-    iget-object v3, v1, Lcoil/request/b;->a:Lkotlinx/coroutines/CoroutineDispatcher;
+    iget-object v3, v1, Lcoil/request/b;->a:Lkotlinx/coroutines/CoroutineDispatcher;    # MARKER: R8 Lcoil/request/b; a
 
-    iget-object v4, v1, Lcoil/request/b;->b:Lkotlinx/coroutines/CoroutineDispatcher;
+    iget-object v4, v1, Lcoil/request/b;->b:Lkotlinx/coroutines/CoroutineDispatcher;    # MARKER: R8 Lcoil/request/b; b
 
-    iget-object v5, v1, Lcoil/request/b;->c:Lkotlinx/coroutines/CoroutineDispatcher;
+    iget-object v5, v1, Lcoil/request/b;->c:Lkotlinx/coroutines/CoroutineDispatcher;    # MARKER: R8 Lcoil/request/b; c
 
-    iget-object v6, v1, Lcoil/request/b;->d:Lkotlinx/coroutines/CoroutineDispatcher;
+    iget-object v6, v1, Lcoil/request/b;->d:Lkotlinx/coroutines/CoroutineDispatcher;    # MARKER: R8 Lcoil/request/b; d
 
-    iget-object v7, v1, Lcoil/request/b;->e:Ld0/c$a;
+    iget-object v7, v1, Lcoil/request/b;->e:Ld0/c$a;    # MARKER: R8 Lcoil/request/b; Ld0/c$a; e
 
-    iget-object v8, v1, Lcoil/request/b;->f:Lcoil/size/Precision;
+    iget-object v8, v1, Lcoil/request/b;->f:Lcoil/size/Precision;    # MARKER: R8 Lcoil/request/b; f
 
-    iget-object v9, v1, Lcoil/request/b;->g:Landroid/graphics/Bitmap$Config;
+    iget-object v9, v1, Lcoil/request/b;->g:Landroid/graphics/Bitmap$Config;    # MARKER: R8 Lcoil/request/b; g
 
-    iget-boolean v10, v1, Lcoil/request/b;->h:Z
+    iget-boolean v10, v1, Lcoil/request/b;->h:Z    # MARKER: R8 Lcoil/request/b; h
 
-    iget-object v11, v1, Lcoil/request/b;->i:Lcoil/request/CachePolicy;
+    iget-object v11, v1, Lcoil/request/b;->i:Lcoil/request/CachePolicy;    # MARKER: R8 Lcoil/request/b; i
 
-    iget-object v12, v1, Lcoil/request/b;->j:Lcoil/request/CachePolicy;
+    iget-object v12, v1, Lcoil/request/b;->j:Lcoil/request/CachePolicy;    # MARKER: R8 Lcoil/request/b; j
 
     sget-object v13, Lcoil/request/CachePolicy;->DISABLED:Lcoil/request/CachePolicy;
 
-    invoke-direct/range {v2 .. v13}, Lcoil/request/b;-><init>(Lkotlinx/coroutines/CoroutineDispatcher;Lkotlinx/coroutines/CoroutineDispatcher;Lkotlinx/coroutines/CoroutineDispatcher;Lkotlinx/coroutines/CoroutineDispatcher;Ld0/c$a;Lcoil/size/Precision;Landroid/graphics/Bitmap$Config;ZLcoil/request/CachePolicy;Lcoil/request/CachePolicy;Lcoil/request/CachePolicy;)V
+    invoke-direct/range {v2 .. v13}, Lcoil/request/b;-><init>(Lkotlinx/coroutines/CoroutineDispatcher;Lkotlinx/coroutines/CoroutineDispatcher;Lkotlinx/coroutines/CoroutineDispatcher;Lkotlinx/coroutines/CoroutineDispatcher;Ld0/c$a;Lcoil/size/Precision;Landroid/graphics/Bitmap$Config;ZLcoil/request/CachePolicy;Lcoil/request/CachePolicy;Lcoil/request/CachePolicy;)V    # MARKER: R8 Lcoil/request/b; Ld0/c$a;
 
-    iput-object v2, v0, Lcoil/request/h$a;->b:Lcoil/request/b;
+    iput-object v2, v0, Lcoil/request/h$a;->b:Lcoil/request/b;    # MARKER: R8 Lcoil/request/h$a; Lcoil/request/b; b
 
-    iput-object p0, v0, Lcoil/request/h$a;->d:Lb0/c;
+    iput-object p0, v0, Lcoil/request/h$a;->d:Lb0/c;    # MARKER: R8 Lcoil/request/h$a; Lb0/c; d
 
-    sget-object v1, Lradiant/Kawarp;->loader:Lcoil/f;
+    sget-object v1, Lradiant/Kawarp;->loader:Lcoil/f;    # MARKER: R8 Lcoil/f;
 
-    invoke-virtual {v0}, Lcoil/request/h$a;->a()Lcoil/request/h;
+    invoke-virtual {v0}, Lcoil/request/h$a;->a()Lcoil/request/h;    # MARKER: R8 Lcoil/request/h$a; Lcoil/request/h; a
 
     move-result-object v0
 
-    invoke-interface {v1, v0}, Lcoil/f;->b(Lcoil/request/h;)Lcoil/request/d;
+    invoke-interface {v1, v0}, Lcoil/f;->b(Lcoil/request/h;)Lcoil/request/d;    # MARKER: R8 Lcoil/f; Lcoil/request/h; Lcoil/request/d; b
     :try_end_4d
     .catchall {:try_start_0 .. :try_end_4d} :catchall_4e
 
