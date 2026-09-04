@@ -423,6 +423,142 @@
       "default": false
     },
     {
+      "id": "SwipeToQueue",
+      "order": 39,
+      "fileNames": [
+        "swipe-to-queue.patch",
+        "swipe-to-queue-compose.patch"
+      ],
+      "extensionFiles": [
+        "radiant/SwipeToQueue.smali",
+        "radiant/QueueSwipeRemove.smali",
+        "radiant/swipe/QueueRequest.smali",
+        "radiant/swipe/QueueRowResolver.smali",
+        "radiant/swipe/QueueExecutor.smali",
+        "radiant/swipe/FavoriteTracksResolver.smali",
+        "radiant/swipe/DynamicTrackResolver.smali",
+        "radiant/swipe/MyAlbumsResolver.smali",
+        "radiant/swipe/MyPlaylistsResolver.smali",
+        "radiant/swipe/MyMixesAndRadioResolver.smali",
+        "radiant/swipe/SearchAlbumsResolver.smali",
+        "radiant/swipe/SearchPlaylistsResolver.smali",
+        "radiant/swipe/PlaylistItemsResolver.smali",
+        "radiant/swipe/UnifiedSearchResolver.smali",
+        "radiant/swipe/ComposeSwipeAction.smali",
+        "radiant/swipe/ComposeSwipeState.smali",
+        "radiant/swipe/ComposeSwipeState$Gesture.smali",
+        "radiant/swipe/ComposeSwipeState$Draw.smali",
+        "radiant/swipe/ComposeSwipeState$ResetAnimator.smali",
+        "radiant/swipe/ComposeTapGuard.smali",
+        "radiant/swipe/AlbumItemQueueAction.smali",
+        "radiant/swipe/DynamicTrackQueueEvent.smali",
+        "radiant/swipe/DynamicTrackQueueAction.smali",
+        "radiant/swipe/DynamicTrackQueue.smali",
+        "radiant/swipe/ViewAllTrackQueueAction.smali",
+        "radiant/swipe/ViewAllTrackQueue.smali",
+        "radiant/swipe/ComposeSearchQueueEvent.smali",
+        "radiant/swipe/ComposeSearchQueueAction.smali",
+        "radiant/swipe/ComposeSearchQueue.smali",
+        "radiant/swipe/FeedResolver.smali",
+        "radiant/swipe/ArtistTrackCreditsQueueEvent.smali",
+        "radiant/swipe/ArtistTrackCreditsQueueAction.smali",
+        "radiant/swipe/ArtistTrackCreditsQueue.smali",
+        "radiant/swipe/DynamicMediaQueueEvent.smali",
+        "radiant/swipe/CompactGridMediaQueueAction.smali",
+        "radiant/swipe/VerticalMediaQueueAction.smali",
+        "radiant/swipe/PublicPlaylistQueueAction.smali",
+        "radiant/swipe/DynamicMediaQueue.smali",
+        "radiant/swipe/SuggestionsResolver.smali"
+      ],
+      "title": "Swipe to Queue",
+      "description": "Swipe on tracks/albums/playlists to add them to the play queue (and more actions)",
+      "default": false,
+      "advancedOptions": [
+        {
+          "type": "choice",
+          "key": "left_action",
+          "title": "Left Swipe Action",
+          "entries": [
+            "Disabled",
+            "Play next",
+            "Add to queue",
+            "Add to playlist"
+          ],
+          "values": [
+            "0x0",
+            "0x1",
+            "0x2",
+            "0x3"
+          ],
+          "defaultIndex": 2,
+          "inline": true,
+          "distinctFrom": "right_action",
+          "token": "RL_SWIPE_TO_QUEUE_LEFT_ACTION"
+        },
+        {
+          "type": "choice",
+          "key": "right_action",
+          "title": "Right Swipe Action",
+          "entries": [
+            "Disabled",
+            "Play next",
+            "Add to queue",
+            "Add to playlist"
+          ],
+          "values": [
+            "0x0",
+            "0x1",
+            "0x2",
+            "0x3"
+          ],
+          "defaultIndex": 0,
+          "inline": true,
+          "distinctFrom": "left_action",
+          "token": "RL_SWIPE_TO_QUEUE_RIGHT_ACTION"
+        },
+        {
+          "type": "choice",
+          "key": "remove_direction",
+          "title": "Remove Track from Queue",
+          "entries": [
+            "Left swipe",
+            "Right swipe",
+            "Both directions"
+          ],
+          "values": [
+            "0x4",
+            "0x8",
+            "0xc"
+          ],
+          "defaultIndex": 0,
+          "forceDropdown": true,
+          "inline": true,
+          "token": "RL_SWIPE_TO_QUEUE_REMOVE_DIRECTION"
+        },
+        {
+          "type": "color",
+          "key": "background_color",
+          "title": "Add to Queue Color",
+          "default": -14408663,
+          "token": "RL_SWIPE_TO_QUEUE_ADD_COLOR"
+        },
+        {
+          "type": "color",
+          "key": "play_next_color",
+          "title": "Play Next Color",
+          "default": -14408663,
+          "token": "RL_SWIPE_TO_QUEUE_PLAY_NEXT_COLOR"
+        },
+        {
+          "type": "color",
+          "key": "add_to_playlist_color",
+          "title": "Add to Playlist Color",
+          "default": -14408663,
+          "token": "RL_SWIPE_TO_QUEUE_ADD_TO_PLAYLIST_COLOR"
+        }
+      ]
+    },
+    {
       "id": "LyricsProgressPill",
       "order": 40,
       "fileNames": [

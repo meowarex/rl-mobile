@@ -1,0 +1,480 @@
+--- a/com/tidal/android/dynamicpages/ui/composables/verticaltracklist/j.smali
++++ b/com/tidal/android/dynamicpages/ui/composables/verticaltracklist/j.smali
+@@ -1791,6 +1791,10 @@
+     .line 391
+     check-cast v34, Lam0/a;
+ 
++    invoke-static/range {v34 .. v34}, Lradiant/swipe/ComposeTapGuard;->wrap(Lam0/a;)Lam0/a;
++
++    move-result-object v34
++
+     .line 392
+     .line 393
+     const/16 v35, 0x6f
+@@ -1832,6 +1836,22 @@
+     .line 412
+     move-result-object v0
+ 
++    iget-wide v14, v3, Lm40/e$e;->a:J
++
++    invoke-static {v14, v15}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v14
++
++    new-instance v15, Lradiant/swipe/DynamicTrackQueueAction;
++
++    invoke-direct {v15, v4, v1, v2, v3}, Lradiant/swipe/DynamicTrackQueueAction;-><init>(Lam0/l;Ljava/lang/String;Ljava/lang/String;Lm40/e$e;)V
++
++    iget-boolean v5, v3, Lm40/e$e;->j:Z
++
++    invoke-static {v0, v14, v15, v5, v11}, Lradiant/swipe/ComposeSwipeState;->attach(Landroidx/compose/ui/Modifier;Ljava/lang/Object;Lradiant/swipe/ComposeSwipeAction;ZLandroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v0
++
+     .line 413
+     const/4 v14, 0x0
+ 
+--- a/com/tidal/android/dynamicpages/ui/modules/tracklist/TrackListModuleManager$createModuleViewState$3.smali
++++ b/com/tidal/android/dynamicpages/ui/modules/tracklist/TrackListModuleManager$createModuleViewState$3.smali
+@@ -601,6 +601,17 @@
+ 
+     .line 248
+     :cond_c
++    instance-of p2, p1, Lradiant/swipe/DynamicTrackQueueEvent;
++
++    if-eqz p2, :cond_d
++
++    check-cast p1, Lradiant/swipe/DynamicTrackQueueEvent;
++
++    invoke-static {v0, p1}, Lradiant/swipe/DynamicTrackQueue;->handle(Lcom/tidal/android/dynamicpages/ui/modules/tracklist/TrackListModuleManager;Lradiant/swipe/DynamicTrackQueueEvent;)V
++
++    goto :goto_4
++
++    :cond_d
+     invoke-static {}, Landroidx/navigation/f0;->a()V
+ 
+     .line 249
+--- a/com/tidal/android/dynamicpages/ui/composables/compactgridcard/CompactGridCardModuleRowKt.smali
++++ b/com/tidal/android/dynamicpages/ui/composables/compactgridcard/CompactGridCardModuleRowKt.smali
+@@ -872,1 +872,26 @@
++    invoke-static {v10}, Lradiant/swipe/CompactGridMediaQueueAction;->isEligible(Lm40/e;)Z
++
++    move-result v11
++
++    if-eqz v11, :rl_compact_grid_swipe_done
++
++    new-instance v11, Lradiant/swipe/CompactGridMediaQueueAction;
++
++    move-object/from16 v12, p0
++
++    move-object/from16 v14, p1
++
++    invoke-direct {v11, v4, v12, v14, v10}, Lradiant/swipe/CompactGridMediaQueueAction;-><init>(Lam0/l;Ljava/lang/String;Ljava/lang/String;Lm40/e;)V
++
++    invoke-virtual {v11}, Lradiant/swipe/CompactGridMediaQueueAction;->stableKey()Ljava/lang/String;
++
++    move-result-object v12
++
++    const/4 v14, 0x1
++
++    invoke-static {v9, v12, v11, v14, v13}, Lradiant/swipe/ComposeSwipeState;->attach(Landroidx/compose/ui/Modifier;Ljava/lang/Object;Lradiant/swipe/ComposeSwipeAction;ZLandroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v9
++
++    :rl_compact_grid_swipe_done
+     const v11, 0xe000
+--- a/com/tidal/android/dynamicpages/ui/composables/compactgridcard/d.smali
++++ b/com/tidal/android/dynamicpages/ui/composables/compactgridcard/d.smali
+@@ -38,1 +38,22 @@
++    instance-of v0, p1, Lradiant/swipe/DynamicMediaQueueEvent;
++
++    if-eqz v0, :rl_compact_grid_native_click
++
++    iget-object v0, p0, Lcom/tidal/android/dynamicpages/ui/composables/compactgridcard/d;->b:Lcom/tidal/android/dynamicpages/ui/modules/compactgridcard/c;
++
++    iget-object v1, v0, Lcom/tidal/android/dynamicpages/ui/modules/compactgridcard/c;->f:Lam0/q;
++
++    iget-object v2, p0, Lcom/tidal/android/dynamicpages/ui/composables/compactgridcard/d;->c:Ljava/lang/String;
++
++    iget-object v3, v0, Lcom/tidal/android/dynamicpages/ui/modules/compactgridcard/c;->a:Ljava/lang/String;
++
++    const/4 v4, 0x0
++
++    invoke-interface {v1, v2, v3, p1, v4}, Lam0/q;->invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
++
++    sget-object p1, Lkotlin/u;->a:Lkotlin/u;
++
++    return-object p1
++
++    :rl_compact_grid_native_click
+     .line 1
+--- a/com/tidal/android/dynamicpages/ui/modules/compactgridcard/CompactGridCardModuleManager$createModuleViewState$2$2.smali
++++ b/com/tidal/android/dynamicpages/ui/modules/compactgridcard/CompactGridCardModuleManager$createModuleViewState$2$2.smali
+@@ -72,1 +72,1 @@
+-    .locals 0
++    .locals 1
+@@ -74,1 +74,18 @@
++    instance-of v0, p3, Lradiant/swipe/DynamicMediaQueueEvent;
++
++    if-eqz v0, :rl_compact_grid_native_event
++
++    iget-object v0, p0, Lkotlin/jvm/internal/AdaptedFunctionReference;->receiver:Ljava/lang/Object;
++
++    check-cast v0, Lcom/tidal/android/dynamicpages/ui/modules/compactgridcard/a;
++
++    check-cast p3, Lradiant/swipe/DynamicMediaQueueEvent;
++
++    invoke-static {v0, p3}, Lradiant/swipe/DynamicMediaQueue;->handleCompact(Lcom/tidal/android/dynamicpages/ui/modules/compactgridcard/a;Lradiant/swipe/DynamicMediaQueueEvent;)V
++
++    sget-object p1, Lkotlin/u;->a:Lkotlin/u;
++
++    return-object p1
++
++    :rl_compact_grid_native_event
+     .line 1
+--- a/com/tidal/android/feature/search/ui/SearchScreenViewModel.smali
++++ b/com/tidal/android/feature/search/ui/SearchScreenViewModel.smali
+@@ -926,6 +926,17 @@
+ 
+     .line 4
+     .line 5
++    instance-of v2, v1, Lradiant/swipe/ComposeSearchQueueEvent;
++
++    if-eqz v2, :rl_search_queue_continue
++
++    check-cast v1, Lradiant/swipe/ComposeSearchQueueEvent;
++
++    invoke-static {v0, v1}, Lradiant/swipe/ComposeSearchQueue;->handle(Lcom/tidal/android/feature/search/ui/SearchScreenViewModel;Lradiant/swipe/ComposeSearchQueueEvent;)V
++
++    return-void
++
++    :rl_search_queue_continue
+     invoke-virtual {v1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+ 
+     .line 6
+--- a/com/tidal/android/feature/search/ui/composables/u0.smali
++++ b/com/tidal/android/feature/search/ui/composables/u0.smali
+@@ -243,6 +243,24 @@
+ 
+     check-cast v2, Lam0/a;
+ 
++    invoke-static {v1}, Lradiant/swipe/ComposeTapGuard;->wrap(Lam0/a;)Lam0/a;
++
++    move-result-object v1
++
++    new-instance v6, Lradiant/swipe/ComposeSearchQueueAction;
++
++    invoke-direct {v6, p3, v0}, Lradiant/swipe/ComposeSearchQueueAction;-><init>(Lam0/l;Lpb0/b;)V
++
++    invoke-virtual {v6}, Lradiant/swipe/ComposeSearchQueueAction;->stableKey()Ljava/lang/String;
++
++    move-result-object v7
++
++    iget-boolean p1, v0, Lpb0/b$a;->f:Z
++
++    invoke-static {v3, v7, v6, p1, v4}, Lradiant/swipe/ComposeSwipeState;->attach(Landroidx/compose/ui/Modifier;Ljava/lang/Object;Lradiant/swipe/ComposeSwipeAction;ZLandroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v3
++
+     const/4 v5, 0x0
+ 
+     .line 20
+@@ -467,7 +485,25 @@
+ 
+     const/4 v5, 0x0
+ 
+-    const/4 v2, 0x0
++    invoke-static {v1}, Lradiant/swipe/ComposeTapGuard;->wrap(Lam0/a;)Lam0/a;
++
++    move-result-object v1
++
++    new-instance v6, Lradiant/swipe/ComposeSearchQueueAction;
++
++    invoke-direct {v6, p3, v0}, Lradiant/swipe/ComposeSearchQueueAction;-><init>(Lam0/l;Lpb0/b;)V
++
++    invoke-virtual {v6}, Lradiant/swipe/ComposeSearchQueueAction;->stableKey()Ljava/lang/String;
++
++    move-result-object v7
++
++    sget-object v2, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;
++
++    const/4 p1, 0x1
++
++    invoke-static {v2, v7, v6, p1, v4}, Lradiant/swipe/ComposeSwipeState;->attach(Landroidx/compose/ui/Modifier;Ljava/lang/Object;Lradiant/swipe/ComposeSwipeAction;ZLandroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v2
+ 
+     .line 52
+     invoke-static/range {v0 .. v5}, Lob0/w;->a(Lpb0/b$f;Lam0/a;Landroidx/compose/ui/Modifier;Lam0/a;Landroidx/compose/runtime/Composer;I)V
+@@ -593,6 +629,24 @@
+ 
+     check-cast v3, Lam0/a;
+ 
++    invoke-static {v1}, Lradiant/swipe/ComposeTapGuard;->wrap(Lam0/a;)Lam0/a;
++
++    move-result-object v1
++
++    new-instance v6, Lradiant/swipe/ComposeSearchQueueAction;
++
++    invoke-direct {v6, p3, v0}, Lradiant/swipe/ComposeSearchQueueAction;-><init>(Lam0/l;Lpb0/b;)V
++
++    invoke-virtual {v6}, Lradiant/swipe/ComposeSearchQueueAction;->stableKey()Ljava/lang/String;
++
++    move-result-object v7
++
++    iget-boolean p1, v0, Lpb0/b$i;->i:Z
++
++    invoke-static {v2, v7, v6, p1, v4}, Lradiant/swipe/ComposeSwipeState;->attach(Landroidx/compose/ui/Modifier;Ljava/lang/Object;Lradiant/swipe/ComposeSwipeAction;ZLandroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v2
++
+     const/4 v5, 0x0
+ 
+     .line 70
+@@ -828,7 +882,25 @@
+ 
+     const/4 v5, 0x0
+ 
+-    const/4 v2, 0x0
++    invoke-static {v1}, Lradiant/swipe/ComposeTapGuard;->wrap(Lam0/a;)Lam0/a;
++
++    move-result-object v1
++
++    new-instance v6, Lradiant/swipe/ComposeSearchQueueAction;
++
++    invoke-direct {v6, p3, v0}, Lradiant/swipe/ComposeSearchQueueAction;-><init>(Lam0/l;Lpb0/b;)V
++
++    invoke-virtual {v6}, Lradiant/swipe/ComposeSearchQueueAction;->stableKey()Ljava/lang/String;
++
++    move-result-object v7
++
++    sget-object v2, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;
++
++    const/4 p1, 0x1
++
++    invoke-static {v2, v7, v6, p1, v4}, Lradiant/swipe/ComposeSwipeState;->attach(Landroidx/compose/ui/Modifier;Ljava/lang/Object;Lradiant/swipe/ComposeSwipeAction;ZLandroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v2
+ 
+     .line 104
+     invoke-static/range {v0 .. v5}, Lob0/q;->a(Lpb0/b$e;Lam0/a;Landroidx/compose/ui/Modifier;Lam0/a;Landroidx/compose/runtime/Composer;I)V
+--- a/com/tidal/android/feature/viewall/ui/l.smali
++++ b/com/tidal/android/feature/viewall/ui/l.smali
+@@ -317,6 +317,31 @@
+     .line 132
+     check-cast v3, Lam0/l;
+ 
++    instance-of p1, v2, Lm40/e$e;
++
++    if-eqz p1, :rl_viewall_swipe_attached
++
++    move-object p1, v2
++
++    check-cast p1, Lm40/e$e;
++
++    iget-wide p2, p1, Lm40/e$e;->a:J
++
++    invoke-static {p2, p3}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object p2
++
++    new-instance p3, Lradiant/swipe/ViewAllTrackQueueAction;
++
++    invoke-direct {p3, v3, p1}, Lradiant/swipe/ViewAllTrackQueueAction;-><init>(Lam0/l;Lm40/e$e;)V
++
++    iget-boolean p1, p1, Lm40/e$e;->j:Z
++
++    invoke-static {v1, p2, p3, p1, v5}, Lradiant/swipe/ComposeSwipeState;->attach(Landroidx/compose/ui/Modifier;Ljava/lang/Object;Lradiant/swipe/ComposeSwipeAction;ZLandroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v1
++
++    :rl_viewall_swipe_attached
+     .line 133
+     .line 134
+     const/4 v6, 0x0
+--- a/j40/p2.smali
++++ b/j40/p2.smali
+@@ -3240,5 +3240,14 @@
+     move-object/from16 v16, v1
+ 
++    instance-of v3, v14, Lcom/tidal/android/feature/viewall/ui/n;
++
++    if-eqz v3, :rl_viewall_tap_guard_done
++
++    invoke-static/range {v24 .. v24}, Lradiant/swipe/ComposeTapGuard;->wrap(Lam0/a;)Lam0/a;
++
++    move-result-object v24
++
++    :rl_viewall_tap_guard_done
+     .line 718
+     .line 719
+     move-object/from16 v25, v9
+--- a/com/tidal/android/feature/viewall/ui/ViewAllScreenViewModel.smali
++++ b/com/tidal/android/feature/viewall/ui/ViewAllScreenViewModel.smali
+@@ -1717,5 +1717,16 @@
+         }
+     .end annotation
+ 
++    invoke-static {p0, p1}, Lradiant/swipe/ViewAllTrackQueue;->handleEvent(Lcom/tidal/android/feature/viewall/ui/ViewAllScreenViewModel;Lcom/tidal/android/feature/viewall/ui/e;)Z
++
++    move-result v0
++
++    if-eqz v0, :rl_viewall_regular_event
++
++    sget-object v0, Lkotlin/u;->a:Lkotlin/u;
++
++    return-object v0
++
++    :rl_viewall_regular_event
+     .line 1
+     instance-of v0, p1, Lcom/tidal/android/feature/viewall/ui/e$a;
+--- a/com/tidal/android/dynamicpages/ui/composables/artisttrackcredits/h.smali
++++ b/com/tidal/android/dynamicpages/ui/composables/artisttrackcredits/h.smali
+@@ -929,1 +929,5 @@
+     check-cast v34, Lam0/a;
++    invoke-static/range {v34 .. v34}, Lradiant/swipe/ComposeTapGuard;->wrap(Lam0/a;)Lam0/a;
++
++    move-result-object v34
++
+@@ -970,1 +974,17 @@
+     move-result-object v0
++    iget-wide v14, v3, Lm40/e$e;->a:J
++
++    invoke-static {v14, v15}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
++
++    move-result-object v14
++
++    new-instance v15, Lradiant/swipe/ArtistTrackCreditsQueueAction;
++
++    invoke-direct {v15, v4, v1, v2, v3}, Lradiant/swipe/ArtistTrackCreditsQueueAction;-><init>(Lam0/l;Ljava/lang/String;Ljava/lang/String;Lm40/e$e;)V
++
++    iget-boolean v5, v3, Lm40/e$e;->j:Z
++
++    invoke-static {v0, v14, v15, v5, v11}, Lradiant/swipe/ComposeSwipeState;->attach(Landroidx/compose/ui/Modifier;Ljava/lang/Object;Lradiant/swipe/ComposeSwipeAction;ZLandroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v0
++
+--- a/com/tidal/android/dynamicpages/ui/modules/artisttrackcredits/ArtistTrackCreditsModuleManager$createModuleViewState$3.smali
++++ b/com/tidal/android/dynamicpages/ui/modules/artisttrackcredits/ArtistTrackCreditsModuleManager$createModuleViewState$3.smali
+@@ -603,1 +603,12 @@
+     :cond_c
++    instance-of p2, p1, Lradiant/swipe/ArtistTrackCreditsQueueEvent;
++
++    if-eqz p2, :rl_artist_credits_queue_unhandled
++
++    check-cast p1, Lradiant/swipe/ArtistTrackCreditsQueueEvent;
++
++    invoke-static {v0, p1}, Lradiant/swipe/ArtistTrackCreditsQueue;->handle(Lcom/tidal/android/dynamicpages/ui/modules/artisttrackcredits/ArtistTrackCreditsModuleManager;Lradiant/swipe/ArtistTrackCreditsQueueEvent;)V
++
++    goto :goto_4
++
++    :rl_artist_credits_queue_unhandled
+--- a/com/tidal/android/dynamicpages/ui/composables/verticallistcard/VerticalListCardKt.smali
++++ b/com/tidal/android/dynamicpages/ui/composables/verticallistcard/VerticalListCardKt.smali
+@@ -3648,1 +3648,24 @@
+     move-result-object v0
++    invoke-static {v10}, Lradiant/swipe/VerticalMediaQueueAction;->isSupported(Lm40/e;)Z
++
++    move-result v7
++
++    if-eqz v7, :rl_vertical_swipe_done
++
++    new-instance v7, Lradiant/swipe/VerticalMediaQueueAction;
++
++    invoke-direct {v7, v4, v1, v2, v10}, Lradiant/swipe/VerticalMediaQueueAction;-><init>(Lam0/l;Ljava/lang/String;Ljava/lang/String;Lm40/e;)V
++
++    invoke-virtual {v7}, Lradiant/swipe/VerticalMediaQueueAction;->stableKey()Ljava/lang/String;
++
++    move-result-object v9
++
++    invoke-static {v10}, Lradiant/swipe/VerticalMediaQueueAction;->isEligible(Lm40/e;)Z
++
++    move-result v12
++
++    invoke-static {v0, v9, v7, v12, v3}, Lradiant/swipe/ComposeSwipeState;->attach(Landroidx/compose/ui/Modifier;Ljava/lang/Object;Lradiant/swipe/ComposeSwipeAction;ZLandroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v0
++
++    :rl_vertical_swipe_done
+--- a/j40/e4.smali
++++ b/j40/e4.smali
+@@ -310,1 +310,24 @@
+     check-cast v11, Lam0/a;
++    instance-of v8, v6, Lcom/tidal/android/dynamicpages/ui/composables/verticallistcard/m;
++
++    if-eqz v8, :rl_vertical_tap_guard_done
++
++    instance-of v8, v5, Lm40/e;
++
++    if-eqz v8, :rl_vertical_tap_guard_done
++
++    move-object v8, v5
++
++    check-cast v8, Lm40/e;
++
++    invoke-static {v8}, Lradiant/swipe/VerticalMediaQueueAction;->isSupported(Lm40/e;)Z
++
++    move-result v8
++
++    if-eqz v8, :rl_vertical_tap_guard_done
++
++    invoke-static {v11}, Lradiant/swipe/ComposeTapGuard;->wrap(Lam0/a;)Lam0/a;
++
++    move-result-object v11
++
++    :rl_vertical_tap_guard_done
+--- a/com/tidal/android/dynamicpages/ui/composables/publicplaylistlist/i.smali
++++ b/com/tidal/android/dynamicpages/ui/composables/publicplaylistlist/i.smali
+@@ -2120,1 +2120,5 @@
+     check-cast v34, Lam0/a;
++    invoke-static/range {v34 .. v34}, Lradiant/swipe/ComposeTapGuard;->wrap(Lam0/a;)Lam0/a;
++
++    move-result-object v34
++
+@@ -2161,1 +2165,15 @@
+     move-result-object v0
++    new-instance v5, Lradiant/swipe/PublicPlaylistQueueAction;
++
++    invoke-direct {v5, v4, v1, v2, v3}, Lradiant/swipe/PublicPlaylistQueueAction;-><init>(Lam0/l;Ljava/lang/String;Ljava/lang/String;Lm40/e$d;)V
++
++    invoke-virtual {v5}, Lradiant/swipe/PublicPlaylistQueueAction;->stableKey()Ljava/lang/String;
++
++    move-result-object v7
++
++    iget-boolean v9, v3, Lm40/e$d;->g:Z
++
++    invoke-static {v0, v7, v5, v9, v11}, Lradiant/swipe/ComposeSwipeState;->attach(Landroidx/compose/ui/Modifier;Ljava/lang/Object;Lradiant/swipe/ComposeSwipeAction;ZLandroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;
++
++    move-result-object v0
++
+--- a/com/tidal/android/dynamicpages/ui/modules/verticallistcard/VerticalListCardModuleManager$createModuleViewState$3.smali
++++ b/com/tidal/android/dynamicpages/ui/modules/verticallistcard/VerticalListCardModuleManager$createModuleViewState$3.smali
+@@ -830,1 +830,12 @@
+     :cond_15
++    instance-of v2, v0, Lradiant/swipe/DynamicMediaQueueEvent;
++
++    if-eqz v2, :rl_vertical_queue_continue
++
++    check-cast v0, Lradiant/swipe/DynamicMediaQueueEvent;
++
++    invoke-static {v3, v0}, Lradiant/swipe/DynamicMediaQueue;->handleVertical(Lcom/tidal/android/dynamicpages/ui/modules/verticallistcard/VerticalListCardModuleManager;Lradiant/swipe/DynamicMediaQueueEvent;)V
++
++    goto :goto_2
++
++    :rl_vertical_queue_continue
+--- a/com/tidal/android/dynamicpages/ui/modules/publicplaylistlist/PublicPlaylistListModuleManager$createModuleViewState$3.smali
++++ b/com/tidal/android/dynamicpages/ui/modules/publicplaylistlist/PublicPlaylistListModuleManager$createModuleViewState$3.smali
+@@ -487,2 +487,13 @@
+     :cond_c
++    instance-of v1, p1, Lradiant/swipe/DynamicMediaQueueEvent;
++
++    if-eqz v1, :rl_public_queue_continue
++
++    check-cast p1, Lradiant/swipe/DynamicMediaQueueEvent;
++
++    invoke-static {p2, p1}, Lradiant/swipe/DynamicMediaQueue;->handlePublicPlaylist(Lcom/tidal/android/dynamicpages/ui/modules/publicplaylistlist/PublicPlaylistListModuleManager;Lradiant/swipe/DynamicMediaQueueEvent;)V
++
++    goto :goto_1
++
++    :rl_public_queue_continue
+     invoke-static {}, Landroidx/navigation/f0;->a()V

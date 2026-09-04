@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
 import com.meowarex.rlmobile.ui.components.radiant.RadiantDialog
+import com.meowarex.rlmobile.ui.components.radiant.RadiantDropdown
 import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonSize
 import com.meowarex.rlmobile.ui.components.radiant.RadiantButtonStyle
 import com.meowarex.rlmobile.ui.components.radiant.RadiantIconButton
@@ -43,7 +44,9 @@ import com.meowarex.rlmobile.ui.components.ResetToDefaultButton
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionLock
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionState
+import com.meowarex.rlmobile.ui.screens.patchopts.conflictingChoices
 import com.meowarex.rlmobile.ui.screens.patchopts.hiddenForVariant
+import com.meowarex.rlmobile.ui.screens.patchopts.isInline
 import com.meowarex.rlmobile.ui.screens.patchopts.optionLock
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchSpec
 import kotlinx.coroutines.launch
@@ -109,12 +112,12 @@ fun PatchAdvancedOptionsSheet(
 
             val parentKeys = patch.advancedOptions
                 .filterIsInstance<OptionSpec.Toggle>()
-                .filter { !it.inline }
+                .filter { !it.isInline }
                 .map { it.key }
                 .toSet()
             val sheetOptions = patch.advancedOptions.filter { option ->
                 when {
-                    option is OptionSpec.Toggle && option.inline -> false
+                    option.isInline -> false
                     option is OptionSpec.Toggle && option.requiresOption in parentKeys -> false
                     // Options belonging to another variant are hidden, not greyed out.
                     option.hiddenForVariant(selectedVariant) -> false
@@ -127,7 +130,7 @@ fun PatchAdvancedOptionsSheet(
                     is OptionSpec.Toggle -> {
                         val toggleOn = state.toggle(patch, option)
                         val gatedChoices = patch.advancedOptions.filterIsInstance<OptionSpec.Choice>()
-                            .filter { it.requiresOption == option.key }
+                            .filter { it.requiresOption == option.key && !it.isInline }
                         val gatedToggles = patch.advancedOptions.filterIsInstance<OptionSpec.Toggle>()
                             .filter { it.requiresOption == option.key && !it.inline }
                         val hasSubOptions = gatedChoices.isNotEmpty() || gatedToggles.isNotEmpty()
@@ -170,8 +173,14 @@ fun PatchAdvancedOptionsSheet(
                                             key(choice.key) {
                                                 ChoiceOptionRow(
                                                     title = choice.title,
+                                                    description = choice.description,
                                                     entries = choice.entries,
                                                     selectedIndex = state.choice(patch, choice),
+                                                    forceDropdown = choice.forceDropdown,
+                                                    disabledIndices = patch.conflictingChoices(choice)
+                                                        .map { state.choice(patch, it) }
+                                                        .filter { it != 0 }
+                                                        .toSet(),
                                                     onSelect = { state.setChoice(patch, choice, it) },
                                                 )
                                             }
@@ -209,8 +218,14 @@ fun PatchAdvancedOptionsSheet(
                         if (option.requiresOption == null) {
                             ChoiceOptionRow(
                                 title = option.title,
+                                description = option.description,
                                 entries = option.entries,
                                 selectedIndex = state.choice(patch, option),
+                                forceDropdown = option.forceDropdown,
+                                disabledIndices = patch.conflictingChoices(option)
+                                    .map { state.choice(patch, it) }
+                                    .filter { it != 0 }
+                                    .toSet(),
                                 onSelect = { state.setChoice(patch, option, it) },
                             )
                         }
@@ -218,6 +233,7 @@ fun PatchAdvancedOptionsSheet(
                     is OptionSpec.Color -> ColorOptionRow(
                         title = option.title,
                         color = state.color(patch, option),
+                        defaultColor = option.default,
                         onColorChange = { state.setColor(patch, option, it) },
                     )
                 }
@@ -376,59 +392,48 @@ private fun snapToNearestStep(
 }
 
 @Composable
-private fun ChoiceOptionRow(
+internal fun ChoiceOptionRow(
     entries: List<String>,
     selectedIndex: Int,
     onSelect: (Int) -> Unit,
     title: String = "",
+    description: String = "",
+    forceDropdown: Boolean = false,
+    disabledIndices: Set<Int> = emptySet(),
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(6.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
     ) {
         if (title.isNotEmpty()) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleSmall,
             )
         }
-        if (entries.size > 3) {
-            var expanded by rememberSaveable { mutableStateOf(false) }
-            val selectedLabel = entries.getOrNull(selectedIndex).orEmpty()
-
-            Box(modifier = Modifier.fillMaxWidth()) {
-                RadiantButton(
-                    text = selectedLabel,
-                    onClick = { expanded = true },
-                    style = RadiantButtonStyle.Ghost,
-                    fillWidth = true,
-                )
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    entries.forEachIndexed { index, entry ->
-                        DropdownMenuItem(
-                            text = { Text(entry) },
-                            onClick = {
-                                onSelect(index)
-                                expanded = false
-                            },
-                        )
-                    }
-                }
-            }
+        if (description.isNotEmpty()) {
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        if (forceDropdown || entries.size > 3) {
+            RadiantDropdown(
+                options = entries,
+                selectedIndex = selectedIndex,
+                onSelect = onSelect,
+                disabledIndices = disabledIndices,
+            )
             return@Column
         }
         RadiantSegmented(
             options = entries,
             selectedIndex = selectedIndex,
             onSelect = onSelect,
+            disabledIndices = disabledIndices,
         )
     }
 }
@@ -437,17 +442,34 @@ private fun ChoiceOptionRow(
 private fun ColorOptionRow(
     title: String,
     color: Int,
+    defaultColor: Int,
     onColorChange: (Int) -> Unit,
 ) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
     val selectedColor = color.withOpaqueAlpha()
-    val materialYouColor = MaterialTheme.colorScheme.primary.toArgb().withOpaqueAlpha()
-    val presets = listOf(
-        stringResource(R.string.patch_waze_color_waze_default),
-        stringResource(R.string.patch_waze_color_tidal_cyan),
-        stringResource(R.string.patch_waze_color_material_you),
-    )
-    val presetColors = listOf(WAZE_DEFAULT, TIDAL_CYAN, materialYouColor)
+    val isNeutralPalette = defaultColor.withOpaqueAlpha() == NEUTRAL
+    val presets = if (isNeutralPalette) {
+        listOf(
+            stringResource(R.string.patch_color_neutral),
+            stringResource(R.string.patch_color_green),
+            stringResource(R.string.patch_color_cyan),
+        )
+    } else {
+        listOf(
+            stringResource(R.string.patch_waze_color_waze_default),
+            stringResource(R.string.patch_waze_color_tidal_cyan),
+            stringResource(R.string.patch_waze_color_material_you),
+        )
+    }
+    val presetColors = if (isNeutralPalette) {
+        listOf(NEUTRAL, GREEN, CYAN)
+    } else {
+        listOf(
+            defaultColor.withOpaqueAlpha(),
+            TIDAL_CYAN,
+            MaterialTheme.colorScheme.primary.toArgb().withOpaqueAlpha(),
+        )
+    }
     val selectedPreset = presetColors.indexOf(selectedColor)
 
     Column(
@@ -474,6 +496,12 @@ private fun ColorOptionRow(
                 text = selectedColor.toRgbHex(),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
+            )
+            Icon(
+                painter = painterResource(R.drawable.ic_edit),
+                contentDescription = stringResource(R.string.patch_color_edit),
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(18.dp),
             )
         }
         RadiantSegmented(
@@ -588,7 +616,9 @@ private fun formatSliderValue(option: OptionSpec.Slider, value: Float): String {
 }
 
 private const val OPAQUE_ALPHA = -0x1000000
-private const val WAZE_DEFAULT = -16747037 // #ff0075e3
+private const val NEUTRAL = -14408663 // #ff242429
+private const val GREEN = -14749031 // #ff1ef299
+private const val CYAN = -14748953 // #ff1ef2e7
 private const val TIDAL_CYAN = -14549268 // #ff21feec
 
 private fun Int.withOpaqueAlpha(): Int = (this and 0x00FFFFFF) or OPAQUE_ALPHA

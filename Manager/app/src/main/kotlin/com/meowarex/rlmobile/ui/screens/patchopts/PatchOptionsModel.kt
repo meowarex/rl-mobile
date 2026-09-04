@@ -179,7 +179,12 @@ class PatchOptionsModel(
 
     fun setChoiceValue(spec: PatchSpec, option: OptionSpec.Choice, index: Int) {
         if (index !in option.entries.indices) return
-        optionInts = optionInts + (keyOf(spec, option) to index)
+        val selectedKey = keyOf(spec, option)
+        optionInts = normalizeChoiceSelections(
+            specs = listOf(spec),
+            values = optionInts + (selectedKey to index),
+            preferredKey = selectedKey,
+        )
     }
 
     fun colorValue(spec: PatchSpec, option: OptionSpec.Color): Int =
@@ -190,10 +195,9 @@ class PatchOptionsModel(
     }
 
     fun isAdvancedModified(spec: PatchSpec): Boolean = spec.advancedOptions.any { option ->
+        if (option.isInline) return@any false
         when (option) {
-            // inline toggles sit next to the variant picker, not in the sheet, so they
-            // must not light up the sheet's "modified" dot
-            is OptionSpec.Toggle -> !option.inline && toggleValue(spec, option) != option.default
+            is OptionSpec.Toggle -> toggleValue(spec, option) != option.default
             is OptionSpec.Slider -> sliderValue(spec, option) != option.default
             is OptionSpec.Choice -> choiceValue(spec, option) != option.defaultIndex
             is OptionSpec.Color -> colorValue(spec, option) != option.default
@@ -201,10 +205,22 @@ class PatchOptionsModel(
     }
 
     fun resetAdvanced(spec: PatchSpec) {
-        val prefix = "${spec.id}/"
-        optionBools = optionBools.filterKeys { !it.startsWith(prefix) }
-        optionFloats = optionFloats.filterKeys { !it.startsWith(prefix) }
-        optionInts = optionInts.filterKeys { !it.startsWith(prefix) }
+        val advancedOptions = spec.advancedOptions.filter { !it.isInline }
+        val boolKeys = advancedOptions.filterIsInstance<OptionSpec.Toggle>().map { keyOf(spec, it) }.toSet()
+        val floatKeys = advancedOptions.filterIsInstance<OptionSpec.Slider>().map { keyOf(spec, it) }.toSet()
+        val intKeys = advancedOptions.filter { it is OptionSpec.Choice || it is OptionSpec.Color }
+            .map { keyOf(spec, it) }
+            .toSet()
+        optionBools = optionBools.filterKeys { it !in boolKeys }
+        optionFloats = optionFloats.filterKeys { it !in floatKeys }
+        optionInts = normalizeChoiceSelections(
+            specs = listOf(spec),
+            values = optionInts.filterKeys { it !in intKeys },
+        )
+    }
+
+    private fun normalizeChoiceSelections(specs: List<PatchSpec>) {
+        optionInts = normalizeChoiceSelections(specs, optionInts)
     }
 
     val optionState: PatchOptionState = PatchOptionState(
@@ -282,6 +298,7 @@ class PatchOptionsModel(
         val loaded = if (component == null) builtinSpecs else loadManifestSpecs(component) ?: builtinSpecs
         mainThread {
             specs = loaded
+            normalizeChoiceSelections(loaded)
             validatePatchSelection()
             specsLoading = false
         }
@@ -351,6 +368,7 @@ class PatchOptionsModel(
             ?: loadCachedReleaseManifestSpecs() ?: builtinSpecs
         mainThread {
             specs = loaded
+            normalizeChoiceSelections(loaded)
             validatePatchSelection()
             specsLoading = false
         }
@@ -415,6 +433,7 @@ class PatchOptionsModel(
     }
 
     init {
+        normalizeChoiceSelections(specs)
         validatePatchSelection()
         screenModelScope.launchBlock { fetchPkgNameState() }
         // Default source is the latest release's manifest; custom selections drive themselves.

@@ -33,6 +33,8 @@ import com.meowarex.rlmobile.ui.components.radiant.RadiantDialog
 import com.meowarex.rlmobile.ui.theme.radiantSurface
 import com.meowarex.rlmobile.ui.theme.glassSurface
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
+import com.meowarex.rlmobile.ui.screens.patchopts.conflictingChoices
+import com.meowarex.rlmobile.ui.screens.patchopts.isInline
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchLock
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionState
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptions
@@ -134,11 +136,9 @@ fun PatchSelectionAccordion(
                     val checked = isEnabled(patch)
                     val lock = lockState(patch)
 
-                    val inlineToggles = patch.advancedOptions
-                        .filterIsInstance<OptionSpec.Toggle>()
-                        .filter { it.inline }
-                    val hasSheetOptions = patch.advancedOptions.any { it !is OptionSpec.Toggle || !it.inline }
-                    val hasSettings = patch.variants.isNotEmpty() || inlineToggles.isNotEmpty() || hasSheetOptions
+                    val inlineOptions = patch.advancedOptions.filter { it.isInline }
+                    val hasSheetOptions = patch.advancedOptions.any { !it.isInline }
+                    val hasSettings = patch.variants.isNotEmpty() || inlineOptions.isNotEmpty() || hasSheetOptions
 
                     // When a patch is enabled and has settings show a carded view of the settings
                     val carded = checked && hasSettings
@@ -189,16 +189,41 @@ fun PatchSelectionAccordion(
                                         )
                                     }
 
-                                    for (option in inlineToggles) key(option.key) {
-                                        val show = option.requiresVariant == null ||
-                                            option.requiresVariant == resolvedVariant
-                                        if (show) {
-                                            InlineToggleRow(
-                                                title = option.title,
-                                                description = option.description,
-                                                checked = optionState.toggle(patch, option),
-                                                onCheckedChange = { optionState.setToggle(patch, option, it) },
-                                            )
+                                    for (option in inlineOptions) key(option.key) {
+                                        when (option) {
+                                            is OptionSpec.Toggle -> {
+                                                val show = option.requiresVariant == null ||
+                                                    option.requiresVariant == resolvedVariant
+                                                if (show) {
+                                                    InlineToggleRow(
+                                                        title = option.title,
+                                                        description = option.description,
+                                                        checked = optionState.toggle(patch, option),
+                                                        onCheckedChange = { optionState.setToggle(patch, option, it) },
+                                                    )
+                                                }
+                                            }
+                                            is OptionSpec.Choice -> {
+                                                val requiredToggle = option.requiresOption?.let { key ->
+                                                    patch.advancedOptions.filterIsInstance<OptionSpec.Toggle>()
+                                                        .firstOrNull { it.key == key }
+                                                }
+                                                if (requiredToggle == null || optionState.toggle(patch, requiredToggle)) {
+                                                    ChoiceOptionRow(
+                                                        title = option.title,
+                                                        description = option.description,
+                                                        entries = option.entries,
+                                                        selectedIndex = optionState.choice(patch, option),
+                                                        forceDropdown = option.forceDropdown,
+                                                        disabledIndices = patch.conflictingChoices(option)
+                                                            .map { optionState.choice(patch, it) }
+                                                            .filter { it != 0 }
+                                                            .toSet(),
+                                                        onSelect = { optionState.setChoice(patch, option, it) },
+                                                    )
+                                                }
+                                            }
+                                            else -> Unit
                                         }
                                     }
 
