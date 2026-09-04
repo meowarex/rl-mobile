@@ -1,6 +1,6 @@
 .class public final Lradiant/NoOp;
 .super Ljava/lang/Object;
-.implements Lam0/a;
+.implements Lam0/a;    # MARKER: R8 Lam0/a;
 
 
 # static fields
@@ -33,7 +33,7 @@
 .method public final invoke()Ljava/lang/Object;
     .locals 1
 
-    sget-object v0, Lkotlin/u;->a:Lkotlin/u;
+    sget-object v0, Lkotlin/u;->a:Lkotlin/u;    # MARKER: R8 Lkotlin/u;
 
     return-object v0
 .end method

@@ -1,0 +1,316 @@
+.class public final Lradiant/gestures/queue/SearchPlaylistsResolver;
+.super Ljava/lang/Object;
+.source "SearchPlaylistsResolver.smali"
+
+# interfaces
+.implements Lradiant/gestures/queue/QueueRowResolver;
+
+
+# instance fields
+.field private final fragment:Ljava/lang/ref/WeakReference;
+
+
+# direct methods
+.method private constructor <init>(Lcom/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView;)V
+    .locals 1
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    new-instance v0, Ljava/lang/ref/WeakReference;
+
+    invoke-direct {v0, p1}, Ljava/lang/ref/WeakReference;-><init>(Ljava/lang/Object;)V
+
+    iput-object v0, p0, Lradiant/gestures/queue/SearchPlaylistsResolver;->fragment:Ljava/lang/ref/WeakReference;
+
+    return-void
+.end method
+
+.method private current(Lradiant/gestures/queue/QueueRequest;)Lcf/b;    # MARKER: R8 Lcf/b;
+    .locals 6
+
+    if-eqz p1, :invalid
+
+    iget-object v0, p1, Lradiant/gestures/queue/QueueRequest;->media:Ljava/lang/Object;
+
+    instance-of v1, v0, Lcom/aspiro/wamp/model/Playlist;
+
+    if-eqz v1, :invalid
+
+    check-cast v0, Lcom/aspiro/wamp/model/Playlist;
+
+    iget-object v1, p0, Lradiant/gestures/queue/SearchPlaylistsResolver;->fragment:Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v1}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Lcom/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView;
+
+    if-eqz v1, :invalid
+
+    iget-object v2, v1, Lcom/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView;->g:Lwf/d;    # MARKER: R8 Lwf/d; g
+
+    if-eqz v2, :invalid
+
+    invoke-virtual {v1}, Lcom/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView;->N()La50/d;    # MARKER: R8 La50/d; N
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Landroidx/recyclerview/widget/ListAdapter;->getCurrentList()Ljava/util/List;
+
+    move-result-object v1
+
+    iget v2, p1, Lradiant/gestures/queue/QueueRequest;->position:I
+
+    if-gez v2, :check_size
+
+    goto :invalid
+
+    :check_size
+    invoke-interface {v1}, Ljava/util/List;->size()I
+
+    move-result v3
+
+    if-lt v2, v3, :read_item
+
+    goto :invalid
+
+    :read_item
+    invoke-interface {v1, v2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object v1
+
+    instance-of v2, v1, Lcf/b;    # MARKER: R8 Lcf/b;
+
+    if-eqz v2, :invalid
+
+    check-cast v1, Lcf/b;    # MARKER: R8 Lcf/b;
+
+    iget-boolean v2, v1, Lcf/b;->h:Z    # MARKER: R8 Lcf/b; h
+
+    if-eqz v2, :invalid
+
+    iget-boolean v2, v1, Lcf/b;->f:Z    # MARKER: R8 Lcf/b; f
+
+    if-eqz v2, :check_playlist
+
+    const-string v2, "NOT_READY"
+
+    iget-object v3, v1, Lcf/b;->g:Ljava/lang/String;    # MARKER: R8 Lcf/b; g
+
+    invoke-virtual {v2, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v2
+
+    if-nez v2, :invalid
+
+    :check_playlist
+    iget-object v2, v1, Lcf/b;->a:Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lcf/b; a
+
+    invoke-virtual {v2}, Lcom/aspiro/wamp/model/Playlist;->getNumberOfItems()I
+
+    move-result v3
+
+    if-lez v3, :invalid
+
+    invoke-virtual {v2}, Lcom/aspiro/wamp/model/Playlist;->getUuid()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v0}, Lcom/aspiro/wamp/model/Playlist;->getUuid()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-virtual {v2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :invalid
+
+    return-object v1
+
+    :invalid
+    const/4 v0, 0x0
+
+    return-object v0
+.end method
+
+.method public static install(Lcom/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView;Landroidx/recyclerview/widget/RecyclerView;)V
+    .locals 1
+
+    if-eqz p0, :done
+
+    if-eqz p1, :done
+
+    new-instance v0, Lradiant/gestures/queue/SearchPlaylistsResolver;
+
+    invoke-direct {v0, p0}, Lradiant/gestures/queue/SearchPlaylistsResolver;-><init>(Lcom/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView;)V
+
+    invoke-static {p1, v0}, Lradiant/gestures/queue/SwipeToQueue;->install(Landroidx/recyclerview/widget/RecyclerView;Lradiant/gestures/queue/QueueRowResolver;)V
+
+    :done
+    return-void
+.end method
+
+
+# virtual methods
+.method public execute(Lradiant/gestures/queue/QueueRequest;)V
+    .locals 7
+
+    iget v6, p1, Lradiant/gestures/queue/QueueRequest;->action:I
+
+    invoke-direct {p0, p1}, Lradiant/gestures/queue/SearchPlaylistsResolver;->current(Lradiant/gestures/queue/QueueRequest;)Lcf/b;    # MARKER: R8 Lcf/b;
+
+    move-result-object p1
+
+    if-eqz p1, :done
+
+    iget-object v0, p0, Lradiant/gestures/queue/SearchPlaylistsResolver;->fragment:Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v0}, Ljava/lang/ref/Reference;->get()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Lcom/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView;
+
+    if-eqz v0, :done
+
+    iget-object v1, v0, Lcom/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView;->c:Lzf/c;    # MARKER: R8 Lzf/c; c
+
+    if-eqz v1, :done
+
+    invoke-virtual {v0}, Landroidx/fragment/app/Fragment;->getContext()Landroid/content/Context;
+
+    move-result-object v2
+
+    iget-object v3, p1, Lcf/b;->a:Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lcf/b; a
+
+    new-instance v4, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
+
+    const-string v5, "mycollection_search_playlists"
+
+    invoke-direct {v4, v5}, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;-><init>(Ljava/lang/String;)V
+
+    iget-object p0, v1, Lzf/c;->c:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lzf/c; c
+
+    const/4 v0, 0x3
+
+    if-eq v6, v0, :add_to_playlist
+
+    const/4 v0, 0x1
+
+    if-ne v6, v0, :append
+
+    invoke-static {v2, v3, v4, p0}, Lradiant/gestures/queue/QueueExecutor;->playNextPlaylist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    goto :done
+
+    :append
+    invoke-static {v2, v3, v4, p0}, Lradiant/gestures/queue/QueueExecutor;->playlist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    goto :done
+
+    :add_to_playlist
+    invoke-static {v2, v3, v4, p0}, Lradiant/gestures/queue/QueueExecutor;->addToPlaylistPlaylist(Landroid/content/Context;Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V
+
+    :done
+    return-void
+.end method
+
+.method public resolve(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/gestures/queue/QueueRequest;
+    .locals 5
+
+    instance-of v0, p2, Lxf/d$a;    # MARKER: R8 Lxf/d$a;
+
+    if-eqz v0, :invalid
+
+    invoke-virtual {p2}, Landroidx/recyclerview/widget/RecyclerView$ViewHolder;->getBindingAdapterPosition()I
+
+    move-result p2
+
+    const/4 v0, -0x1
+
+    if-ne p2, v0, :has_position
+
+    goto :invalid
+
+    :has_position
+    invoke-virtual {p1}, Landroidx/recyclerview/widget/RecyclerView;->getAdapter()Landroidx/recyclerview/widget/RecyclerView$Adapter;
+
+    move-result-object p1
+
+    instance-of v0, p1, La50/d;    # MARKER: R8 La50/d;
+
+    if-eqz v0, :invalid
+
+    check-cast p1, La50/d;    # MARKER: R8 La50/d;
+
+    invoke-virtual {p1}, Landroidx/recyclerview/widget/ListAdapter;->getCurrentList()Ljava/util/List;
+
+    move-result-object p1
+
+    invoke-interface {p1}, Ljava/util/List;->size()I
+
+    move-result v0
+
+    if-lt p2, v0, :read_item
+
+    goto :invalid
+
+    :read_item
+    invoke-interface {p1, p2}, Ljava/util/List;->get(I)Ljava/lang/Object;
+
+    move-result-object p1
+
+    instance-of v0, p1, Lcf/b;    # MARKER: R8 Lcf/b;
+
+    if-eqz v0, :invalid
+
+    check-cast p1, Lcf/b;    # MARKER: R8 Lcf/b;
+
+    iget-boolean v0, p1, Lcf/b;->h:Z    # MARKER: R8 Lcf/b; h
+
+    if-eqz v0, :invalid
+
+    iget-boolean v0, p1, Lcf/b;->f:Z    # MARKER: R8 Lcf/b; f
+
+    if-eqz v0, :check_playlist
+
+    const-string v0, "NOT_READY"
+
+    iget-object v1, p1, Lcf/b;->g:Ljava/lang/String;    # MARKER: R8 Lcf/b; g
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :invalid
+
+    :check_playlist
+    iget-object v0, p1, Lcf/b;->a:Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lcf/b; a
+
+    invoke-virtual {v0}, Lcom/aspiro/wamp/model/Playlist;->getNumberOfItems()I
+
+    move-result v1
+
+    if-lez v1, :invalid
+
+    invoke-virtual {v0}, Lcom/aspiro/wamp/model/Playlist;->getUuid()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v1}, Ljava/lang/String;->hashCode()I
+
+    move-result v2
+
+    new-instance v3, Lradiant/gestures/queue/QueueRequest;
+
+    invoke-direct {v3, p2, v0, v2}, Lradiant/gestures/queue/QueueRequest;-><init>(ILjava/lang/Object;I)V
+
+    return-object v3
+
+    :invalid
+    const/4 p1, 0x0
+
+    return-object p1
+.end method

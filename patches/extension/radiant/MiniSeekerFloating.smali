@@ -1,7 +1,7 @@
 .class public final Lradiant/MiniSeekerFloating;
 .super Ljava/lang/Object;
 
-.implements Lam0/l;
+.implements Lam0/l;    # MARKER: R8 Lam0/l;
 
 
 # static fields
@@ -46,7 +46,7 @@
     .catch Ljava/lang/Throwable; {:try_start .. :try_end} :swallow
 
     :swallow
-    sget-object v0, Lkotlin/u;->a:Lkotlin/u;    # Unit
+    sget-object v0, Lkotlin/u;->a:Lkotlin/u;    # Unit  MARKER: R8 Lkotlin/u;
 
     return-object v0
 .end method

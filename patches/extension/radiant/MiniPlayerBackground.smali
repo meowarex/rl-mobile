@@ -48,7 +48,7 @@
 
     const/4 v4, 0x1
 
-    invoke-static {v0, v1, p2, v3, v4}, Landroidx/compose/runtime/SnapshotStateKt;->collectAsState(Lkotlinx/coroutines/flow/StateFlow;Lkotlin/coroutines/h;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;
+    invoke-static {v0, v1, p2, v3, v4}, Landroidx/compose/runtime/SnapshotStateKt;->collectAsState(Lkotlinx/coroutines/flow/StateFlow;Lkotlin/coroutines/h;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;    # MARKER: R8 Lkotlin/coroutines/h;
 
     move-result-object v0
 
@@ -91,7 +91,7 @@
 
     const/16 v7, 0x8
 
-    invoke-static/range {v0 .. v7}, Landroidx/compose/animation/SingleValueAnimationKt;->animateColorAsState-euL9pac(JLandroidx/compose/animation/core/AnimationSpec;Ljava/lang/String;Lam0/l;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;
+    invoke-static/range {v0 .. v7}, Landroidx/compose/animation/SingleValueAnimationKt;->animateColorAsState-euL9pac(JLandroidx/compose/animation/core/AnimationSpec;Ljava/lang/String;Lam0/l;Landroidx/compose/runtime/Composer;II)Landroidx/compose/runtime/State;    # MARKER: R8 Lam0/l;
 
     move-result-object v0
 

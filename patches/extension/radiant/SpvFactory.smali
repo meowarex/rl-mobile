@@ -1,6 +1,6 @@
 .class public final Lradiant/SpvFactory;
 .super Ljava/lang/Object;
-.implements Lam0/l;
+.implements Lam0/l;    # MARKER: R8 Lam0/l;
 
 
 # static fields

@@ -3,7 +3,7 @@
 .source "SourceFile"
 
 # interfaces
-.implements Lam0/p;
+.implements Lam0/p;    # MARKER: R8 Lam0/p;
 
 
 # virtual methods

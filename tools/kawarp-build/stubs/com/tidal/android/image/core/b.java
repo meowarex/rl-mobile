@@ -1,4 +1,5 @@
 package com.tidal.android.image.core;
+// MARKER: R8 whole class: TIDAL dex FQN is `com.tidal.android.image.core.b` - both package and name roll
 /** TIDAL's sealed image-source type; b$a is AlbumCover(albumId, coverUuid). */
 public abstract class b {
     public static final class a extends b { public a(String albumId, String cover) {} }

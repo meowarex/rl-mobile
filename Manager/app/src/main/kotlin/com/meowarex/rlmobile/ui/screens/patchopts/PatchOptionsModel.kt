@@ -238,7 +238,6 @@ class PatchOptionsModel(
 
     fun lockState(spec: PatchSpec): PatchLock {
         if (isBlockedByPackageName(spec)) return PatchLock.RequiresDefaultPackage
-        if (spec.variants.isNotEmpty()) return PatchLock.Free
 
         val byId = specs.associateBy { it.id }
         fun closure(seed: PatchSpec, step: (PatchSpec) -> List<PatchSpec>): Set<PatchSpec> =
@@ -254,7 +253,14 @@ class PatchOptionsModel(
             if (other.id == spec.id || !isPatchEnabled(other)) continue
 
             val requiresClosure = closure(other, requiresOf)
-            if (spec in requiresClosure - other) return PatchLock.LockedOn(other)
+            // A spec with variants is a multi-choice control, so there is no single state to
+            // force it *on* into - hence the exemption here. Forcing it *off* is unambiguous, so
+            // the disables check below still applies to it. Skipping both left LyricsRlApi and
+            // PlayerBackdrop tappable under Legacy UI even though setPatchEnabled had already
+            // switched them off, letting the user turn a patch back on that cannot work.
+            if (spec.variants.isEmpty() && spec in requiresClosure - other) {
+                return PatchLock.LockedOn(other)
+            }
 
             val disablesClosure = requiresClosure.flatMap { it.disables }
                 .mapNotNull(byId::get)

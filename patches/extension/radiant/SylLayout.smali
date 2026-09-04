@@ -2,7 +2,7 @@
 .super Ljava/lang/Object;
 
 # interfaces
-.implements Lam0/l;
+.implements Lam0/l;    # MARKER: R8 Lam0/l;
 
 # Remembers where each line's glyphs landed
 
@@ -31,7 +31,7 @@
 
 
 # One reusable callback per line
-.method public static cb(I)Lam0/l;
+.method public static cb(I)Lam0/l;    # MARKER: R8 Lam0/l;
     .locals 5
 
     if-gez p0, :have_idx
@@ -258,7 +258,7 @@
     aput-object p1, v1, v0
 
     :ret
-    sget-object v0, Lkotlin/u;->a:Lkotlin/u;
+    sget-object v0, Lkotlin/u;->a:Lkotlin/u;    # MARKER: R8 Lkotlin/u;
 
     return-object v0
 .end method

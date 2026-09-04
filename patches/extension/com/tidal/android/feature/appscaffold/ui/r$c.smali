@@ -1,12 +1,12 @@
-.class public final Lcom/tidal/android/feature/appscaffold/ui/r$c;
-.super Lcom/tidal/android/feature/appscaffold/ui/r;
+.class public final Lcom/tidal/android/feature/appscaffold/ui/r$c;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/r$c;
+.super Lcom/tidal/android/feature/appscaffold/ui/r;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/r;
 .source "SourceFile"
 
 # Synthetic mini-player event used by right swipe (previous/rewind).
 
 # annotations
 .annotation system Ldalvik/annotation/EnclosingClass;
-    value = Lcom/tidal/android/feature/appscaffold/ui/r;
+    value = Lcom/tidal/android/feature/appscaffold/ui/r;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/r;
 .end annotation
 
 .annotation system Ldalvik/annotation/InnerClass;
@@ -16,18 +16,18 @@
 
 
 # static fields
-.field public static final a:Lcom/tidal/android/feature/appscaffold/ui/r$c;
+.field public static final a:Lcom/tidal/android/feature/appscaffold/ui/r$c;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/r$c;
 
 
 # direct methods
 .method static constructor <clinit>()V
     .locals 1
 
-    new-instance v0, Lcom/tidal/android/feature/appscaffold/ui/r$c;
+    new-instance v0, Lcom/tidal/android/feature/appscaffold/ui/r$c;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/r$c;
 
-    invoke-direct {v0}, Lcom/tidal/android/feature/appscaffold/ui/r;-><init>()V
+    invoke-direct {v0}, Lcom/tidal/android/feature/appscaffold/ui/r;-><init>()V    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/r;
 
-    sput-object v0, Lcom/tidal/android/feature/appscaffold/ui/r$c;->a:Lcom/tidal/android/feature/appscaffold/ui/r$c;
+    sput-object v0, Lcom/tidal/android/feature/appscaffold/ui/r$c;->a:Lcom/tidal/android/feature/appscaffold/ui/r$c;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/r$c; a
 
     return-void
 .end method
@@ -44,7 +44,7 @@
     return v0
 
     :cond_0
-    instance-of p1, p1, Lcom/tidal/android/feature/appscaffold/ui/r$c;
+    instance-of p1, p1, Lcom/tidal/android/feature/appscaffold/ui/r$c;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/r$c;
 
     if-nez p1, :cond_1
 
