@@ -21,6 +21,7 @@ Every Patch & Integration can be disabled/enabled & adjusted exactly how you wan
 ### Integrations
 
 - Waze | Control TIDAL playback from Waze
+- Pebble Watch | Synced lyrics (Line, Word or Syllable) & playback controls on your Pebble
 
 ### Disclaimer
 

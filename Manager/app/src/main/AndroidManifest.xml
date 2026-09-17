@@ -43,6 +43,22 @@
         android:name=".installers.pm.PMIntentReceiver"
         android:exported="false" />
 
+    <!-- Pebble relay, bound by patched TIDAL -->
+    <service
+        android:name=".pebble.PebbleRelayService"
+        android:exported="true"
+        tools:ignore="ExportedService" />
+
+    <!-- Pebble watch messages -->
+    <service
+        android:name=".pebble.PebbleWatchListenerService"
+        android:exported="true"
+        tools:ignore="ExportedService">
+      <intent-filter>
+        <action android:name="io.rebble.pebblekit2.RECEIVE_DATA_FROM_WATCH" />
+      </intent-filter>
+    </service>
+
     <provider
         android:name="androidx.core.content.FileProvider"
         android:authorities="${applicationId}.provider"

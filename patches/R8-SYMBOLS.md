@@ -49,7 +49,15 @@ That script regenerates `extension/radiant/Kawarp.smali` and
 The Java side under `tools/kawarp-build/{src,stubs}` is not regenerated and keeps its
 markers.
 
-## 1. Rolled class references (268)
+## Gotcha: Pebble integration hooks
+
+`extension/radiant/PebbleBridge*.smali` is built by `tools/pebble-bridge-build/build.sh`.
+
+- `integration-pebble-playback.patch` hooks `bk0/e`, TIDAL's 200 ms position poller.
+  It holds `Lbk0/d;`, `ExoPlayer` and `Handler` and reposts with `0xc8`.
+- `integration-pebble-lyrics.patch` hooks our `RLAPILyricsWorker`, so no markers there.
+
+## 1. Rolled class references (270)
 
 | symbol | uses | referenced from |
 |---|---:|---|
@@ -298,6 +306,8 @@ markers.
 | `Lxf/d$a;` | 2 | `extension/radiant/gestures/queue/SearchPlaylistsResolver.smali` |
 | `La30/b;` | 1 | `player-favorite-heart.patch` |
 | `Landroidx/compose/foundation/text/input/a;` | 1 | `player-backdrop-playback.patch` |
+| `Lbk0/d;` | 1 | `integration-pebble-playback.patch` |
+| `Lbk0/e;` | 1 | `integration-pebble-playback.patch` |
 | `Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/n;` | 1 | `gestures/queue/swipe-to-queue.patch` |
 | `Lcom/aspiro/wamp/nowplaying/view/playqueue/l;` | 1 | `gestures/queue/swipe-to-queue.patch` |
 | `Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/a;` | 1 | `gestures/queue/swipe-to-queue.patch` |
@@ -676,12 +686,13 @@ The owner name survives R8; only the member name rolls. Match on the descriptor.
 | `Lz70/a;` | `c` | `:Lcom/aspiro/wamp/model/AvailabilityInteractor;` | 1 |
 | `Lzf/c;` | `c` | `:Lcom/tidal/android/navigation/NavigationInfo;` | 1 |
 
-## 3. Rolled patch target classes (64)
+## 3. Rolled patch target classes (65)
 
 `--- a/` headers naming an obfuscated class. If these move the hunk cannot even be located.
 
 | target | hooked by |
 |---|---|
+| `bk0/e.smali` | `integration-pebble-playback.patch` |
 | `cg0/h.smali` | `lyrics-rl-api-isrc.patch` |
 | `com/aspiro/wamp/mycollection/subpages/albums/myalbums/MyAlbumsView.smali` | `gestures/queue/swipe-to-queue.patch` |
 | `com/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView.smali` | `gestures/queue/swipe-to-queue.patch` |
@@ -747,7 +758,7 @@ The owner name survives R8; only the member name rolls. Match on the descriptor.
 | `p7/a.smali` | `gestures/queue/swipe-to-queue.patch` |
 | `v6/e.smali` | `gestures/queue/swipe-to-queue.patch` |
 
-## 4. Occurrences inside .patch files - not marked inline (220)
+## 4. Occurrences inside .patch files - not marked inline (221)
 
 | file | line | kind | symbols |
 |---|---:|---|---|
@@ -883,6 +894,7 @@ The owner name survives R8; only the member name rolls. Match on the descriptor.
 | `gestures/queue/swipe-to-queue.patch` | 469 | context | `Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b; Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a; a` |
 | `gestures/queue/swipe-to-queue.patch` | 482 | context | `Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b; Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a; a` |
 | `gestures/queue/swipe-to-queue.patch` | 500 | context | `Lcom/aspiro/wamp/nowplaying/view/suggestions/o0; Lcom/aspiro/wamp/nowplaying/view/suggestions/l; M` |
+| `integration-pebble-playback.patch` | 30 | context | `Lbk0/d; Lbk0/e;` |
 | `integration-waze-playback.patch` | 9 | added | `Lkotlin/jvm/internal/n;` |
 | `integration-waze-playback.patch` | 17 | added | `Lkotlin/jvm/internal/n;` |
 | `integration-waze-playback.patch` | 35 | added | `Lkotlin/jvm/internal/n;` |

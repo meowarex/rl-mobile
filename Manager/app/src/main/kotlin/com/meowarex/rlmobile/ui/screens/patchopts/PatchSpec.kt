@@ -34,6 +34,8 @@ data class PatchSpec(
     val advancedOptions: List<OptionSpec> = emptyList(),
     val category: String = CATEGORY_PATCH,
     val pathLocked: Boolean = false,
+    /** Watchapp shown under an integration. */
+    val companionApp: CompanionAppSpec? = null,
 ) {
     val isIntegration: Boolean get() = category == CATEGORY_INTEGRATION
 
@@ -42,6 +44,17 @@ data class PatchSpec(
         const val CATEGORY_INTEGRATION = "integration"
     }
 }
+
+@Immutable
+@Serializable
+data class CompanionAppSpec(
+    val installTitle: String = "",
+    val customizeTitle: String = "",
+    /** Pebble appstore id. */
+    val storeId: String? = null,
+    /** Appstore feed url. */
+    val storeSource: String? = null,
+)
 
 @Immutable
 @Serializable
