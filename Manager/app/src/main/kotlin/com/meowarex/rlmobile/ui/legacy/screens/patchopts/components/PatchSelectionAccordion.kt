@@ -22,13 +22,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.pebble.PebbleWatchapp
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchLock
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionState
@@ -135,7 +140,9 @@ fun PatchSelectionAccordion(
 
                     val inlineOptions = patch.advancedOptions.filter { it.isInline }
                     val hasSheetOptions = patch.advancedOptions.any { !it.isInline }
-                    val hasSettings = patch.variants.isNotEmpty() || inlineOptions.isNotEmpty() || hasSheetOptions
+                    val companionApp = patch.companionApp
+                    val hasSettings = patch.variants.isNotEmpty() || inlineOptions.isNotEmpty() || hasSheetOptions ||
+                        companionApp != null
 
                     // When a patch is enabled and has settings show a carded view of the settings
                     val carded = checked && hasSettings
@@ -238,6 +245,56 @@ fun PatchSelectionAccordion(
                                                 modified = optionState.isModified(patch),
                                                 onClick = { advancedFor = patch },
                                             )
+                                        }
+                                    }
+
+                                    if (companionApp != null) {
+                                        val context = LocalContext.current
+                                        val lifecycleOwner = LocalLifecycleOwner.current
+                                        var installState by remember { mutableStateOf(PebbleWatchapp.InstallState.Unknown) }
+                                        // Recheck on resume
+                                        LaunchedEffect(lifecycleOwner) {
+                                            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                                                installState = PebbleWatchapp.installState(context)
+                                            }
+                                        }
+                                        val installed = installState == PebbleWatchapp.InstallState.Installed
+                                        Row(
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                                            modifier = Modifier.fillMaxWidth(),
+                                        ) {
+                                            FilledTonalButton(
+                                                onClick = { PebbleWatchapp.install(context, companionApp) },
+                                                enabled = !installed && PebbleWatchapp.canInstall(companionApp),
+                                                modifier = Modifier.weight(1f),
+                                            ) {
+                                                Icon(
+                                                    painter = painterResource(if (installed) R.drawable.ic_check_circle else R.drawable.ic_download),
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(18.dp),
+                                                )
+                                                Spacer(Modifier.width(8.dp))
+                                                Text(
+                                                    if (installed) {
+                                                        stringResource(R.string.patchopts_companion_installed)
+                                                    } else {
+                                                        companionApp.installTitle.ifBlank { stringResource(R.string.patchopts_companion_install) }
+                                                    }
+                                                )
+                                            }
+                                            FilledTonalButton(
+                                                onClick = { PebbleWatchapp.openSettings(context) },
+                                                enabled = installed,
+                                                modifier = Modifier.weight(1f),
+                                            ) {
+                                                Icon(
+                                                    painter = painterResource(R.drawable.ic_tune),
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(18.dp),
+                                                )
+                                                Spacer(Modifier.width(8.dp))
+                                                Text(companionApp.customizeTitle.ifBlank { stringResource(R.string.patchopts_companion_customize) })
+                                            }
                                         }
                                     }
                                 }

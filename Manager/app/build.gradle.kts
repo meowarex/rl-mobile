@@ -190,6 +190,7 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.shizuku)
     implementation(libs.bundles.voyager)
+    implementation(libs.pebblekit2.client)
 
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)

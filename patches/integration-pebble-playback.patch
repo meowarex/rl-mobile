@@ -1,0 +1,31 @@
+--- a/com/aspiro/wamp/player/MusicService.smali
++++ b/com/aspiro/wamp/player/MusicService.smali
+@@ -1495,6 +1495,8 @@
+     .line 36
+     invoke-virtual {p1, v0}, Landroid/support/v4/media/session/MediaSessionCompat;->setPlaybackState(Landroid/support/v4/media/session/PlaybackStateCompat;)V
+ 
++    invoke-static {p0, p1}, Lradiant/PebbleBridge;->onState(Landroid/content/Context;Landroid/support/v4/media/session/MediaSessionCompat;)V
++
+     .line 37
+     .line 38
+     .line 39
+@@ -2669,6 +2671,8 @@
+     .line 1
+     invoke-super {p0}, Landroidx/media/MediaBrowserServiceCompat;->onDestroy()V
+ 
++    invoke-static {}, Lradiant/PebbleBridge;->onDestroy()V
++
+     .line 2
+     .line 3
+     .line 4
+--- a/bk0/e.smali
++++ b/bk0/e.smali
+@@ -56,6 +56,8 @@
+     .line 6
+     move-result-wide v0
+ 
++    invoke-static {v0, v1}, Lradiant/PebbleBridge;->onPosition(J)V
++
+     .line 7
+     iget-object v2, p0, Lbk0/e;->a:Lbk0/d;
+ 

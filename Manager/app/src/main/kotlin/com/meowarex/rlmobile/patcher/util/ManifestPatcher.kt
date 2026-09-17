@@ -21,6 +21,8 @@ object ManifestPatcher {
     private const val WAZE_PACKAGE = "com.waze"
     private const val WAZE_INIT_RECEIVER = "radiant.WazeInitReceiver"
     private const val WAZE_ACTION_INIT = "com.waze.sdk.audio.ACTION_INIT"
+    // Pebble bridge binds to the Manager
+    private const val MANAGER_PACKAGE = "com.meowarex.rlmobile"
 
     fun patchManifest(
         manifestBytes: ByteArray,
@@ -28,6 +30,7 @@ object ManifestPatcher {
         appName: String,
         debuggable: Boolean,
         enableWazeIntegration: Boolean,
+        enablePebbleIntegration: Boolean,
     ): ByteArray {
         // Extract original package name to rewrite every reference to it
         // (permissions, provider authorities) to the new packageName.
@@ -90,11 +93,12 @@ object ManifestPatcher {
                         return when (name) {
                             "queries" -> object : NodeVisitor(nv) {
                                 private var hasWazePackage = false
+                                private var hasManagerPackage = false
 
                                 override fun child(ns: String?, name: String): NodeVisitor {
                                     val visitor = super.child(ns, name)
 
-                                    return if (enableWazeIntegration && name == "package") {
+                                    return if ((enableWazeIntegration || enablePebbleIntegration) && name == "package") {
                                         object : NodeVisitor(visitor) {
                                             override fun attr(
                                                 ns: String?,
@@ -105,6 +109,9 @@ object ManifestPatcher {
                                             ) {
                                                 if (name == "name" && value == WAZE_PACKAGE) {
                                                     hasWazePackage = true
+                                                }
+                                                if (name == "name" && value == MANAGER_PACKAGE) {
+                                                    hasManagerPackage = true
                                                 }
                                                 super.attr(ns, name, resourceId, type, value)
                                             }
@@ -123,6 +130,18 @@ object ManifestPatcher {
                                                 android.R.attr.name,
                                                 TYPE_STRING,
                                                 WAZE_PACKAGE,
+                                            )
+                                            end()
+                                        }
+                                    }
+                                    if (enablePebbleIntegration && !hasManagerPackage) {
+                                        super.child(null, "package").apply {
+                                            attr(
+                                                ANDROID_NAMESPACE,
+                                                "name",
+                                                android.R.attr.name,
+                                                TYPE_STRING,
+                                                MANAGER_PACKAGE,
                                             )
                                             end()
                                         }

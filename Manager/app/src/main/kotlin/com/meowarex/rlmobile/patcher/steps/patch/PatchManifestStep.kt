@@ -29,6 +29,9 @@ class PatchManifestStep(private val options: PatchOptions) : Step() {
         val wazeDefault = container.getStep<SmaliPatchStep>().specs
             .firstOrNull { it.id == "WazeIntegration" }?.defaultEnabled ?: false
         val enableWazeIntegration = options.patchStates["WazeIntegration"] ?: wazeDefault
+        val pebbleDefault = container.getStep<SmaliPatchStep>().specs
+            .firstOrNull { it.id == "PebbleIntegration" }?.defaultEnabled ?: false
+        val enablePebbleIntegration = options.patchStates["PebbleIntegration"] ?: pebbleDefault
 
         val patchedManifest = ManifestPatcher.patchManifest(
             manifestBytes = manifest,
@@ -36,6 +39,7 @@ class PatchManifestStep(private val options: PatchOptions) : Step() {
             appName = options.appName,
             debuggable = options.debuggable,
             enableWazeIntegration = enableWazeIntegration,
+            enablePebbleIntegration = enablePebbleIntegration,
         )
 
         container.log("Repacking apk with patched manifest")

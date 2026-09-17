@@ -781,6 +781,30 @@
       ]
     },
     {
+      "id": "PebbleIntegration",
+      "order": 91,
+      "category": "integration",
+      "fileNames": [
+        "integration-pebble-playback.patch",
+        "integration-pebble-lyrics.patch"
+      ],
+      "extensionFiles": [
+        "radiant/PebbleBridge.smali",
+        "radiant/PebbleBridge$1.smali",
+        "radiant/PebbleBridge$2.smali"
+      ],
+      "title": "Pebble Watch",
+      "description": "Shows synced lyrics on your Pebble Time 2 when listening, Everything is configured and managed in the Pebble App",
+      "default": false,
+      "requires": [
+        "LyricsRlApi"
+      ],
+      "companionApp": {
+        "storeId": "02b779dcf9084fecb0375df1",
+        "storeSource": "https://appstore-api.repebble.com/api"
+      }
+    },
+    {
       "id": "DebugMenuUnlock",
       "order": 100,
       "fileNames": [
