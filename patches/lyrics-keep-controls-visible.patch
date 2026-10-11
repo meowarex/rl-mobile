@@ -11,7 +11,7 @@
      .line 28
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerViewModel.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerViewModel.smali
-@@ -1382,6 +1382,19 @@
+@@ -1467,6 +1467,19 @@
      .line 109
      .line 110
      move-result v1

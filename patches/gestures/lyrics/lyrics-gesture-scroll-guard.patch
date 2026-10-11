@@ -1,6 +1,6 @@
 --- a/com/tidal/android/feature/playerscreen/ui/composables/LyricsKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/composables/LyricsKt.smali
-@@ -6107,6 +6107,10 @@
+@@ -3856,6 +3856,10 @@
  
      move-object v15, v10
  
@@ -9,5 +9,5 @@
 +    move-result-object v15
 +
      .line 61
-     invoke-static/range {v15 .. v27}, Landroidx/compose/foundation/lazy/LazyDslKt;->LazyColumn(Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/foundation/layout/PaddingValues;ZLandroidx/compose/foundation/layout/Arrangement$Vertical;Landroidx/compose/ui/Alignment$Horizontal;Landroidx/compose/foundation/gestures/FlingBehavior;ZLandroidx/compose/foundation/OverscrollEffect;Lam0/l;Landroidx/compose/runtime/Composer;II)V
+     invoke-static/range {v15 .. v27}, Landroidx/compose/foundation/lazy/LazyDslKt;->LazyColumn(Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/foundation/layout/PaddingValues;ZLandroidx/compose/foundation/layout/Arrangement$Vertical;Landroidx/compose/ui/Alignment$Horizontal;Landroidx/compose/foundation/gestures/FlingBehavior;ZLandroidx/compose/foundation/OverscrollEffect;Lyl0/l;Landroidx/compose/runtime/Composer;II)V
  

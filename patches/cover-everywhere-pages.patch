@@ -1,0 +1,49 @@
+--- a/com/tidal/wave/components/WaveScaffoldKt.smali
++++ b/com/tidal/wave/components/WaveScaffoldKt.smali
+@@ -647,4 +647,10 @@
+     move-result-wide v25
+ 
++    const-wide/16 v25, 0x0    # Transparent background for backdrop
++
++    const/4 v0, 0x0    # render $changed flag
++
++    invoke-static {v1, v0}, Lradiant/HomeBackdrop;->render(Landroidx/compose/runtime/Composer;I)V    # render album-art backdrop
++
+     .line 267
+     new-instance v0, Lcom/tidal/wave/components/WaveScaffoldKt$WaveScaffold$2;
+--- a/com/tidal/android/feature/saveforlater/ui/n.smali
++++ b/com/tidal/android/feature/saveforlater/ui/n.smali
+@@ -174,4 +174,10 @@
+     move-result-wide v7
+ 
++    const-wide/16 v7, 0x0    # Transparent background for backdrop
++
++    const/4 v5, 0x0    # render $changed flag
++
++    invoke-static {v13, v5}, Lradiant/HomeBackdrop;->render(Landroidx/compose/runtime/Composer;I)V    # render album-art backdrop
++
+     .line 66
+     new-instance v2, Lcom/tidal/android/feature/saveforlater/ui/p;
+--- a/com/tidal/android/feature/search/ui/composables/SearchScreenKt.smali
++++ b/com/tidal/android/feature/search/ui/composables/SearchScreenKt.smali
+@@ -396,6 +396,10 @@
+     :cond_9
+     check-cast v4, Lyl0/l;
+ 
++    const/4 v1, 0x0    # render $changed flag
++
++    invoke-static {v6, v1}, Lradiant/HomeBackdrop;->render(Landroidx/compose/runtime/Composer;I)V    # Backdrop behind Search
++
+     .line 177
+     .line 178
+     invoke-static {v0, v4, v6, v10}, Lcom/tidal/android/feature/search/ui/composables/SearchScreenKt;->b(Lcom/tidal/android/feature/search/ui/d;Lyl0/l;Landroidx/compose/runtime/Composer;I)V
+--- a/qa/b.smali
++++ b/qa/b.smali
+@@ -126,5 +126,7 @@
+     if-eqz p2, :cond_2
+ 
++    invoke-static {p1, v2}, Lradiant/HomeBackdrop;->render(Landroidx/compose/runtime/Composer;I)V    # Backdrop behind View All
++
+     .line 46
+     .line 47
+     invoke-static {p2, p1, v2}, Lcom/tidal/android/feature/viewall/ui/ViewAllScreenKt;->f(Lcom/tidal/android/feature/viewall/ui/g;Landroidx/compose/runtime/Composer;I)V

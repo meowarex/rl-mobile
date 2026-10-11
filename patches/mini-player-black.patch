@@ -18,22 +18,22 @@
  
      .line 70
      .line 71
---- a/com/tidal/android/feature/appscaffold/ui/composable/i.smali
-+++ b/com/tidal/android/feature/appscaffold/ui/composable/i.smali
-@@ -2275,11 +2275,7 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/k.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/k.smali
+@@ -2283,11 +2283,7 @@
  
-     move-result-object v2
+     move-result-object v1
  
 -    .line 143
--    invoke-static {v2}, Landroidx/compose/foundation/layout/WindowInsetsPadding_androidKt;->navigationBarsPadding(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
+-    invoke-static {v1}, Landroidx/compose/foundation/layout/WindowInsetsPadding_androidKt;->navigationBarsPadding(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
 -
--    move-result-object v2
+-    move-result-object v1
 -
 +    # flush bottom; skip nav inset
      .line 144
      invoke-interface/range {v21 .. v21}, Landroidx/compose/runtime/State;->getValue()Ljava/lang/Object;
  
-@@ -2291,6 +2287,8 @@
+@@ -2299,6 +2295,8 @@
  
      move-result v4
  
@@ -42,38 +42,38 @@
      const/4 v6, 0x2
  
      .line 145
-@@ -2334,6 +2332,12 @@
+@@ -2342,6 +2340,12 @@
  
-     move-result-wide v3
+     move-result-wide v2
  
-+    const v5, -0x1000000    # 0xFF000000 opaque black
++    const v4, -0x1000000    # 0xFF000000 opaque black
 +
-+    invoke-static {v5}, Landroidx/compose/ui/graphics/ColorKt;->Color(I)J    # pack to color long
++    invoke-static {v4}, Landroidx/compose/ui/graphics/ColorKt;->Color(I)J    # pack to color long
 +
-+    move-result-wide v3    # override theme color
++    move-result-wide v2    # override theme color
 +
      .line 150
-     sget-object v5, Lcom/tidal/android/feature/appscaffold/ui/composable/a;->c:Landroidx/compose/foundation/shape/RoundedCornerShape;
+     sget-object v4, Lcom/tidal/android/feature/appscaffold/ui/composable/a;->c:Landroidx/compose/foundation/shape/RoundedCornerShape;
  
-@@ -2375,6 +2379,10 @@
+@@ -2383,6 +2387,10 @@
  
-     move-result-object v2
+     move-result-object v1
  
-+    invoke-static {v2}, Landroidx/compose/foundation/layout/WindowInsetsPadding_androidKt;->navigationBarsPadding(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;    # inset bar content above nav bar (Prevents Bleeding behind Nav Buttons)
++    invoke-static {v1}, Landroidx/compose/foundation/layout/WindowInsetsPadding_androidKt;->navigationBarsPadding(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;    # inset bar content above nav bar (Prevents Bleeding behind Nav Buttons)
 +
-+    move-result-object v2
++    move-result-object v1
 +
      .line 158
-     sget-object v3, Landroidx/compose/foundation/layout/Arrangement;->INSTANCE:Landroidx/compose/foundation/layout/Arrangement;
+     sget-object v2, Landroidx/compose/foundation/layout/Arrangement;->INSTANCE:Landroidx/compose/foundation/layout/Arrangement;
  
-@@ -2487,6 +2495,10 @@
+@@ -2495,6 +2503,10 @@
  
-     invoke-static {v6, v2, v3}, Landroidx/compose/runtime/Updater;->set-impl(Landroidx/compose/runtime/Composer;Ljava/lang/Object;Lam0/p;)V
+     invoke-static {v5, v1, v2}, Landroidx/compose/runtime/Updater;->set-impl(Landroidx/compose/runtime/Composer;Ljava/lang/Object;Lyl0/p;)V
  
 +    const/4 v8, 0x0    # composer $changed flags
 +
 +    invoke-static {v7, v8}, Lradiant/MiniSeekerLine;->render(Landroidx/compose/runtime/Composer;I)V    # draw top-edge seeker
 +
      .line 175
-     sget-object v2, Landroidx/compose/foundation/layout/ColumnScopeInstance;->INSTANCE:Landroidx/compose/foundation/layout/ColumnScopeInstance;
+     sget-object v1, Landroidx/compose/foundation/layout/ColumnScopeInstance;->INSTANCE:Landroidx/compose/foundation/layout/ColumnScopeInstance;
  

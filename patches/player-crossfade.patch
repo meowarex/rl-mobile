@@ -1,0 +1,15 @@
+--- a/nm/c.smali
++++ b/nm/c.smali
+@@ -28,10 +28,10 @@
+     .line 2
+     .line 3
+-    const-string v1, "mf-player-crossfade"
++    const-string v1, "mf-player-crossfade-rl-forced-on"    # Rename key so default wins
+ 
+     .line 4
+     .line 5
+-    const/4 v2, 0x0
++    const/4 v2, 0x1    # default enabled
+ 
+     .line 6
+     const-string v3, "Player Crossfade Enabled"

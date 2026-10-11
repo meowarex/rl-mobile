@@ -9,12 +9,12 @@ import kotlinx.coroutines.CoroutineDispatcher;
  */
 public final class b {
     public CoroutineDispatcher a, b, c, d;
-    public d0.c.a e;  // MARKER: R8 d0.c.a
+    public e0.c.a e;  // MARKER: R8 e0.c.a
     public coil.size.Precision f;
     public android.graphics.Bitmap.Config g;
     public boolean h;
     public CachePolicy i, j, k;
     public b(CoroutineDispatcher a, CoroutineDispatcher b, CoroutineDispatcher c, CoroutineDispatcher d,
-             d0.c.a transition, coil.size.Precision precision, android.graphics.Bitmap.Config config,  // MARKER: R8 d0.c.a
+             e0.c.a transition, coil.size.Precision precision, android.graphics.Bitmap.Config config,  // MARKER: R8 e0.c.a
              boolean h, CachePolicy memory, CachePolicy disk, CachePolicy network) {}
 }

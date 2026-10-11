@@ -3,7 +3,7 @@
 .source "ComposeSwipeAction.smali"
 
 # interfaces
-.implements Lam0/a;    # MARKER: R8 Lam0/a;
+.implements Lyl0/a;    # MARKER: R8 Lyl0/a;
 
 
 # virtual methods

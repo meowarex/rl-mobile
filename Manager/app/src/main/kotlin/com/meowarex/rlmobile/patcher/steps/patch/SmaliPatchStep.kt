@@ -369,7 +369,8 @@ class SmaliPatchStep(
         if (matchesAt(target, sourceLines, hint)) return hint
 
         // Walk outward from the hint, alternating below/above, until finds a unique match.
-        val maxRadius = target.size
+        // Also reach hints past the end of the file
+        val maxRadius = maxOf(target.size, hint)
         for (offset in 1..maxRadius) {
             val below = hint + offset
             if (below + sourceLines.size <= target.size && matchesAt(target, sourceLines, below)) {

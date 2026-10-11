@@ -1,36 +1,25 @@
 --- a/com/tidal/android/feature/playerscreen/ui/composables/SeekbarAndTimeKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/composables/SeekbarAndTimeKt.smali
-@@ -372,6 +372,10 @@
-     .line 158
-     sget v4, Lcom/tidal/android/feature/playerscreen/ui/composables/t4;->g:F
- 
-+    const/high16 v11, 0x40000000    # 2.0f
-+
-+    mul-float/2addr v4, v11  # scale atmos icon 2x as it is too small in stock app
-+
-     .line 159
-     .line 160
-     invoke-static {v2, v4}, Landroidx/compose/foundation/layout/SizeKt;->height-3ABfNKs(Landroidx/compose/ui/Modifier;F)Landroidx/compose/ui/Modifier;
-@@ -461,6 +465,8 @@
-     .line 200
+@@ -445,6 +445,8 @@
+     .line 192
      check-cast v3, Lcom/tidal/android/feature/playerscreen/ui/i$a;
  
 +    iget v13, v3, Lcom/tidal/android/feature/playerscreen/ui/i$a;->b:I
 +
-     .line 201
-     .line 202
+     .line 193
+     .line 194
      iget-object v3, v3, Lcom/tidal/android/feature/playerscreen/ui/i$a;->a:Ljava/lang/String;
-@@ -481,6 +487,16 @@
+@@ -481,6 +483,16 @@
      .line 210
      move-object v1, v3
  
-+    invoke-static {v2, v13}, Lradiant/QualityBadge;->modifier(Landroidx/compose/ui/Modifier;I)Landroidx/compose/ui/Modifier;
++    invoke-static {v6, v13}, Lradiant/QualityBadge;->modifier(Landroidx/compose/ui/Modifier;I)Landroidx/compose/ui/Modifier;
 +
-+    move-result-object v2
++    move-result-object v6
 +
 +    move-object/from16 v3, p1
 +
-+    invoke-static {v13, v3}, Lradiant/QualityBadge;->style(ILq20/c2;)Lq20/c2;
++    invoke-static {v13, v3}, Lradiant/QualityBadge;->style(ILw10/c2;)Lw10/c2;
 +
 +    move-result-object v8
 +

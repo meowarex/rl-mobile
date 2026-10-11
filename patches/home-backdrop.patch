@@ -1,16 +1,16 @@
---- a/com/tidal/android/feature/home/ui/k.smali
-+++ b/com/tidal/android/feature/home/ui/k.smali
-@@ -424,7 +424,7 @@
+--- a/com/tidal/android/feature/home/ui/j.smali
++++ b/com/tidal/android/feature/home/ui/j.smali
+@@ -427,7 +427,7 @@
      const/4 v6, 0x0
  
-     .line 181
--    move-wide v7, v8
+     .line 182
+-    move-wide v7, v9
 +    const-wide/16 v7, 0x0    # transparent containerColor
  
-     .line 182
+     .line 183
      const-wide/16 v9, 0x0
---- a/com/tidal/android/feature/home/ui/o.smali
-+++ b/com/tidal/android/feature/home/ui/o.smali
+--- a/com/tidal/android/feature/home/ui/m.smali
++++ b/com/tidal/android/feature/home/ui/m.smali
 @@ -187,6 +187,10 @@
      .line 61
      .line 62
@@ -22,8 +22,8 @@
      invoke-interface {p1}, Landroidx/compose/foundation/layout/PaddingValues;->calculateTopPadding-D9Ej5fM()F
  
      .line 63
---- a/com/tidal/android/feature/home/ui/composables/g.smali
-+++ b/com/tidal/android/feature/home/ui/composables/g.smali
+--- a/com/tidal/android/feature/home/ui/composables/f.smali
++++ b/com/tidal/android/feature/home/ui/composables/f.smali
 @@ -790,6 +790,8 @@
      .line 104
      move-result-wide v14

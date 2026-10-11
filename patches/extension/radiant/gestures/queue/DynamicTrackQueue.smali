@@ -39,17 +39,17 @@
 
     if-lez v4, :done
 
-    invoke-virtual {p0, v1}, Li60/c;->c(Ljava/lang/String;)Lc60/h;    # MARKER: R8 Li60/c; Lc60/h; c
+    invoke-virtual {p0, v1}, Lq50/c;->c(Ljava/lang/String;)Li50/j;    # MARKER: R8 Lq50/c; Li50/j; c
 
     move-result-object v4
 
-    instance-of v5, v4, Lc60/b0;    # MARKER: R8 Lc60/b0;
+    instance-of v5, v4, Li50/e0;    # MARKER: R8 Li50/e0;
 
     if-eqz v5, :done
 
-    check-cast v4, Lc60/b0;    # MARKER: R8 Lc60/b0;
+    check-cast v4, Li50/e0;    # MARKER: R8 Li50/e0;
 
-    iget-object v5, v4, Lc60/b0;->b:Ljava/lang/String;    # MARKER: R8 Lc60/b0; b
+    iget-object v5, v4, Li50/e0;->b:Ljava/lang/String;    # MARKER: R8 Li50/e0; b
 
     invoke-virtual {v1, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
@@ -57,7 +57,7 @@
 
     if-eqz v1, :done
 
-    iget-object v1, v4, Lc60/b0;->f:Ljava/util/ArrayList;    # MARKER: R8 Lc60/b0; f
+    iget-object v1, v4, Li50/e0;->f:Ljava/util/ArrayList;    # MARKER: R8 Li50/e0; f
 
     if-eqz v1, :done
 
@@ -76,21 +76,21 @@
 
     move-result-object v5
 
-    instance-of v6, v5, Lc60/r$b;    # MARKER: R8 Lc60/r$b;
+    instance-of v6, v5, Li50/u$b;    # MARKER: R8 Li50/u$b;
 
     if-eqz v6, :find_track
 
-    check-cast v5, Lc60/r$b;    # MARKER: R8 Lc60/r$b;
+    check-cast v5, Li50/u$b;    # MARKER: R8 Li50/u$b;
 
-    iget-object v5, v5, Lc60/r$b;->a:Lh40/n;    # MARKER: R8 Lc60/r$b; Lh40/n; a
+    iget-object v5, v5, Li50/u$b;->a:Ln30/o;    # MARKER: R8 Li50/u$b; Ln30/o; a
 
-    instance-of v6, v5, Lh40/p;    # MARKER: R8 Lh40/p;
+    instance-of v6, v5, Ln30/p;    # MARKER: R8 Ln30/p;
 
     if-eqz v6, :find_track
 
-    check-cast v5, Lh40/p;    # MARKER: R8 Lh40/p;
+    check-cast v5, Ln30/p;    # MARKER: R8 Ln30/p;
 
-    iget-wide v6, v5, Lh40/p;->a:J    # MARKER: R8 Lh40/p; a
+    iget-wide v6, v5, Ln30/p;->a:J    # MARKER: R8 Ln30/p; a
 
     cmp-long v6, v6, v2
 
@@ -112,13 +112,13 @@
 
     if-eqz v1, :done
 
-    invoke-static {v5}, Lie0/i;->a(Lh40/p;)Lcom/aspiro/wamp/model/Track;    # MARKER: R8 Lie0/i; Lh40/p; a
+    invoke-static {v5}, Lae0/i;->c(Ln30/p;)Lcom/aspiro/wamp/model/Track;    # MARKER: R8 Lae0/i; Ln30/p; a
 
     move-result-object v7
 
     if-eqz v7, :done
 
-    iget-object v2, v4, Lc60/b0;->a:Ljava/lang/String;    # MARKER: R8 Lc60/b0; a
+    iget-object v2, v4, Li50/e0;->a:Ljava/lang/String;    # MARKER: R8 Li50/e0; a
 
     if-eqz v2, :done
 
@@ -130,7 +130,7 @@
 
     new-instance v8, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
 
-    iget v3, v4, Lc60/b0;->e:I    # MARKER: R8 Lc60/b0; e
+    iget v3, v4, Li50/e0;->e:I    # MARKER: R8 Li50/e0; e
 
     invoke-static {v3}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
 
@@ -144,11 +144,11 @@
 
     move-result-object v2
 
-    iget-object v3, v4, Lc60/b0;->c:Ljava/lang/String;    # MARKER: R8 Lc60/b0; c
+    iget-object v3, v4, Li50/e0;->c:Ljava/lang/String;    # MARKER: R8 Li50/e0; c
 
     if-eqz v3, :done
 
-    iget-object v10, v4, Lc60/b0;->g:Ljava/lang/String;    # MARKER: R8 Lc60/b0; g
+    iget-object v10, v4, Li50/e0;->g:Ljava/lang/String;    # MARKER: R8 Li50/e0; g
 
     invoke-static {v10}, Lcom/aspiro/wamp/playqueue/source/model/ItemSource$NavigationType$a;->a(Ljava/lang/String;)Lcom/aspiro/wamp/playqueue/source/model/ItemSource$NavigationType;    # MARKER: R8 a
 

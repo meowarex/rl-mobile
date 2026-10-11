@@ -7,7 +7,7 @@
 
 
 # instance fields
-.field private final callback:Lam0/l;    # MARKER: R8 Lam0/l;
+.field private final callback:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
 .field private context:Landroid/content/Context;
 
@@ -19,18 +19,18 @@
 
 
 # direct methods
-.method public constructor <init>(Lam0/l;Ljava/lang/String;Ljava/lang/String;Lm40/e$e;)V    # MARKER: R8 Lam0/l; Lm40/e$e;
+.method public constructor <init>(Lyl0/l;Ljava/lang/String;Ljava/lang/String;Ls30/e$e;)V    # MARKER: R8 Lyl0/l; Ls30/e$e;
     .locals 2
 
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
-    iput-object p1, p0, Lradiant/gestures/queue/ArtistTrackCreditsQueueAction;->callback:Lam0/l;    # MARKER: R8 Lam0/l;
+    iput-object p1, p0, Lradiant/gestures/queue/ArtistTrackCreditsQueueAction;->callback:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     iput-object p2, p0, Lradiant/gestures/queue/ArtistTrackCreditsQueueAction;->pageId:Ljava/lang/String;
 
     iput-object p3, p0, Lradiant/gestures/queue/ArtistTrackCreditsQueueAction;->moduleUuid:Ljava/lang/String;
 
-    iget-wide v0, p4, Lm40/e$e;->a:J    # MARKER: R8 Lm40/e$e; a
+    iget-wide v0, p4, Ls30/e$e;->a:J    # MARKER: R8 Ls30/e$e; a
 
     iput-wide v0, p0, Lradiant/gestures/queue/ArtistTrackCreditsQueueAction;->trackId:J
 
@@ -60,7 +60,7 @@
 
     iget-object v4, p0, Lradiant/gestures/queue/ArtistTrackCreditsQueueAction;->moduleUuid:Ljava/lang/String;
 
-    invoke-direct {v0, v1, v2, v3, v4}, Lcom/tidal/android/dynamicpages/ui/modules/artisttrackcredits/b$a;-><init>(JLjava/lang/String;Ljava/lang/String;)V    # MARKER: R8 Lcom/tidal/android/dynamicpages/ui/modules/artisttrackcredits/b$a;
+    invoke-direct {v0, v3, v4, v1, v2}, Lcom/tidal/android/dynamicpages/ui/modules/artisttrackcredits/b$a;-><init>(Ljava/lang/String;Ljava/lang/String;J)V    # MARKER: R8 Lcom/tidal/android/dynamicpages/ui/modules/artisttrackcredits/b$a;
 
     goto :emit
 
@@ -82,9 +82,9 @@
     invoke-direct/range {v0 .. v6}, Lradiant/gestures/queue/ArtistTrackCreditsQueueEvent;-><init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;JI)V
 
     :emit
-    iget-object v7, p0, Lradiant/gestures/queue/ArtistTrackCreditsQueueAction;->callback:Lam0/l;    # MARKER: R8 Lam0/l;
+    iget-object v7, p0, Lradiant/gestures/queue/ArtistTrackCreditsQueueAction;->callback:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
-    invoke-interface {v7, v0}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lam0/l;
+    invoke-interface {v7, v0}, Lyl0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lyl0/l;
 
     :done
     sget-object v0, Lkotlin/u;->a:Lkotlin/u;    # MARKER: R8 Lkotlin/u;

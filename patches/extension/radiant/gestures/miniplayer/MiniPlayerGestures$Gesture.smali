@@ -1,6 +1,6 @@
 .class public final Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;
 .super Ljava/lang/Object;
-.implements Lam0/l;    # MARKER: R8 Lam0/l;
+.implements Lyl0/l;    # MARKER: R8 Lyl0/l;
 
 # annotations
 .annotation system Ldalvik/annotation/EnclosingClass;
@@ -14,7 +14,7 @@
 
 
 # instance fields
-.field public final a:Lam0/l;    # MARKER: R8 Lam0/l;
+.field public final a:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
 # Y at ACTION_DOWN
 .field public b:F
@@ -43,12 +43,12 @@
 
 
 # direct methods
-.method public constructor <init>(Lam0/l;Landroidx/compose/material3/SheetState;Z)V    # MARKER: R8 Lam0/l;
+.method public constructor <init>(Lyl0/l;Landroidx/compose/material3/SheetState;Z)V    # MARKER: R8 Lyl0/l;
     .locals 0
 
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
-    iput-object p1, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->a:Lam0/l;    # MARKER: R8 Lam0/l;
+    iput-object p1, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->a:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     iput-object p2, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->f:Landroidx/compose/material3/SheetState;
 
@@ -90,9 +90,9 @@
 
     iget-object v0, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->f:Landroidx/compose/material3/SheetState;
 
-    iget-object v1, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->a:Lam0/l;    # MARKER: R8 Lam0/l;
+    iget-object v1, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->a:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
-    invoke-static {v0, v1, p1}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->finishDrag(Landroidx/compose/material3/SheetState;Lam0/l;F)V    # MARKER: R8 Lam0/l;
+    invoke-static {v0, v1, p1}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->finishDrag(Landroidx/compose/material3/SheetState;Lyl0/l;F)V    # MARKER: R8 Lyl0/l;
 
     return-void
 .end method
@@ -100,11 +100,11 @@
 .method private openPlayer()V
     .locals 2
 
-    iget-object v0, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->a:Lam0/l;    # MARKER: R8 Lam0/l;
+    iget-object v0, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->a:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     sget-object v1, Lcom/tidal/android/feature/appscaffold/ui/b$b;->a:Lcom/tidal/android/feature/appscaffold/ui/b$b;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/b$b; a
 
-    invoke-interface {v0, v1}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lam0/l;
+    invoke-interface {v0, v1}, Lyl0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lyl0/l;
 
     return-void
 .end method
@@ -467,9 +467,9 @@
 
     move-result v0
 
-    iget-object v1, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->a:Lam0/l;    # MARKER: R8 Lam0/l;
+    iget-object v1, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->a:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
-    invoke-static {v1, v0}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->completeSimpleSwipe(Lam0/l;F)Z    # MARKER: R8 Lam0/l;
+    invoke-static {v1, v0}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->completeSimpleSwipe(Lyl0/l;F)Z    # MARKER: R8 Lyl0/l;
 
     invoke-static {}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->animateSwipeFeedbackReset()V
 
@@ -489,9 +489,9 @@
 
     iget-object v0, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->f:Landroidx/compose/material3/SheetState;
 
-    iget-object v1, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->a:Lam0/l;    # MARKER: R8 Lam0/l;
+    iget-object v1, p0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;->a:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
-    invoke-static {v0, v1}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->cancelDrag(Landroidx/compose/material3/SheetState;Lam0/l;)V    # MARKER: R8 Lam0/l;
+    invoke-static {v0, v1}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->cancelDrag(Landroidx/compose/material3/SheetState;Lyl0/l;)V    # MARKER: R8 Lyl0/l;
 
     goto :cancel_reset
 

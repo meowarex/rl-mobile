@@ -32,13 +32,13 @@
      :cond_47
 +    move-object v14, v12    # settle callback
 +
-+    check-cast v14, Lam0/l;    # to Function1
++    check-cast v14, Lyl0/l;    # to Function1
 +
-+    invoke-static {v13, v14}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->setSettleCallback(Landroidx/compose/material3/SheetState;Lam0/l;)V    # reuse native settle animation on release
++    invoke-static {v13, v14}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->setSettleCallback(Landroidx/compose/material3/SheetState;Lyl0/l;)V    # reuse native settle animation on release
 +
      move-object/from16 v32, v12
  
-     check-cast v32, Lam0/l;
+     check-cast v32, Lyl0/l;
  
      .line 35
      invoke-interface {v5}, Landroidx/compose/runtime/Composer;->rememberedValue()Ljava/lang/Object;

@@ -43,17 +43,17 @@
 
     if-gt v3, v4, :done
 
-    invoke-virtual {p0, v1}, Li60/c;->c(Ljava/lang/String;)Lc60/h;    # MARKER: R8 Li60/c; Lc60/h; c
+    invoke-virtual {p0, v1}, Lq50/c;->c(Ljava/lang/String;)Li50/j;    # MARKER: R8 Lq50/c; Li50/j; c
 
     move-result-object v4
 
-    instance-of v5, v4, Lc60/f;    # MARKER: R8 Lc60/f;
+    instance-of v5, v4, Li50/f;    # MARKER: R8 Li50/f;
 
     if-eqz v5, :done
 
-    check-cast v4, Lc60/f;    # MARKER: R8 Lc60/f;
+    check-cast v4, Li50/f;    # MARKER: R8 Li50/f;
 
-    iget-object v5, v4, Lc60/f;->b:Ljava/lang/String;    # MARKER: R8 Lc60/f; b
+    iget-object v5, v4, Li50/f;->b:Ljava/lang/String;    # MARKER: R8 Li50/f; b
 
     invoke-virtual {v1, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
@@ -61,7 +61,7 @@
 
     if-eqz v1, :done
 
-    iget-object v1, v4, Lc60/f;->g:Ljava/util/ArrayList;    # MARKER: R8 Lc60/f; g
+    iget-object v1, v4, Li50/f;->g:Ljava/util/ArrayList;    # MARKER: R8 Li50/f; g
 
     invoke-virtual {v1}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
 
@@ -78,13 +78,13 @@
 
     move-result-object v6
 
-    instance-of v5, v6, Lc60/r;    # MARKER: R8 Lc60/r;
+    instance-of v5, v6, Li50/u;    # MARKER: R8 Li50/u;
 
     if-eqz v5, :find_media
 
-    check-cast v6, Lc60/r;    # MARKER: R8 Lc60/r;
+    check-cast v6, Li50/u;    # MARKER: R8 Li50/u;
 
-    invoke-static {v6}, Lc60/s;->a(Lc60/r;)Ljava/lang/String;    # MARKER: R8 Lc60/s; Lc60/r; a
+    invoke-static {v6}, Li50/v;->a(Li50/u;)Ljava/lang/String;    # MARKER: R8 Li50/v; Li50/u; a
 
     move-result-object v5
 
@@ -94,19 +94,19 @@
 
     if-eqz v5, :find_media
 
-    instance-of v5, v6, Lc60/r$b;    # MARKER: R8 Lc60/r$b;
+    instance-of v5, v6, Li50/u$b;    # MARKER: R8 Li50/u$b;
 
     if-eqz v5, :done
 
-    check-cast v6, Lc60/r$b;    # MARKER: R8 Lc60/r$b;
+    check-cast v6, Li50/u$b;    # MARKER: R8 Li50/u$b;
 
-    iget-object v7, v6, Lc60/r$b;->a:Lh40/n;    # MARKER: R8 Lc60/r$b; Lh40/n; a
+    iget-object v7, v6, Li50/u$b;->a:Ln30/o;    # MARKER: R8 Li50/u$b; Ln30/o; a
 
     const/4 v5, 0x1
 
     if-ne v3, v5, :check_mix
 
-    instance-of v5, v7, Lh40/a;    # MARKER: R8 Lh40/a;
+    instance-of v5, v7, Ln30/a;    # MARKER: R8 Ln30/a;
 
     if-eqz v5, :done
 
@@ -117,7 +117,7 @@
 
     if-ne v3, v5, :check_playlist
 
-    instance-of v5, v7, Lh40/i;    # MARKER: R8 Lh40/i;
+    instance-of v5, v7, Ln30/j;    # MARKER: R8 Ln30/j;
 
     if-eqz v5, :done
 
@@ -128,14 +128,14 @@
 
     if-ne v3, v5, :check_track
 
-    instance-of v5, v7, Lh40/j;    # MARKER: R8 Lh40/j;
+    instance-of v5, v7, Ln30/k;    # MARKER: R8 Ln30/k;
 
     if-eqz v5, :done
 
     goto :dependencies
 
     :check_track
-    instance-of v5, v7, Lh40/p;    # MARKER: R8 Lh40/p;
+    instance-of v5, v7, Ln30/p;    # MARKER: R8 Ln30/p;
 
     if-eqz v5, :done
 
@@ -156,9 +156,9 @@
 
     new-instance v10, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
 
-    iget-object v11, v4, Lc60/f;->a:Ljava/lang/String;    # MARKER: R8 Lc60/f; a
+    iget-object v11, v4, Li50/f;->a:Ljava/lang/String;    # MARKER: R8 Li50/f; a
 
-    iget v12, v4, Lc60/f;->d:I    # MARKER: R8 Lc60/f; d
+    iget v12, v4, Li50/f;->d:I    # MARKER: R8 Li50/f; d
 
     invoke-static {v12}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
 
@@ -170,9 +170,9 @@
 
     if-ne v3, v0, :mix
 
-    check-cast v7, Lh40/a;    # MARKER: R8 Lh40/a;
+    check-cast v7, Ln30/a;    # MARKER: R8 Ln30/a;
 
-    invoke-static {v7}, Lie0/a;->a(Lh40/a;)Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lie0/a; Lh40/a; a
+    invoke-static {v7}, Lae0/a;->b(Ln30/a;)Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lae0/a; Ln30/a; a
 
     move-result-object v12
 
@@ -211,9 +211,9 @@
 
     if-ne v3, v0, :playlist
 
-    check-cast v7, Lh40/i;    # MARKER: R8 Lh40/i;
+    check-cast v7, Ln30/j;    # MARKER: R8 Ln30/j;
 
-    invoke-static {v7}, Lie0/g;->b(Lh40/i;)Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lie0/g; Lh40/i; b
+    invoke-static {v7}, Lae0/g;->b(Ln30/j;)Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lae0/g; Ln30/j; b
 
     move-result-object v12
 
@@ -252,9 +252,9 @@
 
     if-ne v3, v0, :track
 
-    check-cast v7, Lh40/j;    # MARKER: R8 Lh40/j;
+    check-cast v7, Ln30/k;    # MARKER: R8 Ln30/k;
 
-    invoke-static {v7}, Lie0/h;->a(Lh40/j;)Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lie0/h; Lh40/j; a
+    invoke-static {v7}, Lae0/h;->a(Ln30/k;)Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lae0/h; Ln30/k; a
 
     move-result-object v12
 
@@ -283,9 +283,9 @@
     goto :done
 
     :track
-    check-cast v7, Lh40/p;    # MARKER: R8 Lh40/p;
+    check-cast v7, Ln30/p;    # MARKER: R8 Ln30/p;
 
-    invoke-static {v7}, Lie0/i;->a(Lh40/p;)Lcom/aspiro/wamp/model/Track;    # MARKER: R8 Lie0/i; Lh40/p; a
+    invoke-static {v7}, Lae0/i;->c(Ln30/p;)Lcom/aspiro/wamp/model/Track;    # MARKER: R8 Lae0/i; Ln30/p; a
 
     move-result-object v12
 
@@ -298,9 +298,9 @@
     move-result-object v6
 
     :navigation_ready
-    iget-object v0, v4, Lc60/f;->e:Ljava/lang/String;    # MARKER: R8 Lc60/f; e
+    iget-object v0, v4, Li50/f;->e:Ljava/lang/String;    # MARKER: R8 Li50/f; e
 
-    invoke-static {v2, v0, v6}, Lcom/aspiro/wamp/playqueue/source/model/b;->o(Ljava/lang/String;Ljava/lang/String;Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/playqueue/source/model/ItemSource;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/source/model/b; o
+    invoke-static {v6, v2, v0}, Lcom/aspiro/wamp/playqueue/source/model/b;->o(Lcom/tidal/android/navigation/NavigationInfo;Ljava/lang/String;Ljava/lang/String;)Lcom/aspiro/wamp/playqueue/source/model/ItemSource;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/source/model/b; o
 
     move-result-object v11
 
@@ -367,17 +367,17 @@
 
     if-eqz v2, :done
 
-    invoke-virtual {p0, v1}, Li60/c;->c(Ljava/lang/String;)Lc60/h;    # MARKER: R8 Li60/c; Lc60/h; c
+    invoke-virtual {p0, v1}, Lq50/c;->c(Ljava/lang/String;)Li50/j;    # MARKER: R8 Lq50/c; Li50/j; c
 
     move-result-object v3
 
-    instance-of v4, v3, Lc60/v;    # MARKER: R8 Lc60/v;
+    instance-of v4, v3, Li50/y;    # MARKER: R8 Li50/y;
 
     if-eqz v4, :done
 
-    check-cast v3, Lc60/v;    # MARKER: R8 Lc60/v;
+    check-cast v3, Li50/y;    # MARKER: R8 Li50/y;
 
-    iget-object v4, v3, Lc60/v;->b:Ljava/lang/String;    # MARKER: R8 Lc60/v; b
+    iget-object v4, v3, Li50/y;->b:Ljava/lang/String;    # MARKER: R8 Li50/y; b
 
     invoke-virtual {v1, v4}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
@@ -385,7 +385,7 @@
 
     if-eqz v1, :done
 
-    iget-object v1, v3, Lc60/v;->f:Ljava/util/ArrayList;    # MARKER: R8 Lc60/v; f
+    iget-object v1, v3, Li50/y;->f:Ljava/util/ArrayList;    # MARKER: R8 Li50/y; f
 
     invoke-virtual {v1}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
 
@@ -402,13 +402,13 @@
 
     move-result-object v4
 
-    instance-of v5, v4, Lc60/r;    # MARKER: R8 Lc60/r;
+    instance-of v5, v4, Li50/u;    # MARKER: R8 Li50/u;
 
     if-eqz v5, :find_playlist
 
-    check-cast v4, Lc60/r;    # MARKER: R8 Lc60/r;
+    check-cast v4, Li50/u;    # MARKER: R8 Li50/u;
 
-    invoke-static {v4}, Lc60/s;->a(Lc60/r;)Ljava/lang/String;    # MARKER: R8 Lc60/s; Lc60/r; a
+    invoke-static {v4}, Li50/v;->a(Li50/u;)Ljava/lang/String;    # MARKER: R8 Li50/v; Li50/u; a
 
     move-result-object v5
 
@@ -418,19 +418,19 @@
 
     if-eqz v5, :find_playlist
 
-    instance-of v5, v4, Lc60/r$b;    # MARKER: R8 Lc60/r$b;
+    instance-of v5, v4, Li50/u$b;    # MARKER: R8 Li50/u$b;
 
     if-eqz v5, :done
 
-    check-cast v4, Lc60/r$b;    # MARKER: R8 Lc60/r$b;
+    check-cast v4, Li50/u$b;    # MARKER: R8 Li50/u$b;
 
-    iget-object v4, v4, Lc60/r$b;->a:Lh40/n;    # MARKER: R8 Lc60/r$b; Lh40/n; a
+    iget-object v4, v4, Li50/u$b;->a:Ln30/o;    # MARKER: R8 Li50/u$b; Ln30/o; a
 
-    instance-of v5, v4, Lh40/j;    # MARKER: R8 Lh40/j;
+    instance-of v5, v4, Ln30/k;    # MARKER: R8 Ln30/k;
 
     if-eqz v5, :done
 
-    check-cast v4, Lh40/j;    # MARKER: R8 Lh40/j;
+    check-cast v4, Ln30/k;    # MARKER: R8 Ln30/k;
 
     iget-object v5, p0, Lcom/tidal/android/dynamicpages/ui/modules/publicplaylistlist/PublicPlaylistListModuleManager;->f:Lcom/tidal/android/dynamicpages/ui/b;    # MARKER: R8 Lcom/tidal/android/dynamicpages/ui/b; f
 
@@ -448,9 +448,9 @@
 
     new-instance v8, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
 
-    iget-object v9, v3, Lc60/v;->a:Ljava/lang/String;    # MARKER: R8 Lc60/v; a
+    iget-object v9, v3, Li50/y;->a:Ljava/lang/String;    # MARKER: R8 Li50/y; a
 
-    iget v10, v3, Lc60/v;->e:I    # MARKER: R8 Lc60/v; e
+    iget v10, v3, Li50/y;->e:I    # MARKER: R8 Li50/y; e
 
     invoke-static {v10}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
 
@@ -458,7 +458,7 @@
 
     invoke-direct {v8, v0, v9, v10}, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 
-    invoke-static {v4}, Lie0/h;->a(Lh40/j;)Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lie0/h; Lh40/j; a
+    invoke-static {v4}, Lae0/h;->a(Ln30/k;)Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lae0/h; Ln30/k; a
 
     move-result-object v4
 
@@ -527,17 +527,17 @@
 
     if-gt v3, v4, :done
 
-    invoke-virtual {p0, v1}, Li60/c;->c(Ljava/lang/String;)Lc60/h;    # MARKER: R8 Li60/c; Lc60/h; c
+    invoke-virtual {p0, v1}, Lq50/c;->c(Ljava/lang/String;)Li50/j;    # MARKER: R8 Lq50/c; Li50/j; c
 
     move-result-object v4
 
-    instance-of v5, v4, Lc60/c0;    # MARKER: R8 Lc60/c0;
+    instance-of v5, v4, Li50/f0;    # MARKER: R8 Li50/f0;
 
     if-eqz v5, :done
 
-    check-cast v4, Lc60/c0;    # MARKER: R8 Lc60/c0;
+    check-cast v4, Li50/f0;    # MARKER: R8 Li50/f0;
 
-    iget-object v5, v4, Lc60/c0;->b:Ljava/lang/String;    # MARKER: R8 Lc60/c0; b
+    iget-object v5, v4, Li50/f0;->b:Ljava/lang/String;    # MARKER: R8 Li50/f0; b
 
     invoke-virtual {v1, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
@@ -545,7 +545,7 @@
 
     if-eqz v1, :done
 
-    iget-object v1, v4, Lc60/c0;->g:Ljava/util/ArrayList;    # MARKER: R8 Lc60/c0; g
+    iget-object v1, v4, Li50/f0;->g:Ljava/util/ArrayList;    # MARKER: R8 Li50/f0; g
 
     invoke-virtual {v1}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
 
@@ -562,13 +562,13 @@
 
     move-result-object v6
 
-    instance-of v5, v6, Lc60/r;    # MARKER: R8 Lc60/r;
+    instance-of v5, v6, Li50/u;    # MARKER: R8 Li50/u;
 
     if-eqz v5, :find_media
 
-    check-cast v6, Lc60/r;    # MARKER: R8 Lc60/r;
+    check-cast v6, Li50/u;    # MARKER: R8 Li50/u;
 
-    invoke-static {v6}, Lc60/s;->a(Lc60/r;)Ljava/lang/String;    # MARKER: R8 Lc60/s; Lc60/r; a
+    invoke-static {v6}, Li50/v;->a(Li50/u;)Ljava/lang/String;    # MARKER: R8 Li50/v; Li50/u; a
 
     move-result-object v5
 
@@ -578,19 +578,19 @@
 
     if-eqz v5, :find_media
 
-    instance-of v5, v6, Lc60/r$b;    # MARKER: R8 Lc60/r$b;
+    instance-of v5, v6, Li50/u$b;    # MARKER: R8 Li50/u$b;
 
     if-eqz v5, :done
 
-    check-cast v6, Lc60/r$b;    # MARKER: R8 Lc60/r$b;
+    check-cast v6, Li50/u$b;    # MARKER: R8 Li50/u$b;
 
-    iget-object v7, v6, Lc60/r$b;->a:Lh40/n;    # MARKER: R8 Lc60/r$b; Lh40/n; a
+    iget-object v7, v6, Li50/u$b;->a:Ln30/o;    # MARKER: R8 Li50/u$b; Ln30/o; a
 
     const/4 v5, 0x1
 
     if-ne v3, v5, :check_mix
 
-    instance-of v5, v7, Lh40/a;    # MARKER: R8 Lh40/a;
+    instance-of v5, v7, Ln30/a;    # MARKER: R8 Ln30/a;
 
     if-eqz v5, :done
 
@@ -601,7 +601,7 @@
 
     if-ne v3, v5, :check_playlist
 
-    instance-of v5, v7, Lh40/i;    # MARKER: R8 Lh40/i;
+    instance-of v5, v7, Ln30/j;    # MARKER: R8 Ln30/j;
 
     if-eqz v5, :done
 
@@ -612,14 +612,14 @@
 
     if-ne v3, v5, :check_track
 
-    instance-of v5, v7, Lh40/j;    # MARKER: R8 Lh40/j;
+    instance-of v5, v7, Ln30/k;    # MARKER: R8 Ln30/k;
 
     if-eqz v5, :done
 
     goto :dependencies
 
     :check_track
-    instance-of v5, v7, Lh40/p;    # MARKER: R8 Lh40/p;
+    instance-of v5, v7, Ln30/p;    # MARKER: R8 Ln30/p;
 
     if-eqz v5, :done
 
@@ -640,9 +640,9 @@
 
     new-instance v10, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
 
-    iget-object v11, v4, Lc60/c0;->a:Ljava/lang/String;    # MARKER: R8 Lc60/c0; a
+    iget-object v11, v4, Li50/f0;->a:Ljava/lang/String;    # MARKER: R8 Li50/f0; a
 
-    iget v12, v4, Lc60/c0;->f:I    # MARKER: R8 Lc60/c0; f
+    iget v12, v4, Li50/f0;->f:I    # MARKER: R8 Li50/f0; f
 
     invoke-static {v12}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
 
@@ -654,9 +654,9 @@
 
     if-ne v3, v0, :mix
 
-    check-cast v7, Lh40/a;    # MARKER: R8 Lh40/a;
+    check-cast v7, Ln30/a;    # MARKER: R8 Ln30/a;
 
-    invoke-static {v7}, Lie0/a;->a(Lh40/a;)Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lie0/a; Lh40/a; a
+    invoke-static {v7}, Lae0/a;->b(Ln30/a;)Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lae0/a; Ln30/a; a
 
     move-result-object v12
 
@@ -695,9 +695,9 @@
 
     if-ne v3, v0, :playlist
 
-    check-cast v7, Lh40/i;    # MARKER: R8 Lh40/i;
+    check-cast v7, Ln30/j;    # MARKER: R8 Ln30/j;
 
-    invoke-static {v7}, Lie0/g;->b(Lh40/i;)Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lie0/g; Lh40/i; b
+    invoke-static {v7}, Lae0/g;->b(Ln30/j;)Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lae0/g; Ln30/j; b
 
     move-result-object v12
 
@@ -736,9 +736,9 @@
 
     if-ne v3, v0, :track
 
-    check-cast v7, Lh40/j;    # MARKER: R8 Lh40/j;
+    check-cast v7, Ln30/k;    # MARKER: R8 Ln30/k;
 
-    invoke-static {v7}, Lie0/h;->a(Lh40/j;)Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lie0/h; Lh40/j; a
+    invoke-static {v7}, Lae0/h;->a(Ln30/k;)Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lae0/h; Ln30/k; a
 
     move-result-object v12
 
@@ -767,9 +767,9 @@
     goto :done
 
     :track
-    check-cast v7, Lh40/p;    # MARKER: R8 Lh40/p;
+    check-cast v7, Ln30/p;    # MARKER: R8 Ln30/p;
 
-    invoke-static {v7}, Lie0/i;->a(Lh40/p;)Lcom/aspiro/wamp/model/Track;    # MARKER: R8 Lie0/i; Lh40/p; a
+    invoke-static {v7}, Lae0/i;->c(Ln30/p;)Lcom/aspiro/wamp/model/Track;    # MARKER: R8 Lae0/i; Ln30/p; a
 
     move-result-object v12
 
@@ -782,9 +782,9 @@
     move-result-object v6
 
     :navigation_ready
-    iget-object v0, v4, Lc60/c0;->c:Ljava/lang/String;    # MARKER: R8 Lc60/c0; c
+    iget-object v0, v4, Li50/f0;->c:Ljava/lang/String;    # MARKER: R8 Li50/f0; c
 
-    invoke-static {v2, v0, v6}, Lcom/aspiro/wamp/playqueue/source/model/b;->o(Ljava/lang/String;Ljava/lang/String;Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/playqueue/source/model/ItemSource;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/source/model/b; o
+    invoke-static {v6, v2, v0}, Lcom/aspiro/wamp/playqueue/source/model/b;->o(Lcom/tidal/android/navigation/NavigationInfo;Ljava/lang/String;Ljava/lang/String;)Lcom/aspiro/wamp/playqueue/source/model/ItemSource;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/source/model/b; o
 
     move-result-object v11
 
@@ -819,15 +819,15 @@
 .method private static menu(Lcom/tidal/android/dynamicpages/ui/c;)Lh4/a;    # MARKER: R8 Lcom/tidal/android/dynamicpages/ui/c; Lh4/a;
     .locals 2
 
-    iget-object v0, p0, Lcom/tidal/android/dynamicpages/ui/c;->a:Lcom/aspiro/wamp/core/k;    # MARKER: R8 Lcom/tidal/android/dynamicpages/ui/c; Lcom/aspiro/wamp/core/k; a
+    iget-object v0, p0, Lcom/tidal/android/dynamicpages/ui/c;->a:Lcom/aspiro/wamp/core/l;    # MARKER: R8 Lcom/tidal/android/dynamicpages/ui/c; Lcom/aspiro/wamp/core/l; a
 
-    instance-of v1, v0, Lh9/p1;    # MARKER: R8 Lh9/p1;
+    instance-of v1, v0, Lg9/u1;    # MARKER: R8 Lg9/u1;
 
     if-eqz v1, :invalid
 
-    check-cast v0, Lh9/p1;    # MARKER: R8 Lh9/p1;
+    check-cast v0, Lg9/u1;    # MARKER: R8 Lg9/u1;
 
-    iget-object v0, v0, Lh9/p1;->b:Lx40/a;    # MARKER: R8 Lh9/p1; Lx40/a; b
+    iget-object v0, v0, Lg9/u1;->b:Ld40/a;    # MARKER: R8 Lg9/u1; Ld40/a; b
 
     instance-of v1, v0, Lh4/a;    # MARKER: R8 Lh4/a;
 

@@ -419,7 +419,7 @@
 
     sget-object v0, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$OffsetLayer;->INSTANCE:Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$OffsetLayer;
 
-    invoke-static {p0, v0}, Landroidx/compose/ui/graphics/GraphicsLayerModifierKt;->graphicsLayer(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+    invoke-static {p0, v0}, Landroidx/compose/ui/graphics/GraphicsLayerModifierKt;->graphicsLayer(Landroidx/compose/ui/Modifier;Lyl0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
 
     move-result-object p0
 
@@ -431,7 +431,7 @@
 
     sget-object v0, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$TextDraw;->INSTANCE:Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$TextDraw; # text clip on right only
 
-    invoke-static {p0, v0}, Landroidx/compose/ui/draw/DrawModifierKt;->drawWithContent(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+    invoke-static {p0, v0}, Landroidx/compose/ui/draw/DrawModifierKt;->drawWithContent(Landroidx/compose/ui/Modifier;Lyl0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
 
     move-result-object p0
 
@@ -590,14 +590,14 @@
     return-void
 .end method
 
-.method public static trackModifier(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+.method public static trackModifier(Landroidx/compose/ui/Modifier;Lyl0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
     .locals 1
 
     new-instance v0, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture;
 
-    invoke-direct {v0, p1}, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture;-><init>(Lam0/l;)V    # MARKER: R8 Lam0/l;
+    invoke-direct {v0, p1}, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture;-><init>(Lyl0/l;)V    # MARKER: R8 Lyl0/l;
 
-    invoke-static {p0, v0}, Landroidx/compose/ui/input/pointer/PointerInteropFilter_androidKt;->motionEventSpy(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+    invoke-static {p0, v0}, Landroidx/compose/ui/input/pointer/PointerInteropFilter_androidKt;->motionEventSpy(Landroidx/compose/ui/Modifier;Lyl0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
 
     move-result-object p0
 

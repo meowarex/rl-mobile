@@ -86,7 +86,7 @@
 +
 +    iget-object v3, p1, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/g0;->k:Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
 +
-+    iget-object v0, p0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->b:Lx40/a;
++    iget-object v0, p0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->b:Ld40/a;
 +
 +    instance-of p1, v0, Lh4/a;
 +
@@ -145,7 +145,7 @@
 +
 +    iget-object v0, v0, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/m;->f:Landroidx/recyclerview/widget/RecyclerView;
 +
-+    invoke-virtual {p0, v0, v5, v0}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->w(Landroidx/recyclerview/widget/RecyclerView;ILandroid/view/View;)V
++    invoke-virtual {p0, v0, v5, v0}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->x(Landroidx/recyclerview/widget/RecyclerView;ILandroid/view/View;)V
 +
 +    :done
 +    return-void
@@ -153,9 +153,9 @@
 +
 +
  # virtual methods
- .method public final M()Ln8/b;
+ .method public final M()Lm8/b;
      .locals 1
-@@ -2265,9 +2448,16 @@
+@@ -2108,9 +2256,16 @@
      iput-object p0, p1, Lo4/g;->e:Lo4/g$e;
 
      .line 224
@@ -172,8 +172,8 @@
      .line 226
      .line 227
      invoke-virtual {p0}, Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/FavoriteTracksFragment;->N()Lcom/aspiro/wamp/mycollection/subpages/favoritetracks/n;
---- a/p7/a.smali
-+++ b/p7/a.smali
+--- a/o7/a.smali
++++ b/o7/a.smali
 @@ -33,3 +33,11 @@
  .end method
  
@@ -186,9 +186,9 @@
 +.end method
 +
  .method public final c(Ljava/lang/Object;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)V
---- a/v6/e.smali
-+++ b/v6/e.smali
-@@ -62,3 +62,11 @@
+--- a/u6/e.smali
++++ b/u6/e.smali
+@@ -34,3 +34,11 @@
  .end method
  
 +.method public b(Landroidx/recyclerview/widget/RecyclerView;)V
@@ -202,7 +202,7 @@
  .method public final c(Ljava/lang/Object;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)V
 --- a/com/aspiro/wamp/mycollection/subpages/albums/myalbums/MyAlbumsView.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/albums/myalbums/MyAlbumsView.smali
-@@ -559,6 +559,8 @@
+@@ -560,6 +560,8 @@
      .line 23
      invoke-static {v0, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
 
@@ -213,7 +213,7 @@
      .line 26
 --- a/com/aspiro/wamp/mycollection/subpages/playlists/myplaylists/MyPlaylistsView.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/playlists/myplaylists/MyPlaylistsView.smali
-@@ -581,6 +581,8 @@
+@@ -582,6 +582,8 @@
      .line 23
      invoke-static {p1, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
 
@@ -224,7 +224,7 @@
      .line 26
 --- a/com/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView.smali
-@@ -556,6 +556,8 @@
+@@ -557,6 +557,8 @@
      .line 22
      .line 23
      invoke-static {p1, p2}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
@@ -236,7 +236,7 @@
      .line 26
 --- a/androidx/recyclerview/widget/ItemTouchHelper$2.smali
 +++ b/androidx/recyclerview/widget/ItemTouchHelper$2.smali
-@@ -773,7 +773,11 @@
+@@ -555,7 +555,11 @@
      const/4 v5, 0x1
 
      .line 54
@@ -249,7 +249,7 @@
 
      .line 55
      .line 56
-@@ -867,6 +871,9 @@
+@@ -649,6 +653,9 @@
 
      .line 97
      :cond_6
@@ -261,21 +261,21 @@
      .line 98
 --- a/h4/a.smali
 +++ b/h4/a.smali
-@@ -931,1 +931,46 @@
+@@ -921,1 +921,46 @@
  .end method
 +
 +.method public final q(Landroidx/fragment/app/FragmentActivity;Lcom/aspiro/wamp/model/Track;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/aspiro/wamp/playqueue/source/model/Source;)Z
 +    .locals 3
 +
-+    iget-object v0, p0, Lh4/a;->n:Lcom/aspiro/wamp/contextmenu/menu/track/TrackContextMenu$a;
++    iget-object v0, p0, Lh4/a;->m:Lz3/a$a;
 +
-+    check-cast v0, Lcom/aspiro/wamp/contextmenu/menu/track/d;
++    check-cast v0, Lz3/c;
 +
-+    iget-object v1, v0, Lcom/aspiro/wamp/contextmenu/menu/track/d;->a:Lcom/aspiro/wamp/contextmenu/menu/track/c;
++    iget-object v1, v0, Lz3/c;->a:Lz3/b;
 +
-+    iget-object v0, v1, Lcom/aspiro/wamp/contextmenu/menu/track/c;->b:Ldagger/internal/j;
++    iget-object v0, v1, Lz3/b;->b:Ldagger/internal/j;
 +
-+    invoke-interface {v0}, Lql0/a;->get()Ljava/lang/Object;
++    invoke-interface {v0}, Lol0/a;->get()Ljava/lang/Object;
 +
 +    move-result-object v0
 +
@@ -285,13 +285,13 @@
 +
 +    move-result-object v0
 +
-+    iget-object v2, v0, Lm3/f;->j:Lcom/aspiro/wamp/playqueue/g1;
++    iget-object v2, v0, Lm3/f;->j:Lcom/aspiro/wamp/playqueue/x0;
 +
-+    invoke-virtual {v2}, Lcom/aspiro/wamp/playqueue/g1;->a()Lcom/aspiro/wamp/player/d;
++    invoke-virtual {v2}, Lcom/aspiro/wamp/playqueue/x0;->a()Lcom/aspiro/wamp/player/c;
 +
 +    move-result-object v2
 +
-+    invoke-virtual {v2}, Lcom/aspiro/wamp/player/d;->b()Lcom/aspiro/wamp/model/MediaItemParent;
++    invoke-virtual {v2}, Lcom/aspiro/wamp/player/c;->b()Lcom/aspiro/wamp/model/MediaItemParent;
 +
 +    move-result-object v2
 +
@@ -320,7 +320,7 @@
 +
  
  # direct methods
- .method public constructor <init>(Landroid/content/Context;Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/a;Lcom/aspiro/wamp/nowplaying/view/playqueue/l;)V
+ .method public constructor <init>(Landroid/content/Context;Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/a;Lcom/aspiro/wamp/nowplaying/view/playqueue/n;)V
 @@ -55,6 +59,26 @@
  
      .line 10
@@ -348,7 +348,7 @@
      new-instance p2, Landroid/graphics/drawable/ColorDrawable;
  
      .line 12
-@@ -377,6 +401,10 @@
+@@ -175,6 +199,10 @@
      .line 5
      .line 6
      .line 7
@@ -359,7 +359,7 @@
      iget-object v0, p0, Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/ItemTouchHelperCallbackImpl;->d:Lcom/aspiro/wamp/nowplaying/view/playqueue/touchmanagement/ItemTouchHelperCallbackImpl$ActionType;
  
      .line 8
-@@ -844,7 +872,7 @@
+@@ -374,7 +402,7 @@
  
      .line 32
      .line 33
@@ -368,7 +368,7 @@
  
      .line 34
      :cond_1
-@@ -896,7 +924,23 @@
+@@ -398,7 +426,23 @@
  .end method
  
 +.method public getSwipeEscapeVelocity(F)F
@@ -393,7 +393,7 @@
  
      .line 1
      invoke-virtual {p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
-@@ -916,6 +960,16 @@
+@@ -418,6 +462,16 @@
      .line 10
      invoke-super/range {p0 .. p7}, Landroidx/recyclerview/widget/ItemTouchHelper$Callback;->onChildDraw(Landroid/graphics/Canvas;Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;FFIZ)V
  
@@ -410,9 +410,9 @@
      .line 11
      .line 12
      .line 13
---- a/com/aspiro/wamp/nowplaying/view/playqueue/l.smali
-+++ b/com/aspiro/wamp/nowplaying/view/playqueue/l.smali
-@@ -983,6 +983,8 @@
+--- a/com/aspiro/wamp/nowplaying/view/playqueue/n.smali
++++ b/com/aspiro/wamp/nowplaying/view/playqueue/n.smali
+@@ -719,6 +719,8 @@
      .line 121
      move-result-object p1
  
@@ -423,7 +423,7 @@
  
 --- a/com/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView.smali
-@@ -1176,8 +1176,10 @@
+@@ -579,8 +579,10 @@
      .line 69
      .line 70
      .line 71
@@ -436,20 +436,18 @@
      .line 74
 --- a/com/aspiro/wamp/playlist/ui/fragment/PlaylistFragment.smali
 +++ b/com/aspiro/wamp/playlist/ui/fragment/PlaylistFragment.smali
-@@ -5193,8 +5193,10 @@
-     .line 127
-     .line 128
-     .line 129
+@@ -3125,6 +3125,8 @@
+     invoke-virtual {v1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+
      invoke-static {v1, p1}, Lcom/tidal/android/feature/appscaffold/ui/recyclerview/b;->a(Landroidx/lifecycle/LifecycleOwner;Landroidx/recyclerview/widget/RecyclerView;)Lcom/tidal/android/feature/appscaffold/ui/recyclerview/a;
 
 +    invoke-static {p1}, Lradiant/gestures/queue/PlaylistItemsResolver;->install(Lcom/aspiro/wamp/playlist/ui/items/PlaylistItemCollectionView;)V
 +
-     .line 130
-     .line 131
-     .line 132
+     .line 31
+     iget-object p1, p0, Lcom/aspiro/wamp/playlist/ui/fragment/PlaylistFragment;->s:Lcom/aspiro/wamp/playlist/ui/fragment/p;
 --- a/com/aspiro/wamp/search/v2/UnifiedSearchView.smali
 +++ b/com/aspiro/wamp/search/v2/UnifiedSearchView.smali
-@@ -1596,8 +1596,10 @@
+@@ -881,8 +881,10 @@
      .line 60
      .line 61
      .line 62
@@ -462,7 +460,7 @@
      .line 65
 --- a/com/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView.smali
 +++ b/com/aspiro/wamp/mycollection/subpages/playlists/searchplaylists/SearchPlaylistsView.smali
-@@ -1204,8 +1204,10 @@
+@@ -638,8 +638,10 @@
      .line 69
      .line 70
      .line 71
@@ -486,21 +484,21 @@
      .line 39
      .line 40
      .line 41
---- a/com/aspiro/wamp/nowplaying/view/suggestions/o0.smali
-+++ b/com/aspiro/wamp/nowplaying/view/suggestions/o0.smali
-@@ -876,7 +876,9 @@
-     .line 96
+--- a/com/aspiro/wamp/nowplaying/view/suggestions/q0.smali
++++ b/com/aspiro/wamp/nowplaying/view/suggestions/q0.smali
+@@ -875,7 +875,9 @@
+     .line 97
      invoke-virtual {v0, p2}, Landroidx/recyclerview/widget/RecyclerView;->setAdapter(Landroidx/recyclerview/widget/RecyclerView$Adapter;)V
-
+ 
 +    invoke-static {p0, v0}, Lradiant/gestures/queue/SuggestionsResolver;->install(Landroidx/fragment/app/Fragment;Landroidx/recyclerview/widget/RecyclerView;)V
 +
-     .line 97
      .line 98
      .line 99
-     invoke-virtual {p0}, Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;->M()Lcom/aspiro/wamp/nowplaying/view/suggestions/l;
---- a/com/aspiro/wamp/nowplaying/view/suggestions/h.smali
-+++ b/com/aspiro/wamp/nowplaying/view/suggestions/h.smali
-@@ -674,1 +674,3 @@
+     .line 100
+     invoke-virtual {p0}, Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;->M()Lcom/aspiro/wamp/nowplaying/view/suggestions/m;
+--- a/com/aspiro/wamp/nowplaying/view/suggestions/i.smali
++++ b/com/aspiro/wamp/nowplaying/view/suggestions/i.smali
+@@ -670,1 +670,3 @@
      invoke-virtual {v3, p2}, Landroidx/recyclerview/widget/RecyclerView;->setAdapter(Landroidx/recyclerview/widget/RecyclerView$Adapter;)V
 +    invoke-static {p0, v3}, Lradiant/gestures/queue/SuggestionsResolver;->install(Landroidx/fragment/app/Fragment;Landroidx/recyclerview/widget/RecyclerView;)V
 +

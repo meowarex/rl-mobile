@@ -11,18 +11,18 @@
 
 
 # direct methods
-.method private currentAlbumRow(Lradiant/gestures/queue/QueueRequest;)Lu5/b$a;    # MARKER: R8 Lu5/b$a;
+.method private currentAlbumRow(Lradiant/gestures/queue/QueueRequest;)Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
     .locals 9
 
     if-eqz p1, :invalid
 
     iget-object v0, p1, Lradiant/gestures/queue/QueueRequest;->media:Ljava/lang/Object;
 
-    instance-of v1, v0, Lu5/b$a;    # MARKER: R8 Lu5/b$a;
+    instance-of v1, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
 
     if-eqz v1, :invalid
 
-    check-cast v0, Lu5/b$a;    # MARKER: R8 Lu5/b$a;
+    check-cast v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
 
     iget-object v1, p0, Lradiant/gestures/queue/DynamicTrackResolver;->recycler:Ljava/lang/ref/WeakReference;
 
@@ -68,37 +68,37 @@
 
     move-result-object v2
 
-    instance-of v3, v2, Lu5/b$a;    # MARKER: R8 Lu5/b$a;
+    instance-of v3, v2, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
 
     if-eqz v3, :invalid
 
-    check-cast v2, Lu5/b$a;    # MARKER: R8 Lu5/b$a;
+    check-cast v2, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
 
-    iget-object v3, v0, Lu5/b$a;->a:Lu5/b$a$a;    # MARKER: R8 Lu5/b$a; Lu5/b$a$a; a
+    iget-object v3, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;->a:Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a; Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a; a
 
-    iget-object v4, v2, Lu5/b$a;->a:Lu5/b$a$a;    # MARKER: R8 Lu5/b$a; Lu5/b$a$a; a
+    iget-object v4, v2, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;->a:Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a; Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a; a
 
     if-ne v3, v4, :invalid
 
-    iget-wide v3, v0, Lu5/b$a;->b:J    # MARKER: R8 Lu5/b$a; b
+    iget-wide v3, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;->b:J    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a; b
 
-    iget-wide v5, v2, Lu5/b$a;->b:J    # MARKER: R8 Lu5/b$a; b
+    iget-wide v5, v2, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;->b:J    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a; b
 
     cmp-long v7, v3, v5
 
     if-nez v7, :invalid
 
-    iget-object v3, v0, Lu5/b$a;->c:Lu5/b$a$b;    # MARKER: R8 Lu5/b$a; Lu5/b$a$b; c
+    iget-object v3, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;->c:Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a; Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; c
 
-    iget-object v4, v2, Lu5/b$a;->c:Lu5/b$a$b;    # MARKER: R8 Lu5/b$a; Lu5/b$a$b; c
+    iget-object v4, v2, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;->c:Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a; Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; c
 
     if-eqz v3, :invalid
 
     if-eqz v4, :invalid
 
-    iget v5, v3, Lu5/b$a$b;->r:I    # MARKER: R8 Lu5/b$a$b; r
+    iget v5, v3, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->s:I    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; r
 
-    iget v6, v4, Lu5/b$a$b;->r:I    # MARKER: R8 Lu5/b$a$b; r
+    iget v6, v4, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->s:I    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; r
 
     iget v7, p1, Lradiant/gestures/queue/QueueRequest;->id:I
 
@@ -106,9 +106,9 @@
 
     if-ne v6, v7, :invalid
 
-    iget-object v5, v3, Lu5/b$a$b;->s:Ljava/lang/String;    # MARKER: R8 Lu5/b$a$b; s
+    iget-object v5, v3, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->t:Ljava/lang/String;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; s
 
-    iget-object v6, v4, Lu5/b$a$b;->s:Ljava/lang/String;    # MARKER: R8 Lu5/b$a$b; s
+    iget-object v6, v4, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->t:Ljava/lang/String;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; s
 
     if-eq v5, v6, :module_valid
 
@@ -121,7 +121,7 @@
     if-eqz v5, :invalid
 
     :module_valid
-    iget-object v5, v4, Lu5/b$a$b;->g:Lcom/aspiro/wamp/model/Availability;    # MARKER: R8 Lu5/b$a$b; g
+    iget-object v5, v4, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->g:Lcom/aspiro/wamp/model/Availability;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; g
 
     invoke-interface {v5}, Lcom/aspiro/wamp/model/Availability;->isAvailable()Z
 
@@ -129,7 +129,7 @@
 
     if-eqz v5, :invalid
 
-    iget-boolean v5, v4, Lu5/b$a$b;->p:Z    # MARKER: R8 Lu5/b$a$b; p
+    iget-boolean v5, v4, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->q:Z    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; p
 
     if-nez v5, :invalid
 
@@ -155,18 +155,18 @@
     return-void
 .end method
 
-.method private currentRow(Lradiant/gestures/queue/QueueRequest;)Lo6/b;    # MARKER: R8 Lo6/b;
+.method private currentRow(Lradiant/gestures/queue/QueueRequest;)Ln6/b;    # MARKER: R8 Ln6/b;
     .locals 8
 
     if-eqz p1, :invalid
 
     iget-object v0, p1, Lradiant/gestures/queue/QueueRequest;->media:Ljava/lang/Object;
 
-    instance-of v1, v0, Lo6/b;    # MARKER: R8 Lo6/b;
+    instance-of v1, v0, Ln6/b;    # MARKER: R8 Ln6/b;
 
     if-eqz v1, :invalid
 
-    check-cast v0, Lo6/b;    # MARKER: R8 Lo6/b;
+    check-cast v0, Ln6/b;    # MARKER: R8 Ln6/b;
 
     iget-object v1, p0, Lradiant/gestures/queue/DynamicTrackResolver;->recycler:Ljava/lang/ref/WeakReference;
 
@@ -212,37 +212,37 @@
 
     move-result-object v2
 
-    instance-of v3, v2, Lo6/b;    # MARKER: R8 Lo6/b;
+    instance-of v3, v2, Ln6/b;    # MARKER: R8 Ln6/b;
 
     if-eqz v3, :invalid
 
-    check-cast v2, Lo6/b;    # MARKER: R8 Lo6/b;
+    check-cast v2, Ln6/b;    # MARKER: R8 Ln6/b;
 
-    iget-object v3, v0, Lo6/b;->a:Lo6/i;    # MARKER: R8 Lo6/b; Lo6/i; a
+    iget-object v3, v0, Ln6/b;->a:Ln6/g;    # MARKER: R8 Ln6/b; Ln6/g; a
 
-    iget-object v4, v2, Lo6/b;->a:Lo6/i;    # MARKER: R8 Lo6/b; Lo6/i; a
+    iget-object v4, v2, Ln6/b;->a:Ln6/g;    # MARKER: R8 Ln6/b; Ln6/g; a
 
     if-ne v3, v4, :invalid
 
-    iget-wide v3, v0, Lo6/b;->b:J    # MARKER: R8 Lo6/b; b
+    iget-wide v3, v0, Ln6/b;->b:J    # MARKER: R8 Ln6/b; b
 
-    iget-wide v5, v2, Lo6/b;->b:J    # MARKER: R8 Lo6/b; b
+    iget-wide v5, v2, Ln6/b;->b:J    # MARKER: R8 Ln6/b; b
 
     cmp-long v7, v3, v5
 
     if-nez v7, :invalid
 
-    iget-object v3, v0, Lo6/b;->c:Lo6/b$a;    # MARKER: R8 Lo6/b; Lo6/b$a; c
+    iget-object v3, v0, Ln6/b;->c:Ln6/b$a;    # MARKER: R8 Ln6/b; Ln6/b$a; c
 
-    iget-object v4, v2, Lo6/b;->c:Lo6/b$a;    # MARKER: R8 Lo6/b; Lo6/b$a; c
+    iget-object v4, v2, Ln6/b;->c:Ln6/b$a;    # MARKER: R8 Ln6/b; Ln6/b$a; c
 
     if-eqz v3, :invalid
 
     if-eqz v4, :invalid
 
-    iget v5, v3, Lo6/b$a;->d:I    # MARKER: R8 Lo6/b$a; d
+    iget v5, v3, Ln6/b$a;->d:I    # MARKER: R8 Ln6/b$a; d
 
-    iget v6, v4, Lo6/b$a;->d:I    # MARKER: R8 Lo6/b$a; d
+    iget v6, v4, Ln6/b$a;->d:I    # MARKER: R8 Ln6/b$a; d
 
     iget v7, p1, Lradiant/gestures/queue/QueueRequest;->id:I
 
@@ -250,15 +250,15 @@
 
     if-ne v6, v7, :invalid
 
-    iget v5, v3, Lo6/b$a;->o:I    # MARKER: R8 Lo6/b$a; o
+    iget v5, v3, Ln6/b$a;->o:I    # MARKER: R8 Ln6/b$a; o
 
-    iget v6, v4, Lo6/b$a;->o:I    # MARKER: R8 Lo6/b$a; o
+    iget v6, v4, Ln6/b$a;->o:I    # MARKER: R8 Ln6/b$a; o
 
     if-ne v5, v6, :invalid
 
-    iget-object v5, v3, Lo6/b$a;->q:Ljava/lang/String;    # MARKER: R8 Lo6/b$a; q
+    iget-object v5, v3, Ln6/b$a;->q:Ljava/lang/String;    # MARKER: R8 Ln6/b$a; q
 
-    iget-object v6, v4, Lo6/b$a;->q:Ljava/lang/String;    # MARKER: R8 Lo6/b$a; q
+    iget-object v6, v4, Ln6/b$a;->q:Ljava/lang/String;    # MARKER: R8 Ln6/b$a; q
 
     if-eq v5, v6, :valid
 
@@ -282,19 +282,19 @@
 .method private currentTrack(Lradiant/gestures/queue/QueueRequest;)Lcom/aspiro/wamp/model/Track;
     .locals 7
 
-    invoke-direct {p0, p1}, Lradiant/gestures/queue/DynamicTrackResolver;->currentRow(Lradiant/gestures/queue/QueueRequest;)Lo6/b;    # MARKER: R8 Lo6/b;
+    invoke-direct {p0, p1}, Lradiant/gestures/queue/DynamicTrackResolver;->currentRow(Lradiant/gestures/queue/QueueRequest;)Ln6/b;    # MARKER: R8 Ln6/b;
 
     move-result-object v0
 
     if-eqz v0, :invalid
 
-    iget-object v1, v0, Lo6/b;->a:Lo6/i;    # MARKER: R8 Lo6/b; Lo6/i; a
+    iget-object v1, v0, Ln6/b;->a:Ln6/g;    # MARKER: R8 Ln6/b; Ln6/g; a
 
-    iget-object v2, v0, Lo6/b;->c:Lo6/b$a;    # MARKER: R8 Lo6/b; Lo6/b$a; c
+    iget-object v2, v0, Ln6/b;->c:Ln6/b$a;    # MARKER: R8 Ln6/b; Ln6/b$a; c
 
-    iget-object v3, v1, Lo6/i;->p:Ljava/util/LinkedHashMap;    # MARKER: R8 Lo6/i; p
+    iget-object v3, v1, Ln6/g;->p:Ljava/util/LinkedHashMap;    # MARKER: R8 Ln6/g; p
 
-    iget-object v4, v2, Lo6/b$a;->q:Ljava/lang/String;    # MARKER: R8 Lo6/b$a; q
+    iget-object v4, v2, Ln6/b$a;->q:Ljava/lang/String;    # MARKER: R8 Ln6/b$a; q
 
     invoke-virtual {v3, v4}, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
 
@@ -310,7 +310,7 @@
 
     move-result-object v3
 
-    iget v4, v2, Lo6/b$a;->o:I    # MARKER: R8 Lo6/b$a; o
+    iget v4, v2, Ln6/b$a;->o:I    # MARKER: R8 Ln6/b$a; o
 
     if-gez v4, :check_size
 
@@ -344,7 +344,7 @@
 
     if-ne v4, v5, :invalid
 
-    iget-object v1, v1, Lo6/i;->g:Lcom/aspiro/wamp/model/AvailabilityInteractor;    # MARKER: R8 Lo6/i; g
+    iget-object v1, v1, Ln6/g;->g:Lcom/aspiro/wamp/model/AvailabilityInteractor;    # MARKER: R8 Ln6/g; g
 
     invoke-interface {v1, v3}, Lcom/aspiro/wamp/model/AvailabilityInteractor;->getAvailability(Lcom/aspiro/wamp/model/MediaItem;)Lcom/aspiro/wamp/model/Availability$MediaItem;
 
@@ -418,17 +418,17 @@
 
     move-result-object p1
 
-    instance-of v0, p1, Lu5/b$a;    # MARKER: R8 Lu5/b$a;
+    instance-of v0, p1, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
 
     if-eqz v0, :invalid
 
-    check-cast p1, Lu5/b$a;    # MARKER: R8 Lu5/b$a;
+    check-cast p1, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
 
-    iget-object v0, p1, Lu5/b$a;->c:Lu5/b$a$b;    # MARKER: R8 Lu5/b$a; Lu5/b$a$b; c
+    iget-object v0, p1, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;->c:Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a; Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; c
 
     if-eqz v0, :invalid
 
-    iget-object v1, v0, Lu5/b$a$b;->g:Lcom/aspiro/wamp/model/Availability;    # MARKER: R8 Lu5/b$a$b; g
+    iget-object v1, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->g:Lcom/aspiro/wamp/model/Availability;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; g
 
     invoke-interface {v1}, Lcom/aspiro/wamp/model/Availability;->isAvailable()Z
 
@@ -436,11 +436,11 @@
 
     if-eqz v1, :invalid
 
-    iget-boolean v1, v0, Lu5/b$a$b;->p:Z    # MARKER: R8 Lu5/b$a$b; p
+    iget-boolean v1, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->q:Z    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; p
 
     if-nez v1, :invalid
 
-    iget v0, v0, Lu5/b$a$b;->r:I    # MARKER: R8 Lu5/b$a$b; r
+    iget v0, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->s:I    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; r
 
     new-instance v1, Lradiant/gestures/queue/QueueRequest;
 
@@ -478,11 +478,11 @@
 
     iget-object v0, p1, Lradiant/gestures/queue/QueueRequest;->media:Ljava/lang/Object;
 
-    instance-of v1, v0, Lu5/b$a;    # MARKER: R8 Lu5/b$a;
+    instance-of v1, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
 
     if-eqz v1, :dynamic_track
 
-    invoke-direct {p0, p1}, Lradiant/gestures/queue/DynamicTrackResolver;->currentAlbumRow(Lradiant/gestures/queue/QueueRequest;)Lu5/b$a;    # MARKER: R8 Lu5/b$a;
+    invoke-direct {p0, p1}, Lradiant/gestures/queue/DynamicTrackResolver;->currentAlbumRow(Lradiant/gestures/queue/QueueRequest;)Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
 
     move-result-object v0
 
@@ -490,7 +490,7 @@
 
     new-instance v1, Lradiant/gestures/queue/AlbumItemQueueAction;
 
-    invoke-direct {v1, v0}, Lradiant/gestures/queue/AlbumItemQueueAction;-><init>(Lu5/b$a;)V    # MARKER: R8 Lu5/b$a;
+    invoke-direct {v1, v0}, Lradiant/gestures/queue/AlbumItemQueueAction;-><init>(Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;)V    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
 
     iget-object v2, p0, Lradiant/gestures/queue/DynamicTrackResolver;->recycler:Ljava/lang/ref/WeakReference;
 
@@ -513,7 +513,7 @@
     return-void
 
     :dynamic_track
-    invoke-direct {p0, p1}, Lradiant/gestures/queue/DynamicTrackResolver;->currentRow(Lradiant/gestures/queue/QueueRequest;)Lo6/b;    # MARKER: R8 Lo6/b;
+    invoke-direct {p0, p1}, Lradiant/gestures/queue/DynamicTrackResolver;->currentRow(Lradiant/gestures/queue/QueueRequest;)Ln6/b;    # MARKER: R8 Ln6/b;
 
     move-result-object v0
 
@@ -535,30 +535,30 @@
 
     if-nez v2, :append
 
-    iget-object v2, v0, Lo6/b;->a:Lo6/i;    # MARKER: R8 Lo6/b; Lo6/i; a
+    iget-object v2, v0, Ln6/b;->a:Ln6/g;    # MARKER: R8 Ln6/b; Ln6/g; a
 
-    iget-object v3, v0, Lo6/b;->c:Lo6/b$a;    # MARKER: R8 Lo6/b; Lo6/b$a; c
+    iget-object v3, v0, Ln6/b;->c:Ln6/b$a;    # MARKER: R8 Ln6/b; Ln6/b$a; c
 
-    iget v4, v3, Lo6/b$a;->o:I    # MARKER: R8 Lo6/b$a; o
+    iget v4, v3, Ln6/b$a;->o:I    # MARKER: R8 Ln6/b$a; o
 
-    iget-object v5, v3, Lo6/b$a;->q:Ljava/lang/String;    # MARKER: R8 Lo6/b$a; q
+    iget-object v5, v3, Ln6/b$a;->q:Ljava/lang/String;    # MARKER: R8 Ln6/b$a; q
 
-    invoke-virtual {v2, v4, v5}, Lo6/i;->e(ILjava/lang/String;)V    # MARKER: R8 Lo6/i; e
+    invoke-virtual {v2, v4, v5}, Ln6/g;->e(ILjava/lang/String;)V    # MARKER: R8 Ln6/g; e
 
     goto :done
 
     :append
-    iget-object v0, v0, Lo6/b;->a:Lo6/i;    # MARKER: R8 Lo6/b; Lo6/i; a
+    iget-object v0, v0, Ln6/b;->a:Ln6/g;    # MARKER: R8 Ln6/b; Ln6/g; a
 
-    iget-object v2, v0, Lo6/i;->p:Ljava/util/LinkedHashMap;    # MARKER: R8 Lo6/i; p
+    iget-object v2, v0, Ln6/g;->p:Ljava/util/LinkedHashMap;    # MARKER: R8 Ln6/g; p
 
     iget-object v3, p1, Lradiant/gestures/queue/QueueRequest;->media:Ljava/lang/Object;
 
-    check-cast v3, Lo6/b;    # MARKER: R8 Lo6/b;
+    check-cast v3, Ln6/b;    # MARKER: R8 Ln6/b;
 
-    iget-object v3, v3, Lo6/b;->c:Lo6/b$a;    # MARKER: R8 Lo6/b; Lo6/b$a; c
+    iget-object v3, v3, Ln6/b;->c:Ln6/b$a;    # MARKER: R8 Ln6/b; Ln6/b$a; c
 
-    iget-object v3, v3, Lo6/b$a;->q:Ljava/lang/String;    # MARKER: R8 Lo6/b$a; q
+    iget-object v3, v3, Ln6/b$a;->q:Ljava/lang/String;    # MARKER: R8 Ln6/b$a; q
 
     invoke-virtual {v2, v3}, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
 
@@ -598,7 +598,7 @@
 
     move-result-object v5
 
-    iget-object v6, v0, Lo6/i;->m:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lo6/i; m
+    iget-object v6, v0, Ln6/g;->m:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Ln6/g; m
 
     invoke-virtual {v2}, Lcom/aspiro/wamp/dynamicpages/data/model/Module;->getSelfLink()Ljava/lang/String;
 
@@ -655,7 +655,7 @@
 .method public resolve(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/gestures/queue/QueueRequest;
     .locals 5
 
-    instance-of v0, p2, Lv6/e$a;    # MARKER: R8 Lv6/e$a;
+    instance-of v0, p2, Lu6/e$a;    # MARKER: R8 Lu6/e$a;
 
     if-eqz v0, :dynamic_holder
 
@@ -666,7 +666,7 @@
     return-object p1
 
     :dynamic_holder
-    instance-of v0, p2, Lp7/a$a;    # MARKER: R8 Lp7/a$a;
+    instance-of v0, p2, Lo7/a$a;    # MARKER: R8 Lo7/a$a;
 
     if-eqz v0, :invalid
 
@@ -721,17 +721,17 @@
 
     move-result-object p1
 
-    instance-of v0, p1, Lo6/b;    # MARKER: R8 Lo6/b;
+    instance-of v0, p1, Ln6/b;    # MARKER: R8 Ln6/b;
 
     if-eqz v0, :invalid
 
-    check-cast p1, Lo6/b;    # MARKER: R8 Lo6/b;
+    check-cast p1, Ln6/b;    # MARKER: R8 Ln6/b;
 
-    iget-object v0, p1, Lo6/b;->c:Lo6/b$a;    # MARKER: R8 Lo6/b; Lo6/b$a; c
+    iget-object v0, p1, Ln6/b;->c:Ln6/b$a;    # MARKER: R8 Ln6/b; Ln6/b$a; c
 
     if-eqz v0, :invalid
 
-    iget v0, v0, Lo6/b$a;->d:I    # MARKER: R8 Lo6/b$a; d
+    iget v0, v0, Ln6/b$a;->d:I    # MARKER: R8 Ln6/b$a; d
 
     new-instance v1, Lradiant/gestures/queue/QueueRequest;
 

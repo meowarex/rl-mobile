@@ -36,9 +36,9 @@
     if-eqz v1, :invalid
     invoke-virtual {v1}, Landroidx/recyclerview/widget/RecyclerView;->getAdapter()Landroidx/recyclerview/widget/RecyclerView$Adapter;
     move-result-object v1
-    instance-of v2, v1, La50/d;    # MARKER: R8 La50/d;
+    instance-of v2, v1, Lg40/d;    # MARKER: R8 Lg40/d;
     if-eqz v2, :invalid
-    check-cast v1, La50/d;    # MARKER: R8 La50/d;
+    check-cast v1, Lg40/d;    # MARKER: R8 Lg40/d;
     invoke-virtual {v1}, Landroidx/recyclerview/widget/ListAdapter;->getCurrentList()Ljava/util/List;
     move-result-object v1
 
@@ -138,7 +138,7 @@
     move-result-object v2
     check-cast v2, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;
     if-eqz v2, :invalid
-    invoke-virtual {v2}, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;->N()Ltl/h;    # MARKER: R8 Ltl/h; N
+    invoke-virtual {v2}, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;->N()Ltl/j;    # MARKER: R8 Ltl/j; N
     move-result-object v2
     instance-of v4, v2, Lcom/aspiro/wamp/search/v2/d;    # MARKER: R8 Lcom/aspiro/wamp/search/v2/d;
     if-eqz v4, :invalid
@@ -181,7 +181,7 @@
     move-result-object v2
     check-cast v2, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;
     if-eqz v2, :invalid
-    invoke-virtual {v2}, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;->N()Ltl/h;    # MARKER: R8 Ltl/h; N
+    invoke-virtual {v2}, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;->N()Ltl/j;    # MARKER: R8 Ltl/j; N
     move-result-object v2
     instance-of v4, v2, Lcom/aspiro/wamp/search/v2/d;    # MARKER: R8 Lcom/aspiro/wamp/search/v2/d;
     if-eqz v4, :invalid
@@ -225,12 +225,12 @@
     move-result-object v1
     check-cast v1, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;
     if-eqz v1, :done
-    iget-object v2, v1, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;->c:Ltl/q;    # MARKER: R8 Ltl/q; c
+    iget-object v2, v1, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;->c:Ltl/r;    # MARKER: R8 Ltl/r; c
     if-eqz v2, :done
 
     invoke-static {v0}, Lbm/i;->a(Lbm/h;)Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;    # MARKER: R8 Lbm/i; Lbm/h; a
     move-result-object v3
-    iget-object v4, v2, Ltl/q;->c:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Ltl/q; c
+    iget-object v4, v2, Ltl/r;->c:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Ltl/r; c
 
     instance-of v5, v0, Lbm/k;    # MARKER: R8 Lbm/k;
     if-eqz v5, :album
@@ -245,9 +245,9 @@
     new-instance v2, Lcom/aspiro/wamp/search/v2/a$g;    # MARKER: R8 Lcom/aspiro/wamp/search/v2/a$g;
     iget v3, p1, Lradiant/gestures/queue/QueueRequest;->position:I
     invoke-direct {v2, v0, v3}, Lcom/aspiro/wamp/search/v2/a$g;-><init>(Lbm/h;I)V    # MARKER: R8 Lcom/aspiro/wamp/search/v2/a$g; Lbm/h;
-    invoke-virtual {v1}, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;->N()Ltl/h;    # MARKER: R8 Ltl/h; N
+    invoke-virtual {v1}, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;->N()Ltl/j;    # MARKER: R8 Ltl/j; N
     move-result-object v0
-    invoke-interface {v0, v2}, Ltl/f;->e(Lcom/aspiro/wamp/search/v2/a;)V    # MARKER: R8 Ltl/f; Lcom/aspiro/wamp/search/v2/a; e
+    invoke-interface {v0, v2}, Ltl/h;->e(Lcom/aspiro/wamp/search/v2/a;)V    # MARKER: R8 Ltl/h; Lcom/aspiro/wamp/search/v2/a; e
     goto :done
 
     :append_track
@@ -255,9 +255,9 @@
     iget-object p1, v5, Lbm/k;->n:Lcom/aspiro/wamp/search/SearchDataSource;    # MARKER: R8 Lbm/k; n
     sget-object v0, Lcom/aspiro/wamp/search/SearchDataSource;->REMOTE:Lcom/aspiro/wamp/search/SearchDataSource;
     if-ne p1, v0, :query_ready
-    invoke-virtual {v1}, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;->N()Ltl/h;    # MARKER: R8 Ltl/h; N
+    invoke-virtual {v1}, Lcom/aspiro/wamp/search/v2/UnifiedSearchView;->N()Ltl/j;    # MARKER: R8 Ltl/j; N
     move-result-object p1
-    invoke-interface {p1}, Ltl/h;->c()Lcom/aspiro/wamp/search/v2/model/UnifiedSearchQuery;    # MARKER: R8 Ltl/h; c
+    invoke-interface {p1}, Ltl/j;->c()Lcom/aspiro/wamp/search/v2/model/UnifiedSearchQuery;    # MARKER: R8 Ltl/j; c
     move-result-object p1
     iget-object v7, p1, Lcom/aspiro/wamp/search/v2/model/UnifiedSearchQuery;->a:Ljava/lang/String;    # MARKER: R8 a
     :query_ready
@@ -270,7 +270,7 @@
     invoke-static {v4}, Lcom/tidal/android/navigation/a;->b(Lcom/tidal/android/navigation/NavigationInfo;)Lcom/tidal/android/navigation/NavigationInfo$Node;    # MARKER: R8 Lcom/tidal/android/navigation/a; b
     move-result-object v0
     :nav_ready
-    invoke-static {p1, v7, v0}, Lcom/aspiro/wamp/playqueue/source/model/b;->o(Ljava/lang/String;Ljava/lang/String;Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/playqueue/source/model/ItemSource;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/source/model/b; o
+    invoke-static {v0, p1, v7}, Lcom/aspiro/wamp/playqueue/source/model/b;->o(Lcom/tidal/android/navigation/NavigationInfo;Ljava/lang/String;Ljava/lang/String;)Lcom/aspiro/wamp/playqueue/source/model/ItemSource;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/source/model/b; o
     move-result-object p1
     invoke-virtual {p1, v6}, Lcom/aspiro/wamp/playqueue/source/model/Source;->addSourceItem(Lcom/aspiro/wamp/model/MediaItem;)V
     invoke-virtual {v1}, Landroidx/fragment/app/Fragment;->getContext()Landroid/content/Context;
@@ -298,7 +298,7 @@
     :album
     instance-of v5, v0, Lbm/a;    # MARKER: R8 Lbm/a;
     if-eqz v5, :playlist
-    iget-object v5, v2, Ltl/q;->a:Lx40/a;    # MARKER: R8 Ltl/q; Lx40/a; a
+    iget-object v5, v2, Ltl/r;->a:Ld40/a;    # MARKER: R8 Ltl/r; Ld40/a; a
     instance-of v6, v5, Lh4/a;    # MARKER: R8 Lh4/a;
     if-eqz v6, :done
     check-cast v5, Lh4/a;    # MARKER: R8 Lh4/a;
@@ -360,7 +360,7 @@
     :mix
     instance-of v5, v0, Lbm/f;    # MARKER: R8 Lbm/f;
     if-eqz v5, :done
-    iget-object v5, v2, Ltl/q;->a:Lx40/a;    # MARKER: R8 Ltl/q; Lx40/a; a
+    iget-object v5, v2, Ltl/r;->a:Ld40/a;    # MARKER: R8 Ltl/r; Ld40/a; a
     instance-of v6, v5, Lh4/a;    # MARKER: R8 Lh4/a;
     if-eqz v6, :done
     check-cast v5, Lh4/a;    # MARKER: R8 Lh4/a;
@@ -412,9 +412,9 @@
     :has_position
     invoke-virtual {p1}, Landroidx/recyclerview/widget/RecyclerView;->getAdapter()Landroidx/recyclerview/widget/RecyclerView$Adapter;
     move-result-object p1
-    instance-of v1, p1, La50/d;    # MARKER: R8 La50/d;
+    instance-of v1, p1, Lg40/d;    # MARKER: R8 Lg40/d;
     if-eqz v1, :invalid
-    check-cast p1, La50/d;    # MARKER: R8 La50/d;
+    check-cast p1, Lg40/d;    # MARKER: R8 Lg40/d;
     invoke-virtual {p1}, Landroidx/recyclerview/widget/ListAdapter;->getCurrentList()Ljava/util/List;
     move-result-object p1
     invoke-interface {p1}, Ljava/util/List;->size()I
@@ -425,7 +425,7 @@
     invoke-interface {p1, v0}, Ljava/util/List;->get(I)Ljava/lang/Object;
     move-result-object p1
 
-    instance-of v1, p2, Lul/n0$a;    # MARKER: R8 Lul/n0$a;
+    instance-of v1, p2, Lul/j0$a;    # MARKER: R8 Lul/j0$a;
     if-eqz v1, :album_holder
     instance-of v1, p1, Lbm/k;    # MARKER: R8 Lbm/k;
     if-eqz v1, :invalid
@@ -449,7 +449,7 @@
     goto :create
 
     :playlist_holder
-    instance-of v1, p2, Lul/a0$a;    # MARKER: R8 Lul/a0$a;
+    instance-of v1, p2, Lul/x$a;    # MARKER: R8 Lul/x$a;
     if-eqz v1, :mix_holder
     instance-of v1, p1, Lbm/g;    # MARKER: R8 Lbm/g;
     if-eqz v1, :invalid
@@ -463,7 +463,7 @@
     goto :create
 
     :mix_holder
-    instance-of p2, p2, Lul/w$a;    # MARKER: R8 Lul/w$a;
+    instance-of p2, p2, Lul/t$a;    # MARKER: R8 Lul/t$a;
     if-eqz p2, :invalid
     instance-of p2, p1, Lbm/f;    # MARKER: R8 Lbm/f;
     if-eqz p2, :invalid

@@ -23,7 +23,7 @@
 .field private static g:Landroidx/compose/material3/SheetState;
 
 # Material3 settle lambda
-.field private static h:Lam0/l;    # MARKER: R8 Lam0/l;
+.field private static h:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
 # Latest MotionEvent eventTime for drag updates
 .field private static i:J
@@ -51,7 +51,7 @@
 .field private static r:Z
 
 # AppScaffold context
-.field private static s:Lam0/l;    # MARKER: R8 Lam0/l;
+.field private static s:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
 .field private static t:Landroidx/compose/material3/SheetState;
 
@@ -321,7 +321,7 @@
 
     sput-object v0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->g:Landroidx/compose/material3/SheetState;
 
-    sput-object v0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->h:Lam0/l;    # MARKER: R8 Lam0/l;
+    sput-object v0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->h:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     sput v0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->d:F
 
@@ -437,7 +437,7 @@
     return-void
 .end method
 
-.method public static cancelDrag(Landroidx/compose/material3/SheetState;Lam0/l;)V    # MARKER: R8 Lam0/l;
+.method public static cancelDrag(Landroidx/compose/material3/SheetState;Lyl0/l;)V    # MARKER: R8 Lyl0/l;
     .locals 1
 
     invoke-static {p0}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->isDragging(Landroidx/compose/material3/SheetState;)Z
@@ -450,13 +450,13 @@
 
     sget-object p0, Lcom/tidal/android/feature/appscaffold/ui/b$a;->a:Lcom/tidal/android/feature/appscaffold/ui/b$a;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/b$a; a
 
-    invoke-interface {p1, p0}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lam0/l;
+    invoke-interface {p1, p0}, Lyl0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lyl0/l;
 
     :done
     return-void
 .end method
 
-.method public static finishDrag(Landroidx/compose/material3/SheetState;Lam0/l;F)V    # MARKER: R8 Lam0/l;
+.method public static finishDrag(Landroidx/compose/material3/SheetState;Lyl0/l;F)V    # MARKER: R8 Lyl0/l;
     .locals 6
 
     invoke-static {p0}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->isDragging(Landroidx/compose/material3/SheetState;)Z
@@ -469,7 +469,7 @@
 
     if-ne v0, p0, :fallback_snap
 
-    sget-object v0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->h:Lam0/l;    # MARKER: R8 Lam0/l;
+    sget-object v0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->h:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     if-eqz v0, :fallback_snap
 
@@ -485,7 +485,7 @@
 
     move-result-object p0
 
-    invoke-interface {v0, p0}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lam0/l;
+    invoke-interface {v0, p0}, Lyl0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lyl0/l;
 
     goto/16 :done
 
@@ -589,7 +589,7 @@
 
     sget-object p0, Lcom/tidal/android/feature/appscaffold/ui/b$a;->a:Lcom/tidal/android/feature/appscaffold/ui/b$a;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/b$a; a
 
-    invoke-interface {p1, p0}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lam0/l;
+    invoke-interface {p1, p0}, Lyl0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lyl0/l;
 
     :done
     return-void
@@ -748,10 +748,10 @@
     return-void
 .end method
 
-.method public static configure(Lam0/l;Landroidx/compose/material3/SheetState;Z)V    # MARKER: R8 Lam0/l;
+.method public static configure(Lyl0/l;Landroidx/compose/material3/SheetState;Z)V    # MARKER: R8 Lyl0/l;
     .locals 0
 
-    sput-object p0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->s:Lam0/l;    # MARKER: R8 Lam0/l;
+    sput-object p0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->s:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     sput-object p1, Lradiant/gestures/miniplayer/MiniPlayerGestures;->t:Landroidx/compose/material3/SheetState;
 
@@ -798,7 +798,7 @@
 
     sget-object v0, Lradiant/gestures/miniplayer/MiniPlayerGestures$FeedbackLayer;->INSTANCE:Lradiant/gestures/miniplayer/MiniPlayerGestures$FeedbackLayer;
 
-    invoke-static {p0, v0}, Landroidx/compose/ui/graphics/GraphicsLayerModifierKt;->graphicsLayer(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+    invoke-static {p0, v0}, Landroidx/compose/ui/graphics/GraphicsLayerModifierKt;->graphicsLayer(Landroidx/compose/ui/Modifier;Lyl0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
 
     move-result-object p0
 
@@ -848,14 +848,14 @@
     return p0
 .end method
 
-.method public static modifier(Landroidx/compose/ui/Modifier;Lam0/l;Landroidx/compose/material3/SheetState;Z)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+.method public static modifier(Landroidx/compose/ui/Modifier;Lyl0/l;Landroidx/compose/material3/SheetState;Z)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
     .locals 1
 
     new-instance v0, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;
 
-    invoke-direct {v0, p1, p2, p3}, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;-><init>(Lam0/l;Landroidx/compose/material3/SheetState;Z)V    # MARKER: R8 Lam0/l;
+    invoke-direct {v0, p1, p2, p3}, Lradiant/gestures/miniplayer/MiniPlayerGestures$Gesture;-><init>(Lyl0/l;Landroidx/compose/material3/SheetState;Z)V    # MARKER: R8 Lyl0/l;
 
-    invoke-static {p0, v0}, Landroidx/compose/ui/input/pointer/PointerInteropFilter_androidKt;->motionEventSpy(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+    invoke-static {p0, v0}, Landroidx/compose/ui/input/pointer/PointerInteropFilter_androidKt;->motionEventSpy(Landroidx/compose/ui/Modifier;Lyl0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
 
     move-result-object p0
 
@@ -865,7 +865,7 @@
 .method public static trackAreaModifier(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
     .locals 3
 
-    sget-object v0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->s:Lam0/l;    # MARKER: R8 Lam0/l;
+    sget-object v0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->s:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     if-eqz v0, :done
 
@@ -875,7 +875,7 @@
 
     sget-boolean v2, Lradiant/gestures/miniplayer/MiniPlayerGestures;->u:Z
 
-    invoke-static {p0, v0, v1, v2}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->modifier(Landroidx/compose/ui/Modifier;Lam0/l;Landroidx/compose/material3/SheetState;Z)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+    invoke-static {p0, v0, v1, v2}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->modifier(Landroidx/compose/ui/Modifier;Lyl0/l;Landroidx/compose/material3/SheetState;Z)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
 
     move-result-object p0
 
@@ -988,7 +988,7 @@
     return-void
 .end method
 
-.method public static completeSimpleSwipe(Lam0/l;F)Z    # MARKER: R8 Lam0/l;
+.method public static completeSimpleSwipe(Lyl0/l;F)Z    # MARKER: R8 Lyl0/l;
     .locals 4
 
     sget-boolean v0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->u:Z
@@ -1035,7 +1035,7 @@
 
     sget-object v0, Lcom/tidal/android/feature/appscaffold/ui/b$b;->a:Lcom/tidal/android/feature/appscaffold/ui/b$b;    # MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/b$b; a
 
-    invoke-interface {p0, v0}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lam0/l;
+    invoke-interface {p0, v0}, Lyl0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lyl0/l;
 
     const/4 v0, 0x1
 
@@ -1307,26 +1307,26 @@
     return p0
 .end method
 
-.method public static rootModifier(Landroidx/compose/ui/Modifier;Lam0/l;Landroidx/compose/material3/SheetState;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+.method public static rootModifier(Landroidx/compose/ui/Modifier;Lyl0/l;Landroidx/compose/material3/SheetState;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
     .locals 1
 
     new-instance v0, Lradiant/gestures/miniplayer/MiniPlayerGestures$RootGesture;
 
-    invoke-direct {v0, p1, p2}, Lradiant/gestures/miniplayer/MiniPlayerGestures$RootGesture;-><init>(Lam0/l;Landroidx/compose/material3/SheetState;)V    # MARKER: R8 Lam0/l;
+    invoke-direct {v0, p1, p2}, Lradiant/gestures/miniplayer/MiniPlayerGestures$RootGesture;-><init>(Lyl0/l;Landroidx/compose/material3/SheetState;)V    # MARKER: R8 Lyl0/l;
 
-    invoke-static {p0, v0}, Landroidx/compose/ui/input/pointer/PointerInteropFilter_androidKt;->motionEventSpy(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+    invoke-static {p0, v0}, Landroidx/compose/ui/input/pointer/PointerInteropFilter_androidKt;->motionEventSpy(Landroidx/compose/ui/Modifier;Lyl0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
 
     move-result-object p0
 
     return-object p0
 .end method
 
-.method public static setSettleCallback(Landroidx/compose/material3/SheetState;Lam0/l;)V    # MARKER: R8 Lam0/l;
+.method public static setSettleCallback(Landroidx/compose/material3/SheetState;Lyl0/l;)V    # MARKER: R8 Lyl0/l;
     .locals 0
 
     sput-object p0, Lradiant/gestures/miniplayer/MiniPlayerGestures;->g:Landroidx/compose/material3/SheetState;
 
-    sput-object p1, Lradiant/gestures/miniplayer/MiniPlayerGestures;->h:Lam0/l;    # MARKER: R8 Lam0/l;
+    sput-object p1, Lradiant/gestures/miniplayer/MiniPlayerGestures;->h:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     return-void
 .end method

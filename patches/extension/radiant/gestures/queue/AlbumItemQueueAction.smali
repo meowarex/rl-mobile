@@ -7,7 +7,7 @@
 
 
 # instance fields
-.field private final callback:Lu5/b$a$a;    # MARKER: R8 Lu5/b$a$a;
+.field private final callback:Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a;
 
 .field private context:Landroid/content/Context;
 
@@ -17,22 +17,22 @@
 
 
 # direct methods
-.method public constructor <init>(Lu5/b$a;)V    # MARKER: R8 Lu5/b$a;
+.method public constructor <init>(Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;)V    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;
     .locals 2
 
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
-    iget-object v0, p1, Lu5/b$a;->a:Lu5/b$a$a;    # MARKER: R8 Lu5/b$a; Lu5/b$a$a; a
+    iget-object v0, p1, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;->a:Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a; Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a; a
 
-    iput-object v0, p0, Lradiant/gestures/queue/AlbumItemQueueAction;->callback:Lu5/b$a$a;    # MARKER: R8 Lu5/b$a$a;
+    iput-object v0, p0, Lradiant/gestures/queue/AlbumItemQueueAction;->callback:Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a;
 
-    iget-object v0, p1, Lu5/b$a;->c:Lu5/b$a$b;    # MARKER: R8 Lu5/b$a; Lu5/b$a$b; c
+    iget-object v0, p1, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a;->c:Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a; Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; c
 
-    iget v1, v0, Lu5/b$a$b;->r:I    # MARKER: R8 Lu5/b$a$b; r
+    iget v1, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->s:I    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; r
 
     iput v1, p0, Lradiant/gestures/queue/AlbumItemQueueAction;->mediaItemId:I
 
-    iget-object v0, v0, Lu5/b$a$b;->s:Ljava/lang/String;    # MARKER: R8 Lu5/b$a$b; s
+    iget-object v0, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b;->t:Ljava/lang/String;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$b; s
 
     iput-object v0, p0, Lradiant/gestures/queue/AlbumItemQueueAction;->moduleId:Ljava/lang/String;
 
@@ -44,7 +44,7 @@
 .method public invoke(I)Ljava/lang/Object;
     .locals 10
 
-    iget-object v0, p0, Lradiant/gestures/queue/AlbumItemQueueAction;->callback:Lu5/b$a$a;    # MARKER: R8 Lu5/b$a$a;
+    iget-object v0, p0, Lradiant/gestures/queue/AlbumItemQueueAction;->callback:Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a;
 
     iget v1, p0, Lradiant/gestures/queue/AlbumItemQueueAction;->mediaItemId:I
 
@@ -60,7 +60,7 @@
 
     if-nez v3, :active_queue
 
-    invoke-interface {v0, v1, v2}, Lu5/b$a$a;->g(ILjava/lang/String;)V    # MARKER: R8 Lu5/b$a$a; g
+    invoke-interface {v0, v1, v2}, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a;->g(ILjava/lang/String;)V    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/b$a$a; g
 
     goto :done
 
@@ -69,11 +69,11 @@
 
     if-eqz v3, :done
 
-    instance-of v4, v0, Lu5/g;    # MARKER: R8 Lu5/g;
+    instance-of v4, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/n;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/n;
 
     if-eqz v4, :done
 
-    check-cast v0, Lu5/g;    # MARKER: R8 Lu5/g;
+    check-cast v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/n;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/n;
 
     invoke-virtual {v0, v2}, Lk5/f;->l(Ljava/lang/String;)Lcom/aspiro/wamp/dynamicpages/data/model/Module;    # MARKER: R8 Lk5/f; l
 
@@ -124,7 +124,7 @@
 
     check-cast v7, Lcom/aspiro/wamp/model/Track;
 
-    iget-object v8, v0, Lu5/g;->h:Lcom/aspiro/wamp/model/AvailabilityInteractor;    # MARKER: R8 Lu5/g; h
+    iget-object v8, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/n;->h:Lcom/aspiro/wamp/model/AvailabilityInteractor;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/n; h
 
     invoke-interface {v8, v7}, Lcom/aspiro/wamp/model/AvailabilityInteractor;->getAvailability(Lcom/aspiro/wamp/model/MediaItem;)Lcom/aspiro/wamp/model/Availability$MediaItem;
 
@@ -162,7 +162,7 @@
 
     if-eqz v6, :done
 
-    iget-object v8, v0, Lu5/g;->j:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lu5/g; j
+    iget-object v8, v0, Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/n;->j:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lcom/aspiro/wamp/dynamicpages/modules/albumitemcollection/n; j
 
     invoke-static {v6, v8}, Lcom/aspiro/wamp/playqueue/source/model/b;->c(Lcom/aspiro/wamp/model/Album;Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/playqueue/source/model/AlbumSource;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/source/model/b; c
 

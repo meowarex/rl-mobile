@@ -1,6 +1,6 @@
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerViewModel.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerViewModel.smali
-@@ -1374,6 +1374,8 @@
+@@ -1459,6 +1459,8 @@
      .line 105
      check-cast v1, Lcom/aspiro/wamp/model/Track;
  
@@ -9,10 +9,10 @@
      .line 106
      .line 107
      invoke-virtual {v1}, Lcom/aspiro/wamp/model/MediaItem;->getId()I
-@@ -1655,7 +1657,11 @@
-     .line 239
-     .line 240
-     .line 241
+@@ -1745,7 +1747,11 @@
+     .line 235
+     .line 236
+     .line 237
 -    if-nez v9, :cond_a
 +    invoke-static {v0}, Lradiant/RLAPILyricsHook;->shouldKeepOpen(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
 +    move-result v20
@@ -20,11 +20,11 @@
 +    :rl_native_visibility
 +    if-nez v9, :cond_a
  
-     .line 242
-     .line 243
-@@ -2347,7 +2353,12 @@
+     .line 238
+     .line 239
+@@ -2437,7 +2443,12 @@
  
-     .line 572
+     .line 568
      :goto_c
 +    invoke-static {v0}, Lradiant/RLAPILyricsHook;->isOwner(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
 +    move-result v20
@@ -33,12 +33,12 @@
      invoke-interface {v9, v1}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
 +    :rl_keep_n2
  
-     .line 573
-     .line 574
-@@ -2396,7 +2407,12 @@
+     .line 569
+     .line 570
+@@ -2486,7 +2497,12 @@
  
-     .line 595
-     .line 596
+     .line 591
+     .line 592
 +    invoke-static {v0}, Lradiant/RLAPILyricsHook;->shouldKeepOpen(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
 +    move-result v20
 +    if-nez v20, :rl_keep_o    # only preserve visibility owned by this ViewModel
@@ -46,12 +46,12 @@
      invoke-interface {v1, v5}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
 +    :rl_keep_o
  
-     .line 597
-     .line 598
-@@ -2425,7 +2441,12 @@
+     .line 593
+     .line 594
+@@ -2515,7 +2531,12 @@
  
-     .line 610
-     .line 611
+     .line 606
+     .line 607
 +    invoke-static {v0}, Lradiant/RLAPILyricsHook;->isOwner(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
 +    move-result v20
 +    if-nez v20, :rl_keep_n    # only preserve RL content owned by this ViewModel
@@ -59,8 +59,8 @@
      invoke-interface {v1, v6}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
 +    :rl_keep_n
  
-     .line 612
-     .line 613
+     .line 608
+     .line 609
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerViewModel$special$$inlined$mapNotNull$1$2.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerViewModel$special$$inlined$mapNotNull$1$2.smali
 @@ -2256,6 +2256,11 @@
@@ -74,4 +74,4 @@
 +    :rl_hl_done
  
      .line 1042
-     iget-object v4, v1, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;
+     iget-object v4, v1, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->S:Lkotlinx/coroutines/flow/MutableStateFlow;

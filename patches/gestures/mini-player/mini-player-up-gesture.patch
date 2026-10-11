@@ -1,6 +1,6 @@
-# rl-locals: com/tidal/android/feature/appscaffold/ui/composable/i.smali b( 52
---- a/com/tidal/android/feature/appscaffold/ui/composable/i.smali
-+++ b/com/tidal/android/feature/appscaffold/ui/composable/i.smali
+# rl-locals: com/tidal/android/feature/appscaffold/ui/composable/k.smali b( 52
+--- a/com/tidal/android/feature/appscaffold/ui/composable/k.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/k.smali
 @@ -1691,6 +1691,14 @@
  
      move-result-object v24
@@ -11,14 +11,14 @@
 +
 +    const/16 v51, __RL_MINI_PLAYER_SWIPE_UP_DRAG__    # Enable Drag option
 +
-+    invoke-static/range {v49 .. v51}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->configure(Lam0/l;Landroidx/compose/material3/SheetState;Z)V    # wire swipe-up to expand the sheet
++    invoke-static/range {v49 .. v51}, Lradiant/gestures/miniplayer/MiniPlayerGestures;->configure(Lyl0/l;Landroidx/compose/material3/SheetState;Z)V    # wire swipe-up to expand the sheet
 +
      .line 69
      invoke-static {}, Landroidx/compose/ui/platform/CompositionLocalsKt;->getLocalDensity()Landroidx/compose/runtime/ProvidableCompositionLocal;
  
 --- a/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
 +++ b/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
-@@ -712,6 +712,22 @@
+@@ -716,6 +716,22 @@
  
      iget-object v3, v0, Lcom/tidal/android/feature/appscaffold/ui/t;->c:Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerContract$PlayState;
  
@@ -41,7 +41,7 @@
      invoke-virtual {v1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
  
      const v4, -0x571456a1
-@@ -1215,6 +1231,10 @@
+@@ -1223,6 +1239,10 @@
  
      move-result-object v6
  
@@ -52,7 +52,7 @@
      .line 38
      sget-object v21, Landroidx/compose/ui/Alignment;->Companion:Landroidx/compose/ui/Alignment$Companion;
  
-@@ -1390,6 +1410,10 @@
+@@ -1404,6 +1424,10 @@
  
      move-result-object v6
  
@@ -61,9 +61,9 @@
 +    move-result-object v6
 +
      .line 63
-     invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->p0()Lf20/a;
+     invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->p0()Ll10/a;
  
-@@ -1501,6 +1525,10 @@
+@@ -1519,6 +1543,10 @@
  
      move-result-object v5
  

@@ -1,10 +1,10 @@
---- a/com/tidal/android/feature/playerscreen/ui/composables/o1.smali
-+++ b/com/tidal/android/feature/playerscreen/ui/composables/o1.smali
+--- a/com/tidal/android/feature/playerscreen/ui/composables/f1.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/f1.smali
 @@ -64,7 +64,7 @@
  
      .line 16
      .line 17
--    iget v2, p0, Lcom/tidal/android/feature/playerscreen/ui/composables/o1;->a:F
+-    iget v2, p0, Lcom/tidal/android/feature/playerscreen/ui/composables/f1;->a:F
 +    const/high16 v2, 0x43200000    # 160f start dp
  
      .line 18

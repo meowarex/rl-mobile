@@ -1,0 +1,54 @@
+--- a/com/tidal/android/feature/appscaffold/ui/q.smali
++++ b/com/tidal/android/feature/appscaffold/ui/q.smali
+@@ -38,6 +38,8 @@
+     .line 1
+     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+ 
++    invoke-static {p1, p2, p3, p4}, Lradiant/AnimatedCovers;->onMediaState(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V    # Look up animated cover
++
+     .line 2
+     .line 3
+     .line 4
+--- a/com/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt.smali
+@@ -633,5 +633,7 @@
+     .line 281
+     .line 282
+-    invoke-static/range {v4 .. v13}, Lsd0/f;->a(Lyl0/l;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/ColorFilter;Landroidx/compose/ui/layout/ContentScale;Ljava/lang/Object;Lyl0/a;Landroidx/compose/runtime/Composer;II)V
++    move/from16 v14, p0    # Page album id
++
++    invoke-static/range {v4 .. v14}, Lradiant/AnimatedCovers;->cover(Lyl0/l;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/ColorFilter;Landroidx/compose/ui/layout/ContentScale;Ljava/lang/Object;Lyl0/a;Landroidx/compose/runtime/Composer;III)V    # Animated cover, else normal cover
+ 
+     .line 283
+--- a/com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali
++++ b/com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali
+@@ -92,4 +92,6 @@
+     iput-object v1, v0, Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel;->a:Lzh/e;
+ 
++    invoke-static {v1}, Lradiant/AnimatedCovers;->setQueue(Ljava/lang/Object;)V    # Keep play queue for album name
++
+     move-object/from16 v1, p2
+ 
+--- a/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
+@@ -278,6 +278,10 @@
+     move-object v5, p2
+ 
+     .line 9
+-    invoke-static/range {v0 .. v9}, Lsd0/f;->a(Lyl0/l;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/ColorFilter;Landroidx/compose/ui/layout/ContentScale;Ljava/lang/Object;Lyl0/a;Landroidx/compose/runtime/Composer;II)V
++    move/from16 v10, p1    # Mini player album id
++
++    invoke-static/range {v0 .. v10}, Lradiant/AnimatedCovers;->cover(Lyl0/l;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/ColorFilter;Landroidx/compose/ui/layout/ContentScale;Ljava/lang/Object;Lyl0/a;Landroidx/compose/runtime/Composer;III)V    # Animated cover in mini player
++
++    move/from16 v10, p5    # Restore changed flags
+ 
+     invoke-static {}, Landroidx/compose/runtime/ComposerKt;->isTraceInProgress()Z
+--- a/com/aspiro/wamp/nowplaying/widgets/secondaryProgressView/SecondaryProgressView.smali
++++ b/com/aspiro/wamp/nowplaying/widgets/secondaryProgressView/SecondaryProgressView.smali
+@@ -649,4 +649,6 @@
+     :goto_3
+     invoke-static {v5, v6, v3, v2}, Lwd0/l;->a(Landroid/widget/ImageView;ILjava/lang/String;I)Lcom/tidal/android/image/coil/g;
+ 
++    invoke-static {v5, v6}, Lradiant/AnimatedCoverView;->attach(Landroid/widget/ImageView;I)V    # Animated cover on lyrics pill
++
+     .line 153
