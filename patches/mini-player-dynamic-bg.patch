@@ -6,7 +6,7 @@
  
 +    const/4 v4, 0x0
 +
-+    invoke-static {v2, v4, v7, v4}, Lradiant/MiniPlayerBackground;->color(JLandroidx/compose/runtime/Composer;I)J # dynamic bg or fallback
++    invoke-static {v2, v3, v7, v4}, Lradiant/MiniPlayerBackground;->color(JLandroidx/compose/runtime/Composer;I)J # dynamic bg or fallback
 +
 +    move-result-wide v2
 +
