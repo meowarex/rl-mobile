@@ -1,46 +1,44 @@
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
-@@ -5328,7 +5328,11 @@
-     const/4 v12, 0x0
+@@ -6615,7 +6615,11 @@
+     const/4 v6, 0x0
  
-     .line 280
--    invoke-static {v8, v6, v12, v15, v3}, Lcom/tidal/android/feature/playerscreen/ui/composables/BroadcastButtonKt;->b(Lcom/tidal/android/feature/playerscreen/ui/b;Lam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
-+    const v3, 0x52414244    # empty group key
+     .line 281
+-    invoke-static {v11, v13, v6, v15, v12}, Lcom/tidal/android/feature/playerscreen/ui/composables/BroadcastButtonKt;->b(Lcom/tidal/android/feature/playerscreen/ui/b;Lyl0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
++    const v12, 0x52414244    # empty group key
 +
-+    invoke-interface {v15, v3}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open empty
++    invoke-interface {v15, v12}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V    # open empty
 +
 +    invoke-interface {v15}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V    # close empty
  
-     .line 281
+     .line 282
      invoke-interface {v15}, Landroidx/compose/runtime/Composer;->endNode()V
-@@ -6156,11 +6160,11 @@
-     .line 385
-     :cond_61
-     :goto_2e
--    new-instance v1, Lcom/tidal/android/feature/playerscreen/ui/e0;
-+    new-instance v1, Landroidx/window/embedding/b2;    # connect click lambda (was share e0)
+@@ -7465,9 +7469,9 @@
+     :cond_62
+-    new-instance v0, Landroidx/compose/animation/core/t;
++    new-instance v0, Lradiant/PlayerAction;    # Connect click
+ 
+-    const/4 v9, 0x1
++    sget-object v9, Lcom/tidal/android/feature/playerscreen/ui/q$e;->a:Lcom/tidal/android/feature/playerscreen/ui/q$e;    # BroadcastClicked action
+ 
+-    invoke-direct {v0, v10, v9}, Landroidx/compose/animation/core/t;-><init>(Ljava/lang/Object;I)V
++    invoke-direct {v0, v10, v9}, Lradiant/PlayerAction;-><init>(Ljava/lang/Object;Ljava/lang/Object;)V    # build connect lambda
+ 
+     .line 387
+     invoke-interface {v7, v0}, Landroidx/compose/runtime/Composer;->updateRememberedValue(Ljava/lang/Object;)V
+@@ -7476,10 +7480,12 @@
+     :cond_63
+     check-cast v0, Lyl0/a;
  
 -    const/4 v6, 0x0
-+    const/4 v6, 0x1    # connect-clicked disc
- 
--    invoke-direct {v1, v10, v6}, Lcom/tidal/android/feature/playerscreen/ui/e0;-><init>(Ljava/lang/Object;I)V
-+    invoke-direct {v1, v10, v6}, Landroidx/window/embedding/b2;-><init>(Ljava/lang/Object;I)V    # build connect lambda
- 
-     .line 386
-     invoke-interface {v7, v1}, Landroidx/compose/runtime/Composer;->updateRememberedValue(Ljava/lang/Object;)V
-@@ -6169,9 +6173,13 @@
-     :goto_2f
-     check-cast v1, Lam0/a;
- 
--    const/4 v3, 0x0
 +    iget-object v8, v11, Lcom/tidal/android/feature/playerscreen/ui/s$a;->d:Lcom/tidal/android/feature/playerscreen/ui/b;    # broadcast state
+ 
+-    const/4 v15, 0x0
++    const/4 v6, 0x0    # null modifier
+ 
+-    invoke-static {v15, v7, v6, v0}, Lcom/tidal/android/feature/playerscreen/ui/composables/o4;->a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Lyl0/a;)V
++    const/4 v15, 0x0    # changed flags
 +
-+    const/4 v3, 0x0    # null modifier
-+
-+    const/4 v6, 0x0    # changed flags
++    invoke-static {v8, v0, v6, v7, v15}, Lcom/tidal/android/feature/playerscreen/ui/composables/BroadcastButtonKt;->b(Lcom/tidal/android/feature/playerscreen/ui/b;Lyl0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V    # render connect button
  
--    invoke-static {v6, v1, v7, v3}, Lcom/tidal/android/feature/playerscreen/ui/composables/e5;->a(ILam0/a;Landroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;)V
-+    invoke-static {v8, v1, v3, v7, v6}, Lcom/tidal/android/feature/playerscreen/ui/composables/BroadcastButtonKt;->b(Lcom/tidal/android/feature/playerscreen/ui/b;Lam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V    # render connect button
- 
-     if-ne v0, v2, :cond_62
- 
+     if-ne v12, v14, :cond_64

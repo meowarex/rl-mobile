@@ -2,7 +2,7 @@
 .super Ljava/lang/Object;
 
 # interfaces
-.implements Lam0/l;    # MARKER: R8 Lam0/l;
+.implements Lyl0/l;    # MARKER: R8 Lyl0/l;
 
 # Remembers where each line's glyphs landed
 
@@ -31,7 +31,7 @@
 
 
 # One reusable callback per line
-.method public static cb(I)Lam0/l;    # MARKER: R8 Lam0/l;
+.method public static cb(I)Lyl0/l;    # MARKER: R8 Lyl0/l;
     .locals 5
 
     if-gez p0, :have_idx

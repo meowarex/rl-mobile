@@ -1,6 +1,6 @@
 .class public final Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture;
 .super Ljava/lang/Object;
-.implements Lam0/l;    # MARKER: R8 Lam0/l;
+.implements Lyl0/l;    # MARKER: R8 Lyl0/l;
 
 
 # annotations
@@ -15,16 +15,16 @@
 
 
 # instance fields
-.field public final a:Lam0/l;    # MARKER: R8 Lam0/l;
+.field public final a:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
 
 # direct methods
-.method public constructor <init>(Lam0/l;)V    # MARKER: R8 Lam0/l;
+.method public constructor <init>(Lyl0/l;)V    # MARKER: R8 Lyl0/l;
     .locals 0
 
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
-    iput-object p1, p0, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture;->a:Lam0/l;    # MARKER: R8 Lam0/l;
+    iput-object p1, p0, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture;->a:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     return-void
 .end method
@@ -32,11 +32,11 @@
 .method private nextTrack()V
     .locals 2
 
-    iget-object v0, p0, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture;->a:Lam0/l;    # MARKER: R8 Lam0/l;
+    iget-object v0, p0, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture;->a:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     sget-object v1, Lcom/tidal/android/feature/appscaffold/ui/r$a;->a:Lcom/tidal/android/feature/appscaffold/ui/r$a; # Tidal's built-in next track mini-player event  MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/r$a; a
 
-    invoke-interface {v0, v1}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lam0/l;
+    invoke-interface {v0, v1}, Lyl0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lyl0/l;
 
     return-void
 .end method
@@ -44,11 +44,11 @@
 .method private previousTrack()V
     .locals 2
 
-    iget-object v0, p0, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture;->a:Lam0/l;    # MARKER: R8 Lam0/l;
+    iget-object v0, p0, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures$Gesture;->a:Lyl0/l;    # MARKER: R8 Lyl0/l;
 
     sget-object v1, Lcom/tidal/android/feature/appscaffold/ui/r$c;->a:Lcom/tidal/android/feature/appscaffold/ui/r$c; # Our synthetic previous track event  MARKER: R8 Lcom/tidal/android/feature/appscaffold/ui/r$c; a
 
-    invoke-interface {v0, v1}, Lam0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lam0/l;
+    invoke-interface {v0, v1}, Lyl0/l;->invoke(Ljava/lang/Object;)Ljava/lang/Object;    # MARKER: R8 Lyl0/l;
 
     return-void
 .end method

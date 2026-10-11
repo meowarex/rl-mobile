@@ -7,7 +7,7 @@ public final class h {
         /** defaults block the built request copies its cache policies from */
         public b b;
         /** target */
-        public b0.c d;  // MARKER: R8 b0.c
+        public c0.c d;  // MARKER: R8 c0.c
         public h a() { return null; }
     }
 }

@@ -25,7 +25,7 @@
     return-void
 .end method
 
-.method private current(Lradiant/gestures/queue/QueueRequest;)Lzc/a;    # MARKER: R8 Lzc/a;
+.method private current(Lradiant/gestures/queue/QueueRequest;)Lxc/a;    # MARKER: R8 Lxc/a;
     .locals 5
 
     if-eqz p1, :invalid
@@ -40,11 +40,11 @@
 
     if-eqz v0, :invalid
 
-    iget-object v1, v0, Lcom/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView;->f:Lid/e;    # MARKER: R8 Lid/e; f
+    iget-object v1, v0, Lcom/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView;->f:Lgd/e;    # MARKER: R8 Lgd/e; f
 
     if-eqz v1, :invalid
 
-    invoke-virtual {v0}, Lcom/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView;->N()La50/d;    # MARKER: R8 La50/d; N
+    invoke-virtual {v0}, Lcom/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView;->N()Lg40/d;    # MARKER: R8 Lg40/d; N
 
     move-result-object v0
 
@@ -72,17 +72,17 @@
 
     move-result-object v0
 
-    instance-of v1, v0, Lzc/a;    # MARKER: R8 Lzc/a;
+    instance-of v1, v0, Lxc/a;    # MARKER: R8 Lxc/a;
 
     if-eqz v1, :invalid
 
-    check-cast v0, Lzc/a;    # MARKER: R8 Lzc/a;
+    check-cast v0, Lxc/a;    # MARKER: R8 Lxc/a;
 
-    iget-boolean v1, v0, Lzc/a;->k:Z    # MARKER: R8 Lzc/a; k
+    iget-boolean v1, v0, Lxc/a;->k:Z    # MARKER: R8 Lxc/a; k
 
     if-eqz v1, :invalid
 
-    iget-object v1, v0, Lzc/a;->b:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lzc/a; b
+    iget-object v1, v0, Lxc/a;->b:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lxc/a; b
 
     invoke-virtual {v1}, Lcom/aspiro/wamp/model/Album;->getId()I
 
@@ -124,7 +124,7 @@
 
     iget v6, p1, Lradiant/gestures/queue/QueueRequest;->action:I
 
-    invoke-direct {p0, p1}, Lradiant/gestures/queue/SearchAlbumsResolver;->current(Lradiant/gestures/queue/QueueRequest;)Lzc/a;    # MARKER: R8 Lzc/a;
+    invoke-direct {p0, p1}, Lradiant/gestures/queue/SearchAlbumsResolver;->current(Lradiant/gestures/queue/QueueRequest;)Lxc/a;    # MARKER: R8 Lxc/a;
 
     move-result-object p1
 
@@ -140,11 +140,11 @@
 
     if-eqz v0, :done
 
-    iget-object v1, v0, Lcom/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView;->c:Lld/c;    # MARKER: R8 Lld/c; c
+    iget-object v1, v0, Lcom/aspiro/wamp/mycollection/subpages/albums/search/SearchAlbumsView;->c:Ljd/b;    # MARKER: R8 Ljd/b; c
 
     if-eqz v1, :done
 
-    iget-object v2, v1, Lld/c;->a:Lx40/a;    # MARKER: R8 Lld/c; Lx40/a; a
+    iget-object v2, v1, Ljd/b;->a:Ld40/a;    # MARKER: R8 Ljd/b; Ld40/a; a
 
     instance-of v3, v2, Lh4/a;    # MARKER: R8 Lh4/a;
 
@@ -156,11 +156,11 @@
 
     move-result-object v3
 
-    iget-object v4, p1, Lzc/a;->b:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lzc/a; b
+    iget-object v4, p1, Lxc/a;->b:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lxc/a; b
 
-    iget-object v5, v1, Lld/c;->d:Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;    # MARKER: R8 Lld/c; d
+    iget-object v5, v1, Ljd/b;->d:Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;    # MARKER: R8 Ljd/b; d
 
-    iget-object p0, v1, Lld/c;->c:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lld/c; c
+    iget-object p0, v1, Ljd/b;->c:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Ljd/b; c
 
     const/4 v1, 0x3
 
@@ -202,7 +202,7 @@
 .method public resolve(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/gestures/queue/QueueRequest;
     .locals 5
 
-    instance-of v0, p2, Ljd/d$a;    # MARKER: R8 Ljd/d$a;
+    instance-of v0, p2, Lhd/d$a;    # MARKER: R8 Lhd/d$a;
 
     if-eqz v0, :invalid
 
@@ -221,11 +221,11 @@
 
     move-result-object p1
 
-    instance-of v0, p1, La50/d;    # MARKER: R8 La50/d;
+    instance-of v0, p1, Lg40/d;    # MARKER: R8 Lg40/d;
 
     if-eqz v0, :invalid
 
-    check-cast p1, La50/d;    # MARKER: R8 La50/d;
+    check-cast p1, Lg40/d;    # MARKER: R8 Lg40/d;
 
     invoke-virtual {p1}, Landroidx/recyclerview/widget/ListAdapter;->getCurrentList()Ljava/util/List;
 
@@ -244,17 +244,17 @@
 
     move-result-object p1
 
-    instance-of v0, p1, Lzc/a;    # MARKER: R8 Lzc/a;
+    instance-of v0, p1, Lxc/a;    # MARKER: R8 Lxc/a;
 
     if-eqz v0, :invalid
 
-    check-cast p1, Lzc/a;    # MARKER: R8 Lzc/a;
+    check-cast p1, Lxc/a;    # MARKER: R8 Lxc/a;
 
-    iget-boolean v0, p1, Lzc/a;->k:Z    # MARKER: R8 Lzc/a; k
+    iget-boolean v0, p1, Lxc/a;->k:Z    # MARKER: R8 Lxc/a; k
 
     if-eqz v0, :invalid
 
-    iget-object v0, p1, Lzc/a;->b:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lzc/a; b
+    iget-object v0, p1, Lxc/a;->b:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lxc/a; b
 
     invoke-virtual {v0}, Lcom/aspiro/wamp/model/Album;->getId()I
 

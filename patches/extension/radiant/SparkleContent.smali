@@ -3,7 +3,11 @@
 .source "SourceFile"
 
 # interfaces
-.implements Lam0/p;    # MARKER: R8 Lam0/p;
+.implements Lyl0/p;    # MARKER: R8 Lyl0/p;
+
+
+# instance fields
+.field public m:I    # Sparkle mode
 
 
 # virtual methods
@@ -35,7 +39,7 @@
     invoke-static {v0, p2, v1, v2}, Landroidx/compose/runtime/ComposerKt;->traceEventStart(IIILjava/lang/String;)V
 
     :cond_0
-    const p2, 0x7f080522
+    sget p2, Lcom/aspiro/wamp/R$drawable;->ic_sparkle:I    # By name, ids change every build
 
     const/4 v0, 0x0
 
@@ -52,6 +56,12 @@
     invoke-static {}, Landroidx/compose/runtime/ComposerKt;->traceEventEnd()V
 
     :cond_1
+    iget v0, p0, Lradiant/SparkleContent;->m:I
+
+    invoke-static {p2, v0, p1}, Lradiant/SparkleIcons;->forMode(Landroidx/compose/ui/graphics/painter/Painter;ILandroidx/compose/runtime/Composer;)Landroidx/compose/ui/graphics/painter/Painter;
+
+    move-result-object p2
+
     invoke-interface {p1}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V
 
     return-object p2

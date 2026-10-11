@@ -78,13 +78,13 @@
 
     move-result-object v2
 
-    instance-of v3, v2, La50/b;    # MARKER: R8 La50/b;
+    instance-of v3, v2, Lg40/b;    # MARKER: R8 Lg40/b;
 
     if-eqz v3, :invalid
 
-    check-cast v2, La50/b;    # MARKER: R8 La50/b;
+    check-cast v2, Lg40/b;    # MARKER: R8 Lg40/b;
 
-    iget-object v2, v2, La50/b;->b:Ljava/util/ArrayList;    # MARKER: R8 La50/b; b
+    iget-object v2, v2, Lg40/b;->b:Ljava/util/ArrayList;    # MARKER: R8 Lg40/b; b
 
     iget v3, p1, Lradiant/gestures/queue/QueueRequest;->position:I
 
@@ -160,17 +160,17 @@
 
     if-eqz v4, :invalid
 
-    invoke-direct {p0}, Lradiant/gestures/queue/SuggestionsResolver;->viewModel()Lcom/aspiro/wamp/nowplaying/view/suggestions/l;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/l;
+    invoke-direct {p0}, Lradiant/gestures/queue/SuggestionsResolver;->viewModel()Lcom/aspiro/wamp/nowplaying/view/suggestions/m;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/m;
 
     move-result-object v1
 
-    instance-of v4, v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/a1;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/a1;
+    instance-of v4, v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/e1;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/e1;
 
     if-eqz v4, :invalid
 
-    check-cast v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/a1;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/a1;
+    check-cast v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/e1;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/e1;
 
-    iget-object v1, v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/a1;->o:Ljava/lang/Object;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/a1; o
+    iget-object v1, v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/e1;->o:Ljava/lang/Object;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/e1; o
 
     instance-of v4, v1, Ljava/util/List;
 
@@ -220,24 +220,24 @@
 
     move-result-object v0
 
-    instance-of v1, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/h;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/h;
+    instance-of v1, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/i;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/i;
 
     if-eqz v1, :dialog
 
-    check-cast v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/h;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/h;
+    check-cast v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/i;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/i;
 
-    iget-object v0, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/h;->d:Lcom/aspiro/wamp/model/AvailabilityInteractor;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/h; d
+    iget-object v0, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/i;->d:Lcom/aspiro/wamp/model/AvailabilityInteractor;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/i; d
 
     return-object v0
 
     :dialog
-    instance-of v1, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;
+    instance-of v1, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;
 
     if-eqz v1, :invalid
 
-    check-cast v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;
+    check-cast v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;
 
-    iget-object v0, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;->d:Lcom/aspiro/wamp/model/AvailabilityInteractor;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/o0; d
+    iget-object v0, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;->d:Lcom/aspiro/wamp/model/AvailabilityInteractor;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/q0; d
 
     return-object v0
 
@@ -264,7 +264,7 @@
     return-void
 .end method
 
-.method private viewModel()Lcom/aspiro/wamp/nowplaying/view/suggestions/l;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/l;
+.method private viewModel()Lcom/aspiro/wamp/nowplaying/view/suggestions/m;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/m;
     .locals 2
 
     iget-object v0, p0, Lradiant/gestures/queue/SuggestionsResolver;->host:Ljava/lang/ref/WeakReference;
@@ -273,24 +273,24 @@
 
     move-result-object v0
 
-    instance-of v1, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/h;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/h;
+    instance-of v1, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/i;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/i;
 
     if-eqz v1, :dialog
 
-    check-cast v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/h;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/h;
+    check-cast v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/i;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/i;
 
-    iget-object v0, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/h;->c:Lcom/aspiro/wamp/nowplaying/view/suggestions/l;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/h; Lcom/aspiro/wamp/nowplaying/view/suggestions/l; c
+    iget-object v0, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/i;->c:Lcom/aspiro/wamp/nowplaying/view/suggestions/m;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/i; Lcom/aspiro/wamp/nowplaying/view/suggestions/m; c
 
     return-object v0
 
     :dialog
-    instance-of v1, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;
+    instance-of v1, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;
 
     if-eqz v1, :invalid
 
-    check-cast v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;
+    check-cast v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;
 
-    iget-object v0, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/o0;->c:Lcom/aspiro/wamp/nowplaying/view/suggestions/l;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/o0; Lcom/aspiro/wamp/nowplaying/view/suggestions/l; c
+    iget-object v0, v0, Lcom/aspiro/wamp/nowplaying/view/suggestions/q0;->c:Lcom/aspiro/wamp/nowplaying/view/suggestions/m;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/q0; Lcom/aspiro/wamp/nowplaying/view/suggestions/m; c
 
     return-object v0
 
@@ -311,7 +311,7 @@
 
     if-eqz v0, :done
 
-    invoke-direct {p0}, Lradiant/gestures/queue/SuggestionsResolver;->viewModel()Lcom/aspiro/wamp/nowplaying/view/suggestions/l;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/l;
+    invoke-direct {p0}, Lradiant/gestures/queue/SuggestionsResolver;->viewModel()Lcom/aspiro/wamp/nowplaying/view/suggestions/m;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/m;
 
     move-result-object v1
 
@@ -354,9 +354,9 @@
 
     move-result-object v4
 
-    check-cast v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/a1;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/a1;
+    check-cast v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/e1;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/e1;
 
-    iget-object v5, v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/a1;->j:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/a1; j
+    iget-object v5, v1, Lcom/aspiro/wamp/nowplaying/view/suggestions/e1;->j:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/e1; j
 
     invoke-static {v3, v4, v5}, Lcom/aspiro/wamp/playqueue/source/model/b;->p(Ljava/lang/String;Ljava/util/List;Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/playqueue/source/model/ItemSource;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/source/model/b; p
 
@@ -404,19 +404,19 @@
 
     if-eqz v2, :empty_queue
 
-    new-instance v2, Lcom/aspiro/wamp/nowplaying/view/suggestions/i$a;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/i$a;
+    new-instance v2, Lcom/aspiro/wamp/nowplaying/view/suggestions/j$a;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/j$a;
 
-    invoke-direct {v2, p1}, Lcom/aspiro/wamp/nowplaying/view/suggestions/i$a;-><init>(I)V    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/i$a;
+    invoke-direct {v2, p1}, Lcom/aspiro/wamp/nowplaying/view/suggestions/j$a;-><init>(I)V    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/j$a;
 
     goto :emit
 
     :empty_queue
-    new-instance v2, Lcom/aspiro/wamp/nowplaying/view/suggestions/i$e;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/i$e;
+    new-instance v2, Lcom/aspiro/wamp/nowplaying/view/suggestions/j$e;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/j$e;
 
-    invoke-direct {v2, p1}, Lcom/aspiro/wamp/nowplaying/view/suggestions/i$e;-><init>(I)V    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/i$e;
+    invoke-direct {v2, p1}, Lcom/aspiro/wamp/nowplaying/view/suggestions/j$e;-><init>(I)V    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/j$e;
 
     :emit
-    invoke-interface {v1, v2}, Lcom/aspiro/wamp/nowplaying/view/suggestions/j;->a(Lcom/aspiro/wamp/nowplaying/view/suggestions/i;)V    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/j; Lcom/aspiro/wamp/nowplaying/view/suggestions/i; a
+    invoke-interface {v1, v2}, Lcom/aspiro/wamp/nowplaying/view/suggestions/k;->a(Lcom/aspiro/wamp/nowplaying/view/suggestions/j;)V    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/k; Lcom/aspiro/wamp/nowplaying/view/suggestions/j; a
 
     :done
     return-void
@@ -433,7 +433,7 @@
 
     if-ne v0, p1, :invalid
 
-    instance-of v0, p2, Lcom/aspiro/wamp/nowplaying/view/suggestions/y$a;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/y$a;
+    instance-of v0, p2, Lcom/aspiro/wamp/nowplaying/view/suggestions/z$a;    # MARKER: R8 Lcom/aspiro/wamp/nowplaying/view/suggestions/z$a;
 
     if-eqz v0, :invalid
 
@@ -450,13 +450,13 @@
 
     move-result-object p1
 
-    instance-of v0, p1, La50/b;    # MARKER: R8 La50/b;
+    instance-of v0, p1, Lg40/b;    # MARKER: R8 Lg40/b;
 
     if-eqz v0, :invalid
 
-    check-cast p1, La50/b;    # MARKER: R8 La50/b;
+    check-cast p1, Lg40/b;    # MARKER: R8 Lg40/b;
 
-    iget-object p1, p1, La50/b;->b:Ljava/util/ArrayList;    # MARKER: R8 La50/b; b
+    iget-object p1, p1, Lg40/b;->b:Ljava/util/ArrayList;    # MARKER: R8 Lg40/b; b
 
     invoke-virtual {p1}, Ljava/util/ArrayList;->size()I
 

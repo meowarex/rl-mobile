@@ -21,9 +21,13 @@
 
     if-lez v2, :done
 
-    iget-object v0, p0, Lcom/tidal/android/feature/viewall/ui/ViewAllScreenViewModel;->n:Lcom/tidal/android/feature/viewall/ui/c;    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/c; n
+    iget-object v0, p0, Lcom/tidal/android/feature/viewall/ui/ViewAllScreenViewModel;->r:Lcom/tidal/android/feature/viewall/ui/OffsetPagingEngine;    # MARKER: R8 r
 
-    iget-object v0, v0, Lcom/tidal/android/feature/viewall/ui/c;->f:Ljava/util/ArrayList;    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/c; f
+    if-eqz v0, :done
+
+    iget-object v0, v0, Lcom/tidal/android/feature/viewall/ui/OffsetPagingEngine;->g:Ljava/util/ArrayList;    # MARKER: R8 g
+
+    if-eqz v0, :done
 
     invoke-virtual {v0}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
 
@@ -40,37 +44,37 @@
 
     move-result-object v1
 
-    instance-of v2, v1, Lpd0/a;    # MARKER: R8 Lpd0/a;
+    instance-of v2, v1, Lhd0/a;    # MARKER: R8 Lhd0/a;
 
     if-eqz v2, :find_track
 
-    check-cast v1, Lpd0/a;    # MARKER: R8 Lpd0/a;
+    check-cast v1, Lhd0/a;    # MARKER: R8 Lhd0/a;
 
-    iget-object v1, v1, Lpd0/a;->a:Lh40/n;    # MARKER: R8 Lpd0/a; Lh40/n; a
+    iget-object v1, v1, Lhd0/a;->a:Ln30/o;    # MARKER: R8 Lhd0/a; Ln30/o; a
 
-    instance-of v2, v1, Lh40/p;    # MARKER: R8 Lh40/p;
+    instance-of v2, v1, Ln30/p;    # MARKER: R8 Ln30/p;
 
     if-eqz v2, :find_track
 
-    check-cast v1, Lh40/p;    # MARKER: R8 Lh40/p;
+    check-cast v1, Ln30/p;    # MARKER: R8 Ln30/p;
 
-    iget-wide v3, v1, Lh40/p;->a:J    # MARKER: R8 Lh40/p; a
+    iget-wide v3, v1, Ln30/p;->a:J    # MARKER: R8 Ln30/p; a
 
     cmp-long v2, v3, p2
 
     if-nez v2, :find_track
 
-    iget-object v0, p0, Lcom/tidal/android/feature/viewall/ui/ViewAllScreenViewModel;->f:Lcom/tidal/android/feature/viewall/ui/u;    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/u; f
+    iget-object v0, p0, Lcom/tidal/android/feature/viewall/ui/ViewAllScreenViewModel;->f:Lcom/tidal/android/feature/viewall/ui/y;    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/y; f
 
-    instance-of v2, v0, Lra/d;    # MARKER: R8 Lra/d;
+    instance-of v2, v0, Lqa/d;    # MARKER: R8 Lqa/d;
 
     if-eqz v2, :done
 
-    check-cast v0, Lra/d;    # MARKER: R8 Lra/d;
+    check-cast v0, Lqa/d;    # MARKER: R8 Lqa/d;
 
-    iget-object v2, v0, Lra/d;->b:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lra/d; b
+    iget-object v2, v0, Lqa/d;->b:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lqa/d; b
 
-    invoke-static {v1}, Lie0/i;->a(Lh40/p;)Lcom/aspiro/wamp/model/Track;    # MARKER: R8 Lie0/i; Lh40/p; a
+    invoke-static {v1}, Lae0/i;->c(Ln30/p;)Lcom/aspiro/wamp/model/Track;    # MARKER: R8 Lae0/i; Ln30/p; a
 
     move-result-object v3
 
@@ -128,13 +132,13 @@
 .method public static handleEvent(Lcom/tidal/android/feature/viewall/ui/ViewAllScreenViewModel;Lcom/tidal/android/feature/viewall/ui/e;)Z    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/e;
     .locals 6
 
-    instance-of v0, p1, Lcom/tidal/android/feature/viewall/ui/e$c;    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/e$c;
+    instance-of v0, p1, Lcom/tidal/android/feature/viewall/ui/e$d;    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/e$d;
 
     if-eqz v0, :not_handled
 
-    check-cast p1, Lcom/tidal/android/feature/viewall/ui/e$c;    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/e$c;
+    check-cast p1, Lcom/tidal/android/feature/viewall/ui/e$d;    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/e$d;
 
-    iget-object v0, p1, Lcom/tidal/android/feature/viewall/ui/e$c;->a:Ljava/lang/Object;    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/e$c; a
+    iget-object v0, p1, Lcom/tidal/android/feature/viewall/ui/e$d;->a:Ljava/lang/Object;    # MARKER: R8 Lcom/tidal/android/feature/viewall/ui/e$d; a
 
     instance-of v1, v0, Ljava/lang/String;
 

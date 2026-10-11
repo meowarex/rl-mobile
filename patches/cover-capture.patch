@@ -1,6 +1,6 @@
 --- a/com/tidal/android/feature/appscaffold/ui/q.smali
 +++ b/com/tidal/android/feature/appscaffold/ui/q.smali
-@@ -55,6 +55,8 @@
+@@ -57,6 +57,8 @@
      .line 10
      iput-object p4, p0, Lcom/tidal/android/feature/appscaffold/ui/q;->d:Ljava/lang/String;
  

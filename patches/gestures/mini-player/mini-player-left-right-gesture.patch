@@ -1,17 +1,17 @@
 --- a/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
 +++ b/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
-@@ -1215,6 +1215,10 @@
+@@ -1219,6 +1219,10 @@
  
      move-result-object v6
  
-+    invoke-static {v6, v1}, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures;->trackModifier(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # attach horizontal swipe listener
++    invoke-static {v6, v1}, Lradiant/gestures/miniplayer/MiniPlayerTrackGestures;->trackModifier(Landroidx/compose/ui/Modifier;Lyl0/l;)Landroidx/compose/ui/Modifier;    # attach horizontal swipe listener
 +
 +    move-result-object v6
 +
      .line 38
      sget-object v21, Landroidx/compose/ui/Alignment;->Companion:Landroidx/compose/ui/Alignment$Companion;
  
-@@ -1352,6 +1356,8 @@
+@@ -1356,6 +1360,8 @@
      .line 56
      iget-object v11, v0, Lcom/tidal/android/feature/appscaffold/ui/t;->b:Lcom/tidal/android/feature/appscaffold/ui/q;
  
@@ -20,7 +20,7 @@
      .line 57
      invoke-virtual/range {v16 .. v16}, Lcom/squareup/ui/market/core/theme/MarketStylesheet;->getBorderRadii()Lcom/squareup/ui/market/core/theme/MarketStylesheet$b;
  
-@@ -1390,6 +1396,10 @@
+@@ -1394,6 +1400,10 @@
  
      move-result-object v6
  
@@ -29,9 +29,9 @@
 +    move-result-object v6
 +
      .line 63
-     invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->p0()Lf20/a;
+     invoke-virtual/range {v22 .. v22}, Lcom/squareup/ui/market/core/theme/MarketStylesheet$c;->p0()Ll10/a;
  
-@@ -1501,6 +1511,10 @@
+@@ -1505,6 +1515,10 @@
  
      move-result-object v5
  
@@ -44,7 +44,7 @@
  
 --- a/com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali
 +++ b/com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali
-@@ -512,16 +512,16 @@
+@@ -514,16 +514,16 @@
      .line 110
      invoke-virtual {p1, v0}, Ljava/lang/Object;->equals(Ljava/lang/Object;)Z
  
@@ -60,10 +60,10 @@
  
      .line 115
      .line 116
-     invoke-interface {v3}, Lbi/e;->i()Z
+     invoke-interface {v3}, Lzh/e;->i()Z
  
      .line 117
-@@ -695,12 +695,34 @@
+@@ -697,12 +697,34 @@
      .line 194
      :cond_e
      return-void
@@ -78,7 +78,7 @@
 +
 +    if-eqz p1, :unknown_event
 +
-+    invoke-interface {v3}, Lbi/e;->canSkipToPreviousOrRewind()Z
++    invoke-interface {v3}, Lzh/e;->canSkipToPreviousOrRewind()Z
 +
 +    move-result p1
 +
@@ -86,13 +86,13 @@
 +
 +    const/4 p1, 0x0
 +
-+    invoke-interface {v3, p1}, Lbi/e;->h(Z)V    # false = previous/rewind
++    invoke-interface {v3, p1}, Lzh/e;->h(Z)V    # false = previous/rewind
 +
 +    :previous_done
 +    return-void
 +
 +    :unknown_event
-     invoke-static {}, Landroidx/navigation/f0;->a()V
+     invoke-static {}, Lx/f0;->a()V
  
      .line 196
      .line 197
@@ -119,7 +119,7 @@
 +
 +    :rl_continue_open
      .line 1
-     iget-object v0, p0, Lcom/tidal/android/feature/appscaffold/ui/composable/g;->a:Lam0/l;
+     iget-object v0, p0, Lcom/tidal/android/feature/appscaffold/ui/composable/g;->a:Lyl0/l;
  
      .line 2
      .line 3

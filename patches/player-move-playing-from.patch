@@ -1,11 +1,11 @@
-# rl-locals: com/tidal/android/feature/playerscreen/ui/composables/n2.smali a( 45
+# rl-locals: com/tidal/android/feature/playerscreen/ui/composables/c2.smali a( 53
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
-@@ -5202,6 +5202,20 @@
+@@ -6479,6 +6479,20 @@
  
-     .line 262
-     :goto_21
-+    iget-object v7, v5, Lcom/tidal/android/feature/playerscreen/ui/s$a;->m:Lcom/tidal/android/feature/playerscreen/ui/p;    # RL move-playing-from: SourceLabel — published in BOTH cover & lyrics view (may be null)
+     .line 263
+     :goto_24
++    iget-object v7, v3, Lcom/tidal/android/feature/playerscreen/ui/s$a;->m:Lcom/tidal/android/feature/playerscreen/ui/p;    # RL move-playing-from: SourceLabel — published in BOTH cover & lyrics view (may be null)
 +
 +    if-eqz v7, :rl_pf_null    # no source -> clear
 +
@@ -19,50 +19,50 @@
 +    :rl_pf_set
 +    sput-object v7, Lradiant/PlayingFrom;->a:Ljava/lang/String;    # publish for n2 (rendered above the title)
 +
-     iget-object v7, v5, Lcom/tidal/android/feature/playerscreen/ui/s$a;->c:Lcom/tidal/android/feature/playerscreen/ui/d;
+     iget-object v7, v3, Lcom/tidal/android/feature/playerscreen/ui/s$a;->c:Lcom/tidal/android/feature/playerscreen/ui/d;
  
-     .line 263
---- a/com/tidal/android/feature/playerscreen/ui/composables/n2.smali
-+++ b/com/tidal/android/feature/playerscreen/ui/composables/n2.smali
-@@ -674,6 +674,41 @@
-     :cond_1e
-     check-cast v3, Lq20/c2;
+     .line 264
+--- a/com/tidal/android/feature/playerscreen/ui/composables/c2.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/c2.smali
+@@ -671,6 +671,41 @@
+     :cond_20
+     check-cast v4, Lw10/c2;
  
-+    move-object/from16 v33, v1    # RL: composer held stable for the conditional group
++    move-object/from16 v41, v1    # RL: composer held stable for the conditional group
 +
-+    const v34, 0x52414450    # RL group key
++    const v42, 0x52414450    # RL group key
 +
-+    invoke-interface/range {v33 .. v34}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V
++    invoke-interface/range {v41 .. v42}, Landroidx/compose/runtime/Composer;->startReplaceGroup(I)V
 +
-+    sget-object v34, Lradiant/PlayingFrom;->a:Ljava/lang/String;    # RL: published "Playing from" source name
++    sget-object v42, Lradiant/PlayingFrom;->a:Ljava/lang/String;    # RL: published "Playing from" source name
 +
-+    if-eqz v34, :rl_pf_skip    # no source -> render nothing above the title
++    if-eqz v42, :rl_pf_skip    # no source -> render nothing above the title
 +
-+    sget-object v35, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;
++    sget-object v43, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;
 +
-+    const/16 v36, 0x1    # maxLines = 1
++    const/16 v44, 0x1    # maxLines = 1
 +
-+    const/16 v37, 0x0
++    const/16 v45, 0x0
 +
-+    const/16 v38, 0x0
++    const/16 v46, 0x0
 +
-+    const/16 v39, 0x0
++    const/16 v47, 0x0
 +
-+    const/16 v40, 0x0
++    const/16 v48, 0x0
 +
-+    move-object/from16 v41, v3    # reuse the artist PARAGRAPH_30 style (same colour + size)
++    move-object/from16 v49, v4    # reuse the artist PARAGRAPH_30 style (same colour + size)
 +
-+    move-object/from16 v42, v1    # composer
++    move-object/from16 v50, v1    # composer
 +
-+    const/16 v43, 0x0
++    const/16 v51, 0x0
 +
-+    const/16 v44, 0x78    # default-arg mask (matches the artist MarketLabel.e call)
++    const/16 v52, 0x78    # default-arg mask (matches the artist MarketLabel.e call)
 +
-+    invoke-static/range {v34 .. v44}, Lcom/squareup/ui/market/components/MarketLabelKt;->e(Ljava/lang/String;Landroidx/compose/ui/Modifier;IILcom/squareup/ui/market/text/a;Landroidx/compose/foundation/interaction/MutableInteractionSource;Lam0/l;Lq20/c2;Landroidx/compose/runtime/Composer;II)V
++    invoke-static/range {v42 .. v52}, Lcom/squareup/ui/market/components/MarketLabelKt;->e(Ljava/lang/String;Landroidx/compose/ui/Modifier;IILcom/squareup/ui/market/text/a;Landroidx/compose/foundation/interaction/MutableInteractionSource;Lyl0/l;Lw10/c2;Landroidx/compose/runtime/Composer;II)V
 +
 +    :rl_pf_skip
-+    invoke-interface/range {v33 .. v33}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V
++    invoke-interface/range {v41 .. v41}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V
 +
-     .line 43
-     sget-object v17, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;
+     .line 37
+     sget-object v14, Landroidx/compose/ui/Modifier;->Companion:Landroidx/compose/ui/Modifier$Companion;
  

@@ -46,7 +46,7 @@
 
     if-eqz v0, :invalid
 
-    iget-object v0, v0, Lcom/tidal/android/feature/feed/ui/FeedView;->d:Lv70/b;    # MARKER: R8 Lv70/b; d
+    iget-object v0, v0, Lcom/tidal/android/feature/feed/ui/FeedView;->d:Lg70/b;    # MARKER: R8 Lg70/b; d
 
     instance-of v1, v0, Lcom/tidal/android/feature/feed/ui/c;    # MARKER: R8 Lcom/tidal/android/feature/feed/ui/c;
 
@@ -54,11 +54,11 @@
 
     check-cast v0, Lcom/tidal/android/feature/feed/ui/c;    # MARKER: R8 Lcom/tidal/android/feature/feed/ui/c;
 
-    iget-object v0, v0, Lcom/tidal/android/feature/feed/ui/c;->c:Lz70/a;    # MARKER: R8 Lcom/tidal/android/feature/feed/ui/c; Lz70/a; c
+    iget-object v0, v0, Lcom/tidal/android/feature/feed/ui/c;->c:Lk70/a;    # MARKER: R8 Lcom/tidal/android/feature/feed/ui/c; Lk70/a; c
 
     if-eqz v0, :invalid
 
-    iget-object v0, v0, Lz70/a;->c:Lcom/aspiro/wamp/model/AvailabilityInteractor;    # MARKER: R8 Lz70/a; c
+    iget-object v0, v0, Lk70/a;->c:Lcom/aspiro/wamp/model/AvailabilityInteractor;    # MARKER: R8 Lk70/a; c
 
     return-object v0
 
@@ -99,13 +99,13 @@
 
     move-result-object v2
 
-    instance-of v3, v2, La50/b;    # MARKER: R8 La50/b;
+    instance-of v3, v2, Lg40/b;    # MARKER: R8 Lg40/b;
 
     if-eqz v3, :invalid
 
-    check-cast v2, La50/b;    # MARKER: R8 La50/b;
+    check-cast v2, Lg40/b;    # MARKER: R8 Lg40/b;
 
-    iget-object v2, v2, La50/b;->b:Ljava/util/ArrayList;    # MARKER: R8 La50/b; b
+    iget-object v2, v2, Lg40/b;->b:Ljava/util/ArrayList;    # MARKER: R8 Lg40/b; b
 
     iget v3, p1, Lradiant/gestures/queue/QueueRequest;->position:I
 
@@ -133,7 +133,7 @@
 
     if-eqz v4, :invalid
 
-    instance-of v3, v2, Lb80/a;    # MARKER: R8 Lb80/a;
+    instance-of v3, v2, Lm70/a;    # MARKER: R8 Lm70/a;
 
     if-eqz v3, :mix
 
@@ -141,15 +141,15 @@
 
     if-eqz v3, :invalid
 
-    check-cast v2, Lb80/a;    # MARKER: R8 Lb80/a;
+    check-cast v2, Lm70/a;    # MARKER: R8 Lm70/a;
 
-    iget-boolean v3, v2, Lb80/a;->c:Z    # MARKER: R8 Lb80/a; c
+    iget-boolean v3, v2, Lm70/a;->c:Z    # MARKER: R8 Lm70/a; c
 
     if-eqz v3, :invalid
 
     check-cast v8, Lcom/aspiro/wamp/model/Album;
 
-    iget-object v5, v2, Lb80/a;->a:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lb80/a; a
+    iget-object v5, v2, Lm70/a;->a:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lm70/a; a
 
     invoke-virtual {v8}, Lcom/aspiro/wamp/model/Album;->getId()I
 
@@ -178,7 +178,7 @@
     return-object v2
 
     :mix
-    instance-of v3, v2, Lb80/c;    # MARKER: R8 Lb80/c;
+    instance-of v3, v2, Lm70/c;    # MARKER: R8 Lm70/c;
 
     if-eqz v3, :playlist
 
@@ -186,11 +186,11 @@
 
     if-eqz v3, :invalid
 
-    check-cast v2, Lb80/c;    # MARKER: R8 Lb80/c;
+    check-cast v2, Lm70/c;    # MARKER: R8 Lm70/c;
 
     check-cast v8, Lcom/aspiro/wamp/mix/model/Mix;
 
-    iget-object v5, v2, Lb80/c;->a:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lb80/c; a
+    iget-object v5, v2, Lm70/c;->a:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lm70/c; a
 
     invoke-virtual {v8}, Lcom/aspiro/wamp/mix/model/Mix;->getId()Ljava/lang/String;
 
@@ -227,7 +227,7 @@
     return-object v2
 
     :playlist
-    instance-of v3, v2, Lb80/d;    # MARKER: R8 Lb80/d;
+    instance-of v3, v2, Lm70/d;    # MARKER: R8 Lm70/d;
 
     if-eqz v3, :invalid
 
@@ -235,11 +235,11 @@
 
     if-eqz v3, :invalid
 
-    check-cast v2, Lb80/d;    # MARKER: R8 Lb80/d;
+    check-cast v2, Lm70/d;    # MARKER: R8 Lm70/d;
 
     check-cast v8, Lcom/aspiro/wamp/model/Playlist;
 
-    iget-object v5, v2, Lb80/d;->a:Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lb80/d; a
+    iget-object v5, v2, Lm70/d;->a:Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lm70/d; a
 
     invoke-virtual {v8}, Lcom/aspiro/wamp/model/Playlist;->getUuid()Ljava/lang/String;
 
@@ -349,45 +349,45 @@
 
     if-eqz v3, :done
 
-    iget-object v2, v1, Lcom/tidal/android/feature/feed/ui/FeedView;->c:La80/c;    # MARKER: R8 La80/c; c
+    iget-object v2, v1, Lcom/tidal/android/feature/feed/ui/FeedView;->c:Ll70/c;    # MARKER: R8 Ll70/c; c
 
     if-eqz v2, :done
 
-    instance-of v4, v0, Lb80/a;    # MARKER: R8 Lb80/a;
+    instance-of v4, v0, Lm70/a;    # MARKER: R8 Lm70/a;
 
     if-eqz v4, :mix
 
-    check-cast v0, Lb80/a;    # MARKER: R8 Lb80/a;
+    check-cast v0, Lm70/a;    # MARKER: R8 Lm70/a;
 
-    iget-object v7, v0, Lb80/a;->a:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lb80/a; a
+    iget-object v7, v0, Lm70/a;->a:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lm70/a; a
 
-    iget v8, v0, Lb80/a;->g:I    # MARKER: R8 Lb80/a; g
+    iget v8, v0, Lm70/a;->g:I    # MARKER: R8 Lm70/a; g
 
     const/4 v4, 0x1
 
     goto :metadata
 
     :mix
-    instance-of v4, v0, Lb80/c;    # MARKER: R8 Lb80/c;
+    instance-of v4, v0, Lm70/c;    # MARKER: R8 Lm70/c;
 
     if-eqz v4, :playlist
 
-    check-cast v0, Lb80/c;    # MARKER: R8 Lb80/c;
+    check-cast v0, Lm70/c;    # MARKER: R8 Lm70/c;
 
-    iget-object v7, v0, Lb80/c;->a:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lb80/c; a
+    iget-object v7, v0, Lm70/c;->a:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lm70/c; a
 
-    iget v8, v0, Lb80/c;->c:I    # MARKER: R8 Lb80/c; c
+    iget v8, v0, Lm70/c;->c:I    # MARKER: R8 Lm70/c; c
 
     const/4 v4, 0x2
 
     goto :metadata
 
     :playlist
-    check-cast v0, Lb80/d;    # MARKER: R8 Lb80/d;
+    check-cast v0, Lm70/d;    # MARKER: R8 Lm70/d;
 
-    iget-object v7, v0, Lb80/d;->a:Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lb80/d; a
+    iget-object v7, v0, Lm70/d;->a:Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lm70/d; a
 
-    iget v8, v0, Lb80/d;->c:I    # MARKER: R8 Lb80/d; c
+    iget v8, v0, Lm70/d;->c:I    # MARKER: R8 Lm70/d; c
 
     const/4 v4, 0x3
 
@@ -396,13 +396,13 @@
 
     move-result-object v8
 
-    iget-object v0, v2, La80/c;->a:Ljava/lang/String;    # MARKER: R8 La80/c; a
+    iget-object v0, v2, Ll70/c;->a:Ljava/lang/String;    # MARKER: R8 Ll70/c; a
 
     new-instance p1, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
 
     invoke-direct {p1, v0, v8}, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;-><init>(Ljava/lang/String;Ljava/lang/String;)V
 
-    iget-object v5, v2, La80/c;->e:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 La80/c; e
+    iget-object v5, v2, Ll70/c;->e:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Ll70/c; e
 
     const/4 v0, 0x3
 
@@ -433,7 +433,7 @@
     goto :done
 
     :collection
-    iget-object v6, v2, La80/c;->b:Lx40/a;    # MARKER: R8 La80/c; Lx40/a; b
+    iget-object v6, v2, Ll70/c;->b:Ld40/a;    # MARKER: R8 Ll70/c; Ld40/a; b
 
     instance-of v0, v6, Lh4/a;    # MARKER: R8 Lh4/a;
 
@@ -524,7 +524,7 @@
 
     if-ne v0, p1, :invalid
 
-    instance-of v0, p2, Lw70/c$a;    # MARKER: R8 Lw70/c$a;
+    instance-of v0, p2, Lh70/c$a;    # MARKER: R8 Lh70/c$a;
 
     if-eqz v0, :mix_holder
 
@@ -534,7 +534,7 @@
 
     :mix_holder
 
-    instance-of v0, p2, Lw70/h$a;    # MARKER: R8 Lw70/h$a;
+    instance-of v0, p2, Lh70/h$a;    # MARKER: R8 Lh70/h$a;
 
     if-eqz v0, :playlist_holder
 
@@ -544,7 +544,7 @@
 
     :playlist_holder
 
-    instance-of v0, p2, Lw70/k$a;    # MARKER: R8 Lw70/k$a;
+    instance-of v0, p2, Lh70/l$a;    # MARKER: R8 Lh70/l$a;
 
     if-eqz v0, :invalid
 
@@ -564,13 +564,13 @@
 
     move-result-object p1
 
-    instance-of v0, p1, La50/b;    # MARKER: R8 La50/b;
+    instance-of v0, p1, Lg40/b;    # MARKER: R8 Lg40/b;
 
     if-eqz v0, :invalid
 
-    check-cast p1, La50/b;    # MARKER: R8 La50/b;
+    check-cast p1, Lg40/b;    # MARKER: R8 Lg40/b;
 
-    iget-object p1, p1, La50/b;->b:Ljava/util/ArrayList;    # MARKER: R8 La50/b; b
+    iget-object p1, p1, Lg40/b;->b:Ljava/util/ArrayList;    # MARKER: R8 Lg40/b; b
 
     invoke-virtual {p1}, Ljava/util/ArrayList;->size()I
 
@@ -585,7 +585,7 @@
 
     move-result-object p1
 
-    instance-of v0, p1, Lb80/a;    # MARKER: R8 Lb80/a;
+    instance-of v0, p1, Lm70/a;    # MARKER: R8 Lm70/a;
 
     if-eqz v0, :mix
 
@@ -593,9 +593,9 @@
 
     if-ne v5, v0, :invalid
 
-    check-cast p1, Lb80/a;    # MARKER: R8 Lb80/a;
+    check-cast p1, Lm70/a;    # MARKER: R8 Lm70/a;
 
-    iget-object v1, p1, Lb80/a;->a:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lb80/a; a
+    iget-object v1, p1, Lm70/a;->a:Lcom/aspiro/wamp/model/Album;    # MARKER: R8 Lm70/a; a
 
     invoke-virtual {v1}, Lcom/aspiro/wamp/model/Album;->getId()I
 
@@ -604,7 +604,7 @@
     goto :request
 
     :mix
-    instance-of v0, p1, Lb80/c;    # MARKER: R8 Lb80/c;
+    instance-of v0, p1, Lm70/c;    # MARKER: R8 Lm70/c;
 
     if-eqz v0, :playlist
 
@@ -612,9 +612,9 @@
 
     if-ne v5, v0, :invalid
 
-    check-cast p1, Lb80/c;    # MARKER: R8 Lb80/c;
+    check-cast p1, Lm70/c;    # MARKER: R8 Lm70/c;
 
-    iget-object v1, p1, Lb80/c;->a:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lb80/c; a
+    iget-object v1, p1, Lm70/c;->a:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lm70/c; a
 
     invoke-virtual {v1}, Lcom/aspiro/wamp/mix/model/Mix;->getId()Ljava/lang/String;
 
@@ -627,7 +627,7 @@
     goto :request
 
     :playlist
-    instance-of v0, p1, Lb80/d;    # MARKER: R8 Lb80/d;
+    instance-of v0, p1, Lm70/d;    # MARKER: R8 Lm70/d;
 
     if-eqz v0, :invalid
 
@@ -635,9 +635,9 @@
 
     if-ne v5, v0, :invalid
 
-    check-cast p1, Lb80/d;    # MARKER: R8 Lb80/d;
+    check-cast p1, Lm70/d;    # MARKER: R8 Lm70/d;
 
-    iget-object v1, p1, Lb80/d;->a:Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lb80/d; a
+    iget-object v1, p1, Lm70/d;->a:Lcom/aspiro/wamp/model/Playlist;    # MARKER: R8 Lm70/d; a
 
     invoke-virtual {v1}, Lcom/aspiro/wamp/model/Playlist;->getUuid()Ljava/lang/String;
 

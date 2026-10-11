@@ -1,6 +1,6 @@
 .class public final Lradiant/gestures/queue/ComposeSwipeState$Gesture;
 .super Landroidx/compose/ui/input/pointer/PointerInputFilter;
-.implements Lam0/l;    # MARKER: R8 Lam0/l;
+.implements Lyl0/l;    # MARKER: R8 Lyl0/l;
 .implements Landroidx/compose/ui/input/pointer/PointerInputModifier;
 
 

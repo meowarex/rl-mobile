@@ -74,7 +74,7 @@
 .method public resolve(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/gestures/queue/QueueRequest;
     .locals 5
 
-    instance-of p1, p2, Ln8/d;    # MARKER: R8 Ln8/d;
+    instance-of p1, p2, Lm8/d;    # MARKER: R8 Lm8/d;
 
     if-eqz p1, :invalid
 
@@ -89,9 +89,9 @@
     goto :invalid
 
     :has_position
-    check-cast p2, Ln8/d;    # MARKER: R8 Ln8/d;
+    check-cast p2, Lm8/d;    # MARKER: R8 Lm8/d;
 
-    iget-object p2, p2, Ln8/d;->f:Lcom/aspiro/wamp/model/MediaItem;    # MARKER: R8 Ln8/d; f
+    iget-object p2, p2, Lm8/d;->f:Lcom/aspiro/wamp/model/MediaItem;    # MARKER: R8 Lm8/d; f
 
     instance-of v0, p2, Lcom/aspiro/wamp/model/FavoriteTrack;
 

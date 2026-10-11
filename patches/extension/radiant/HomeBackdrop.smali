@@ -362,7 +362,7 @@
 
     const/4 v15, 0x0    # v15 = changed flags
 
-    invoke-static/range {v8 .. v15}, Lcom/tidal/android/feature/playerscreen/ui/composables/p3;->a(ILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+    invoke-static/range {v8 .. v15}, Lcom/tidal/android/feature/playerscreen/ui/composables/e3;->a(ILjava/lang/String;ZZLyl0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
 
     :skip
     invoke-interface {v0}, Landroidx/compose/runtime/Composer;->endReplaceGroup()V

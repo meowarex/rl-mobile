@@ -36,10 +36,10 @@
 
     invoke-virtual {v1}, Landroidx/recyclerview/widget/RecyclerView;->getAdapter()Landroidx/recyclerview/widget/RecyclerView$Adapter;
     move-result-object v2
-    instance-of v3, v2, La50/b;    # MARKER: R8 La50/b;
+    instance-of v3, v2, Lg40/b;    # MARKER: R8 Lg40/b;
     if-eqz v3, :invalid
-    check-cast v2, La50/b;    # MARKER: R8 La50/b;
-    iget-object v2, v2, La50/b;->b:Ljava/util/ArrayList;    # MARKER: R8 La50/b; b
+    check-cast v2, Lg40/b;    # MARKER: R8 Lg40/b;
+    iget-object v2, v2, Lg40/b;->b:Ljava/util/ArrayList;    # MARKER: R8 Lg40/b; b
 
     iget v3, p1, Lradiant/gestures/queue/QueueRequest;->position:I
     if-gez v3, :check_size
@@ -176,10 +176,10 @@
 
     invoke-virtual {v0}, Landroidx/recyclerview/widget/RecyclerView;->getAdapter()Landroidx/recyclerview/widget/RecyclerView$Adapter;
     move-result-object v0
-    instance-of v1, v0, La50/b;    # MARKER: R8 La50/b;
+    instance-of v1, v0, Lg40/b;    # MARKER: R8 Lg40/b;
     if-eqz v1, :invalid
-    check-cast v0, La50/b;    # MARKER: R8 La50/b;
-    iget-object v0, v0, La50/b;->b:Ljava/util/ArrayList;    # MARKER: R8 La50/b; b
+    check-cast v0, Lg40/b;    # MARKER: R8 Lg40/b;
+    iget-object v0, v0, Lg40/b;->b:Ljava/util/ArrayList;    # MARKER: R8 Lg40/b; b
 
     iget v1, p1, Lradiant/gestures/queue/QueueRequest;->position:I
     const/4 v2, 0x0
@@ -277,7 +277,7 @@
     invoke-static {v3}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
     move-result-object v3
     sget v4, Lcom/aspiro/wamp/R$string;->recommended_tracks:I
-    invoke-static {v4}, Lcom/aspiro/wamp/util/h0;->c(I)Ljava/lang/String;    # MARKER: R8 Lcom/aspiro/wamp/util/h0; c
+    invoke-static {v4}, Lcom/aspiro/wamp/util/a0;->c(I)Ljava/lang/String;    # MARKER: R8 Lcom/aspiro/wamp/util/a0; c
     move-result-object v4
     iget-object v5, v2, Lcom/aspiro/wamp/playlist/ui/items/PlaylistItemCollectionView;->h:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 h
     sget-object v6, Lcom/aspiro/wamp/playqueue/source/model/ItemSource$NavigationType$None;->INSTANCE:Lcom/aspiro/wamp/playqueue/source/model/ItemSource$NavigationType$None;
@@ -290,7 +290,7 @@
     :append_member
     iget-object v3, v2, Lcom/aspiro/wamp/playlist/ui/items/PlaylistItemCollectionView;->c:Lcom/aspiro/wamp/playlist/ui/items/a;    # MARKER: R8 Lcom/aspiro/wamp/playlist/ui/items/a; c
     if-eqz v3, :done
-    invoke-interface {v3}, Lcom/aspiro/wamp/playlist/ui/items/a;->k()Lcom/aspiro/wamp/playlist/viewmodel/PlaylistCollectionViewModel;    # MARKER: R8 Lcom/aspiro/wamp/playlist/ui/items/a; k
+    invoke-interface {v3}, Lcom/aspiro/wamp/playlist/ui/items/a;->l()Lcom/aspiro/wamp/playlist/viewmodel/PlaylistCollectionViewModel;    # MARKER: R8 Lcom/aspiro/wamp/playlist/ui/items/a; k
     move-result-object v3
     invoke-virtual {v3}, Lcom/aspiro/wamp/playlist/viewmodel/PlaylistCollectionViewModel;->getPlaylist()Lcom/aspiro/wamp/model/Playlist;
     move-result-object v3
@@ -342,7 +342,7 @@
     if-gez v0, :start_member
     goto :done
     :start_member
-    invoke-interface {v3, v0}, Lcom/aspiro/wamp/playlist/ui/items/a;->i(I)V    # MARKER: R8 Lcom/aspiro/wamp/playlist/ui/items/a; i
+    invoke-interface {v3, v0}, Lcom/aspiro/wamp/playlist/ui/items/a;->j(I)V    # MARKER: R8 Lcom/aspiro/wamp/playlist/ui/items/a; i
 
     :done
     return-void
@@ -365,10 +365,10 @@
     :has_position
     invoke-virtual {p1}, Landroidx/recyclerview/widget/RecyclerView;->getAdapter()Landroidx/recyclerview/widget/RecyclerView$Adapter;
     move-result-object p1
-    instance-of v1, p1, La50/b;    # MARKER: R8 La50/b;
+    instance-of v1, p1, Lg40/b;    # MARKER: R8 Lg40/b;
     if-eqz v1, :invalid
-    check-cast p1, La50/b;    # MARKER: R8 La50/b;
-    iget-object p1, p1, La50/b;->b:Ljava/util/ArrayList;    # MARKER: R8 La50/b; b
+    check-cast p1, Lg40/b;    # MARKER: R8 Lg40/b;
+    iget-object p1, p1, Lg40/b;->b:Ljava/util/ArrayList;    # MARKER: R8 Lg40/b; b
     invoke-virtual {p1}, Ljava/util/ArrayList;->size()I
     move-result v1
     if-lt v0, v1, :read_item
@@ -378,21 +378,21 @@
     invoke-virtual {p1, v0}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
     move-result-object p1
 
-    instance-of v1, p2, Lij/q$a;    # MARKER: R8 Lij/q$a;
+    instance-of v1, p2, Lgj/r$a;    # MARKER: R8 Lgj/r$a;
     if-eqz v1, :podcast_holder
     instance-of v1, p1, Lcom/aspiro/wamp/playlist/viewmodel/item/TrackViewModel;
     if-eqz v1, :invalid
     goto :create
 
     :podcast_holder
-    instance-of v1, p2, Lij/a0$a;    # MARKER: R8 Lij/a0$a;
+    instance-of v1, p2, Lgj/b0$a;    # MARKER: R8 Lgj/b0$a;
     if-eqz v1, :suggestion_holder
     instance-of v1, p1, Lcom/aspiro/wamp/playlist/viewmodel/item/PodcastTrackViewModel;
     if-eqz v1, :invalid
     goto :create
 
     :suggestion_holder
-    instance-of p2, p2, Lij/j0$a;    # MARKER: R8 Lij/j0$a;
+    instance-of p2, p2, Lgj/l0$a;    # MARKER: R8 Lgj/l0$a;
     if-eqz p2, :invalid
     instance-of p2, p1, Lcom/aspiro/wamp/playlist/viewmodel/item/SuggestedTrackViewModel;
     if-eqz p2, :invalid

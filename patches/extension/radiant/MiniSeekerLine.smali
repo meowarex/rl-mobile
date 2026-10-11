@@ -5,7 +5,7 @@
 # static fields
 .field public static progressState:Landroidx/compose/runtime/MutableFloatState;
 
-.field public static volatile vm:Lgh/j;    # MARKER: R8 Lgh/j;
+.field public static volatile vm:Leh/j;    # MARKER: R8 Leh/j;
 
 .field public static volatile sub:Lio/reactivex/disposables/Disposable;
 
@@ -57,7 +57,7 @@
 
     :start_block
     :try_start
-    sget-object v0, Lradiant/MiniSeekerLine;->vm:Lgh/j;    # cached vm  MARKER: R8 Lgh/j;
+    sget-object v0, Lradiant/MiniSeekerLine;->vm:Leh/j;    # cached vm  MARKER: R8 Leh/j;
 
     if-nez v0, :got_vm    # reuse if present
 
@@ -69,28 +69,28 @@
 
     move-result-object v0    # component
 
-    check-cast v0, Le5/z$n2;    # narrow type  MARKER: R8 Le5/z$n2;
+    check-cast v0, Le5/d0$t2;    # narrow type  MARKER: R8 Le5/d0$t2;
 
-    iget-object v0, v0, Le5/z$n2;->z0:Ldagger/internal/j;    # playqueue provider  MARKER: R8 Le5/z$n2; Ldagger/internal/j; z0
+    iget-object v0, v0, Le5/d0$t2;->e1:Ldagger/internal/j;    # playqueue provider  MARKER: R8 Le5/d0$t2; Ldagger/internal/j; z0
 
-    invoke-interface {v0}, Lql0/a;->get()Ljava/lang/Object;    # resolve  MARKER: R8 Lql0/a;
+    invoke-interface {v0}, Lol0/a;->get()Ljava/lang/Object;    # resolve  MARKER: R8 Lol0/a;
 
     move-result-object v0    # playqueue
 
-    check-cast v0, Lcom/aspiro/wamp/playqueue/d1;    # narrow type  MARKER: R8 Lcom/aspiro/wamp/playqueue/d1;
+    check-cast v0, Lcom/aspiro/wamp/playqueue/v0;    # narrow type  MARKER: R8 Lcom/aspiro/wamp/playqueue/v0;
 
-    new-instance v1, Lgh/j;    # build vm  MARKER: R8 Lgh/j;
+    new-instance v1, Leh/j;    # build vm  MARKER: R8 Leh/j;
 
-    invoke-direct {v1, v0}, Lgh/j;-><init>(Lcom/aspiro/wamp/playqueue/d1;)V    # ctor  MARKER: R8 Lgh/j; Lcom/aspiro/wamp/playqueue/d1;
+    invoke-direct {v1, v0}, Leh/j;-><init>(Lcom/aspiro/wamp/playqueue/v0;)V    # ctor  MARKER: R8 Leh/j; Lcom/aspiro/wamp/playqueue/v0;
 
-    sput-object v1, Lradiant/MiniSeekerLine;->vm:Lgh/j;    # cache  MARKER: R8 Lgh/j;
+    sput-object v1, Lradiant/MiniSeekerLine;->vm:Leh/j;    # cache  MARKER: R8 Leh/j;
 
     :got_vm
-    sget-object v0, Lradiant/MiniSeekerLine;->vm:Lgh/j;    # vm ref  MARKER: R8 Lgh/j;
+    sget-object v0, Lradiant/MiniSeekerLine;->vm:Leh/j;    # vm ref  MARKER: R8 Leh/j;
 
-    invoke-virtual {v0}, Lgh/j;->a()V    # activate emission  MARKER: R8 Lgh/j; a
+    invoke-virtual {v0}, Leh/j;->a()V    # activate emission  MARKER: R8 Leh/j; a
 
-    iget-object v0, v0, Lgh/j;->d:Lio/reactivex/subjects/BehaviorSubject;    # position subject  MARKER: R8 Lgh/j; d
+    iget-object v0, v0, Leh/j;->d:Lio/reactivex/subjects/BehaviorSubject;    # position subject  MARKER: R8 Leh/j; d
 
     invoke-static {}, Lio/reactivex/android/schedulers/AndroidSchedulers;->mainThread()Lio/reactivex/Scheduler;    # main scheduler
 

@@ -63,7 +63,7 @@
 
     iget-object v1, p0, Lradiant/RLAPILyricsWorker;->vm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
 
-    iget-object v2, v1, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 P
+    iget-object v2, v1, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->S:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 P
 
     sget-object v3, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
 
@@ -82,15 +82,15 @@
 
     if-ne v0, v1, :not_current
 
-    iget-object v1, v0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->a:Lbi/e;    # MARKER: R8 Lbi/e; a
+    iget-object v1, v0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->a:Lzh/e;    # MARKER: R8 Lzh/e; a
 
-    invoke-interface {v1}, Lbi/e;->getCurrentItem()Lcom/aspiro/wamp/playqueue/u0;    # MARKER: R8 Lbi/e; Lcom/aspiro/wamp/playqueue/u0;
+    invoke-interface {v1}, Lzh/e;->getCurrentItem()Lcom/aspiro/wamp/playqueue/q0;    # MARKER: R8 Lzh/e; Lcom/aspiro/wamp/playqueue/q0;
 
     move-result-object v1
 
     if-eqz v1, :not_current
 
-    invoke-interface {v1}, Lcom/aspiro/wamp/playqueue/u0;->getMediaItem()Lcom/aspiro/wamp/model/MediaItem;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/u0;
+    invoke-interface {v1}, Lcom/aspiro/wamp/playqueue/q0;->getMediaItem()Lcom/aspiro/wamp/model/MediaItem;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/q0;
 
     move-result-object v1
 
@@ -855,9 +855,9 @@
 
     iget-object v4, p0, Lradiant/RLAPILyricsWorker;->vm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
 
-    iget-object v5, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->O:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 O
+    iget-object v5, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->R:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 O
 
-    invoke-static {v3}, Lvn0/a;->c(Ljava/lang/Iterable;)Lvn0/b;    # MARKER: R8 Lvn0/a; Lvn0/b; c
+    invoke-static {v3}, Ltn0/a;->c(Ljava/lang/Iterable;)Ltn0/b;    # MARKER: R8 Ltn0/a; Ltn0/b; c
 
     move-result-object v6
 
@@ -874,7 +874,7 @@
 
     const/4 v10, 0x0
 
-    invoke-direct {v8, v7, v6, v9, v10}, Lcom/tidal/android/feature/playerscreen/ui/g$c;-><init>(Ljava/lang/String;Lvn0/b;IZ)V    # MARKER: R8 Lcom/tidal/android/feature/playerscreen/ui/g$c; Lvn0/b;
+    invoke-direct {v8, v7, v6, v9, v10}, Lcom/tidal/android/feature/playerscreen/ui/g$c;-><init>(Ljava/lang/String;Ltn0/b;IZ)V    # MARKER: R8 Lcom/tidal/android/feature/playerscreen/ui/g$c; Ltn0/b;
 
     const-string v6, "publishing g$c -> K=true (O=true if sticky) N=g$c"
 
@@ -886,7 +886,7 @@
 
     sput-boolean v6, Lradiant/RLAPILyricsHook;->isRlState:Z
 
-    iget-object v6, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->K:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 K
+    iget-object v6, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->N:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 K
 
     sget-object v7, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
 
@@ -902,7 +902,7 @@
 
     :open_lyrics
 
-    iget-object v6, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->P:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 P
+    iget-object v6, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->S:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 P
 
     invoke-interface {v6, v7}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
 
@@ -921,16 +921,22 @@
 .method public run()V
     .locals 2
 
+    invoke-static {p0}, Lradiant/SparkleIcons;->rlBegin(Ljava/lang/Object;)V    # Spinner while fetching
+
     :try_start
     invoke-direct {p0}, Lradiant/RLAPILyricsWorker;->runImpl()V
 
     :try_end
     .catchall {:try_start .. :try_end} :catch_all
 
+    invoke-static {p0}, Lradiant/SparkleIcons;->rlEnd(Ljava/lang/Object;)V
+
     return-void
 
     :catch_all
     move-exception v0
+
+    invoke-static {p0}, Lradiant/SparkleIcons;->rlEnd(Ljava/lang/Object;)V
 
     invoke-virtual {v0}, Ljava/lang/Throwable;->toString()Ljava/lang/String;
 

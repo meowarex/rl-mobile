@@ -25,7 +25,7 @@
     return-void
 .end method
 
-.method private current(Lradiant/gestures/queue/QueueRequest;)Lve/a;    # MARKER: R8 Lve/a;
+.method private current(Lradiant/gestures/queue/QueueRequest;)Lte/a;    # MARKER: R8 Lte/a;
     .locals 6
 
     if-eqz p1, :invalid
@@ -48,11 +48,11 @@
 
     if-eqz v1, :invalid
 
-    iget-object v2, v1, Lcom/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView;->c:Lpe/f;    # MARKER: R8 Lpe/f; c
+    iget-object v2, v1, Lcom/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView;->c:Lne/f;    # MARKER: R8 Lne/f; c
 
     if-eqz v2, :invalid
 
-    invoke-virtual {v1}, Lcom/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView;->N()La50/d;    # MARKER: R8 La50/d; N
+    invoke-virtual {v1}, Lcom/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView;->N()Lg40/d;    # MARKER: R8 Lg40/d; N
 
     move-result-object v1
 
@@ -80,17 +80,17 @@
 
     move-result-object v1
 
-    instance-of v2, v1, Lve/a;    # MARKER: R8 Lve/a;
+    instance-of v2, v1, Lte/a;    # MARKER: R8 Lte/a;
 
     if-eqz v2, :invalid
 
-    check-cast v1, Lve/a;    # MARKER: R8 Lve/a;
+    check-cast v1, Lte/a;    # MARKER: R8 Lte/a;
 
-    iget-boolean v2, v1, Lve/a;->f:Z    # MARKER: R8 Lve/a; f
+    iget-boolean v2, v1, Lte/a;->f:Z    # MARKER: R8 Lte/a; f
 
     if-eqz v2, :invalid
 
-    iget-object v2, v1, Lve/a;->c:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lve/a; c
+    iget-object v2, v1, Lte/a;->c:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lte/a; c
 
     if-eqz v2, :invalid
 
@@ -98,7 +98,7 @@
 
     move-result-object v0
 
-    iget-object v3, v1, Lve/a;->a:Ljava/lang/String;    # MARKER: R8 Lve/a; a
+    iget-object v3, v1, Lte/a;->a:Ljava/lang/String;    # MARKER: R8 Lte/a; a
 
     invoke-virtual {v3, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
@@ -156,7 +156,7 @@
 
     iget v7, p1, Lradiant/gestures/queue/QueueRequest;->action:I
 
-    invoke-direct {p0, p1}, Lradiant/gestures/queue/MyMixesAndRadioResolver;->current(Lradiant/gestures/queue/QueueRequest;)Lve/a;    # MARKER: R8 Lve/a;
+    invoke-direct {p0, p1}, Lradiant/gestures/queue/MyMixesAndRadioResolver;->current(Lradiant/gestures/queue/QueueRequest;)Lte/a;    # MARKER: R8 Lte/a;
 
     move-result-object p1
 
@@ -172,11 +172,11 @@
 
     if-eqz v0, :done
 
-    iget-object v1, v0, Lcom/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView;->c:Lpe/f;    # MARKER: R8 Lpe/f; c
+    iget-object v1, v0, Lcom/aspiro/wamp/mycollection/subpages/mixesandradios/MyMixesAndRadioView;->c:Lne/f;    # MARKER: R8 Lne/f; c
 
     if-eqz v1, :done
 
-    iget-object v2, v1, Lpe/f;->a:Lx40/a;    # MARKER: R8 Lpe/f; Lx40/a; a
+    iget-object v2, v1, Lne/f;->a:Ld40/a;    # MARKER: R8 Lne/f; Ld40/a; a
 
     instance-of v3, v2, Lh4/a;    # MARKER: R8 Lh4/a;
 
@@ -188,7 +188,7 @@
 
     move-result-object v3
 
-    iget-object v4, p1, Lve/a;->c:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lve/a; c
+    iget-object v4, p1, Lte/a;->c:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lte/a; c
 
     new-instance v5, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;
 
@@ -196,7 +196,7 @@
 
     invoke-direct {v5, v6}, Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;-><init>(Ljava/lang/String;)V
 
-    iget-object p0, v1, Lpe/f;->b:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lpe/f; b
+    iget-object p0, v1, Lne/f;->b:Lcom/tidal/android/navigation/NavigationInfo;    # MARKER: R8 Lne/f; b
 
     const/4 v1, 0x3
 
@@ -238,7 +238,7 @@
 .method public resolve(Landroidx/recyclerview/widget/RecyclerView;Landroidx/recyclerview/widget/RecyclerView$ViewHolder;)Lradiant/gestures/queue/QueueRequest;
     .locals 5
 
-    instance-of v0, p2, Lqe/c$a;    # MARKER: R8 Lqe/c$a;
+    instance-of v0, p2, Loe/d$a;    # MARKER: R8 Loe/d$a;
 
     if-eqz v0, :invalid
 
@@ -257,11 +257,11 @@
 
     move-result-object p1
 
-    instance-of v0, p1, La50/d;    # MARKER: R8 La50/d;
+    instance-of v0, p1, Lg40/d;    # MARKER: R8 Lg40/d;
 
     if-eqz v0, :invalid
 
-    check-cast p1, La50/d;    # MARKER: R8 La50/d;
+    check-cast p1, Lg40/d;    # MARKER: R8 Lg40/d;
 
     invoke-virtual {p1}, Landroidx/recyclerview/widget/ListAdapter;->getCurrentList()Ljava/util/List;
 
@@ -285,21 +285,21 @@
 
     move-result-object p1
 
-    instance-of v0, p1, Lve/a;    # MARKER: R8 Lve/a;
+    instance-of v0, p1, Lte/a;    # MARKER: R8 Lte/a;
 
     if-eqz v0, :invalid
 
-    check-cast p1, Lve/a;    # MARKER: R8 Lve/a;
+    check-cast p1, Lte/a;    # MARKER: R8 Lte/a;
 
-    iget-boolean v0, p1, Lve/a;->f:Z    # MARKER: R8 Lve/a; f
-
-    if-eqz v0, :invalid
-
-    iget-object v0, p1, Lve/a;->c:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lve/a; c
+    iget-boolean v0, p1, Lte/a;->f:Z    # MARKER: R8 Lte/a; f
 
     if-eqz v0, :invalid
 
-    iget-object v1, p1, Lve/a;->a:Ljava/lang/String;    # MARKER: R8 Lve/a; a
+    iget-object v0, p1, Lte/a;->c:Lcom/aspiro/wamp/mix/model/Mix;    # MARKER: R8 Lte/a; c
+
+    if-eqz v0, :invalid
+
+    iget-object v1, p1, Lte/a;->a:Ljava/lang/String;    # MARKER: R8 Lte/a; a
 
     invoke-virtual {v0}, Lcom/aspiro/wamp/mix/model/Mix;->getId()Ljava/lang/String;
 

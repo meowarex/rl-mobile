@@ -5,6 +5,7 @@ import android.content.pm.PackageManager.NameNotFoundException
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.installers.InstallerResult
 import com.meowarex.rlmobile.manager.InstallerManager
+import com.meowarex.rlmobile.manager.PathManager
 import com.meowarex.rlmobile.patcher.StepRunner
 import com.meowarex.rlmobile.patcher.steps.StepGroup
 import com.meowarex.rlmobile.patcher.steps.base.Step
@@ -21,6 +22,7 @@ import org.koin.core.component.inject
 class DowngradeCheckStep(private val options: PatchOptions) : Step(), KoinComponent {
     private val context: Application by inject()
     private val installers: InstallerManager by inject()
+    private val paths: PathManager by inject()
 
     override val group = StepGroup.Prepare
     override val localizedName = R.string.patch_step_downgrade_check
@@ -38,9 +40,11 @@ class DowngradeCheckStep(private val options: PatchOptions) : Step(), KoinCompon
         }
         container.log("Version of installed TIDAL app: $currentVersion")
 
-        val targetVersion = container
-            .getStep<FetchInfoStep>()
-            .data.tidalVersionCode
+        // Custom APK can be newer than data.json
+        val targetVersion = customApkVersionCode(container)
+            ?: container
+                .getStep<FetchInfoStep>()
+                .data.tidalVersionCode
 
         container.log("Target TIDAL version: $targetVersion")
 
@@ -57,6 +61,17 @@ class DowngradeCheckStep(private val options: PatchOptions) : Step(), KoinCompon
 
                 else -> {}
             }
+        }
+    }
+
+    private fun customApkVersionCode(container: StepRunner): Int? {
+        val file = options.customTidalApk?.getFile(paths)?.takeIf { it.exists() } ?: return null
+        return try {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageArchiveInfo(file.absolutePath, 0)?.versionCode
+        } catch (t: Throwable) {
+            container.log("Failed to read custom TIDAL APK version: ${t.message}")
+            null
         }
     }
 }

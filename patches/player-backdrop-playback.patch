@@ -1,13 +1,12 @@
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
-@@ -4433,6 +4433,8 @@
- 
-     move-object/from16 v25, v10
+@@ -5701,5 +5701,7 @@
+     move-object/from16 v23, v43
  
 +    sget-object v16, Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;->DARK_BLUR:Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;    # RL: force native Blur player background
 +
-     .line 171
-     invoke-static/range {v16 .. v26}, Lcom/tidal/android/feature/playerscreen/ui/composables/p3;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+     .line 172
+     invoke-static/range {v16 .. v26}, Lcom/tidal/android/feature/playerscreen/ui/composables/e3;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLyl0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
  
 --- a/com/tidal/android/core/ui/composable/c0.smali
 +++ b/com/tidal/android/core/ui/composable/c0.smali
@@ -22,8 +21,8 @@
  
      .line 6
      .line 7
---- a/de0/c.smali
-+++ b/de0/c.smali
+--- a/vd0/c.smali
++++ b/vd0/c.smali
 @@ -26,29 +26,26 @@
      .line 2
      .line 3
@@ -43,7 +42,7 @@
 -
 -    .line 10
 -    .line 11
--    invoke-static {v2, v3, v0, v1}, Landroidx/compose/foundation/text/input/a;->b(IILjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+-    invoke-static {v2, v3, v0, v1}, Landroidx/compose/foundation/text/input/a;->a(IILjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 -
 -    .line 12
 -    .line 13
@@ -70,7 +69,7 @@
      move-result-object v0
 -
 -    .line 15
-     iput-object v0, p0, Lde0/c;->a:Ljava/lang/String;
+     iput-object v0, p0, Lvd0/c;->a:Ljava/lang/String;
  
      .line 16
 @@ -59,10 +56,17 @@
@@ -92,7 +91,7 @@
 +    :rl_ds_ok
  
      .line 2
-     invoke-static {p1, v0}, Lcom/squareup/ui/market/layout/e;->c(Landroid/graphics/Bitmap;I)Landroid/graphics/Bitmap;
+     invoke-static {p1, v0}, Lrx/functions/u;->b(Landroid/graphics/Bitmap;I)Landroid/graphics/Bitmap;
 @@ -82,7 +86,7 @@
      .line 9
      .line 10

@@ -4,7 +4,7 @@
 
 
 # direct methods
-.method public static final a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Lam0/a;)V    # MARKER: R8 Lam0/a;
+.method public static final a(ILandroidx/compose/runtime/Composer;Landroidx/compose/ui/Modifier;Lyl0/a;)V    # MARKER: R8 Lyl0/a;
     .locals 21
     .annotation build Landroidx/compose/runtime/Composable;
     .end annotation
@@ -98,7 +98,7 @@
 
     const/4 v4, 0x6
 
-    invoke-static {v2, v11, v4}, Lcom/squareup/ui/market/core/theme/z;->t(Lcom/squareup/ui/market/core/theme/k$a;Landroidx/compose/runtime/Composer;I)Lcom/squareup/ui/market/core/theme/MarketStylesheet;    # MARKER: R8 Lcom/squareup/ui/market/core/theme/z; Lcom/squareup/ui/market/core/theme/k$a; t
+    invoke-static {v2, v11, v4}, Lcom/squareup/ui/market/core/theme/d0;->t(Lcom/squareup/ui/market/core/theme/k$a;Landroidx/compose/runtime/Composer;I)Lcom/squareup/ui/market/core/theme/MarketStylesheet;    # MARKER: R8 Lcom/squareup/ui/market/core/theme/d0; Lcom/squareup/ui/market/core/theme/k$a; t
 
     move-result-object v15
 
@@ -131,7 +131,7 @@
 
     const/16 v18, 0x0
 
-    invoke-static/range {v15 .. v20}, Lcom/squareup/ui/market/components/MarketIconButtonKt;->P(Lcom/squareup/ui/market/core/theme/MarketStylesheet;Lcom/squareup/ui/market/core/components/properties/IconButton$Size;Lcom/squareup/ui/market/core/components/properties/IconButton$Rank;Lcom/squareup/ui/market/core/components/properties/IconButton$Variant;ILjava/lang/Object;)Lq20/u1;    # MARKER: R8 Lq20/u1; P
+    invoke-static/range {v15 .. v20}, Lcom/squareup/ui/market/components/MarketIconButtonKt;->P(Lcom/squareup/ui/market/core/theme/MarketStylesheet;Lcom/squareup/ui/market/core/components/properties/IconButton$Size;Lcom/squareup/ui/market/core/components/properties/IconButton$Rank;Lcom/squareup/ui/market/core/components/properties/IconButton$Variant;ILjava/lang/Object;)Lw10/u1;    # MARKER: R8 Lw10/u1; P
 
     move-result-object v4
 
@@ -140,7 +140,7 @@
     :cond_5
     move-object v9, v4
 
-    check-cast v9, Lq20/u1;    # MARKER: R8 Lq20/u1;
+    check-cast v9, Lw10/u1;    # MARKER: R8 Lw10/u1;
 
     sget v2, Lcom/tidal/android/feature/playerscreen/ui/R$string;->lyrics:I
 
@@ -160,11 +160,24 @@
 
     and-int/lit8 v12, v4, 0xe
 
-    const/16 v13, 0xf8
+    const/16 v13, 0xe8    # Pass enabled ourselves
 
     const/4 v4, 0x0
 
+    sget v5, Lradiant/SparkleIcons;->currentMode:I    # Sparkle mode from PlayerScreen
+
+    iput v5, v10, Lradiant/SparkleContent;->m:I
+
+    if-nez v5, :rl_disabled    # Grey out while loading or no lyrics
+
+    const/4 v5, 0x1    # enabled
+
+    goto :rl_enabled_set
+
+    :rl_disabled
     const/4 v5, 0x0
+
+    :rl_enabled_set
 
     const/4 v6, 0x0
 
@@ -172,7 +185,7 @@
 
     const/4 v8, 0x0
 
-    invoke-static/range {v1 .. v13}, Lcom/squareup/ui/market/components/MarketIconButtonKt;->b(Lam0/a;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLcom/squareup/ui/market/components/n;Lam0/a;Ljava/lang/String;Lq20/u1;Lam0/p;Landroidx/compose/runtime/Composer;II)V    # MARKER: R8 Lam0/a; Lcom/squareup/ui/market/components/n; Lq20/u1; Lam0/p; b
+    invoke-static/range {v1 .. v13}, Lcom/squareup/ui/market/components/MarketIconButtonKt;->c(Lyl0/a;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/interaction/MutableInteractionSource;ZLcom/squareup/ui/market/components/n;Lyl0/a;Ljava/lang/String;Lw10/u1;Lyl0/p;Landroidx/compose/runtime/Composer;II)V    # MARKER: R8 Lyl0/a; Lcom/squareup/ui/market/components/n; Lw10/u1; Lyl0/p; b
 
     invoke-static {}, Landroidx/compose/runtime/ComposerKt;->isTraceInProgress()Z
 

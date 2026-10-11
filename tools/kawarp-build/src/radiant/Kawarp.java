@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.AndroidCompositionLocals_androidKt;
 
 import coil.request.CachePolicy;
 
-import com.tidal.android.feature.playerscreen.ui.composables.p3;
+import com.tidal.android.feature.playerscreen.ui.composables.e3;
 import com.tidal.android.feature.playerscreen.ui.model.PlayerBackgroundStyle;
 import com.tidal.android.image.coil.base.CoilImageLoader;
 import com.tidal.android.image.core.b;  // MARKER: R8 core.b
@@ -41,7 +41,7 @@ import java.util.concurrent.Executors;
  * (cloned at tools/kawarp-agsl) and is compiled into this bundle by tools/kawarp-build/build.sh;
  * this class only holds what is TIDAL/Compose-specific
  */
-public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallback, b0.c {  // MARKER: R8 am0.l b0.c
+public final class Kawarp implements yl0.l, Runnable, Choreographer.FrameCallback, c0.c {  // MARKER: R8 yl0.l c0.c
 
     /** Stop the frame loop once nothing has drawn for this long (player left / backgrounded). */
     private static final long IDLE_STOP_MS = 500L;
@@ -61,7 +61,7 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
      * would allocate an Integer per frame for nothing.
      */
     private static final MutableIntState frameState = SnapshotIntStateKt.mutableIntStateOf(0);
-    /** Flips true on any shader failure; read during composition so we recompose onto p3.a. */
+    /** Flips true on any shader failure; read during composition so we recompose onto e3.a. */
     private static final MutableState fallbackState =
         SnapshotStateKt.mutableStateOf$default(Boolean.FALSE, null, 2, null);
 
@@ -70,7 +70,7 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
 
     private static KawarpEngine engine;
     /** TIDAL's application-scoped Coil loader and the context its requests are built with. */
-    private static volatile coil.f loader;  // MARKER: R8 coil.f
+    private static volatile coil.e loader;  // MARKER: R8 coil.e
     private static volatile Context appContext;
     private static volatile String requestedUuid;
     private static volatile int loadToken;
@@ -95,11 +95,11 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
 
 
     /**
-     * Drop-in replacement for TIDAL's PlayerBackground composable (p3.b) - the patch redirects
+     * Drop-in replacement for TIDAL's PlayerBackground composable (e3.b) - the patch redirects
      * the call site here so the whole backdrop works <3
      */
     public static void b(PlayerBackgroundStyle style, long color, int albumId, String coverUuid,
-                         boolean isPlaying, boolean isSeeking, am0.a progress, Modifier modifier,  // MARKER: R8 am0.a
+                         boolean isPlaying, boolean isSeeking, yl0.a progress, Modifier modifier,  // MARKER: R8 yl0.a
                          Composer composer, int changed) {
         render(albumId, coverUuid, isPlaying, modifier, composer);
     }
@@ -112,7 +112,7 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
         boolean ok = !((Boolean) fallbackState.getValue()).booleanValue() && ensureEngine();
         if (!ok) {
             // No (working) AGSL here - fall back to TIDAL's own blurred backdrop.
-            p3.a(albumId, coverUuid, isPlaying, false, null, modifier, composer, 0);  // MARKER: R8 p3.a
+            e3.a(albumId, coverUuid, isPlaying, false, null, modifier, composer, 0);  // MARKER: R8 e3.a
         } else {
             engine.setPlaying(isPlaying);
             request(albumId, coverUuid);
@@ -131,8 +131,8 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
             Object local = composer.consume(AndroidCompositionLocals_androidKt.getLocalContext());
             if (!(local instanceof Context)) return;
             Context app = ((Context) local).getApplicationContext();
-            if (!(app instanceof ce0.b.a)) return;  // MARKER: R8 ce0.b.a
-            Object tidalLoader = ((ce0.b.a) app).a().a();  // MARKER: R8 ce0.b.a
+            if (!(app instanceof ud0.b.a)) return;  // MARKER: R8 ud0.b.a
+            Object tidalLoader = ((ud0.b.a) app).a().a();  // MARKER: R8 ud0.b.a
             if (!(tidalLoader instanceof CoilImageLoader)) return;
             appContext = app;
             loader = ((CoilImageLoader) tidalLoader).a;
@@ -181,7 +181,7 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
      */
     public void run() {
         try {
-            xd0.g tidal = new xd0.g(appContext, new b.a(String.valueOf(albumId), uuid),  // MARKER: R8 xd0.g b.a
+            pd0.g tidal = new pd0.g(appContext, new b.a(String.valueOf(albumId), uuid),  // MARKER: R8 pd0.g b.a
                 null, null, false, null, null, false);
             coil.request.h.a req = coil.request.h.a(com.tidal.android.image.coil.c.a(tidal, null));  // MARKER: R8 h.a coil.c.a
             coil.request.b d = req.b;  // MARKER: R8 req.b
@@ -207,7 +207,7 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
     public void b(Drawable placeholder) {}
 
     /** Target.onError - not in any of TIDAL's stores. */
-    public void d(Drawable error) { fail(); }
+    public void c(Drawable error) { fail(); }
 
     private void fail() {
         if (token == loadToken) requestedUuid = null;
@@ -258,7 +258,7 @@ public final class Kawarp implements am0.l, Runnable, Choreographer.FrameCallbac
             engine.draw(AndroidCanvas_androidKt.getNativeCanvas(scope.getDrawContext().getCanvas()),
                 width, height);
         } catch (Throwable t) {
-            fallbackState.setValue(Boolean.TRUE);      // AGSL draw failed: recompose onto p3.a  // MARKER: R8 p3.a
+            fallbackState.setValue(Boolean.TRUE);      // AGSL draw failed: recompose onto e3.a  // MARKER: R8 e3.a
         }
     }
 }

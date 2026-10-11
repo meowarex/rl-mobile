@@ -1,14 +1,13 @@
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
-@@ -4613,8 +4613,8 @@
+@@ -5701,7 +5701,7 @@
+     move-object/from16 v23, v43
  
-     move-object/from16 v25, v10
+     .line 172
+-    invoke-static/range {v16 .. v26}, Lcom/tidal/android/feature/playerscreen/ui/composables/e3;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLyl0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
++    invoke-static/range {v16 .. v26}, Lradiant/Kawarp;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLyl0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
  
-     .line 171
--    invoke-static/range {v16 .. v26}, Lcom/tidal/android/feature/playerscreen/ui/composables/p3;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
-+    invoke-static/range {v16 .. v26}, Lradiant/Kawarp;->b(Lcom/tidal/android/feature/playerscreen/ui/model/PlayerBackgroundStyle;JILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
- 
-     const/4 v4, 0x0
+     const/16 v5, 0x12c
  
 --- a/com/tidal/android/core/ui/composable/c0.smali
 +++ b/com/tidal/android/core/ui/composable/c0.smali
@@ -33,7 +32,7 @@
 -
 -    const/4 v15, 0x0    # v15 = changed flags
 -
--    invoke-static/range {v8 .. v15}, Lcom/tidal/android/feature/playerscreen/ui/composables/p3;->a(ILjava/lang/String;ZZLam0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
+-    invoke-static/range {v8 .. v15}, Lcom/tidal/android/feature/playerscreen/ui/composables/e3;->a(ILjava/lang/String;ZZLyl0/a;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)V
 +    invoke-static {v8, v9, v10, v13, v0}, Lradiant/Kawarp;->render(ILjava/lang/String;ZLandroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;)V    # RL: Radiant AGSL backdrop
  
      :skip

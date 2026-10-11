@@ -1,11 +1,11 @@
 --- a/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
 +++ b/com/tidal/android/feature/playerscreen/ui/PlayerScreenKt.smali
-@@ -5970,6 +5970,8 @@
-     .line 365
-     iget-object v3, v11, Lcom/tidal/android/feature/playerscreen/ui/s$a;->m:Lcom/tidal/android/feature/playerscreen/ui/p;
+@@ -7303,6 +7303,8 @@
+     .line 366
+     iget-object v2, v11, Lcom/tidal/android/feature/playerscreen/ui/s$a;->m:Lcom/tidal/android/feature/playerscreen/ui/p;
  
-+    const/4 v3, 0x0    # Never show the "Playing from" source at the bottom (relocated above the title, or hidden when off)
++    const/4 v2, 0x0    # Never show the "Playing from" source at the bottom (relocated above the title, or hidden when off)
 +
-     if-nez v3, :cond_5a
+     if-nez v2, :cond_5c
  
-     const v3, 0x26ba353b
+     const v2, 0x2441e85f

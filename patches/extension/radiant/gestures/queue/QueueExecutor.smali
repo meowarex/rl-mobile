@@ -64,15 +64,15 @@
 
     if-eqz v0, :done
 
-    iget-object v0, v0, Lo3/a;->l:Lcom/aspiro/wamp/module/album/AlbumProvider;    # MARKER: R8 Lo3/a; l
+    iget-object v0, v0, Lo3/a;->m:Lcom/aspiro/wamp/module/album/AlbumProvider;    # MARKER: R8 Lo3/a; l
 
     if-eqz v0, :done
 
-    new-instance v1, Lc3/h;    # MARKER: R8 Lc3/h;
+    new-instance v1, Ld3/f;    # MARKER: R8 Ld3/f;
 
-    invoke-direct {v1, p1, v0, p2, p3}, Lc3/h;-><init>(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/module/album/AlbumProvider;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V    # MARKER: R8 Lc3/h;
+    invoke-direct {v1, p1, v0, p2, p3}, Ld3/f;-><init>(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/module/album/AlbumProvider;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)V    # MARKER: R8 Ld3/f;
 
-    invoke-virtual {v1, p0}, Lc3/h;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lc3/h; b
+    invoke-virtual {v1, p0}, Ld3/f;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Ld3/f; b
 
     :done
     return-void
@@ -103,17 +103,17 @@
 
     if-eqz v0, :done
 
-    iget-object v0, v0, Lu3/a;->j:Lj3/k$a;    # MARKER: R8 Lu3/a; Lj3/k$a; j
+    iget-object v0, v0, Lu3/a;->j:Lk3/m$a;    # MARKER: R8 Lu3/a; Lk3/m$a; j
 
     if-eqz v0, :done
 
-    invoke-interface {v0, p1, p2, p3}, Lj3/k$a;->a(Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lj3/k;    # MARKER: R8 Lj3/k$a; Lj3/k; a
+    invoke-interface {v0, p1, p2, p3}, Lk3/m$a;->a(Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lk3/m;    # MARKER: R8 Lk3/m$a; Lk3/m; a
 
     move-result-object v0
 
     if-eqz v0, :done
 
-    invoke-virtual {v0, p0}, Lj3/k;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lj3/k; b
+    invoke-virtual {v0, p0}, Lk3/m;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lk3/m; b
 
     :done
     return-void
@@ -180,17 +180,17 @@
 
     move-result-object v1
 
-    check-cast v1, Le5/z$n2;    # MARKER: R8 Le5/z$n2;
+    check-cast v1, Le5/d0$t2;    # MARKER: R8 Le5/d0$t2;
 
-    invoke-virtual {v1}, Le5/z$n2;->r2()Lcom/aspiro/wamp/playqueue/g1;    # MARKER: R8 Le5/z$n2; Lcom/aspiro/wamp/playqueue/g1; r2
-
-    move-result-object v2
-
-    invoke-virtual {v2}, Lcom/aspiro/wamp/playqueue/g1;->a()Lcom/aspiro/wamp/player/d;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/g1; Lcom/aspiro/wamp/player/d; a
+    invoke-virtual {v1}, Le5/d0$t2;->A2()Lcom/aspiro/wamp/playqueue/x0;    # MARKER: R8 Le5/d0$t2; Lcom/aspiro/wamp/playqueue/x0; r2
 
     move-result-object v2
 
-    invoke-virtual {v2}, Lcom/aspiro/wamp/player/d;->b()Lcom/aspiro/wamp/model/MediaItemParent;    # MARKER: R8 Lcom/aspiro/wamp/player/d; b
+    invoke-virtual {v2}, Lcom/aspiro/wamp/playqueue/x0;->a()Lcom/aspiro/wamp/player/c;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/x0; Lcom/aspiro/wamp/player/c; a
+
+    move-result-object v2
+
+    invoke-virtual {v2}, Lcom/aspiro/wamp/player/c;->b()Lcom/aspiro/wamp/model/MediaItemParent;    # MARKER: R8 Lcom/aspiro/wamp/player/c; b
 
     move-result-object v2
 
@@ -229,20 +229,20 @@
 
     move-result-object v2
 
-    iget-object v2, v2, Lo3/a;->e:Lc3/i$a;    # MARKER: R8 Lo3/a; Lc3/i$a; e
+    iget-object v2, v2, Lo3/a;->f:Ld3/g$a;    # MARKER: R8 Lo3/a; Ld3/g$a; e
 
-    invoke-interface {v2, p1, p2, p3}, Lc3/i$a;->a(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lc3/i;    # MARKER: R8 Lc3/i$a; Lc3/i; a
+    invoke-interface {v2, p1, p2, p3}, Ld3/g$a;->a(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Ld3/g;    # MARKER: R8 Ld3/g$a; Ld3/g; a
 
     move-result-object p1
 
     check-cast p0, Landroidx/fragment/app/FragmentActivity;
 
-    invoke-virtual {p1, p0}, Lc3/i;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lc3/i; b
+    invoke-virtual {p1, p0}, Ld3/g;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Ld3/g; b
 
     goto :done
 
     :play
-    invoke-virtual {v1}, Le5/z$n2;->u3()Lcom/aspiro/wamp/playback/f;    # MARKER: R8 Le5/z$n2; Lcom/aspiro/wamp/playback/f; u3
+    invoke-virtual {v1}, Le5/d0$t2;->F3()Lcom/aspiro/wamp/playback/e;    # MARKER: R8 Le5/d0$t2; Lcom/aspiro/wamp/playback/e; u3
 
     move-result-object p0
 
@@ -252,7 +252,7 @@
 
     const/4 p2, 0x1
 
-    invoke-virtual {p0, p1, p3, p2, v0}, Lcom/aspiro/wamp/playback/f;->a(ILcom/tidal/android/navigation/NavigationInfo;ZLjava/lang/String;)Lhu/akarnokd/rxjava/interop/f;    # MARKER: R8 Lcom/aspiro/wamp/playback/f; Lhu/akarnokd/rxjava/interop/f; a
+    invoke-virtual {p0, p1, p3, p2, v0}, Lcom/aspiro/wamp/playback/e;->a(ILcom/tidal/android/navigation/NavigationInfo;ZLjava/lang/String;)Lhu/akarnokd/rxjava/interop/f;    # MARKER: R8 Lcom/aspiro/wamp/playback/e; Lhu/akarnokd/rxjava/interop/f; a
 
     move-result-object v0
 
@@ -271,17 +271,17 @@
 
     move-result-object v0
 
-    check-cast v0, Le5/z$n2;    # MARKER: R8 Le5/z$n2;
+    check-cast v0, Le5/d0$t2;    # MARKER: R8 Le5/d0$t2;
 
-    invoke-virtual {v0}, Le5/z$n2;->r2()Lcom/aspiro/wamp/playqueue/g1;    # MARKER: R8 Le5/z$n2; Lcom/aspiro/wamp/playqueue/g1; r2
-
-    move-result-object v0
-
-    invoke-virtual {v0}, Lcom/aspiro/wamp/playqueue/g1;->a()Lcom/aspiro/wamp/player/d;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/g1; Lcom/aspiro/wamp/player/d; a
+    invoke-virtual {v0}, Le5/d0$t2;->A2()Lcom/aspiro/wamp/playqueue/x0;    # MARKER: R8 Le5/d0$t2; Lcom/aspiro/wamp/playqueue/x0; r2
 
     move-result-object v0
 
-    invoke-virtual {v0}, Lcom/aspiro/wamp/player/d;->b()Lcom/aspiro/wamp/model/MediaItemParent;    # MARKER: R8 Lcom/aspiro/wamp/player/d; b
+    invoke-virtual {v0}, Lcom/aspiro/wamp/playqueue/x0;->a()Lcom/aspiro/wamp/player/c;    # MARKER: R8 Lcom/aspiro/wamp/playqueue/x0; Lcom/aspiro/wamp/player/c; a
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Lcom/aspiro/wamp/player/c;->b()Lcom/aspiro/wamp/model/MediaItemParent;    # MARKER: R8 Lcom/aspiro/wamp/player/c; b
 
     move-result-object v0
 
@@ -343,15 +343,15 @@
 
     move-result-object v1
 
-    iget-object v1, v1, Lu3/a;->e:Lj3/n$a;    # MARKER: R8 Lu3/a; Lj3/n$a; e
+    iget-object v1, v1, Lu3/a;->e:Lk3/p$a;    # MARKER: R8 Lu3/a; Lk3/p$a; e
 
-    invoke-interface {v1, p1, p2, p3}, Lj3/n$a;->a(Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lj3/n;    # MARKER: R8 Lj3/n$a; Lj3/n; a
+    invoke-interface {v1, p1, p2, p3}, Lk3/p$a;->a(Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lk3/p;    # MARKER: R8 Lk3/p$a; Lk3/p; a
 
     move-result-object p1
 
     check-cast p0, Landroidx/fragment/app/FragmentActivity;
 
-    invoke-virtual {p1, p0}, Lj3/n;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lj3/n; b
+    invoke-virtual {p1, p0}, Lk3/p;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lk3/p; b
 
     goto :done
 
@@ -364,9 +364,9 @@
 
     move-result-object p0
 
-    check-cast p0, Le5/z$n2;    # MARKER: R8 Le5/z$n2;
+    check-cast p0, Le5/d0$t2;    # MARKER: R8 Le5/d0$t2;
 
-    invoke-virtual {p0}, Le5/z$n2;->x3()Lcom/aspiro/wamp/playback/e0;    # MARKER: R8 Le5/z$n2; Lcom/aspiro/wamp/playback/e0; x3
+    invoke-virtual {p0}, Le5/d0$t2;->I3()Lcom/aspiro/wamp/playback/e0;    # MARKER: R8 Le5/d0$t2; Lcom/aspiro/wamp/playback/e0; x3
 
     move-result-object p0
 
@@ -403,7 +403,7 @@
 
     move-result-object v0
 
-    check-cast v0, Le5/z$n2;    # MARKER: R8 Le5/z$n2;
+    check-cast v0, Le5/d0$t2;    # MARKER: R8 Le5/d0$t2;
 
     invoke-static {}, Lradiant/gestures/queue/QueueExecutor;->hasActiveQueue()Z
 
@@ -436,9 +436,9 @@
 
     :has_activity
 
-    iget-object v1, v0, Le5/z$n2;->w8:Ldagger/internal/f;    # MARKER: R8 Le5/z$n2; Ldagger/internal/f; w8
+    iget-object v1, v0, Le5/d0$t2;->e9:Ldagger/internal/f;    # MARKER: R8 Le5/d0$t2; Ldagger/internal/f; w8
 
-    invoke-interface {v1}, Lql0/a;->get()Ljava/lang/Object;    # MARKER: R8 Lql0/a;
+    invoke-interface {v1}, Lol0/a;->get()Ljava/lang/Object;    # MARKER: R8 Lol0/a;
 
     move-result-object v1
 
@@ -455,7 +455,7 @@
     goto :done
 
     :play
-    invoke-virtual {v0}, Le5/z$n2;->y3()Lcom/aspiro/wamp/playback/k0;    # MARKER: R8 Le5/z$n2; Lcom/aspiro/wamp/playback/k0; y3
+    invoke-virtual {v0}, Le5/d0$t2;->J3()Lcom/aspiro/wamp/playback/k0;    # MARKER: R8 Le5/d0$t2; Lcom/aspiro/wamp/playback/k0; y3
 
     move-result-object p0
 
@@ -492,13 +492,13 @@
 
     move-result-object v1
 
-    iget-object v1, v1, Lo3/a;->d:Lc3/l$a;    # MARKER: R8 Lo3/a; Lc3/l$a; d
+    iget-object v1, v1, Lo3/a;->e:Ld3/j$a;    # MARKER: R8 Lo3/a; Ld3/j$a; d
 
-    invoke-interface {v1, p1, p2, p3}, Lc3/l$a;->a(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lc3/l;    # MARKER: R8 Lc3/l$a; Lc3/l; a
+    invoke-interface {v1, p1, p2, p3}, Ld3/j$a;->a(Lcom/aspiro/wamp/model/Album;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Ld3/j;    # MARKER: R8 Ld3/j$a; Ld3/j; a
 
     move-result-object p1
 
-    invoke-virtual {p1, p0}, Lc3/l;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lc3/l; b
+    invoke-virtual {p1, p0}, Ld3/j;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Ld3/j; b
 
     goto :done
 
@@ -538,13 +538,13 @@
 
     move-result-object v1
 
-    iget-object v1, v1, Lu3/a;->d:Lj3/q$a;    # MARKER: R8 Lu3/a; Lj3/q$a; d
+    iget-object v1, v1, Lu3/a;->d:Lk3/s$a;    # MARKER: R8 Lu3/a; Lk3/s$a; d
 
-    invoke-interface {v1, p1, p2, p3}, Lj3/q$a;->a(Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lj3/q;    # MARKER: R8 Lj3/q$a; Lj3/q; a
+    invoke-interface {v1, p1, p2, p3}, Lk3/s$a;->a(Lcom/aspiro/wamp/mix/model/Mix;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lk3/s;    # MARKER: R8 Lk3/s$a; Lk3/s; a
 
     move-result-object p1
 
-    invoke-virtual {p1, p0}, Lj3/q;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lj3/q; b
+    invoke-virtual {p1, p0}, Lk3/s;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lk3/s; b
 
     goto :done
 
@@ -588,21 +588,21 @@
 
     move-result-object v0
 
-    check-cast v0, Le5/z$n2;    # MARKER: R8 Le5/z$n2;
+    check-cast v0, Le5/d0$t2;    # MARKER: R8 Le5/d0$t2;
 
-    iget-object v0, v0, Le5/z$n2;->v8:Ldagger/internal/f;    # MARKER: R8 Le5/z$n2; Ldagger/internal/f; v8
+    iget-object v0, v0, Le5/d0$t2;->d9:Ldagger/internal/f;    # MARKER: R8 Le5/d0$t2; Ldagger/internal/f; v8
 
-    invoke-interface {v0}, Lql0/a;->get()Ljava/lang/Object;    # MARKER: R8 Lql0/a;
+    invoke-interface {v0}, Lol0/a;->get()Ljava/lang/Object;    # MARKER: R8 Lol0/a;
 
     move-result-object v0
 
-    check-cast v0, Lcom/aspiro/wamp/contextmenu/item/playlist/u$a;    # MARKER: R8 Lcom/aspiro/wamp/contextmenu/item/playlist/u$a;
+    check-cast v0, Lcom/aspiro/wamp/contextmenu/item/playlist/z$a;    # MARKER: R8 Lcom/aspiro/wamp/contextmenu/item/playlist/z$a;
 
-    invoke-interface {v0, p1, p2, p3}, Lcom/aspiro/wamp/contextmenu/item/playlist/u$a;->a(Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/contextmenu/item/playlist/u;    # MARKER: R8 Lcom/aspiro/wamp/contextmenu/item/playlist/u$a; Lcom/aspiro/wamp/contextmenu/item/playlist/u; a
+    invoke-interface {v0, p1, p2, p3}, Lcom/aspiro/wamp/contextmenu/item/playlist/z$a;->a(Lcom/aspiro/wamp/model/Playlist;Lcom/aspiro/wamp/eventtracking/model/ContextualMetadata;Lcom/tidal/android/navigation/NavigationInfo;)Lcom/aspiro/wamp/contextmenu/item/playlist/z;    # MARKER: R8 Lcom/aspiro/wamp/contextmenu/item/playlist/z$a; Lcom/aspiro/wamp/contextmenu/item/playlist/z; a
 
     move-result-object p1
 
-    invoke-virtual {p1, p0}, Lcom/aspiro/wamp/contextmenu/item/playlist/u;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lcom/aspiro/wamp/contextmenu/item/playlist/u; b
+    invoke-virtual {p1, p0}, Lcom/aspiro/wamp/contextmenu/item/playlist/z;->b(Landroidx/fragment/app/FragmentActivity;)V    # MARKER: R8 Lcom/aspiro/wamp/contextmenu/item/playlist/z; b
 
     goto :done
 
@@ -640,11 +640,11 @@
 
     move-result-object v1
 
-    check-cast v1, Le5/z$n2;    # MARKER: R8 Le5/z$n2;
+    check-cast v1, Le5/d0$t2;    # MARKER: R8 Le5/d0$t2;
 
-    iget-object v1, v1, Le5/z$n2;->K9:Ldagger/internal/f;    # MARKER: R8 Le5/z$n2; Ldagger/internal/f; K9
+    iget-object v1, v1, Le5/d0$t2;->ga:Ldagger/internal/f;    # MARKER: R8 Le5/d0$t2; Ldagger/internal/f; K9
 
-    invoke-interface {v1}, Lql0/a;->get()Ljava/lang/Object;    # MARKER: R8 Lql0/a;
+    invoke-interface {v1}, Lol0/a;->get()Ljava/lang/Object;    # MARKER: R8 Lol0/a;
 
     move-result-object v1
 
@@ -707,11 +707,11 @@
 
     move-result-object v1
 
-    check-cast v1, Le5/z$n2;    # MARKER: R8 Le5/z$n2;
+    check-cast v1, Le5/d0$t2;    # MARKER: R8 Le5/d0$t2;
 
-    iget-object v1, v1, Le5/z$n2;->k9:Ldagger/internal/f;    # MARKER: R8 Le5/z$n2; Ldagger/internal/f; k9
+    iget-object v1, v1, Le5/d0$t2;->Z9:Ldagger/internal/f;    # MARKER: R8 Le5/d0$t2; Ldagger/internal/f; k9
 
-    invoke-interface {v1}, Lql0/a;->get()Ljava/lang/Object;    # MARKER: R8 Lql0/a;
+    invoke-interface {v1}, Lol0/a;->get()Ljava/lang/Object;    # MARKER: R8 Lol0/a;
 
     move-result-object v1
 

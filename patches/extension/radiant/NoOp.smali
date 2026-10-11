@@ -1,6 +1,6 @@
 .class public final Lradiant/NoOp;
 .super Ljava/lang/Object;
-.implements Lam0/a;    # MARKER: R8 Lam0/a;
+.implements Lyl0/a;    # MARKER: R8 Lyl0/a;
 
 
 # static fields

@@ -126,7 +126,7 @@
 
     iget-object v1, v2, Lradiant/gestures/queue/ComposeSwipeState;->draw:Lradiant/gestures/queue/ComposeSwipeState$Draw;
 
-    invoke-static {p0, v1}, Landroidx/compose/ui/draw/DrawModifierKt;->drawWithContent(Landroidx/compose/ui/Modifier;Lam0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lam0/l;
+    invoke-static {p0, v1}, Landroidx/compose/ui/draw/DrawModifierKt;->drawWithContent(Landroidx/compose/ui/Modifier;Lyl0/l;)Landroidx/compose/ui/Modifier;    # MARKER: R8 Lyl0/l;
 
     move-result-object p0
 

@@ -1,7 +1,7 @@
 .class public final Lradiant/MiniSeekerFloating;
 .super Ljava/lang/Object;
 
-.implements Lam0/l;    # MARKER: R8 Lam0/l;
+.implements Lyl0/l;    # MARKER: R8 Lyl0/l;
 
 
 # static fields

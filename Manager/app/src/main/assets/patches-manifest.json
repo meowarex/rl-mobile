@@ -82,7 +82,13 @@
           "description": "[Only works with API results] - Generates Syllable timings from Line timings using a self trained AI model ",
           "default": false,
           "inline": true,
-          "token": "RL_SYNTHESIZE"
+          "token": "RL_SYNTHESIZE",
+          "fileNames": [
+            "lyrics-ai-indicator.patch"
+          ],
+          "extensionFiles": [
+            "radiant/AiSparkle.smali"
+          ]
         },
         {
           "type": "toggle",
@@ -378,16 +384,42 @@
           "type": "toggle",
           "key": "cover_everywhere",
           "title": "Cover Everywhere - WIP",
-          "description": "Applies TIDAL's native blurred album-art backdrop to every Compose based page (Home & Collection)",
+          "description": "Applies TIDAL's native blurred album-art backdrop to every Compose based page (Home, Collection, Search, Save For Later, Profile, Downloads & Settings)",
           "default": false,
           "inline": true,
           "fileNames": [
             "home-backdrop.patch",
             "collection-backdrop.patch",
+            "cover-everywhere-pages.patch",
             "cover-capture.patch"
           ]
         }
       ]
+    },
+    {
+      "id": "AnimatedCovers",
+      "order": 34,
+      "fileNames": [
+        "animated-covers.patch"
+      ],
+      "title": "Animated Covers",
+      "description": "Replaces cover art with animated artwork when available",
+      "default": true,
+      "extensionFiles": [
+        "radiant/AnimatedCovers.smali",
+        "radiant/AnimatedCoverView.smali",
+        "radiant/RoundOutline.smali"
+      ]
+    },
+    {
+      "id": "PlayerCrossfade",
+      "order": 35,
+      "fileNames": [
+        "player-crossfade.patch"
+      ],
+      "title": "Audio Crossfade",
+      "description": "[Temporary Patch] - Unlocks TIDAL's crossfade between tracks. Set the duration in TIDAL Settings > Audio & Playback (enables the mf-player-crossfade feature flag)",
+      "default": true
     },
     {
       "id": "QualityBadgeColors",
@@ -592,7 +624,7 @@
         "lyrics-sparkle-conditional-visibility.patch"
       ],
       "title": "Replace Lyrics Button",
-      "description": "Replaces the Lyrics button with the RL Sparkle!",
+      "description": "Replaces the Lyrics button with the RL Sparkle! Spins while lyrics load, and shows a greyed-out crossed note when a track has no lyrics",
       "default": true
     },
     {
