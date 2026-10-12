@@ -98,7 +98,7 @@ Each patch file targets a specific class via its `--- a/` header — the filenam
 ### The Kawarp extension (generated smali)
 
 `patches/extension/radiant/Kawarp.smali` and `patches/extension/dev/kawarp/KawarpEngine.smali`
-are **generated — don't hand-edit them**. The engine comes from the
+are **generated don't hand-edit them**. The engine comes from the
 [Kawarp-AGSL](https://github.com/meowarex/kawarp-agsl) library, which the build tooling expects
 cloned inside `tools/` (the clone is gitignored):
 
@@ -106,7 +106,7 @@ cloned inside `tools/` (the clone is gitignored):
 git clone https://github.com/meowarex/kawarp-agsl tools/kawarp-agsl
 ```
 
-To change the TIDAL glue, edit `tools/kawarp-build/src/radiant/Kawarp.java`; to change the
+To change the TIDAL hooks, edit `tools/kawarp-build/src/radiant/Kawarp.java`. to change the
 effect itself, PR the Kawarp-AGSL repo. Then regenerate and commit the refreshed smali:
 
 ```bash
