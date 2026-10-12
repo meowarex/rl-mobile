@@ -17,6 +17,8 @@ Every Patch & Integration can be disabled/enabled & adjusted exactly how you wan
 - Redesigned mini-player with gestures
 - Word Level Lyrics (Word by Word) <3
 - Syllable Level Lyrics (Syllable by Syllable) <3
+- Animated Covers
+- Crossfade (Unlocks hidden built in functionality)
 
 ### Integrations
 
