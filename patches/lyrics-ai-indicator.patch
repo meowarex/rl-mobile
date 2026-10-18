@@ -1,20 +1,3 @@
---- a/radiant/RLAPILyricsWorker.smali
-+++ b/radiant/RLAPILyricsWorker.smali
-@@ -683,6 +683,8 @@
- .method private runImpl()V
-     .locals 13
- 
-+    invoke-static {}, Lradiant/AiSparkle;->reset()V    # Reset AI sparkle
-+
-     iget-object v0, p0, Lradiant/RLAPILyricsWorker;->title:Ljava/lang/String;
- 
-     invoke-static {v0}, Lradiant/RLAPILyricsWorker;->uric(Ljava/lang/String;)Ljava/lang/String;
-@@ -859,3 +861,5 @@
-     :key_ok
-+    invoke-static {v11}, Lradiant/AiSparkle;->onResponse(Ljava/lang/String;)V    # Rainbow sparkle for AI syllables
-+
-     invoke-static {v11}, Lradiant/WordLyrics;->ingest(Ljava/lang/String;)V
- 
 --- a/radiant/SparkleContent.smali
 +++ b/radiant/SparkleContent.smali
 @@ -47,4 +47,8 @@

@@ -1,56 +1,11 @@
---- a/com/tidal/android/feature/playerscreen/ui/composables/u1.smali
-+++ b/com/tidal/android/feature/playerscreen/ui/composables/u1.smali
-@@ -87,7 +87,7 @@
+--- a/radiant/RLDefaults.smali
++++ b/radiant/RLDefaults.smali
+@@ -68,7 +68,7 @@
+ .method static sync()I
+     .locals 1
  
- # virtual methods
- .method public final invoke(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
--    .locals 28
-+    .locals 40
+-    const/4 v0, 0x0    # default sync style
++    const/4 v0, 0x1    # default sync style: Word
  
-     .line 1
-     move-object/from16 v0, p0
-@@ -313,6 +313,8 @@
-     .line 100
-     check-cast v1, Lcom/tidal/android/feature/playerscreen/ui/f;
- 
-+    move/16 v33, v2
-+
-     .line 101
-     .line 102
-     const v3, 0x6b82e849
-@@ -801,6 +803,26 @@
-     .line 331
-     iget-object v3, v1, Lcom/tidal/android/feature/playerscreen/ui/f;->a:Ljava/lang/String;
- 
-+    iget v4, v0, Lcom/tidal/android/feature/playerscreen/ui/composables/u1;->b:I
-+
-+    move/16 v34, v4
-+
-+    iget-object v4, v1, Lcom/tidal/android/feature/playerscreen/ui/f;->a:Ljava/lang/String;
-+
-+    move-object/16 v35, v4
-+
-+    iget-wide v4, v0, Lcom/tidal/android/feature/playerscreen/ui/composables/u1;->d:J
-+
-+    move-wide/16 v36, v4
-+
-+    iget-wide v4, v0, Lcom/tidal/android/feature/playerscreen/ui/composables/u1;->e:J
-+
-+    move-wide/16 v38, v4
-+
-+    invoke-static/range {v33 .. v39}, Lradiant/WordLyrics;->render(IILjava/lang/String;JJ)Landroidx/compose/ui/text/AnnotatedString;
-+
-+    move-result-object v3
-+
-     .line 332
-     .line 333
-     invoke-interface {v2}, Landroidx/compose/runtime/State;->getValue()Ljava/lang/Object;
-@@ -898,7 +920,7 @@
- 
-     .line 377
-     .line 378
--    invoke-static/range {v3 .. v27}, Landroidx/compose/material3/TextKt;->Text--4IGK_g(Ljava/lang/String;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZIILyl0/l;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
-+    invoke-static/range {v3 .. v27}, Landroidx/compose/material3/TextKt;->Text--4IGK_g(Landroidx/compose/ui/text/AnnotatedString;Landroidx/compose/ui/Modifier;JJLandroidx/compose/ui/text/font/FontStyle;Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/ui/text/font/FontFamily;JLandroidx/compose/ui/text/style/TextDecoration;Landroidx/compose/ui/text/style/TextAlign;JIZILjava/util/Map;Lyl0/l;Landroidx/compose/ui/text/TextStyle;Landroidx/compose/runtime/Composer;III)V
- 
-     .line 379
-     .line 380
+     return v0
+ .end method

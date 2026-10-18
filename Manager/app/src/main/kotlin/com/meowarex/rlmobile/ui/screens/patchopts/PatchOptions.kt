@@ -44,7 +44,7 @@ data class PatchOptions(
         patchStates[spec.id] ?: spec.defaultEnabled
 
     fun variantIndex(spec: PatchSpec): Int {
-        val stored = (selectedVariants[spec.id] ?: spec.defaultVariantIndex)
+        val stored = (selectedVariants[spec.variantStoreKey] ?: spec.defaultVariantIndex)
             .coerceIn(0, spec.variants.lastIndex.coerceAtLeast(0))
         return spec.resolveVariantIndex(stored) { isToggleOn(spec, it) }
     }
@@ -59,8 +59,14 @@ data class PatchOptions(
     fun colorValue(spec: PatchSpec, option: OptionSpec.Color): Int =
         optionInts["${spec.id}/${option.key}"] ?: option.default
 
-    fun isToggleOn(spec: PatchSpec, option: OptionSpec.Toggle): Boolean =
+    private fun rawToggleOn(spec: PatchSpec, option: OptionSpec.Toggle): Boolean =
         optionBools["${spec.id}/${option.key}"] ?: option.default
+
+    fun isToggleOn(spec: PatchSpec, option: OptionSpec.Toggle): Boolean {
+        // Pinned while its locking toggle is on
+        if (spec.lockingToggle(option) { rawToggleOn(spec, it) } != null) return option.lockedValue ?: option.default
+        return rawToggleOn(spec, option)
+    }
 
     fun isToggleActive(spec: PatchSpec, option: OptionSpec.Toggle): Boolean {
         if (!isToggleOn(spec, option)) return false
@@ -90,6 +96,19 @@ data class PatchOptions(
             for (option in spec.advancedOptions) {
                 if (option is OptionSpec.Toggle && option.fileNames.isNotEmpty()) {
                     if (!enabled || !isToggleActive(spec, option)) addAll(option.fileNames)
+                }
+            }
+            // Toggle x variant files, like Floating x Grey/Black
+            for (option in spec.advancedOptions) {
+                if (option !is OptionSpec.Toggle) continue
+                if (option.variantFileNames.isEmpty() && option.offVariantFileNames.isEmpty()) continue
+                val active = enabled && isToggleActive(spec, option)
+                val selected = variantIndex(spec)
+                option.variantFileNames.forEach { (index, files) ->
+                    if (!enabled || !active || index != selected) addAll(files)
+                }
+                option.offVariantFileNames.forEach { (index, files) ->
+                    if (!enabled || active || index != selected) addAll(files)
                 }
             }
         }
@@ -147,6 +166,13 @@ data class PatchOptions(
                 }
             }
         }
+    }
+
+    /** Old variant choices moved into the new lists */
+    fun migrated(specs: List<PatchSpec>): PatchOptions {
+        val (variants, bools) = migrateLegacyVariants(specs, selectedVariants, optionBools)
+        return if (variants == selectedVariants && bools == optionBools) this
+        else copy(selectedVariants = variants, optionBools = bools)
     }
 
     companion object {

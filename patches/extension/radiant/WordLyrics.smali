@@ -1337,26 +1337,9 @@
 .end method
 
 
-
 # MARKER: RL API user settings
-# Baked in by the Manager's options
+# Manager options, romanize lives in RLSettings now
 # CTX bits: 0x1 adlibs, 0x2 singers
-
-# Ask the API to invent syllable timings
-.method public static synthesizeOn()Z
-    .locals 2
-
-    const v0, __RL_SYNTHESIZE__
-
-    const/4 v1, 0x0
-
-    if-eqz v0, :off
-
-    const/4 v1, 0x1
-
-    :off
-    return v1
-.end method
 
 # Is context aware switched on
 # The mode bits alone can't say "off"
@@ -1423,18 +1406,14 @@
 .end method
 
 .method public static romanizeOn()Z
-    .locals 2
+    .locals 1
 
-    const v0, __RL_ROMANIZE__
+    # Sparkle menu can flip it at runtime
+    invoke-static {}, Lradiant/RLSettings;->romanize()Z
 
-    const/4 v1, 0x0
+    move-result v0
 
-    if-eqz v0, :off
-
-    const/4 v1, 0x1
-
-    :off
-    return v1
+    return v0
 .end method
 
 # Romanized text when it was asked for

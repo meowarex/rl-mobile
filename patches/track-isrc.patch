@@ -1,0 +1,26 @@
+--- a/vf0/h.smali
++++ b/vf0/h.smali
+@@ -2030,6 +2030,23 @@
+ .method public static final k(Lcom/tidal/sdk/tidalapi/generated/models/TracksResourceObject;Ljava/util/List;Ljava/util/List;Ljava/util/ArrayList;Ljava/util/ArrayList;Ljava/util/ArrayList;Ljava/util/ArrayList;Ljava/util/Map;)Lcom/tidal/android/tidalapi/domain/model/p;
+     .locals 23
+ 
++    invoke-virtual/range {p0 .. p0}, Lcom/tidal/sdk/tidalapi/generated/models/TracksResourceObject;->getAttributes()Lcom/tidal/sdk/tidalapi/generated/models/TracksAttributes;    # track attributes
++
++    move-result-object v1
++
++    if-eqz v1, :rl_isrc_skip    # none, skip
++
++    invoke-virtual/range {p0 .. p0}, Lcom/tidal/sdk/tidalapi/generated/models/TracksResourceObject;->getId()Ljava/lang/String;    # track id
++
++    move-result-object v0
++
++    invoke-virtual {v1}, Lcom/tidal/sdk/tidalapi/generated/models/TracksAttributes;->getIsrc()Ljava/lang/String;    # its ISRC
++
++    move-result-object v1
++
++    invoke-static {v0, v1}, Lradiant/IsrcCache;->put(Ljava/lang/String;Ljava/lang/String;)V    # cache id to ISRC
++
++    :rl_isrc_skip
+     move-object/from16 v0, p0
+ 
+     move-object/from16 v1, p7

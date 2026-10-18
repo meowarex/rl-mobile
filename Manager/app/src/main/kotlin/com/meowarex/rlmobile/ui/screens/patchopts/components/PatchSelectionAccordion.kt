@@ -40,6 +40,7 @@ import com.meowarex.rlmobile.ui.theme.glassSurface
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
 import com.meowarex.rlmobile.ui.screens.patchopts.conflictingChoices
 import com.meowarex.rlmobile.ui.screens.patchopts.isInline
+import com.meowarex.rlmobile.ui.screens.patchopts.lockingToggle
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchLock
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionState
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptions
@@ -183,6 +184,17 @@ fun PatchSelectionAccordion(
                                                 optionState.toggle(patch, it)
                                             }
                                         else -1
+                                    // Toggles that change the variants go above
+                                    for (option in inlineOptions) key("above-" + option.key) {
+                                        if (option is OptionSpec.Toggle && option.aboveVariants) {
+                                            InlineToggleRow(
+                                                title = option.title,
+                                                description = option.description,
+                                                checked = optionState.toggle(patch, option),
+                                                onCheckedChange = { optionState.setToggle(patch, option, it) },
+                                            )
+                                        }
+                                    }
                                     if (patch.variants.isNotEmpty()) {
                                         val effective = patch.effectiveVariants { optionState.toggle(patch, it) }
                                         PatchVariantSelector(
@@ -199,14 +211,15 @@ fun PatchSelectionAccordion(
                                     for (option in inlineOptions) key(option.key) {
                                         when (option) {
                                             is OptionSpec.Toggle -> {
-                                                val show = option.requiresVariant == null ||
-                                                    option.requiresVariant == resolvedVariant
+                                                val show = !option.aboveVariants && (option.requiresVariant == null ||
+                                                    option.requiresVariant == resolvedVariant)
                                                 if (show) {
                                                     InlineToggleRow(
                                                         title = option.title,
                                                         description = option.description,
                                                         checked = optionState.toggle(patch, option),
                                                         onCheckedChange = { optionState.setToggle(patch, option, it) },
+                                                        enabled = patch.lockingToggle(option) { optionState.toggle(patch, it) } == null,
                                                     )
                                                 }
                                             }
@@ -334,6 +347,8 @@ private fun InlineToggleRow(
     description: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    // False when another option pins it
+    enabled: Boolean = true,
 ) {
     val interactionSource = remember(::MutableInteractionSource)
 
@@ -342,10 +357,12 @@ private fun InlineToggleRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .fillMaxWidth()
+            .alpha(if (enabled) 1f else .4f)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
                 role = Role.Switch,
+                enabled = enabled,
             ) { onCheckedChange(!checked) }
             .padding(vertical = 4.dp),
     ) {
@@ -363,6 +380,7 @@ private fun InlineToggleRow(
         RadiantSwitch(
             checked = checked,
             onCheckedChange = onCheckedChange,
+            enabled = enabled,
             interactionSource = interactionSource,
         )
     }

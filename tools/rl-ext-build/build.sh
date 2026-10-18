@@ -47,7 +47,9 @@ find "$out/smali" -name '*.smali' -print0 | xargs -0 sed -i \
     -e 's/getIntrinsicSizeNHjbRc/getIntrinsicSize-NH-jbRc/g' \
     -e 's/drawxKDEd0/draw-x_KDEd0/g' \
     -e 's/getWidthImpl/getWidth-impl/g' \
-    -e 's/getHeightImpl/getHeight-impl/g'
+    -e 's/getHeightImpl/getHeight-impl/g' \
+    -e 's/combinedClickableauXiCPI/combinedClickable-auXiCPI/g' \
+    -e 's/lerpjxsXWHM/lerp-jxsXWHM/g'
 
 if grep -rl 'invoke-custom\|access\$' "$out/smali" >/dev/null; then
     echo "!! invoke-custom / access\$ bridge in output - keep it to one class, no lambdas" >&2
@@ -55,7 +57,8 @@ if grep -rl 'invoke-custom\|access\$' "$out/smali" >/dev/null; then
 fi
 
 dest="$repo/patches/extension/radiant"
-for c in AiSparkle AnimatedCovers AnimatedCoverView RoundOutline SparkleIcons; do
+for c in AiSparkle AnimatedCovers AnimatedCoverView RoundOutline SparkleIcons \
+         RLSettings RLLyrics RLHttp RLTask RLMenu RLSwitch ArtPlayer CoverPlayer FadeIn QualitySeek RLTopButton; do
     rm -f "$dest/$c".smali
     cp "$out"/smali/radiant/"$c".smali "$dest/"
     echo "    -> patches/extension/radiant/$c.smali"

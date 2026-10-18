@@ -20,18 +20,14 @@ import androidx.compose.ui.graphics.ColorFilter;
 import androidx.compose.ui.graphics.drawscope.DrawScope;
 import androidx.compose.ui.graphics.painter.Painter;
 
-import org.json.JSONObject;
-
-// Rainbow sparkle when syllables are AI generated
+// Rainbow sparkle when Sylla AI made the lyrics
 public final class AiSparkle extends Painter implements Choreographer.FrameCallback, Runnable {
     private static final String TAG = "RLAiSparkle";
 
-    // Same colours as desktop
-    private static final int[] PALETTE = {0xFFFF6B9D, 0xFFFFD166, 0xFF5EE7FF, 0xFFA78BFA};
-    private static final long CYCLE_MS = 6000L;
-    private static final float[] STOPS = {0f, 0.35f, 0.65f, 1f};
+    // Palette lives in SparkleIcons, shared with the spinner
+    private static final long CYCLE_MS = SparkleIcons.CYCLE_MS;
 
-    // Current lyrics are AI generated
+    // Current lyrics came from Sylla Align or Generate
     static final MutableState aiState = SnapshotStateKt.mutableStateOf$default(Boolean.FALSE, null, 2, null);
     // Frame tick for the animation
     static final MutableState tick = SnapshotStateKt.mutableStateOf$default(Long.valueOf(0L), null, 2, null);
@@ -51,25 +47,15 @@ public final class AiSparkle extends Painter implements Choreographer.FrameCallb
         fillPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
     }
 
-    // Check the API response for AI syllables
-    public static void onResponse(String body) {
-        boolean ai = false;
-        try {
-            JSONObject o = new JSONObject(body);
-            ai = "Word".equals(o.optString("type", "")) && o.optBoolean("_synthesized", false);
-        } catch (Throwable ignored) {
-        }
+    // Set by RLLyrics from _synthesisType
+    static void set(boolean ai) {
         post(ai);
-    }
-
-    // New lookup, clear it
-    public static void reset() {
-        post(false);
     }
 
     // Use the rainbow painter while AI
     public static Painter wrap(Painter painter, Composer composer) {
-        if (!((Boolean) aiState.getValue()).booleanValue() || painter == null) return painter;
+        // Spinner and no lyrics icons stay as is
+        if (!((Boolean) aiState.getValue()).booleanValue() || painter == null || painter instanceof SparkleIcons) return painter;
         AiSparkle c = cached;
         if (c == null || c.base != painter) {
             c = new AiSparkle(painter);
@@ -120,8 +106,8 @@ public final class AiSparkle extends Painter implements Choreographer.FrameCallb
         // Paint the gradient into the icon
         int save = canvas.saveLayer(0f, 0f, w, h, null);
         base.drawxKDEd0(scope, size, 1f, null);
-        for (int i = 0; i < 4; i++) colors[i] = lerpPalette(phase + i * 0.25f);
-        fillPaint.setShader(new LinearGradient(0f, h, w, 0f, colors, STOPS, Shader.TileMode.CLAMP));
+        for (int i = 0; i < 4; i++) colors[i] = SparkleIcons.lerpPalette(phase + i * 0.25f);
+        fillPaint.setShader(new LinearGradient(0f, h, w, 0f, colors, SparkleIcons.STOPS, Shader.TileMode.CLAMP));
         canvas.drawRect(0f, 0f, w, h, fillPaint);
         canvas.restoreToCount(save);
     }
@@ -135,21 +121,5 @@ public final class AiSparkle extends Painter implements Choreographer.FrameCallb
         } else {
             frameScheduled = false;
         }
-    }
-
-    // Blend between palette colours
-    private static int lerpPalette(float phase) {
-        float p = phase - (float) Math.floor(phase);
-        float x = p * 4f;
-        int i = (int) x;
-        float f = x - i;
-        int a = PALETTE[i & 3];
-        int b = PALETTE[(i + 1) & 3];
-        int ar = (a >> 16) & 0xFF, ag = (a >> 8) & 0xFF, ab = a & 0xFF;
-        int br = (b >> 16) & 0xFF, bg = (b >> 8) & 0xFF, bb = b & 0xFF;
-        int rr = (int) (ar + (br - ar) * f);
-        int gg = (int) (ag + (bg - ag) * f);
-        int bl = (int) (ab + (bb - ab) * f);
-        return 0xFF000000 | (rr << 16) | (gg << 8) | bl;
     }
 }

@@ -108,7 +108,7 @@ class PatchOptionsModel(
         private set
 
     fun variantIndex(spec: PatchSpec): Int =
-        (selectedVariants[spec.id] ?: spec.defaultVariantIndex)
+        (selectedVariants[spec.variantStoreKey] ?: spec.defaultVariantIndex)
             .coerceIn(0, spec.variants.lastIndex.coerceAtLeast(0))
 
     fun isPatchEnabled(spec: PatchSpec): Boolean =
@@ -145,7 +145,7 @@ class PatchOptionsModel(
 
     fun selectVariant(spec: PatchSpec, index: Int) {
         if (spec.variants.isEmpty() || index !in spec.variants.indices) return
-        selectedVariants = selectedVariants + (spec.id to index)
+        selectedVariants = selectedVariants + (spec.variantStoreKey to index)
     }
 
     // Advanced (per-patch) options
@@ -159,10 +159,17 @@ class PatchOptionsModel(
 
     private fun keyOf(spec: PatchSpec, option: OptionSpec): String = "${spec.id}/${option.key}"
 
-    fun toggleValue(spec: PatchSpec, option: OptionSpec.Toggle): Boolean =
+    private fun rawToggleValue(spec: PatchSpec, option: OptionSpec.Toggle): Boolean =
         optionBools[keyOf(spec, option)] ?: option.default
 
+    fun toggleValue(spec: PatchSpec, option: OptionSpec.Toggle): Boolean {
+        // Pinned while its locking toggle is on
+        if (spec.lockingToggle(option) { rawToggleValue(spec, it) } != null) return option.lockedValue ?: option.default
+        return rawToggleValue(spec, option)
+    }
+
     fun setToggleValue(spec: PatchSpec, option: OptionSpec.Toggle, value: Boolean) {
+        if (spec.lockingToggle(option) { rawToggleValue(spec, it) } != null) return
         optionBools = optionBools + (keyOf(spec, option) to value)
     }
 
@@ -304,6 +311,7 @@ class PatchOptionsModel(
         val loaded = if (component == null) builtinSpecs else loadManifestSpecs(component) ?: builtinSpecs
         mainThread {
             specs = loaded
+            applyLegacyVariants(loaded)
             normalizeChoiceSelections(loaded)
             validatePatchSelection()
             specsLoading = false
@@ -374,6 +382,7 @@ class PatchOptionsModel(
             ?: loadCachedReleaseManifestSpecs() ?: builtinSpecs
         mainThread {
             specs = loaded
+            applyLegacyVariants(loaded)
             normalizeChoiceSelections(loaded)
             validatePatchSelection()
             specsLoading = false
@@ -438,7 +447,15 @@ class PatchOptionsModel(
         }
     }
 
+    // Move old variant choices into the new lists
+    private fun applyLegacyVariants(loaded: List<PatchSpec>) {
+        val (variants, bools) = migrateLegacyVariants(loaded, selectedVariants, optionBools)
+        if (variants != selectedVariants) selectedVariants = variants
+        if (bools != optionBools) optionBools = bools
+    }
+
     init {
+        applyLegacyVariants(specs)
         normalizeChoiceSelections(specs)
         validatePatchSelection()
         screenModelScope.launchBlock { fetchPkgNameState() }

@@ -9,11 +9,7 @@
 # static fields
 .field private static final CYCLE_MS:J = 0x1770L
 
-.field private static final PALETTE:[I
-
 .field private static final POSTER:Lradiant/AiSparkle;
-
-.field private static final STOPS:[F
 
 .field private static final TAG:Ljava/lang/String; = "RLAiSparkle"
 
@@ -41,28 +37,6 @@
 # direct methods
 .method static constructor <clinit>()V
     .registers 5
-
-    const v0, -0xa11801
-
-    const v1, -0x587406
-
-    const v2, -0x9463
-
-    const/16 v3, -0x2e9a
-
-    filled-new-array {v2, v3, v0, v1}, [I
-
-    move-result-object v0
-
-    sput-object v0, Lradiant/AiSparkle;->PALETTE:[I
-
-    const/4 v0, 0x4
-
-    new-array v0, v0, [F
-
-    fill-array-data v0, :array_38
-
-    sput-object v0, Lradiant/AiSparkle;->STOPS:[F
 
     sget-object v0, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
 
@@ -95,16 +69,6 @@
     sput-object v0, Lradiant/AiSparkle;->POSTER:Lradiant/AiSparkle;
 
     return-void
-
-    nop
-
-    :array_38
-    .array-data 4
-        0x0
-        0x3eb33333    # 0.35f
-        0x3f266666    # 0.65f
-        0x3f800000    # 1.0f
-    .end array-data
 .end method
 
 .method private constructor <init>(Landroidx/compose/ui/graphics/painter/Painter;)V
@@ -141,166 +105,6 @@
     return-void
 .end method
 
-.method private static lerpPalette(F)I
-    .registers 8
-
-    float-to-double v0, p0
-
-    invoke-static {v0, v1}, Ljava/lang/Math;->floor(D)D
-
-    move-result-wide v0
-
-    double-to-float v0, v0
-
-    sub-float/2addr p0, v0
-
-    const/high16 v0, 0x40800000    # 4.0f
-
-    mul-float/2addr p0, v0
-
-    float-to-int v0, p0
-
-    int-to-float v1, v0
-
-    sub-float/2addr p0, v1
-
-    sget-object v1, Lradiant/AiSparkle;->PALETTE:[I
-
-    and-int/lit8 v2, v0, 0x3
-
-    aget v1, v1, v2
-
-    sget-object v2, Lradiant/AiSparkle;->PALETTE:[I
-
-    add-int/lit8 v0, v0, 0x1
-
-    and-int/lit8 v0, v0, 0x3
-
-    aget v0, v2, v0
-
-    shr-int/lit8 v2, v1, 0x10
-
-    and-int/lit16 v2, v2, 0xff
-
-    shr-int/lit8 v3, v1, 0x8
-
-    and-int/lit16 v3, v3, 0xff
-
-    and-int/lit16 v1, v1, 0xff
-
-    shr-int/lit8 v4, v0, 0x10
-
-    and-int/lit16 v4, v4, 0xff
-
-    shr-int/lit8 v5, v0, 0x8
-
-    and-int/lit16 v5, v5, 0xff
-
-    and-int/lit16 v0, v0, 0xff
-
-    int-to-float v6, v2
-
-    sub-int/2addr v4, v2
-
-    int-to-float v2, v4
-
-    mul-float/2addr v2, p0
-
-    add-float/2addr v6, v2
-
-    float-to-int v2, v6
-
-    int-to-float v4, v3
-
-    sub-int/2addr v5, v3
-
-    int-to-float v3, v5
-
-    mul-float/2addr v3, p0
-
-    add-float/2addr v4, v3
-
-    float-to-int v3, v4
-
-    int-to-float v4, v1
-
-    sub-int/2addr v0, v1
-
-    int-to-float v0, v0
-
-    mul-float/2addr v0, p0
-
-    add-float/2addr v4, v0
-
-    float-to-int p0, v4
-
-    const/high16 v0, -0x1000000
-
-    shl-int/lit8 v1, v2, 0x10
-
-    or-int/2addr v0, v1
-
-    shl-int/lit8 v1, v3, 0x8
-
-    or-int/2addr v0, v1
-
-    or-int/2addr p0, v0
-
-    return p0
-.end method
-
-.method public static onResponse(Ljava/lang/String;)V
-    .registers 5
-
-    const/4 v0, 0x0
-
-    :try_start_1
-    new-instance v1, Lorg/json/JSONObject;
-
-    invoke-direct {v1, p0}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
-
-    const-string p0, "Word"
-
-    const-string v2, "type"
-
-    const-string v3, ""
-
-    invoke-virtual {v1, v2, v3}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v2
-
-    invoke-virtual {p0, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result p0
-
-    if-eqz p0, :cond_22
-
-    const-string p0, "_synthesized"
-
-    invoke-virtual {v1, p0, v0}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
-
-    move-result p0
-    :try_end_1c
-    .catchall {:try_start_1 .. :try_end_1c} :catchall_21
-
-    if-eqz p0, :cond_22
-
-    const/4 p0, 0x1
-
-    move v0, p0
-
-    goto :goto_22
-
-    :catchall_21
-    move-exception p0
-
-    :cond_22
-    :goto_22
-    invoke-static {v0}, Lradiant/AiSparkle;->post(Z)V
-
-    return-void
-.end method
-
 .method private static post(Z)V
     .registers 2
 
@@ -321,12 +125,10 @@
     return-void
 .end method
 
-.method public static reset()V
+.method static set(Z)V
     .registers 1
 
-    const/4 v0, 0x0
-
-    invoke-static {v0}, Lradiant/AiSparkle;->post(Z)V
+    invoke-static {p0}, Lradiant/AiSparkle;->post(Z)V
 
     return-void
 .end method
@@ -346,33 +148,37 @@
 
     move-result p1
 
-    if-eqz p1, :cond_21
+    if-eqz p1, :cond_25
 
-    if-nez p0, :cond_11
+    if-eqz p0, :cond_25
 
-    goto :goto_21
+    instance-of p1, p0, Lradiant/SparkleIcons;
 
-    :cond_11
+    if-eqz p1, :cond_15
+
+    goto :goto_25
+
+    :cond_15
     sget-object p1, Lradiant/AiSparkle;->cached:Lradiant/AiSparkle;
 
-    if-eqz p1, :cond_19
+    if-eqz p1, :cond_1d
 
     iget-object v0, p1, Lradiant/AiSparkle;->base:Landroidx/compose/ui/graphics/painter/Painter;
 
-    if-eq v0, p0, :cond_20
+    if-eq v0, p0, :cond_24
 
-    :cond_19
+    :cond_1d
     new-instance p1, Lradiant/AiSparkle;
 
     invoke-direct {p1, p0}, Lradiant/AiSparkle;-><init>(Landroidx/compose/ui/graphics/painter/Painter;)V
 
     sput-object p1, Lradiant/AiSparkle;->cached:Lradiant/AiSparkle;
 
-    :cond_20
+    :cond_24
     return-object p1
 
-    :cond_21
-    :goto_21
+    :cond_25
+    :goto_25
     return-object p0
 .end method
 
@@ -574,7 +380,7 @@
 
     add-float/2addr v6, v1
 
-    invoke-static {v6}, Lradiant/AiSparkle;->lerpPalette(F)I
+    invoke-static {v6}, Lradiant/SparkleIcons;->lerpPalette(F)I
 
     move-result v6
 
@@ -591,7 +397,7 @@
 
     iget-object v14, v0, Lradiant/AiSparkle;->colors:[I
 
-    sget-object v15, Lradiant/AiSparkle;->STOPS:[F
+    sget-object v15, Lradiant/SparkleIcons;->STOPS:[F
 
     sget-object v16, Landroid/graphics/Shader$TileMode;->CLAMP:Landroid/graphics/Shader$TileMode;
 

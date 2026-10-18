@@ -52,3 +52,33 @@
 +    invoke-static {v5, v6}, Lradiant/AnimatedCoverView;->attach(Landroid/widget/ImageView;I)V    # Animated cover on lyrics pill
 +
      .line 153
+--- a/com/tidal/android/core/compose/components/l.smali
++++ b/com/tidal/android/core/compose/components/l.smali
+@@ -1481,6 +1481,16 @@
+ .method public static final c(Ljava/lang/String;Landroid/view/Surface;Lyl0/a;)Landroid/media/MediaPlayer;
+     .locals 1
+ 
++    invoke-static {p0, p1, p2}, Lradiant/CoverPlayer;->create(Ljava/lang/String;Landroid/view/Surface;Lyl0/a;)Landroid/media/MediaPlayer;    # HLS covers via ExoPlayer
++
++    move-result-object v0
++
++    if-eqz v0, :rl_native_cover    # not HLS, native player
++
++    return-object v0    # use ExoPlayer
++
++    :rl_native_cover
++
+     .line 1
+     :try_start_0
+     new-instance v0, Landroid/media/MediaPlayer;
+--- a/com/tidal/android/core/compose/components/j.smali
++++ b/com/tidal/android/core/compose/components/j.smali
+@@ -74,6 +74,8 @@
+ .method public final onSurfaceTextureAvailable(Landroid/graphics/SurfaceTexture;II)V
+     .locals 0
+ 
++    invoke-static {p2, p3}, Lradiant/CoverPlayer;->nextSize(II)V    # size for resolution cap
++
+     .line 1
+     invoke-virtual {p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+ 

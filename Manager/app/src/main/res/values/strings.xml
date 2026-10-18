@@ -360,6 +360,7 @@
   <string name="patch_opt_lock_title">Option Locked</string>
   <string name="patch_opt_lock_needs_variant">Requires the &lt;b>%s&lt;/b> style.</string>
   <string name="patch_opt_lock_needs_option">Requires the &lt;b>%s&lt;/b> option.</string>
+  <string name="patch_opt_lock_locked_by">Set from the app while &lt;b>%s&lt;/b> is on.</string>
   <string name="action_got_it">Got it</string>
 
   <string name="componentopts_screen_title">Custom Component (%s)</string>
