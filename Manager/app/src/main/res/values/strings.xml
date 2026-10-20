@@ -321,10 +321,6 @@
   <string name="patch_color_edit">Choose custom color</string>
   <string name="patch_color_picker_hex">Hex color</string>
   <string name="patch_color_picker_hex_error">Use #RRGGBB or #AARRGGBB.</string>
-  <string name="patch_enable_legacy_ui_title">Enable Legacy UI</string>
-  <string
-    name="patch_enable_legacy_ui_desc"
-  >[This patch will stop working soon] - Replaces the New Compose based UI with the Legacy UI (disables player-market-ui feature flag)</string>
 
   <string name="patch_mini_player_redesign_title">Redesigned Mini-Player</string>
   <string name="patch_mini_player_redesign_desc">Integrates the Seekbar into the control panel at the bottom of the screen.</string>

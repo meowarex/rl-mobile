@@ -12,32 +12,6 @@
       "default": false
     },
     {
-      "id": "EnableLegacyUi",
-      "order": 10,
-      "fileNames": [
-        "enable-legacy-ui.patch"
-      ],
-      "title": "Enable Legacy UI",
-      "description": "[This patch will stop working soon] - Replaces the New Compose based UI with the Legacy UI (disables player-market-ui feature flag)",
-      "default": false,
-      "requires": [
-        "DebugMenuUnlock"
-      ],
-      "disables": [
-        "LyricsRlApi",
-        "PlayerBackdrop",
-        "QualityBadgeColors",
-        "PlayerMovePlayingFrom",
-        "PlayerOneHanded",
-        "LyricsProgressPill",
-        "LyricsDisableCover",
-        "LyricsReplaceLyricsButton",
-        "LyricsReplaceShareButton",
-        "LyricsKeepControlsVisible",
-        "AnimatedCovers"
-      ]
-    },
-    {
       "id": "LyricsRlApi",
       "order": 20,
       "fileNames": [

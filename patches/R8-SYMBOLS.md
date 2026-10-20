@@ -751,7 +751,6 @@ The owner name survives R8; only the member name rolls. Match on the descriptor.
 | `com/tidal/wave2/foundation/WaveScaffoldKt.smali` | `collection-backdrop.patch` |
 | `vd0/c.smali` | `player-backdrop-playback.patch` |
 | `h4/a.smali` | `gestures/queue/swipe-to-queue.patch` |
-| `fg/e.smali` | `enable-legacy-ui.patch` |
 | `p30/h4.smali` | `gestures/queue/swipe-to-queue-compose.patch` |
 | `p30/t2.smali` | `gestures/queue/swipe-to-queue-compose.patch` |
 | `kb/f.smali` | `integration-waze-playback.patch` |
