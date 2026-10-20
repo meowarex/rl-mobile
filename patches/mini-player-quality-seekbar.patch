@@ -1,0 +1,24 @@
+--- a/com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali
++++ b/com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali
+@@ -88,6 +88,8 @@
+ 
+     move-object/from16 v1, p1
+ 
++    invoke-static {v1}, Lradiant/QualitySeek;->setQueue(Ljava/lang/Object;)V    # remember the play queue
++
+     .line 2
+     iput-object v1, v0, Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel;->a:Lzh/e;
+ 
+--- a/radiant/MiniSeekerLine.smali
++++ b/radiant/MiniSeekerLine.smali
+@@ -176,7 +176,9 @@
+ 
+     move-result-object v0    # sized modifier
+ 
+-    const v1, -0x1    # 0xFFFFFFFF white
++    invoke-static {}, Lradiant/QualitySeek;->argb()I    # quality badge colour
++
++    move-result v1
+ 
+     invoke-static {v1}, Landroidx/compose/ui/graphics/ColorKt;->Color(I)J    # pack color
+ 

@@ -1,0 +1,14 @@
+# Ring colour, skipped without Lradiant/MiniSeekerFloating;
+--- a/radiant/MiniSeekerFloating.smali
++++ b/radiant/MiniSeekerFloating.smali
+@@ -403,7 +403,9 @@
+ 
+     move-object/from16 v35, v40    # stash stroke
+ 
+-    const v0, -0x1    # white ARGB
++    invoke-static {}, Lradiant/QualitySeek;->argb()I    # quality badge colour
++
++    move-result v0
+ 
+     invoke-static {v0}, Landroidx/compose/ui/graphics/ColorKt;->Color(I)J    # pack color
+ 

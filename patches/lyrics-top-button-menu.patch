@@ -1,0 +1,13 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/c1.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/c1.smali
+@@ -406,6 +406,10 @@
+     const/4 v9, 0x0
+ 
+     .line 178
++    invoke-static {v2, v1, v11}, Lradiant/RLTopButton;->wrap(Landroidx/compose/ui/Modifier;Lyl0/a;Landroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;    # hold for the Quick Menu
++
++    move-result-object v2
++
+     invoke-static/range {v0 .. v14}, Lcom/squareup/ui/market/components/MarketButtonKt;->h(Ljava/lang/String;Lyl0/a;Landroidx/compose/ui/Modifier;Lcom/squareup/ui/market/model/b;Lcom/squareup/ui/market/model/b;Lcom/squareup/ui/market/components/l0$a;Lcom/squareup/ui/market/components/n;ZIILw10/r;Landroidx/compose/runtime/Composer;III)V
+ 
+     .line 179

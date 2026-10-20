@@ -36,6 +36,10 @@ data class PatchSpec(
     val pathLocked: Boolean = false,
     /** Watchapp shown under an integration. */
     val companionApp: CompanionAppSpec? = null,
+    /** selectedVariants key, new one when the variants get reshaped */
+    val variantKey: String? = null,
+    /** Old variant index to new variant + toggles, once */
+    val legacyVariants: Map<Int, LegacyVariant> = emptyMap(),
 ) {
     val isIntegration: Boolean get() = category == CATEGORY_INTEGRATION
 
@@ -44,6 +48,16 @@ data class PatchSpec(
         const val CATEGORY_INTEGRATION = "integration"
     }
 }
+
+/** Where an old variant choice lands now */
+@Immutable
+@Serializable
+data class LegacyVariant(
+    val variant: Int = 0,
+    val toggles: Map<String, Boolean> = emptyMap(),
+)
+
+val PatchSpec.variantStoreKey: String get() = variantKey ?: id
 
 @Immutable
 @Serializable
@@ -102,6 +116,16 @@ sealed interface OptionSpec {
         val relabelVariants: Map<Int, String> = emptyMap(),
         /** Placeholder name (without the surrounding `__`) baked into the `.patch` files. */
         val token: String? = null,
+        /** Inline toggle above the variant picker */
+        val aboveVariants: Boolean = false,
+        /** Greyed out and pinned while this sibling toggle is on */
+        val lockedByOption: String? = null,
+        /** Pinned value, null means the default */
+        val lockedValue: Boolean? = null,
+        /** Patch files per variant, used while this toggle is on */
+        val variantFileNames: Map<Int, List<String>> = emptyMap(),
+        /** Patch files per variant, used while this toggle is off */
+        val offVariantFileNames: Map<Int, List<String>> = emptyMap(),
     ) : OptionSpec
 
     @Immutable
@@ -294,6 +318,15 @@ sealed interface OptionLock {
     data object Free : OptionLock
     data class NeedsVariant(val title: String) : OptionLock
     data class NeedsOption(val title: String) : OptionLock
+    /** Pinned by another option, like Quick Menu */
+    data class LockedBy(val title: String) : OptionLock
+}
+
+/** The toggle pinning this one right now, if any */
+fun PatchSpec.lockingToggle(option: OptionSpec.Toggle, rawToggleOn: (OptionSpec.Toggle) -> Boolean): OptionSpec.Toggle? {
+    val key = option.lockedByOption ?: return null
+    val locker = advancedOptions.filterIsInstance<OptionSpec.Toggle>().firstOrNull { it.key == key } ?: return null
+    return if (rawToggleOn(locker)) locker else null
 }
 
 fun PatchSpec.optionLock(
@@ -302,6 +335,7 @@ fun PatchSpec.optionLock(
     isOptionOn: (OptionSpec.Toggle) -> Boolean,
 ): OptionLock {
     if (option !is OptionSpec.Toggle) return OptionLock.Free
+    lockingToggle(option, isOptionOn)?.let { return OptionLock.LockedBy(it.title) }
     option.requiresVariant?.let { required ->
         if (selectedVariant != required) {
             variants.getOrNull(required)?.let { return OptionLock.NeedsVariant(it.title) }
@@ -342,4 +376,25 @@ class PatchOptionState(
             reset = {},
         )
     }
+}
+
+// Move old variant choices over once, keeps user picks
+fun migrateLegacyVariants(
+    specs: List<PatchSpec>,
+    selectedVariants: Map<String, Int>,
+    optionBools: Map<String, Boolean>,
+): Pair<Map<String, Int>, Map<String, Boolean>> {
+    var variants = selectedVariants
+    var bools = optionBools
+    for (spec in specs) {
+        val key = spec.variantStoreKey
+        if (key == spec.id || spec.legacyVariants.isEmpty() || key in variants) continue
+        val target = variants[spec.id]?.let(spec.legacyVariants::get) ?: continue
+        variants = variants + (key to target.variant)
+        for ((toggle, value) in target.toggles) {
+            val full = "${spec.id}/$toggle"
+            if (full !in bools) bools = bools + (full to value)
+        }
+    }
+    return variants to bools
 }

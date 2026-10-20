@@ -1,7 +1,6 @@
 package radiant;
 
 import android.graphics.SurfaceTexture;
-import android.media.MediaPlayer;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -15,7 +14,6 @@ import java.lang.ref.WeakReference;
 
 // Animated cover over the lyrics pill cover
 public final class AnimatedCoverView extends TextureView implements TextureView.SurfaceTextureListener,
-        MediaPlayer.OnPreparedListener, MediaPlayer.OnInfoListener, MediaPlayer.OnErrorListener,
         View.OnLayoutChangeListener, View.OnAttachStateChangeListener, Runnable {
 
     private static final ArrayList<WeakReference<AnimatedCoverView>> live = new ArrayList<WeakReference<AnimatedCoverView>>();
@@ -24,7 +22,9 @@ public final class AnimatedCoverView extends TextureView implements TextureView.
     private final ViewGroup host;
     private int albumId = -1;
     private String url;
-    private MediaPlayer player;
+    private ArtPlayer player;
+    // First frame callback, for the fade in
+    private final FadeIn fadeIn = new FadeIn(this);
     private boolean outlined;
     private Surface surface;
 
@@ -114,31 +114,18 @@ public final class AnimatedCoverView extends TextureView implements TextureView.
 
     private void start() {
         if (url == null || surface == null || player != null) return;
-        try {
-            MediaPlayer mp = new MediaPlayer();
-            player = mp;
-            mp.setSurface(surface);
-            mp.setOnPreparedListener(this);
-            mp.setOnInfoListener(this);
-            mp.setOnErrorListener(this);
-            mp.setLooping(true);
-            mp.setVolume(0f, 0f);
-            mp.setDataSource(url);
-            mp.prepareAsync();
-        } catch (Throwable t) {
-            release();
-        }
+        player = ArtPlayer.start(getContext(), url, surface, getWidth(), getHeight(), fadeIn);
     }
 
     private void release() {
-        MediaPlayer mp = player;
+        ArtPlayer p = player;
         player = null;
-        if (mp != null) {
-            try {
-                mp.release();
-            } catch (Throwable ignored) {
-            }
-        }
+        if (p != null) p.release();
+    }
+
+    // Fade in on the first frame, 300ms like desktop
+    void onFirstFrame() {
+        animate().alpha(1f).setDuration(300L).start();
     }
 
     // Line up with the cover
@@ -226,28 +213,5 @@ public final class AnimatedCoverView extends TextureView implements TextureView.
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture st) {
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        if (mp == player) mp.start();
-    }
-
-    @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        if (mp == player && what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-            animate().alpha(1f).setDuration(300L).start();
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        if (mp == player) {
-            release();
-            setAlpha(0f);
-            setVisibility(View.INVISIBLE);
-        }
-        return true;
     }
 }

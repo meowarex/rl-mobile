@@ -1,0 +1,15 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/k.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/k.smali
+@@ -2334,6 +2334,12 @@
+ 
+     move-result-wide v2
+ 
++    const v4, -0x1000000    # 0xFF000000 opaque black
++
++    invoke-static {v4}, Landroidx/compose/ui/graphics/ColorKt;->Color(I)J    # pack to color long
++
++    move-result-wide v2    # black over theme colour
++
+     .line 150
+     sget-object v4, Lcom/tidal/android/feature/appscaffold/ui/composable/a;->c:Landroidx/compose/foundation/shape/RoundedCornerShape;
+ 

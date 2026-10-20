@@ -160,7 +160,7 @@
 
     and-int/lit8 v12, v4, 0xe
 
-    const/16 v13, 0xe8    # Pass enabled ourselves
+    const/16 v13, 0x28    # We pass enabled and long click
 
     const/4 v4, 0x0
 
@@ -168,20 +168,19 @@
 
     iput v5, v10, Lradiant/SparkleContent;->m:I
 
-    if-nez v5, :rl_disabled    # Grey out while loading or no lyrics
+    sget-boolean v5, Lradiant/SparkleIcons;->enabled:Z    # Grey out while loading or no lyrics
 
-    const/4 v5, 0x1    # enabled
+    # Long press opens the lyrics menu
+    invoke-static {v11}, Lradiant/RLMenu;->longClick(Landroidx/compose/runtime/Composer;)Lyl0/a;    # MARKER: R8 Lyl0/a;
 
-    goto :rl_enabled_set
+    move-result-object v7
 
-    :rl_disabled
-    const/4 v5, 0x0
+    # Disabled buttons drop long presses, catch them around it
+    invoke-static {v3, v5}, Lradiant/RLMenu;->wrap(Landroidx/compose/ui/Modifier;Z)Landroidx/compose/ui/Modifier;
 
-    :rl_enabled_set
+    move-result-object v3
 
     const/4 v6, 0x0
-
-    const/4 v7, 0x0
 
     const/4 v8, 0x0
 

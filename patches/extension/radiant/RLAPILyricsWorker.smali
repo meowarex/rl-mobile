@@ -16,6 +16,9 @@
 
 .field public static volatile clientIp:Ljava/lang/String;
 
+# Newest worker, RLLyrics publishes through it
+.field public static volatile last:Lradiant/RLAPILyricsWorker;
+
 
 # direct methods
 .method public constructor <init>(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
@@ -116,6 +119,17 @@
     const/4 v3, 0x0
 
     return v3
+.end method
+
+# Still the playing track
+.method public isLive()Z
+    .locals 1
+
+    invoke-direct {p0}, Lradiant/RLAPILyricsWorker;->isCurrent()Z
+
+    move-result v0
+
+    return v0
 .end method
 
 # Public client IP (needed for debugging with ratelimits)
@@ -715,32 +729,17 @@
 
     invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    invoke-static {}, Lradiant/WordLyrics;->romanizeOn()Z
+    # Sparkle menu settings as query flags
+    invoke-static {}, Lradiant/RLLyrics;->queryExtras()Ljava/lang/String;
 
-    move-result v0
-
-    if-eqz v0, :no_romanize
-
-    const-string v0, "&romanize=true"
+    move-result-object v0
 
     invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    :no_romanize
     const-string v0, "&platform=rl-mobile"
 
     invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    invoke-static {}, Lradiant/WordLyrics;->synthesizeOn()Z
-
-    move-result v0
-
-    if-eqz v0, :no_synthesize
-
-    const-string v0, "&synthesize=true"
-
-    invoke-virtual {v2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    :no_synthesize
     invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
     move-result-object v2
@@ -792,9 +791,42 @@
     goto :request_failed
 
     :got_body
-    move-object v11, v3
+    # Word breaks from the original text, like desktop
+    invoke-static {v3}, Lradiant/RLLyrics;->normalize(Ljava/lang/String;)Ljava/lang/String;
 
-    invoke-static {v3}, Lradiant/RLAPILyricsWorker;->parseLines(Ljava/lang/String;)Ljava/util/ArrayList;
+    move-result-object v3
+
+    invoke-virtual {p0, v3}, Lradiant/RLAPILyricsWorker;->publish(Ljava/lang/String;)Z
+
+    move-result v4
+
+    if-eqz v4, :request_failed
+
+    return-void
+
+    :request_failed
+    # No lyrics, let Radiant AI generate them
+    invoke-static {p0}, Lradiant/RLLyrics;->onNoLyrics(Lradiant/RLAPILyricsWorker;)Z
+
+    move-result v0
+
+    if-eqz v0, :rl_drop    # True means old lyrics were put back
+
+    return-void
+
+    :rl_drop
+    invoke-direct {p0}, Lradiant/RLAPILyricsWorker;->failCurrent()V
+
+    return-void
+.end method
+
+# Show a lyrics body, false if unusable
+.method public publish(Ljava/lang/String;)Z
+    .locals 13
+
+    move-object/from16 v11, p1
+
+    invoke-static {v11}, Lradiant/RLAPILyricsWorker;->parseLines(Ljava/lang/String;)Ljava/util/ArrayList;
 
     move-result-object v3
 
@@ -804,7 +836,7 @@
 
     invoke-static {v4}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
 
-    goto :request_failed
+    goto :publish_failed
 
     :parse_ok
     invoke-virtual {v3}, Ljava/util/ArrayList;->size()I
@@ -817,7 +849,7 @@
 
     invoke-static {v5}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
 
-    goto :request_failed
+    goto :publish_failed
 
     :nonempty
     new-instance v5, Ljava/lang/StringBuilder;
@@ -848,9 +880,14 @@
 
     invoke-static {v5}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
 
-    return-void
+    const/4 v5, 0x1
+
+    return v5
 
     :key_ok
+    # Translations, AI sparkle and Radiant AI align
+    invoke-static {p0, v11}, Lradiant/RLLyrics;->onBody(Lradiant/RLAPILyricsWorker;Ljava/lang/String;)V
+
     invoke-static {v11}, Lradiant/WordLyrics;->ingest(Ljava/lang/String;)V
 
     iget-object v4, p0, Lradiant/RLAPILyricsWorker;->vm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
@@ -907,19 +944,30 @@
     invoke-interface {v6, v7}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
 
     :skip_n
-    :done
-    return-void
+    # Mark the track done so re-fires don't refetch
+    iget-object v6, p0, Lradiant/RLAPILyricsWorker;->key:Ljava/lang/String;
 
-    :request_failed
-    invoke-direct {p0}, Lradiant/RLAPILyricsWorker;->failCurrent()V
+    sput-object v6, Lradiant/RLAPILyricsHook;->currentKey:Ljava/lang/String;
 
-    return-void
+    # Same lyrics to every other player
+    invoke-static {p0, v8}, Lradiant/RLLyrics;->broadcast(Lradiant/RLAPILyricsWorker;Ljava/lang/Object;)V
+
+    const/4 v6, 0x1
+
+    return v6
+
+    :publish_failed
+    const/4 v6, 0x0
+
+    return v6
 .end method
 
 
 # virtual methods
 .method public run()V
     .locals 2
+
+    sput-object p0, Lradiant/RLAPILyricsWorker;->last:Lradiant/RLAPILyricsWorker;
 
     invoke-static {p0}, Lradiant/SparkleIcons;->rlBegin(Ljava/lang/Object;)V    # Spinner while fetching
 
@@ -946,5 +994,36 @@
 
     invoke-direct {p0}, Lradiant/RLAPILyricsWorker;->failCurrent()V
 
+    return-void
+.end method
+
+# Push lyrics state into one player
+.method public static pushTo(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;Ljava/lang/Object;)V
+    .locals 3
+
+    iget-object v0, p0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->R:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 O
+
+    invoke-interface {v0, p1}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
+
+    iget-object v0, p0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->N:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 K
+
+    sget-object v1, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
+
+    invoke-interface {v0, v1}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
+
+    sget-boolean v2, Lradiant/RLAPILyricsHook;->keepOpen:Z
+
+    if-nez v2, :open
+
+    sget-boolean v2, Lradiant/StickyLyrics;->enabled:Z
+
+    if-eqz v2, :done
+
+    :open
+    iget-object v0, p0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->S:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 P
+
+    invoke-interface {v0, v1}, Lkotlinx/coroutines/flow/MutableStateFlow;->setValue(Ljava/lang/Object;)V
+
+    :done
     return-void
 .end method

@@ -69,28 +69,29 @@
 .end method
 
 .method public static isOwner(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
-    .locals 2
+    .locals 1
 
-    sget-object v0, Lradiant/RLAPILyricsHook;->currentVm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
+    # Player showing this track (TIDAL runs several)
+    sget-boolean v0, Lradiant/RLAPILyricsHook;->isRlState:Z
 
-    if-ne p0, v0, :not_owner
+    if-eqz v0, :not_owner
 
-    sget-boolean v1, Lradiant/RLAPILyricsHook;->isRlState:Z
+    invoke-static {p0}, Lradiant/RLLyrics;->ownsVm(Ljava/lang/Object;)Z
 
-    return v1
+    move-result v0
 
     :not_owner
-    const/4 v1, 0x0
-
-    return v1
+    return v0
 .end method
 
 .method public static shouldKeepOpen(Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;)Z
     .locals 2
 
-    sget-object v0, Lradiant/RLAPILyricsHook;->currentVm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
+    invoke-static {p0}, Lradiant/RLLyrics;->ownsVm(Ljava/lang/Object;)Z
 
-    if-ne p0, v0, :do_not_keep
+    move-result v0
+
+    if-eqz v0, :do_not_keep
 
     sget-boolean v1, Lradiant/RLAPILyricsHook;->keepOpen:Z
 
@@ -204,25 +205,29 @@
 
     move-result-object v4
 
-    sget-object v5, Lradiant/RLAPILyricsHook;->currentKey:Ljava/lang/String;
+    # Remember every player on this track
+    invoke-static {p0, v4}, Lradiant/RLLyrics;->registerVm(Ljava/lang/Object;Ljava/lang/String;)V
 
-    invoke-virtual {v4, v5}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    # Players race in on separate threads, lock it
+    invoke-static {v4}, Lradiant/RLLyrics;->claimTrack(Ljava/lang/String;)Z
 
     move-result v5
 
-    if-eqz v5, :rl_new_track
+    if-nez v5, :rl_new_track
 
-    sget-object v5, Lradiant/RLAPILyricsHook;->currentVm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
+    # Already have this track, just share the lyrics
+    invoke-static {p0, v4}, Lradiant/RLLyrics;->catchUp(Ljava/lang/Object;Ljava/lang/String;)V
 
-    if-ne p0, v5, :rl_new_track
-
-    const-string v5, "onWampTrack: same track re-fired, skipping duplicate fetch"
+    const-string v5, "onWampTrack: same track re-fired, sharing the lyrics instead of refetching"
 
     invoke-static {v5}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
 
     return-void
 
     :rl_new_track
+    # New track, reset menu header and Sylla state
+    invoke-static {p1, v4}, Lradiant/RLLyrics;->onTrack(Lcom/aspiro/wamp/model/Track;Ljava/lang/String;)V
+
     iget-object v5, p0, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->S:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 P
 
     invoke-interface {v5}, Lkotlinx/coroutines/flow/MutableStateFlow;->getValue()Ljava/lang/Object;

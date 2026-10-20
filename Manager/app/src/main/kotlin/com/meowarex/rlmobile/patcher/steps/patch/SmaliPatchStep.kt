@@ -67,6 +67,8 @@ class SmaliPatchStep(
                 if (manifestSpecs != null) "manifest.json" else "built-in list"
         )
 
+        // Old saved configs, move variant choices over
+        val options = options.migrated(specs)
         val disabledFiles = options.disabledPatchFiles(specs)
         val knownExtensionFiles = options.knownExtensionFiles(specs)
         val enabledExtensionFiles = options.enabledExtensionFiles(specs)

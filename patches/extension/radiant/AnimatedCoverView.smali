@@ -3,9 +3,6 @@
 
 # interfaces
 .implements Landroid/view/TextureView$SurfaceTextureListener;
-.implements Landroid/media/MediaPlayer$OnPreparedListener;
-.implements Landroid/media/MediaPlayer$OnInfoListener;
-.implements Landroid/media/MediaPlayer$OnErrorListener;
 .implements Landroid/view/View$OnLayoutChangeListener;
 .implements Landroid/view/View$OnAttachStateChangeListener;
 .implements Ljava/lang/Runnable;
@@ -27,11 +24,13 @@
 # instance fields
 .field private albumId:I
 
+.field private final fadeIn:Lradiant/FadeIn;
+
 .field private final host:Landroid/view/ViewGroup;
 
 .field private outlined:Z
 
-.field private player:Landroid/media/MediaPlayer;
+.field private player:Lradiant/ArtPlayer;
 
 .field private surface:Landroid/view/Surface;
 
@@ -65,6 +64,12 @@
     const/4 v0, -0x1
 
     iput v0, p0, Lradiant/AnimatedCoverView;->albumId:I
+
+    new-instance v0, Lradiant/FadeIn;
+
+    invoke-direct {v0, p0}, Lradiant/FadeIn;-><init>(Lradiant/AnimatedCoverView;)V
+
+    iput-object v0, p0, Lradiant/AnimatedCoverView;->fadeIn:Lradiant/FadeIn;
 
     iput-object p1, p0, Lradiant/AnimatedCoverView;->target:Landroid/widget/ImageView;
 
@@ -391,89 +396,64 @@
 .method private release()V
     .registers 3
 
-    iget-object v0, p0, Lradiant/AnimatedCoverView;->player:Landroid/media/MediaPlayer;
+    iget-object v0, p0, Lradiant/AnimatedCoverView;->player:Lradiant/ArtPlayer;
 
     const/4 v1, 0x0
 
-    iput-object v1, p0, Lradiant/AnimatedCoverView;->player:Landroid/media/MediaPlayer;
+    iput-object v1, p0, Lradiant/AnimatedCoverView;->player:Lradiant/ArtPlayer;
 
-    if-eqz v0, :cond_c
+    if-eqz v0, :cond_a
 
-    :try_start_7
-    invoke-virtual {v0}, Landroid/media/MediaPlayer;->release()V
-    :try_end_a
-    .catchall {:try_start_7 .. :try_end_a} :catchall_b
+    invoke-virtual {v0}, Lradiant/ArtPlayer;->release()V
 
-    goto :goto_c
-
-    :catchall_b
-    move-exception v0
-
-    :cond_c
-    :goto_c
+    :cond_a
     return-void
 .end method
 
 .method private start()V
-    .registers 3
+    .registers 8
 
     iget-object v0, p0, Lradiant/AnimatedCoverView;->url:Ljava/lang/String;
 
-    if-eqz v0, :cond_37
+    if-eqz v0, :cond_25
 
     iget-object v0, p0, Lradiant/AnimatedCoverView;->surface:Landroid/view/Surface;
 
-    if-eqz v0, :cond_37
+    if-eqz v0, :cond_25
 
-    iget-object v0, p0, Lradiant/AnimatedCoverView;->player:Landroid/media/MediaPlayer;
+    iget-object v0, p0, Lradiant/AnimatedCoverView;->player:Lradiant/ArtPlayer;
 
     if-eqz v0, :cond_d
 
-    goto :goto_37
+    goto :goto_25
 
     :cond_d
-    :try_start_d
-    new-instance v0, Landroid/media/MediaPlayer;
+    invoke-virtual {p0}, Lradiant/AnimatedCoverView;->getContext()Landroid/content/Context;
 
-    invoke-direct {v0}, Landroid/media/MediaPlayer;-><init>()V
+    move-result-object v1
 
-    iput-object v0, p0, Lradiant/AnimatedCoverView;->player:Landroid/media/MediaPlayer;
+    iget-object v2, p0, Lradiant/AnimatedCoverView;->url:Ljava/lang/String;
 
-    iget-object v1, p0, Lradiant/AnimatedCoverView;->surface:Landroid/view/Surface;
+    iget-object v3, p0, Lradiant/AnimatedCoverView;->surface:Landroid/view/Surface;
 
-    invoke-virtual {v0, v1}, Landroid/media/MediaPlayer;->setSurface(Landroid/view/Surface;)V
+    invoke-virtual {p0}, Lradiant/AnimatedCoverView;->getWidth()I
 
-    invoke-virtual {v0, p0}, Landroid/media/MediaPlayer;->setOnPreparedListener(Landroid/media/MediaPlayer$OnPreparedListener;)V
+    move-result v4
 
-    invoke-virtual {v0, p0}, Landroid/media/MediaPlayer;->setOnInfoListener(Landroid/media/MediaPlayer$OnInfoListener;)V
+    invoke-virtual {p0}, Lradiant/AnimatedCoverView;->getHeight()I
 
-    invoke-virtual {v0, p0}, Landroid/media/MediaPlayer;->setOnErrorListener(Landroid/media/MediaPlayer$OnErrorListener;)V
+    move-result v5
 
-    const/4 v1, 0x1
+    iget-object v6, p0, Lradiant/AnimatedCoverView;->fadeIn:Lradiant/FadeIn;
 
-    invoke-virtual {v0, v1}, Landroid/media/MediaPlayer;->setLooping(Z)V
+    invoke-static/range {v1 .. v6}, Lradiant/ArtPlayer;->start(Landroid/content/Context;Ljava/lang/String;Landroid/view/Surface;IILjava/lang/Runnable;)Lradiant/ArtPlayer;
 
-    const/4 v1, 0x0
+    move-result-object v0
 
-    invoke-virtual {v0, v1, v1}, Landroid/media/MediaPlayer;->setVolume(FF)V
+    iput-object v0, p0, Lradiant/AnimatedCoverView;->player:Lradiant/ArtPlayer;
 
-    iget-object v1, p0, Lradiant/AnimatedCoverView;->url:Ljava/lang/String;
-
-    invoke-virtual {v0, v1}, Landroid/media/MediaPlayer;->setDataSource(Ljava/lang/String;)V
-
-    invoke-virtual {v0}, Landroid/media/MediaPlayer;->prepareAsync()V
-    :try_end_32
-    .catchall {:try_start_d .. :try_end_32} :catchall_33
-
-    goto :goto_37
-
-    :catchall_33
-    move-exception v0
-
-    invoke-direct {p0}, Lradiant/AnimatedCoverView;->release()V
-
-    :cond_37
-    :goto_37
+    :cond_25
+    :goto_25
     return-void
 .end method
 
@@ -668,62 +648,28 @@
 
 
 # virtual methods
-.method public onError(Landroid/media/MediaPlayer;II)Z
+.method onFirstFrame()V
     .registers 4
-
-    iget-object p2, p0, Lradiant/AnimatedCoverView;->player:Landroid/media/MediaPlayer;
-
-    if-ne p1, p2, :cond_f
-
-    invoke-direct {p0}, Lradiant/AnimatedCoverView;->release()V
-
-    const/4 p1, 0x0
-
-    invoke-virtual {p0, p1}, Lradiant/AnimatedCoverView;->setAlpha(F)V
-
-    const/4 p1, 0x4
-
-    invoke-virtual {p0, p1}, Lradiant/AnimatedCoverView;->setVisibility(I)V
-
-    :cond_f
-    const/4 p1, 0x1
-
-    return p1
-.end method
-
-.method public onInfo(Landroid/media/MediaPlayer;II)Z
-    .registers 4
-
-    iget-object p3, p0, Lradiant/AnimatedCoverView;->player:Landroid/media/MediaPlayer;
-
-    if-ne p1, p3, :cond_1a
-
-    const/4 p1, 0x3
-
-    if-ne p2, p1, :cond_1a
 
     invoke-virtual {p0}, Lradiant/AnimatedCoverView;->animate()Landroid/view/ViewPropertyAnimator;
 
-    move-result-object p1
+    move-result-object v0
 
-    const/high16 p2, 0x3f800000    # 1.0f
+    const/high16 v1, 0x3f800000    # 1.0f
 
-    invoke-virtual {p1, p2}, Landroid/view/ViewPropertyAnimator;->alpha(F)Landroid/view/ViewPropertyAnimator;
+    invoke-virtual {v0, v1}, Landroid/view/ViewPropertyAnimator;->alpha(F)Landroid/view/ViewPropertyAnimator;
 
-    move-result-object p1
+    move-result-object v0
 
-    const-wide/16 p2, 0x12c
+    const-wide/16 v1, 0x12c
 
-    invoke-virtual {p1, p2, p3}, Landroid/view/ViewPropertyAnimator;->setDuration(J)Landroid/view/ViewPropertyAnimator;
+    invoke-virtual {v0, v1, v2}, Landroid/view/ViewPropertyAnimator;->setDuration(J)Landroid/view/ViewPropertyAnimator;
 
-    move-result-object p1
+    move-result-object v0
 
-    invoke-virtual {p1}, Landroid/view/ViewPropertyAnimator;->start()V
+    invoke-virtual {v0}, Landroid/view/ViewPropertyAnimator;->start()V
 
-    :cond_1a
-    const/4 p1, 0x0
-
-    return p1
+    return-void
 .end method
 
 .method public onLayoutChange(Landroid/view/View;IIIIIIII)V
@@ -731,19 +677,6 @@
 
     invoke-virtual {p0, p0}, Lradiant/AnimatedCoverView;->post(Ljava/lang/Runnable;)Z
 
-    return-void
-.end method
-
-.method public onPrepared(Landroid/media/MediaPlayer;)V
-    .registers 3
-
-    iget-object v0, p0, Lradiant/AnimatedCoverView;->player:Landroid/media/MediaPlayer;
-
-    if-ne p1, v0, :cond_7
-
-    invoke-virtual {p1}, Landroid/media/MediaPlayer;->start()V
-
-    :cond_7
     return-void
 .end method
 

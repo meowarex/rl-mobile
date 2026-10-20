@@ -642,6 +642,7 @@ private fun OptionLockDialog(lock: OptionLock, onDismiss: () -> Unit) {
     val message = when (lock) {
         is OptionLock.NeedsVariant -> stringResource(R.string.patch_opt_lock_needs_variant, lock.title)
         is OptionLock.NeedsOption -> stringResource(R.string.patch_opt_lock_needs_option, lock.title)
+        is OptionLock.LockedBy -> stringResource(R.string.patch_opt_lock_locked_by, lock.title)
         OptionLock.Free -> return
     }
 
