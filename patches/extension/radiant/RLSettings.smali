@@ -17,6 +17,12 @@
 
 .field static final SYNC_WORD:I = 0x1
 
+.field static final TOASTS_ALL:I = 0x2
+
+.field static final TOASTS_ERRORS:I = 0x1
+
+.field static final TOASTS_NONE:I
+
 .field private static volatile allowAI:Z
 
 .field private static volatile language:I
@@ -32,6 +38,8 @@
 .field private static volatile romanize:Z
 
 .field private static volatile sync:I
+
+.field private static volatile toasts:I
 
 .field private static volatile translate:Z
 
@@ -252,7 +260,7 @@
     :try_start_3
     sget-boolean v1, Lradiant/RLSettings;->loaded:Z
     :try_end_5
-    .catchall {:try_start_3 .. :try_end_5} :catchall_102
+    .catchall {:try_start_3 .. :try_end_5} :catchall_108
 
     if-eqz v1, :cond_9
 
@@ -317,6 +325,12 @@
 
     :goto_33
     sput-boolean v6, Lradiant/RLSettings;->quickMenu:Z
+
+    invoke-static {}, Lradiant/RLDefaults;->toasts()I
+
+    move-result v6
+
+    sput v6, Lradiant/RLSettings;->toasts:I
 
     new-instance v6, Ljava/lang/StringBuilder;
 
@@ -386,19 +400,19 @@
 
     const/4 v10, 0x0
 
-    if-eqz v9, :cond_80
+    if-eqz v9, :cond_86
 
     invoke-static {}, Lradiant/RLSettings;->prefs()Landroid/content/SharedPreferences;
 
     move-result-object v9
 
-    goto :goto_81
+    goto :goto_87
 
-    :cond_80
+    :cond_86
     move-object v9, v10
 
-    :goto_81
-    if-eqz v9, :cond_cd
+    :goto_87
+    if-eqz v9, :cond_d3
 
     const-string v11, "baked"
 
@@ -410,20 +424,20 @@
 
     move-result v10
 
-    if-eqz v10, :cond_cd
+    if-eqz v10, :cond_d3
 
     const-string v6, "romanize"
 
-    if-eqz v1, :cond_95
+    if-eqz v1, :cond_9b
 
     move v1, v8
 
-    goto :goto_96
+    goto :goto_9c
 
-    :cond_95
+    :cond_9b
     move v1, v7
 
-    :goto_96
+    :goto_9c
     invoke-interface {v9, v6, v1}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
 
     move-result v1
@@ -432,16 +446,16 @@
 
     const-string v1, "translate"
 
-    if-eqz v2, :cond_a2
+    if-eqz v2, :cond_a8
 
     move v2, v8
 
-    goto :goto_a3
+    goto :goto_a9
 
-    :cond_a2
+    :cond_a8
     move v2, v7
 
-    :goto_a3
+    :goto_a9
     invoke-interface {v9, v1, v2}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
 
     move-result v1
@@ -462,11 +476,11 @@
 
     const-string v1, "radiantAI"
 
-    if-eqz v4, :cond_ba
+    if-eqz v4, :cond_c0
 
     move v7, v8
 
-    :cond_ba
+    :cond_c0
     invoke-interface {v9, v1, v7}, Landroid/content/SharedPreferences;->getBoolean(Ljava/lang/String;Z)Z
 
     move-result v1
@@ -485,31 +499,31 @@
 
     sput v1, Lradiant/RLSettings;->sync:I
 
-    goto :goto_fe
+    goto :goto_104
 
-    :cond_cd
-    if-eqz v1, :cond_d1
+    :cond_d3
+    if-eqz v1, :cond_d7
 
     move v1, v8
 
-    goto :goto_d2
+    goto :goto_d8
 
-    :cond_d1
+    :cond_d7
     move v1, v7
 
-    :goto_d2
+    :goto_d8
     sput-boolean v1, Lradiant/RLSettings;->romanize:Z
 
-    if-eqz v2, :cond_d8
+    if-eqz v2, :cond_de
 
     move v1, v8
 
-    goto :goto_d9
+    goto :goto_df
 
-    :cond_d8
+    :cond_de
     move v1, v7
 
-    :goto_d9
+    :goto_df
     sput-boolean v1, Lradiant/RLSettings;->translate:Z
 
     invoke-static {v3}, Lradiant/RLSettings;->clampLang(I)I
@@ -518,11 +532,11 @@
 
     sput v1, Lradiant/RLSettings;->language:I
 
-    if-eqz v4, :cond_e4
+    if-eqz v4, :cond_ea
 
     move v7, v8
 
-    :cond_e4
+    :cond_ea
     sput-boolean v7, Lradiant/RLSettings;->radiantAI:Z
 
     invoke-static {v5}, Lradiant/RLSettings;->clampSync(I)I
@@ -531,7 +545,7 @@
 
     sput v1, Lradiant/RLSettings;->sync:I
 
-    if-eqz v9, :cond_fe
+    if-eqz v9, :cond_104
 
     invoke-interface {v9}, Landroid/content/SharedPreferences;->edit()Landroid/content/SharedPreferences$Editor;
 
@@ -547,23 +561,23 @@
 
     invoke-static {}, Lradiant/RLSettings;->save()V
 
-    :cond_fe
-    :goto_fe
+    :cond_104
+    :goto_104
     sput-boolean v8, Lradiant/RLSettings;->loaded:Z
-    :try_end_100
-    .catchall {:try_start_9 .. :try_end_100} :catchall_102
+    :try_end_106
+    .catchall {:try_start_9 .. :try_end_106} :catchall_108
 
     monitor-exit v0
 
     return-void
 
-    :catchall_102
+    :catchall_108
     move-exception v1
 
-    :try_start_103
+    :try_start_109
     monitor-exit v0
-    :try_end_104
-    .catchall {:try_start_103 .. :try_end_104} :catchall_102
+    :try_end_10a
+    .catchall {:try_start_109 .. :try_end_10a} :catchall_108
 
     throw v1
 .end method
@@ -783,6 +797,16 @@
     invoke-static {}, Lradiant/RLSettings;->load()V
 
     sget v0, Lradiant/RLSettings;->sync:I
+
+    return v0
+.end method
+
+.method public static toasts()I
+    .registers 1
+
+    invoke-static {}, Lradiant/RLSettings;->load()V
+
+    sget v0, Lradiant/RLSettings;->toasts:I
 
     return v0
 .end method

@@ -5245,47 +5245,69 @@
 .end method
 
 .method static toast(Ljava/lang/String;)V
-    .registers 7
+    .registers 9
 
-    new-instance v0, Lradiant/RLTask;
+    invoke-static {}, Lradiant/RLSettings;->toasts()I
 
-    const/4 v4, 0x0
+    move-result v0
+
+    const/4 v1, 0x2
+
+    if-ge v0, v1, :cond_8
+
+    return-void
+
+    :cond_8
+    new-instance v2, Lradiant/RLTask;
+
+    const/4 v6, 0x0
+
+    const/4 v7, 0x0
+
+    const/4 v3, 0x3
 
     const/4 v5, 0x0
 
-    const/4 v1, 0x3
+    move-object v4, p0
 
-    const/4 v3, 0x0
+    invoke-direct/range {v2 .. v7}, Lradiant/RLTask;-><init>(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
 
-    move-object v2, p0
-
-    invoke-direct/range {v0 .. v5}, Lradiant/RLTask;-><init>(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
-
-    invoke-static {v0}, Lradiant/RLLyrics;->post(Ljava/lang/Runnable;)V
+    invoke-static {v2}, Lradiant/RLLyrics;->post(Ljava/lang/Runnable;)V
 
     return-void
 .end method
 
 .method static toastErr(Ljava/lang/String;)V
-    .registers 7
+    .registers 9
 
     invoke-static {p0}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
 
-    new-instance v0, Lradiant/RLTask;
+    invoke-static {}, Lradiant/RLSettings;->toasts()I
 
-    const/4 v4, 0x0
+    move-result v0
 
-    const/4 v5, 0x1
+    const/4 v1, 0x1
 
-    const/4 v1, 0x3
+    if-ge v0, v1, :cond_b
 
-    const/4 v3, 0x0
+    return-void
 
-    move-object v2, p0
+    :cond_b
+    new-instance v2, Lradiant/RLTask;
 
-    invoke-direct/range {v0 .. v5}, Lradiant/RLTask;-><init>(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+    const/4 v6, 0x0
 
-    invoke-static {v0}, Lradiant/RLLyrics;->post(Ljava/lang/Runnable;)V
+    const/4 v7, 0x1
+
+    const/4 v3, 0x3
+
+    const/4 v5, 0x0
+
+    move-object v4, p0
+
+    invoke-direct/range {v2 .. v7}, Lradiant/RLTask;-><init>(ILjava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;I)V
+
+    invoke-static {v2}, Lradiant/RLLyrics;->post(Ljava/lang/Runnable;)V
 
     return-void
 .end method

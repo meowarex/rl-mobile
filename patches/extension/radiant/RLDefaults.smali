@@ -72,3 +72,12 @@
 
     return v0
 .end method
+
+# 0 None, 1 Errors, 2 All
+.method static toasts()I
+    .locals 1
+
+    const v0, __RL_TOASTS__
+
+    return v0
+.end method

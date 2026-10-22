@@ -31,6 +31,11 @@ public final class RLSettings {
     private static volatile int sync;
     // Menu on uses saved prefs, off uses Manager values
     private static volatile boolean quickMenu = true;
+    // Radiant AI toasts, Manager only
+    static final int TOASTS_NONE = 0;
+    static final int TOASTS_ERRORS = 1;
+    static final int TOASTS_ALL = 2;
+    private static volatile int toasts;
 
     private RLSettings() {}
 
@@ -57,6 +62,7 @@ public final class RLSettings {
         int ai = RLDefaults.radiantAI(), s = RLDefaults.sync();
         allowAI = RLDefaults.allowAI() != 0;
         quickMenu = RLDefaults.quickMenu() != 0;
+        toasts = RLDefaults.toasts();
         String baked = r + "," + t + "," + l + "," + ai + "," + s + "," + (quickMenu ? 1 : 0);
         // No menu, ignore anything an older one saved
         SharedPreferences p = quickMenu ? prefs() : null;
@@ -133,6 +139,11 @@ public final class RLSettings {
     public static boolean quickMenu() {
         load();
         return quickMenu;
+    }
+
+    public static int toasts() {
+        load();
+        return toasts;
     }
 
     public static int sync() {
