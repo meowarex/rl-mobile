@@ -161,6 +161,24 @@
           "defaultIndex": 0,
           "requiresOption": "context_aware",
           "token": "RL_CTX"
+        },
+        {
+          "type": "choice",
+          "key": "ai_toasts",
+          "title": "Radiant AI Toasts",
+          "description": "Notifs from Sylla AI when retiming and generating lyrics",
+          "entries": [
+            "None",
+            "Errors",
+            "All"
+          ],
+          "values": [
+            "0x0",
+            "0x1",
+            "0x2"
+          ],
+          "defaultIndex": 1,
+          "token": "RL_TOASTS"
         }
       ]
     },

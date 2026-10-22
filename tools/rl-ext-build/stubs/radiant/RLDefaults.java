@@ -8,4 +8,5 @@ public final class RLDefaults {
     static int radiantAI() { return 0; }
     static int sync() { return 0; }
     static int quickMenu() { return 1; }
+    static int toasts() { return 0; }
 }

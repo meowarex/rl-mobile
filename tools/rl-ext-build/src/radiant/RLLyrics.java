@@ -866,11 +866,13 @@ public final class RLLyrics {
     }
 
     static void toast(String msg) {
+        if (RLSettings.toasts() < RLSettings.TOASTS_ALL) return;
         post(new RLTask(RLTask.TOAST, msg, null, null, 0));
     }
 
     static void toastErr(String msg) {
         RLAPILyricsHook.dlog(msg);
+        if (RLSettings.toasts() < RLSettings.TOASTS_ERRORS) return;
         post(new RLTask(RLTask.TOAST, msg, null, null, 1));
     }
 
