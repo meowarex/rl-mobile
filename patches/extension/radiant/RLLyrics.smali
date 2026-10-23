@@ -5,6 +5,12 @@
 # static fields
 .field private static final API:Ljava/lang/String; = "https://api.radiant-lyrics.org/"
 
+.field private static final LYRICS_SETTLE_MS:J = 0x5dcL
+
+.field private static final SKIP_WINDOW_MS:J = 0x1388L
+
+.field private static final SYLLA_SETTLE_MS:J = 0x1388L
+
 .field static volatile aiType:Ljava/lang/String;
 
 .field private static volatile autoSyllaJob:Ljava/lang/Object;
@@ -37,6 +43,8 @@
 
 .field static volatile retimeTrack:Ljava/lang/String;
 
+.field private static volatile skipping:Z
+
 .field static volatile syllaEpoch:I
 
 .field private static final syllaRefused:Ljava/lang/ThreadLocal;
@@ -52,6 +60,8 @@
 .field static volatile track:Lcom/aspiro/wamp/model/Track;
 
 .field static volatile trackKey:Ljava/lang/String;
+
+.field private static volatile trackStartedAt:J
 
 .field private static volatile trans:[Ljava/lang/String;
 
@@ -215,17 +225,32 @@
 .method static autoSylla(Lradiant/RLAPILyricsWorker;Ljava/lang/String;Ljava/lang/String;)Z
     .registers 11
 
-    if-eqz p0, :cond_36
+    const/4 v0, 0x0
+
+    if-eqz p0, :cond_41
 
     invoke-static {}, Lradiant/RLSettings;->radiantAI()Z
 
-    move-result v0
+    move-result v1
 
-    if-nez v0, :cond_9
+    if-nez v1, :cond_a
 
-    goto :goto_36
+    goto :goto_41
 
-    :cond_9
+    :cond_a
+    iget-object v1, p0, Lradiant/RLAPILyricsWorker;->key:Ljava/lang/String;
+
+    sget-object v2, Lradiant/RLLyrics;->trackKey:Ljava/lang/String;
+
+    invoke-virtual {v1, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-nez v1, :cond_15
+
+    return v0
+
+    :cond_15
     iget-object v0, p0, Lradiant/RLAPILyricsWorker;->key:Ljava/lang/String;
 
     sget-object v1, Lradiant/RLLyrics;->autoSyllaTrack:Ljava/lang/String;
@@ -234,13 +259,13 @@
 
     move-result v0
 
-    if-eqz v0, :cond_16
+    if-eqz v0, :cond_22
 
     sget-boolean p0, Lradiant/RLLyrics;->autoSyllaRunning:Z
 
     return p0
 
-    :cond_16
+    :cond_22
     iget-object v0, p0, Lradiant/RLAPILyricsWorker;->key:Ljava/lang/String;
 
     sput-object v0, Lradiant/RLLyrics;->autoSyllaTrack:Ljava/lang/String;
@@ -273,13 +298,9 @@
 
     invoke-static {v2}, Lradiant/RLLyrics;->background(Ljava/lang/Runnable;)V
 
+    :cond_41
+    :goto_41
     return v0
-
-    :cond_36
-    :goto_36
-    const/4 p0, 0x0
-
-    return p0
 .end method
 
 .method private static background(Ljava/lang/Runnable;)V
@@ -1858,7 +1879,7 @@
 .end method
 
 .method public static onTrack(Lcom/aspiro/wamp/model/Track;Ljava/lang/String;)V
-    .registers 3
+    .registers 7
 
     const/4 v0, 0x1
 
@@ -1866,7 +1887,7 @@
 
     sput-object p0, Lradiant/RLLyrics;->track:Lcom/aspiro/wamp/model/Track;
 
-    if-eqz p1, :cond_44
+    if-eqz p1, :cond_59
 
     sget-object p0, Lradiant/RLLyrics;->trackKey:Ljava/lang/String;
 
@@ -1876,10 +1897,38 @@
 
     if-eqz p0, :cond_10
 
-    goto :goto_44
+    goto :goto_59
 
     :cond_10
     sput-object p1, Lradiant/RLLyrics;->trackKey:Ljava/lang/String;
+
+    invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
+
+    move-result-wide p0
+
+    sget-wide v1, Lradiant/RLLyrics;->trackStartedAt:J
+
+    sub-long v1, p0, v1
+
+    const-wide/16 v3, 0x1388
+
+    cmp-long v1, v1, v3
+
+    const/4 v2, 0x0
+
+    if-gez v1, :cond_23
+
+    move v1, v0
+
+    goto :goto_24
+
+    :cond_23
+    move v1, v2
+
+    :goto_24
+    sput-boolean v1, Lradiant/RLLyrics;->skipping:Z
+
+    sput-wide p0, Lradiant/RLLyrics;->trackStartedAt:J
 
     const-class p0, Lradiant/RLLyrics;
 
@@ -1887,14 +1936,14 @@
 
     const/4 p1, 0x0
 
-    :try_start_16
+    :try_start_2c
     sput-object p1, Lradiant/RLLyrics;->lastState:Ljava/lang/Object;
 
     sput-object p1, Lradiant/RLLyrics;->lastStateKey:Ljava/lang/String;
 
     monitor-exit p0
-    :try_end_1b
-    .catchall {:try_start_16 .. :try_end_1b} :catchall_41
+    :try_end_31
+    .catchall {:try_start_2c .. :try_end_31} :catchall_56
 
     sget p0, Lradiant/RLLyrics;->syllaEpoch:I
 
@@ -1904,17 +1953,15 @@
 
     sput-object p1, Lradiant/RLLyrics;->autoSyllaTrack:Ljava/lang/String;
 
-    const/4 p0, 0x0
-
-    sput-boolean p0, Lradiant/RLLyrics;->autoSyllaRunning:Z
+    sput-boolean v2, Lradiant/RLLyrics;->autoSyllaRunning:Z
 
     sput-object p1, Lradiant/RLLyrics;->retimeTrack:Ljava/lang/String;
 
-    sput-boolean p0, Lradiant/RLLyrics;->busy:Z
+    sput-boolean v2, Lradiant/RLLyrics;->busy:Z
 
     sput-object p1, Lradiant/RLLyrics;->body:Ljava/lang/String;
 
-    sput-boolean p0, Lradiant/RLLyrics;->bodyIsLine:Z
+    sput-boolean v2, Lradiant/RLLyrics;->bodyIsLine:Z
 
     sput-object p1, Lradiant/RLLyrics;->aiType:Ljava/lang/String;
 
@@ -1928,24 +1975,24 @@
 
     invoke-static {}, Lradiant/SparkleIcons;->resetWork()V
 
-    invoke-static {p0}, Lradiant/AiSparkle;->set(Z)V
+    invoke-static {v2}, Lradiant/AiSparkle;->set(Z)V
 
     invoke-static {}, Lradiant/RLLyrics;->bump()V
 
     return-void
 
-    :catchall_41
+    :catchall_56
     move-exception p1
 
-    :try_start_42
+    :try_start_57
     monitor-exit p0
-    :try_end_43
-    .catchall {:try_start_42 .. :try_end_43} :catchall_41
+    :try_end_58
+    .catchall {:try_start_57 .. :try_end_58} :catchall_56
 
     throw p1
 
-    :cond_44
-    :goto_44
+    :cond_59
+    :goto_59
     return-void
 .end method
 
@@ -4027,6 +4074,27 @@
 .method static runAutoSylla(Lradiant/RLAPILyricsWorker;Ljava/lang/String;Ljava/lang/String;I)V
     .registers 8
 
+    sget-wide v0, Lradiant/RLLyrics;->trackStartedAt:J
+
+    const-wide/16 v2, 0x1388
+
+    add-long/2addr v0, v2
+
+    invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
+
+    move-result-wide v2
+
+    sub-long/2addr v0, v2
+
+    invoke-static {v0, v1}, Lradiant/RLLyrics;->sleep(J)V
+
+    sget v0, Lradiant/RLLyrics;->syllaEpoch:I
+
+    if-eq p3, v0, :cond_12
+
+    return-void
+
+    :cond_12
     const-string v0, "untimed"
 
     invoke-virtual {v0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
@@ -4037,19 +4105,19 @@
 
     const/4 v2, 0x0
 
-    if-eqz v0, :cond_e
+    if-eqz v0, :cond_20
 
-    if-eqz p2, :cond_e
+    if-eqz p2, :cond_20
 
     move v0, v1
 
-    goto :goto_f
+    goto :goto_21
 
-    :cond_e
+    :cond_20
     move v0, v2
 
-    :goto_f
-    if-nez v0, :cond_19
+    :goto_21
+    if-nez v0, :cond_2b
 
     const-string v3, "align"
 
@@ -4057,42 +4125,42 @@
 
     move-result p1
 
-    if-eqz p1, :cond_1d
+    if-eqz p1, :cond_2f
 
-    :cond_19
-    if-eqz p2, :cond_1d
+    :cond_2b
+    if-eqz p2, :cond_2f
 
     move p1, v1
 
-    goto :goto_1e
+    goto :goto_30
 
-    :cond_1d
+    :cond_2f
     move p1, v2
 
-    :goto_1e
-    if-eqz p1, :cond_25
+    :goto_30
+    if-eqz p1, :cond_37
 
     invoke-static {p0, p2}, Lradiant/RLLyrics;->align(Lradiant/RLAPILyricsWorker;Ljava/lang/String;)Ljava/lang/Object;
 
     move-result-object p2
 
-    goto :goto_29
+    goto :goto_3b
 
-    :cond_25
+    :cond_37
     invoke-static {p0}, Lradiant/RLLyrics;->gen(Lradiant/RLAPILyricsWorker;)Ljava/lang/Object;
 
     move-result-object p2
 
-    :goto_29
-    if-eqz v0, :cond_62
+    :goto_3b
+    if-eqz v0, :cond_74
 
     instance-of v0, p2, Lorg/json/JSONObject;
 
-    if-nez v0, :cond_62
+    if-nez v0, :cond_74
 
     sget v0, Lradiant/RLLyrics;->syllaEpoch:I
 
-    if-ne p3, v0, :cond_62
+    if-ne p3, v0, :cond_74
 
     sget-object v0, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
 
@@ -4106,7 +4174,7 @@
 
     move-result v0
 
-    if-eqz v0, :cond_62
+    if-eqz v0, :cond_74
 
     new-instance p1, Ljava/lang/StringBuilder;
 
@@ -4140,14 +4208,14 @@
 
     move p1, v2
 
-    :cond_62
+    :cond_74
     sget v0, Lradiant/RLLyrics;->syllaEpoch:I
 
-    if-eq p3, v0, :cond_67
+    if-eq p3, v0, :cond_79
 
     return-void
 
-    :cond_67
+    :cond_79
     sput-boolean v2, Lradiant/RLLyrics;->autoSyllaRunning:Z
 
     sget-object p3, Lradiant/RLLyrics;->autoSyllaJob:Ljava/lang/Object;
@@ -4156,7 +4224,7 @@
 
     instance-of p3, p2, Lorg/json/JSONObject;
 
-    if-nez p3, :cond_b1
+    if-nez p3, :cond_c3
 
     new-instance p0, Ljava/lang/StringBuilder;
 
@@ -4168,16 +4236,16 @@
 
     move-result-object p0
 
-    if-eqz p1, :cond_82
+    if-eqz p1, :cond_94
 
     const-string p3, "Align"
 
-    goto :goto_84
+    goto :goto_96
 
-    :cond_82
+    :cond_94
     const-string p3, "Gen"
 
-    :goto_84
+    :goto_96
     invoke-virtual {p0, p3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object p0
@@ -4188,16 +4256,16 @@
 
     move-result-object p0
 
-    if-eqz p1, :cond_93
+    if-eqz p1, :cond_a5
 
     const-string p1, "line lyrics"
 
-    goto :goto_95
+    goto :goto_a7
 
-    :cond_93
+    :cond_a5
     const-string p1, "no lyrics"
 
-    :goto_95
+    :goto_a7
     invoke-virtual {p0, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object p0
@@ -4226,19 +4294,19 @@
 
     return-void
 
-    :cond_b1
+    :cond_c3
     check-cast p2, Lorg/json/JSONObject;
 
-    if-eqz p1, :cond_b8
+    if-eqz p1, :cond_ca
 
     const-string p1, "retimed"
 
-    goto :goto_ba
+    goto :goto_cc
 
-    :cond_b8
+    :cond_ca
     const-string p1, "generated"
 
-    :goto_ba
+    :goto_cc
     invoke-static {p0, p2, p1}, Lradiant/RLLyrics;->loadSylla(Lradiant/RLAPILyricsWorker;Lorg/json/JSONObject;Ljava/lang/String;)V
 
     return-void
@@ -4874,6 +4942,42 @@
     throw p0
 .end method
 
+.method public static settleLookup(Lradiant/RLAPILyricsWorker;)Z
+    .registers 5
+
+    sget-boolean v0, Lradiant/RLLyrics;->skipping:Z
+
+    const/4 v1, 0x1
+
+    if-nez v0, :cond_6
+
+    return v1
+
+    :cond_6
+    const-wide/16 v2, 0x5dc
+
+    invoke-static {v2, v3}, Lradiant/RLLyrics;->sleep(J)V
+
+    iget-object p0, p0, Lradiant/RLAPILyricsWorker;->key:Ljava/lang/String;
+
+    sget-object v0, Lradiant/RLLyrics;->trackKey:Ljava/lang/String;
+
+    invoke-virtual {p0, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result p0
+
+    const/4 v0, 0x0
+
+    if-nez p0, :cond_17
+
+    return v0
+
+    :cond_17
+    sput-boolean v0, Lradiant/RLLyrics;->skipping:Z
+
+    return v1
+.end method
+
 .method static showToast(Ljava/lang/String;Z)V
     .registers 3
 
@@ -4890,6 +4994,32 @@
     invoke-virtual {p0}, Landroid/widget/Toast;->show()V
 
     :cond_d
+    return-void
+.end method
+
+.method private static sleep(J)V
+    .registers 4
+
+    const-wide/16 v0, 0x0
+
+    cmp-long v0, p0, v0
+
+    if-gtz v0, :cond_7
+
+    return-void
+
+    :cond_7
+    :try_start_7
+    invoke-static {p0, p1}, Ljava/lang/Thread;->sleep(J)V
+    :try_end_a
+    .catch Ljava/lang/InterruptedException; {:try_start_7 .. :try_end_a} :catch_b
+
+    goto :goto_c
+
+    :catch_b
+    move-exception p0
+
+    :goto_c
     return-void
 .end method
 

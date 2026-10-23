@@ -697,6 +697,16 @@
 .method private runImpl()V
     .locals 13
 
+    # Hold the lookup while skipping
+    invoke-static {p0}, Lradiant/RLLyrics;->settleLookup(Lradiant/RLAPILyricsWorker;)Z
+
+    move-result v0
+
+    if-nez v0, :settled
+
+    return-void
+
+    :settled
     iget-object v0, p0, Lradiant/RLAPILyricsWorker;->title:Ljava/lang/String;
 
     invoke-static {v0}, Lradiant/RLAPILyricsWorker;->uric(Ljava/lang/String;)Ljava/lang/String;
