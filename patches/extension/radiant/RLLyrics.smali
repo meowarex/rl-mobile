@@ -3,7 +3,7 @@
 
 
 # static fields
-.field private static final API:Ljava/lang/String; = "https://api.atomix.one/"
+.field private static final API:Ljava/lang/String; = "https://api.radiant-lyrics.org/"
 
 .field static volatile aiType:Ljava/lang/String;
 
@@ -2044,7 +2044,7 @@
 
     invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string v1, "https://api.atomix.one/"
+    const-string v1, "https://api.radiant-lyrics.org/"
 
     invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
@@ -4300,7 +4300,7 @@
     :try_start_30
     new-instance v6, Ljava/lang/StringBuilder;
 
-    const-string v7, "https://api.atomix.one/"
+    const-string v7, "https://api.radiant-lyrics.org/"
 
     invoke-direct {v6, v7}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
 

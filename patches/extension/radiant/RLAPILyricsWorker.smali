@@ -746,7 +746,7 @@
 
     new-instance v3, Ljava/lang/StringBuilder;
 
-    const-string v4, "https://api.atomix.one/rl-api"
+    const-string v4, "https://api.radiant-lyrics.org/rl-api"
 
     invoke-direct {v3, v4}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
 

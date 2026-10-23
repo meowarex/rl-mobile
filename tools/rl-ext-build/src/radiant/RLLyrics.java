@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 // RL API lyrics state, translations, flush and Sylla
 public final class RLLyrics {
-    private static final String API = "https://api.atomix.one/";
+    private static final String API = "https://api.radiant-lyrics.org/";
 
     // Current track id + Track for the menu header
     static volatile String trackKey;
