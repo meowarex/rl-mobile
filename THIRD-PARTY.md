@@ -1,6 +1,6 @@
 # Third-party notices
 
-Radiant Lyrics Mobile is licensed under the GPL-3.0 (see `LICENSE`). It includes work from the
+Radiant Lyrics Mobile is licensed under the GPL-3.0 (see `LICENSE`, plus `ADDITIONAL-TERMS.md`). It includes work from the
 projects below, whose original licences and copyright notices are preserved as those licences
 require.
 
