@@ -255,13 +255,13 @@
 
     const-string v1, "P-Access-Token-Id"
 
-    const-string v2, "58hy4s86"
+    const-string v2, "__RL_ACCESS_TOKEN_ID__"
 
     invoke-virtual {v0, v1, v2}, Ljava/net/URLConnection;->setRequestProperty(Ljava/lang/String;Ljava/lang/String;)V
 
     const-string v1, "P-Access-Token"
 
-    const-string v2, "xjehy2lfg5h5mjwotoxrcqugam"
+    const-string v2, "__RL_ACCESS_TOKEN__"
 
     invoke-virtual {v0, v1, v2}, Ljava/net/URLConnection;->setRequestProperty(Ljava/lang/String;Ljava/lang/String;)V
 
@@ -697,6 +697,16 @@
 .method private runImpl()V
     .locals 13
 
+    # Hold the lookup while skipping
+    invoke-static {p0}, Lradiant/RLLyrics;->settleLookup(Lradiant/RLAPILyricsWorker;)Z
+
+    move-result v0
+
+    if-nez v0, :settled
+
+    return-void
+
+    :settled
     iget-object v0, p0, Lradiant/RLAPILyricsWorker;->title:Ljava/lang/String;
 
     invoke-static {v0}, Lradiant/RLAPILyricsWorker;->uric(Ljava/lang/String;)Ljava/lang/String;
@@ -746,7 +756,7 @@
 
     new-instance v3, Ljava/lang/StringBuilder;
 
-    const-string v4, "https://api.atomix.one/rl-api"
+    const-string v4, "https://api.radiant-lyrics.org/rl-api"
 
     invoke-direct {v3, v4}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
 

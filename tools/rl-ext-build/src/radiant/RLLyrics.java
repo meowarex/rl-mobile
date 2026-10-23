@@ -2,6 +2,7 @@ package radiant;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.widget.Toast;
 
 import androidx.compose.runtime.MutableState;
@@ -17,7 +18,7 @@ import org.json.JSONObject;
 
 // RL API lyrics state, translations, flush and Sylla
 public final class RLLyrics {
-    private static final String API = "https://api.atomix.one/";
+    private static final String API = "https://api.radiant-lyrics.org/";
 
     // Current track id + Track for the menu header
     static volatile String trackKey;
@@ -56,6 +57,16 @@ public final class RLLyrics {
     // Flush or retime running
     static volatile boolean busy;
 
+    // Sylla waits 5s from song start (skip spam)
+    private static final long SYLLA_SETTLE_MS = 5000;
+    // Changes this close = skipping
+    private static final long SKIP_WINDOW_MS = 5000;
+    // Hold the lookup while skipping
+    private static final long LYRICS_SETTLE_MS = 1500;
+    // When this track started
+    private static volatile long trackStartedAt;
+    private static volatile boolean skipping;
+
     private static Handler main;
 
     private RLLyrics() {}
@@ -68,6 +79,9 @@ public final class RLLyrics {
         track = t;
         if (key == null || key.equals(trackKey)) return;
         trackKey = key;
+        long now = SystemClock.elapsedRealtime();
+        skipping = now - trackStartedAt < SKIP_WINDOW_MS;
+        trackStartedAt = now;
         synchronized (RLLyrics.class) {
             lastState = null;
             lastStateKey = null;
@@ -87,6 +101,15 @@ public final class RLLyrics {
         SparkleIcons.resetWork();
         AiSparkle.set(false);
         bump();
+    }
+
+    // Wait out skip spam (false = skipped)
+    public static boolean settleLookup(RLAPILyricsWorker w) {
+        if (!skipping) return true;
+        sleep(LYRICS_SETTLE_MS);
+        if (!w.key.equals(trackKey)) return false;
+        skipping = false;
+        return true;
     }
 
     // MARKER: player instances (TIDAL runs several per track)
@@ -531,6 +554,8 @@ public final class RLLyrics {
     // Auto Sylla job once per track, true = running
     static boolean autoSylla(RLAPILyricsWorker w, String mode, String src) {
         if (w == null || !RLSettings.radiantAI()) return false;
+        // Old track came back late, skip it
+        if (!w.key.equals(trackKey)) return false;
         if (w.key.equals(autoSyllaTrack)) return autoSyllaRunning;
         autoSyllaTrack = w.key;
         autoSyllaRunning = true;
@@ -542,6 +567,9 @@ public final class RLLyrics {
     }
 
     static void runAutoSylla(RLAPILyricsWorker w, String mode, String src, int epoch) {
+        sleep(trackStartedAt + SYLLA_SETTLE_MS - SystemClock.elapsedRealtime());
+        // Skipped, never reaches Sylla
+        if (epoch != syllaEpoch) return;
         boolean untimed = "untimed".equals(mode) && src != null;
         boolean align = (untimed || "align".equals(mode)) && src != null;
         Object res = align ? align(w, src) : gen(w);
@@ -852,6 +880,14 @@ public final class RLLyrics {
     }
 
     // MARKER: threads + toasts
+
+    private static void sleep(long ms) {
+        if (ms <= 0) return;
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException ignored) {
+        }
+    }
 
     private static void background(Runnable r) {
         Thread t = new Thread(r);

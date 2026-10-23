@@ -60,6 +60,12 @@ jobs:
           name: rl-mobile-artifacts
           path: ./dist/
 
+      - name: Inject RL API creds
+        env:
+          RL_ACCESS_TOKEN_ID: ${{ secrets.RL_ACCESS_TOKEN_ID }}
+          RL_ACCESS_TOKEN: ${{ secrets.RL_ACCESS_TOKEN }}
+        run: bash tools/inject-secrets.sh patches
+
       - name: Prepare release assets
         run: |
           mv ./dist/app-release.apk ./dist/rl-manager.apk
