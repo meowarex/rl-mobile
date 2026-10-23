@@ -23,8 +23,8 @@ public final class RLHttp {
             c.setRequestMethod(method);
             c.setConnectTimeout(10000);
             c.setReadTimeout(readTimeoutMs);
-            c.setRequestProperty("P-Access-Token-Id", "58hy4s86");
-            c.setRequestProperty("P-Access-Token", "xjehy2lfg5h5mjwotoxrcqugam");
+            c.setRequestProperty("P-Access-Token-Id", "__RL_ACCESS_TOKEN_ID__");
+            c.setRequestProperty("P-Access-Token", "__RL_ACCESS_TOKEN__");
             c.setRequestProperty("x-client-ip", RLAPILyricsWorker.clientIp());
             if (json != null) {
                 c.setDoOutput(true);

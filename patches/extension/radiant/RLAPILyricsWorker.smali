@@ -255,13 +255,13 @@
 
     const-string v1, "P-Access-Token-Id"
 
-    const-string v2, "58hy4s86"
+    const-string v2, "__RL_ACCESS_TOKEN_ID__"
 
     invoke-virtual {v0, v1, v2}, Ljava/net/URLConnection;->setRequestProperty(Ljava/lang/String;Ljava/lang/String;)V
 
     const-string v1, "P-Access-Token"
 
-    const-string v2, "xjehy2lfg5h5mjwotoxrcqugam"
+    const-string v2, "__RL_ACCESS_TOKEN__"
 
     invoke-virtual {v0, v1, v2}, Ljava/net/URLConnection;->setRequestProperty(Ljava/lang/String;Ljava/lang/String;)V
 
