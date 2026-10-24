@@ -2,27 +2,21 @@ package com.meowarex.rlmobile.ui.screens.patchopts
 
 import android.content.Context
 import android.content.pm.PackageManager.NameNotFoundException
-import android.util.Log
 import androidx.compose.runtime.*
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.navigator.Navigator
 import com.meowarex.rlmobile.ui.util.ScreenWithResult
-import com.github.diamondminer88.zip.ZipReader
-import com.meowarex.rlmobile.BuildConfig
+import com.meowarex.rlmobile.manager.PatchManifestLoader
 import com.meowarex.rlmobile.manager.PathManager
 import com.meowarex.rlmobile.manager.PreferencesManager
+import com.meowarex.rlmobile.network.utils.SemVer
 import com.meowarex.rlmobile.ui.screens.componentopts.ComponentOptionsScreen
 import com.meowarex.rlmobile.ui.screens.componentopts.PatchComponent
 import com.meowarex.rlmobile.ui.util.pushForResult
 import com.meowarex.rlmobile.util.*
-import com.meowarex.rlmobile.manager.download.IDownloadManager
-import com.meowarex.rlmobile.manager.download.KtorDownloadManager
-import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
-import com.meowarex.rlmobile.network.utils.getOrThrow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import java.io.File
 
 class PatchOptionsModel(
     prefilledOptions: PatchOptions,
@@ -30,8 +24,7 @@ class PatchOptionsModel(
     private val prefs: PreferencesManager,
     private val paths: PathManager,
     private val json: Json,
-    private val github: RadiantLyricsGithubService,
-    private val downloader: KtorDownloadManager,
+    private val manifests: PatchManifestLoader,
 ) : ScreenModel {
     var packageName by mutableStateOf(prefilledOptions.packageName)
         private set
@@ -76,6 +69,9 @@ class PatchOptionsModel(
     var debuggable by mutableStateOf(prefilledOptions.debuggable)
         private set
 
+    // Outdated Manager, stays on the installed patches
+    private val pinnedPatchesVersion = prefilledOptions.pinnedPatchesVersion
+
     fun changeDebuggable(value: Boolean) {
         debuggable = value
     }
@@ -99,6 +95,10 @@ class PatchOptionsModel(
         private set
 
     var specsLoading by mutableStateOf(false)
+        private set
+
+    /** True once the real manifest has loaded */
+    var specsReady by mutableStateOf(false)
         private set
 
     var patchStates by mutableStateOf(prefilledOptions.patchStates)
@@ -315,77 +315,32 @@ class PatchOptionsModel(
             normalizeChoiceSelections(loaded)
             validatePatchSelection()
             specsLoading = false
+            specsReady = true
         }
     }
 
     private fun loadManifestSpecs(component: PatchComponent): List<PatchSpec>? =
-        loadManifestSpecs(component.getFile(paths))
-
-    private fun loadManifestSpecs(file: File): List<PatchSpec>? {
-        if (!file.exists()) return null
-        return try {
-            val bytes = ZipReader(file).use { it.openEntry(MANIFEST_NAME)?.read() } ?: return null
-            json.decodeFromString(PatchManifest.serializer(), bytes.decodeToString())
-                .patches
-                .sortedBy { it.order }   // manifest is authoritative for UI order (not KnownPatch)
-                .takeIf { it.isNotEmpty() }
-        } catch (t: Throwable) {
-            Log.w(BuildConfig.TAG, "Failed to parse $MANIFEST_NAME; using built-in list", t)
-            null
-        }
-    }
-
-    /**
-     * Pulls the patch list from the latest GitHub release's patches.zip manifest
-     */
-    private suspend fun loadLatestReleaseSpecs(): List<PatchSpec>? = try {
-        val release = github.getLatestRelease().getOrThrow()
-        val url = release.assets
-            .find { it.name == RadiantLyricsGithubService.PATCHES_ASSET_NAME }
-            ?.browserDownloadUrl
-        if (url == null) {
-            Log.w(BuildConfig.TAG, "Latest release ${release.tagName} has no patches.zip asset; using built-in list")
-            null
-        } else {
-            // Cached per release tag so re-opening the screen doesn't re-download the same zip.
-            val dest = paths.cacheDownloadDir.resolve("manifest-${release.tagName}.zip")
-                .apply { parentFile?.mkdirs() }
-            if (dest.exists() || downloader.download(url, dest) is IDownloadManager.Result.Success) {
-                loadManifestSpecs(dest).also { loaded ->
-                    if (loaded != null) {
-                        Log.i(BuildConfig.TAG, "Loaded ${loaded.size} patches from latest release ${release.tagName} manifest")
-                    } else {
-                        Log.w(BuildConfig.TAG, "Latest release ${release.tagName} ships no manifest.json; using built-in list")
-                    }
-                }
-            } else {
-                null
-            }
-        }
-    } catch (t: Throwable) {
-        Log.w(BuildConfig.TAG, "Failed to load latest release manifest; using built-in list", t)
-        null
-    }
-
-    private fun loadCachedReleaseManifestSpecs(): List<PatchSpec>? =
-        paths.cacheDownloadDir
-            .listFiles { f -> f.name.startsWith("manifest-") && f.name.endsWith(".zip") }
-            ?.maxByOrNull { it.lastModified() }
-            ?.let { loadManifestSpecs(it) }
-            ?.also { Log.i(BuildConfig.TAG, "Loaded ${it.size} patches from cached release manifest (offline)") }
+        manifests.fromZip(component.getFile(paths))
 
     /** Default (non-custom) source: latest release manifest → last cached manifest → built-in list. */
     private fun loadDefaultSpecs() = screenModelScope.launchIO {
         mainThread { specsLoading = true }
         // Only hit the network when actually online
-        val loaded = (if (context.isOnline()) loadLatestReleaseSpecs() else null)
-            ?: loadCachedReleaseManifestSpecs() ?: builtinSpecs
+        val online = context.isOnline()
+        val pinned = pinnedPatchesVersion?.let(SemVer::parseOrNull)
+        val loaded = if (pinned != null) {
+            // Never the newer release lists
+            manifests.forPatchesVersion(pinned, online) ?: builtinSpecs
+        } else {
+            (if (online) manifests.latestRelease() else null) ?: manifests.cachedRelease() ?: builtinSpecs
+        }
         mainThread {
             specs = loaded
             applyLegacyVariants(loaded)
             normalizeChoiceSelections(loaded)
             validatePatchSelection()
             specsLoading = false
+            specsReady = true
         }
     }
 
@@ -415,6 +370,8 @@ class PatchOptionsModel(
             optionFloats = optionFloats,
             optionBools = optionBools,
             optionInts = optionInts,
+            // Custom patches (dev options) skip the pin
+            pinnedPatchesVersion = pinnedPatchesVersion.takeIf { customPatches == null },
         )
     }
 
@@ -464,8 +421,6 @@ class PatchOptionsModel(
     }
 
     companion object {
-        private const val MANIFEST_NAME = "manifest.json"
-
         private val PACKAGE_REGEX = """^[a-z]\w*(\.[a-z]\w*)+$"""
             .toRegex(RegexOption.IGNORE_CASE)
     }

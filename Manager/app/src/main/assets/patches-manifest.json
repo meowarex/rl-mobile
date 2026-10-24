@@ -749,6 +749,12 @@
           "default": false,
           "inline": true,
           "aboveVariants": true,
+          "fileNames": [
+            "mini-player-floating-nav-inset.patch"
+          ],
+          "extensionFiles": [
+            "radiant/MiniNavInset.smali"
+          ],
           "variantFileNames": {
             "1": [
               "mini-player-floating-black.patch"

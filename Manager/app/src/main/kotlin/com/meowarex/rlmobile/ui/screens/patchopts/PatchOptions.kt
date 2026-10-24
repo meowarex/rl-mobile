@@ -38,6 +38,10 @@ data class PatchOptions(
     val optionFloats: Map<String, Float> = emptyMap(),
     val optionBools: Map<String, Boolean> = emptyMap(),
     val optionInts: Map<String, Int> = emptyMap(),
+
+    /** Patches release to repatch on while the Manager is outdated */
+    @kotlinx.serialization.Transient
+    val pinnedPatchesVersion: String? = null,
 ) : Parcelable {
 
     fun isEnabled(spec: PatchSpec): Boolean =

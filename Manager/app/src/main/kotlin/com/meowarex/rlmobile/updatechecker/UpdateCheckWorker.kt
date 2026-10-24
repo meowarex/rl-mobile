@@ -54,11 +54,11 @@ class UpdateCheckWorker(
         if (current >= version) return Result.success()
 
         Log.i(BuildConfig.TAG, "Update available: $version (installed $current)")
-        postUpdateNotification(version.toString())
+        postUpdateNotification(version.toString(), github.getLatestCommitTitles())
         return Result.success()
     }
 
-    private fun postUpdateNotification(version: String) {
+    private fun postUpdateNotification(version: String, commits: List<String>) {
         val nm = applicationContext.getSystemService<NotificationManager>() ?: return
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -89,10 +89,20 @@ class UpdateCheckWorker(
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
 
+        val text = applicationContext.getString(R.string.notif_update_text, version)
+        // Latest commits so people know why to update
+        val bigText = if (commits.isEmpty()) text else buildString {
+            append(text)
+            append("\n\n")
+            append(applicationContext.getString(R.string.notif_update_latest_changes))
+            commits.forEach { append("\n• ").append(it) }
+        }
+
         val notif = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_monochrome)
             .setContentTitle(applicationContext.getString(R.string.notif_update_title))
-            .setContentText(applicationContext.getString(R.string.notif_update_text, version))
+            .setContentText(text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(bigText))
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()

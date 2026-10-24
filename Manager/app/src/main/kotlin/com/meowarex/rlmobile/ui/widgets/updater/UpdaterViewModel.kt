@@ -190,7 +190,8 @@ class UpdaterViewModel(
             targetReleaseUrl = release.htmlUrl
             targetVersion = newVersion
             targetApkUrl = apkUrl
-            if (!alreadyKnown) showDialog = true
+            // Only pops up by itself on release builds
+            if (!alreadyKnown && BuildConfig.RELEASE) showDialog = true
         }
     }
 

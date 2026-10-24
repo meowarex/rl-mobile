@@ -37,6 +37,9 @@ import com.meowarex.rlmobile.ui.components.radiant.RadiantSwitch
 import com.meowarex.rlmobile.ui.components.radiant.RadiantDialog
 import com.meowarex.rlmobile.ui.theme.radiantSurface
 import com.meowarex.rlmobile.ui.theme.glassSurface
+import com.meowarex.rlmobile.ui.components.NewPin
+import com.meowarex.rlmobile.ui.components.TitleWithNewPin
+import com.meowarex.rlmobile.ui.screens.patchopts.LocalPatchChanges
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
 import com.meowarex.rlmobile.ui.screens.patchopts.conflictingChoices
 import com.meowarex.rlmobile.ui.screens.patchopts.isInline
@@ -72,8 +75,8 @@ fun PatchSelectionAccordion(
         label = "patch-accordion-arrow",
     )
 
-    var lockInfo by remember { mutableStateOf<LockInfo?>(null) }
-    var advancedFor by remember { mutableStateOf<PatchSpec?>(null) }
+    val changes = LocalPatchChanges.current
+    val newCount = specs.count(changes::hasNew)
 
     Column(
         modifier = modifier
@@ -98,10 +101,16 @@ fun PatchSelectionAccordion(
                 verticalArrangement = Arrangement.spacedBy(2.dp),
                 modifier = Modifier.weight(1f),
             ) {
-                Text(
-                    text = stringResource(titleRes),
-                    style = MaterialTheme.typography.titleMedium,
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(titleRes),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    if (newCount > 0) NewPin(text = stringResource(R.string.patchopts_new_count, newCount))
+                }
                 Text(
                     text = stringResource(
                         R.string.patchopts_patches_summary,
@@ -138,168 +147,202 @@ fun PatchSelectionAccordion(
                         .padding(bottom = 8.dp),
                 )
 
-                for (patch in specs) key(patch.id) {
-                    val checked = isEnabled(patch)
-                    val lock = lockState(patch)
+                PatchSelectionList(
+                    specs = specs,
+                    isEnabled = isEnabled,
+                    onToggle = onToggle,
+                    lockState = lockState,
+                    variantIndex = variantIndex,
+                    onSelectVariant = onSelectVariant,
+                    optionState = optionState,
+                )
+            }
+        }
+    }
+}
 
-                    val inlineOptions = patch.advancedOptions.filter { it.isInline }
-                    val hasSheetOptions = patch.advancedOptions.any { !it.isInline }
-                    val companionApp = patch.companionApp
-                    val hasSettings = patch.variants.isNotEmpty() || inlineOptions.isNotEmpty() || hasSheetOptions ||
-                        companionApp != null
+/**
+ * Patch rows without the accordion around them
+ */
+@Composable
+fun PatchSelectionList(
+    specs: List<PatchSpec>,
+    isEnabled: (PatchSpec) -> Boolean,
+    onToggle: (PatchSpec, Boolean) -> Unit,
+    lockState: (PatchSpec) -> PatchLock,
+    variantIndex: (PatchSpec) -> Int,
+    onSelectVariant: (PatchSpec, Int) -> Unit,
+    optionState: PatchOptionState,
+) {
+    val changes = LocalPatchChanges.current
+    var lockInfo by remember { mutableStateOf<LockInfo?>(null) }
+    var advancedFor by remember { mutableStateOf<PatchSpec?>(null) }
 
-                    // When a patch is enabled and has settings show a carded view of the settings
-                    val carded = checked && hasSettings
+    for (patch in specs) key(patch.id) {
+        val checked = isEnabled(patch)
+        val lock = lockState(patch)
+
+        val inlineOptions = patch.advancedOptions.filter { it.isInline }
+        val hasSheetOptions = patch.advancedOptions.any { !it.isInline }
+        val companionApp = patch.companionApp
+        val hasSettings = patch.variants.isNotEmpty() || inlineOptions.isNotEmpty() || hasSheetOptions ||
+            companionApp != null
+
+        // When a patch is enabled and has settings show a carded view of the settings
+        val carded = checked && hasSettings
+        Column(
+            modifier = if (carded) {
+                Modifier
+                    .fillMaxWidth()
+                    .glassSurface(MaterialTheme.shapes.medium)
+                    .clip(MaterialTheme.shapes.medium)
+                    .padding(horizontal = 12.dp, vertical = 4.dp)
+            } else {
+                Modifier.fillMaxWidth()
+            },
+        ) {
+            PatchSwitchRow(
+                title = patch.title,
+                description = patch.description,
+                isNew = changes.isNew(patch),
+                hasNewOptions = !changes.isNew(patch) && changes.hasNew(patch),
+                checked = checked,
+                lock = lock,
+                onCheckedChange = { onToggle(patch, it) },
+                onLockedTap = { lockInfo = LockInfo(patch, lock) },
+            )
+
+            if (hasSettings) {
+                AnimatedVisibility(visible = checked) {
                     Column(
-                        modifier = if (carded) {
-                            Modifier
-                                .fillMaxWidth()
-                                .glassSurface(MaterialTheme.shapes.medium)
-                                .clip(MaterialTheme.shapes.medium)
-                                .padding(horizontal = 12.dp, vertical = 4.dp)
-                        } else {
-                            Modifier.fillMaxWidth()
-                        },
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
                     ) {
-                        PatchSwitchRow(
-                            title = patch.title,
-                            description = patch.description,
-                            checked = checked,
-                            lock = lock,
-                            onCheckedChange = { onToggle(patch, it) },
-                            onLockedTap = { lockInfo = LockInfo(patch, lock) },
-                        )
+                        val resolvedVariant =
+                            if (patch.variants.isNotEmpty())
+                                patch.resolveVariantIndex(variantIndex(patch)) {
+                                    optionState.toggle(patch, it)
+                                }
+                            else -1
+                        // Toggles that change the variants go above
+                        for (option in inlineOptions) key("above-" + option.key) {
+                            if (option is OptionSpec.Toggle && option.aboveVariants) {
+                                InlineToggleRow(
+                                    title = option.title,
+                                    description = option.description,
+                                    isNew = changes.isNew(patch, option),
+                                    checked = optionState.toggle(patch, option),
+                                    onCheckedChange = { optionState.setToggle(patch, option, it) },
+                                )
+                            }
+                        }
+                        if (patch.variants.isNotEmpty()) {
+                            val effective = patch.effectiveVariants { optionState.toggle(patch, it) }
+                            PatchVariantSelector(
+                                variants = effective,
+                                selectedIndex = effective
+                                    .indexOfFirst { it.originalIndex == resolvedVariant }
+                                    .coerceAtLeast(0),
+                                onSelect = { pos ->
+                                    effective.getOrNull(pos)?.let { onSelectVariant(patch, it.originalIndex) }
+                                },
+                            )
+                        }
 
-                        if (hasSettings) {
-                            AnimatedVisibility(visible = checked) {
-                                Column(
-                                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 8.dp),
-                                ) {
-                                    val resolvedVariant =
-                                        if (patch.variants.isNotEmpty())
-                                            patch.resolveVariantIndex(variantIndex(patch)) {
-                                                optionState.toggle(patch, it)
-                                            }
-                                        else -1
-                                    // Toggles that change the variants go above
-                                    for (option in inlineOptions) key("above-" + option.key) {
-                                        if (option is OptionSpec.Toggle && option.aboveVariants) {
-                                            InlineToggleRow(
-                                                title = option.title,
-                                                description = option.description,
-                                                checked = optionState.toggle(patch, option),
-                                                onCheckedChange = { optionState.setToggle(patch, option, it) },
-                                            )
-                                        }
-                                    }
-                                    if (patch.variants.isNotEmpty()) {
-                                        val effective = patch.effectiveVariants { optionState.toggle(patch, it) }
-                                        PatchVariantSelector(
-                                            variants = effective,
-                                            selectedIndex = effective
-                                                .indexOfFirst { it.originalIndex == resolvedVariant }
-                                                .coerceAtLeast(0),
-                                            onSelect = { pos ->
-                                                effective.getOrNull(pos)?.let { onSelectVariant(patch, it.originalIndex) }
-                                            },
+                        for (option in inlineOptions) key(option.key) {
+                            when (option) {
+                                is OptionSpec.Toggle -> {
+                                    val show = !option.aboveVariants && (option.requiresVariant == null ||
+                                        option.requiresVariant == resolvedVariant)
+                                    if (show) {
+                                        InlineToggleRow(
+                                            title = option.title,
+                                            description = option.description,
+                                            isNew = changes.isNew(patch, option),
+                                            checked = optionState.toggle(patch, option),
+                                            onCheckedChange = { optionState.setToggle(patch, option, it) },
+                                            enabled = patch.lockingToggle(option) { optionState.toggle(patch, it) } == null,
                                         )
                                     }
-
-                                    for (option in inlineOptions) key(option.key) {
-                                        when (option) {
-                                            is OptionSpec.Toggle -> {
-                                                val show = !option.aboveVariants && (option.requiresVariant == null ||
-                                                    option.requiresVariant == resolvedVariant)
-                                                if (show) {
-                                                    InlineToggleRow(
-                                                        title = option.title,
-                                                        description = option.description,
-                                                        checked = optionState.toggle(patch, option),
-                                                        onCheckedChange = { optionState.setToggle(patch, option, it) },
-                                                        enabled = patch.lockingToggle(option) { optionState.toggle(patch, it) } == null,
-                                                    )
-                                                }
-                                            }
-                                            is OptionSpec.Choice -> {
-                                                val requiredToggle = option.requiresOption?.let { key ->
-                                                    patch.advancedOptions.filterIsInstance<OptionSpec.Toggle>()
-                                                        .firstOrNull { it.key == key }
-                                                }
-                                                if (requiredToggle == null || optionState.toggle(patch, requiredToggle)) {
-                                                    ChoiceOptionRow(
-                                                        title = option.title,
-                                                        description = option.description,
-                                                        entries = option.entries,
-                                                        selectedIndex = optionState.choice(patch, option),
-                                                        forceDropdown = option.forceDropdown,
-                                                        disabledIndices = patch.conflictingChoices(option)
-                                                            .map { optionState.choice(patch, it) }
-                                                            .filter { it != 0 }
-                                                            .toSet(),
-                                                        onSelect = { optionState.setChoice(patch, option, it) },
-                                                    )
-                                                }
-                                            }
-                                            else -> Unit
-                                        }
+                                }
+                                is OptionSpec.Choice -> {
+                                    val requiredToggle = option.requiresOption?.let { key ->
+                                        patch.advancedOptions.filterIsInstance<OptionSpec.Toggle>()
+                                            .firstOrNull { it.key == key }
                                     }
-
-                                    if (hasSheetOptions) {
-                                        Box(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            contentAlignment = Alignment.Center,
-                                        ) {
-                                            AdvancedOptionsButton(
-                                                modified = optionState.isModified(patch),
-                                                onClick = { advancedFor = patch },
-                                            )
-                                        }
-                                    }
-
-                                    if (companionApp != null) {
-                                        val context = LocalContext.current
-                                        val lifecycleOwner = LocalLifecycleOwner.current
-                                        var installState by remember { mutableStateOf(PebbleWatchapp.InstallState.Unknown) }
-                                        // Recheck on resume
-                                        LaunchedEffect(lifecycleOwner) {
-                                            lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                                                installState = PebbleWatchapp.installState(context)
-                                            }
-                                        }
-                                        val installed = installState == PebbleWatchapp.InstallState.Installed
-                                        Row(
-                                            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                                            modifier = Modifier.fillMaxWidth(),
-                                        ) {
-                                            RadiantButton(
-                                                text = if (installed) {
-                                                    stringResource(R.string.patchopts_companion_installed)
-                                                } else {
-                                                    companionApp.installTitle.ifBlank { stringResource(R.string.patchopts_companion_install) }
-                                                },
-                                                icon = painterResource(if (installed) R.drawable.ic_check_circle else R.drawable.ic_download),
-                                                onClick = { PebbleWatchapp.install(context, companionApp) },
-                                                enabled = !installed && PebbleWatchapp.canInstall(companionApp),
-                                                size = RadiantButtonSize.Small,
-                                                fillWidth = true,
-                                                modifier = Modifier.weight(1f),
-                                            )
-                                            RadiantButton(
-                                                text = companionApp.customizeTitle
-                                                    .ifBlank { stringResource(R.string.patchopts_companion_customize) },
-                                                icon = painterResource(R.drawable.ic_tune),
-                                                onClick = { PebbleWatchapp.openSettings(context) },
-                                                enabled = installed,
-                                                size = RadiantButtonSize.Small,
-                                                fillWidth = true,
-                                                modifier = Modifier.weight(1f),
-                                            )
-                                        }
+                                    if (requiredToggle == null || optionState.toggle(patch, requiredToggle)) {
+                                        ChoiceOptionRow(
+                                            title = option.title,
+                                            description = option.description,
+                                            isNew = changes.isNew(patch, option),
+                                            entries = option.entries,
+                                            selectedIndex = optionState.choice(patch, option),
+                                            forceDropdown = option.forceDropdown,
+                                            disabledIndices = patch.conflictingChoices(option)
+                                                .map { optionState.choice(patch, it) }
+                                                .filter { it != 0 }
+                                                .toSet(),
+                                            onSelect = { optionState.setChoice(patch, option, it) },
+                                        )
                                     }
                                 }
+                                else -> Unit
+                            }
+                        }
+
+                        if (hasSheetOptions) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                AdvancedOptionsButton(
+                                    modified = optionState.isModified(patch),
+                                    hasNew = changes.hasNewSheetOptions(patch),
+                                    onClick = { advancedFor = patch },
+                                )
+                            }
+                        }
+
+                        if (companionApp != null) {
+                            val context = LocalContext.current
+                            val lifecycleOwner = LocalLifecycleOwner.current
+                            var installState by remember { mutableStateOf(PebbleWatchapp.InstallState.Unknown) }
+                            // Recheck on resume
+                            LaunchedEffect(lifecycleOwner) {
+                                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                                    installState = PebbleWatchapp.installState(context)
+                                }
+                            }
+                            val installed = installState == PebbleWatchapp.InstallState.Installed
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                RadiantButton(
+                                    text = if (installed) {
+                                        stringResource(R.string.patchopts_companion_installed)
+                                    } else {
+                                        companionApp.installTitle.ifBlank { stringResource(R.string.patchopts_companion_install) }
+                                    },
+                                    icon = painterResource(if (installed) R.drawable.ic_check_circle else R.drawable.ic_download),
+                                    onClick = { PebbleWatchapp.install(context, companionApp) },
+                                    enabled = !installed && PebbleWatchapp.canInstall(companionApp),
+                                    size = RadiantButtonSize.Small,
+                                    fillWidth = true,
+                                    modifier = Modifier.weight(1f),
+                                )
+                                RadiantButton(
+                                    text = companionApp.customizeTitle
+                                        .ifBlank { stringResource(R.string.patchopts_companion_customize) },
+                                    icon = painterResource(R.drawable.ic_tune),
+                                    onClick = { PebbleWatchapp.openSettings(context) },
+                                    enabled = installed,
+                                    size = RadiantButtonSize.Small,
+                                    fillWidth = true,
+                                    modifier = Modifier.weight(1f),
+                                )
                             }
                         }
                     }
@@ -331,14 +374,21 @@ private fun AdvancedOptionsButton(
     modified: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    hasNew: Boolean = false,
 ) {
-    RadiantButton(
-        text = stringResource(R.string.patchopts_advanced_button) + if (modified) " •" else "",
-        icon = painterResource(R.drawable.ic_tune),
-        onClick = onClick,
-        size = RadiantButtonSize.Small,
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier,
-    )
+    ) {
+        RadiantButton(
+            text = stringResource(R.string.patchopts_advanced_button) + if (modified) " •" else "",
+            icon = painterResource(R.drawable.ic_tune),
+            onClick = onClick,
+            size = RadiantButtonSize.Small,
+        )
+        if (hasNew) NewPin()
+    }
 }
 
 @Composable
@@ -349,6 +399,7 @@ private fun InlineToggleRow(
     onCheckedChange: (Boolean) -> Unit,
     // False when another option pins it
     enabled: Boolean = true,
+    isNew: Boolean = false,
 ) {
     val interactionSource = remember(::MutableInteractionSource)
 
@@ -370,7 +421,7 @@ private fun InlineToggleRow(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             modifier = Modifier.weight(1f),
         ) {
-            Text(text = title, style = MaterialTheme.typography.titleSmall)
+            TitleWithNewPin(title = title, isNew = isNew, style = MaterialTheme.typography.titleSmall)
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodySmall,
@@ -394,6 +445,9 @@ private fun PatchSwitchRow(
     lock: PatchLock,
     onCheckedChange: (Boolean) -> Unit,
     onLockedTap: () -> Unit,
+    isNew: Boolean = false,
+    // Only its options are new
+    hasNewOptions: Boolean = false,
 ) {
     val interactionSource = remember(::MutableInteractionSource)
     val isLocked = lock !is PatchLock.Free
@@ -417,9 +471,11 @@ private fun PatchSwitchRow(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             modifier = Modifier.weight(1f),
         ) {
-            Text(
-                text = title,
+            TitleWithNewPin(
+                title = title,
+                isNew = isNew || hasNewOptions,
                 style = MaterialTheme.typography.titleSmall,
+                pinText = stringResource(if (isNew) R.string.patchopts_new else R.string.patchopts_new_options),
             )
             Text(
                 text = description,

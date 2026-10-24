@@ -4,7 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -226,7 +231,7 @@ public final class RLMenu implements yl0.a, View.OnClickListener, View.OnApplyWi
         String key = RLLyrics.trackKey;
         boolean retime = ai && key != null && key.equals(RLLyrics.retimeTrack);
         View flush = retime
-                ? item(l, "ic_sparkle", "Retime Lyrics using Sylla!", !busy, FLUSH, 0)
+                ? item(l, "ic_media_lyric_sync_medium", "Retime Lyrics using Sylla!", !busy, FLUSH, 0)
                 : item(l, "ic_media_lyric_sync_medium", "Flush Lyrics", !busy, FLUSH, 0);
         if (retime && !busy) rainbow(flush);
         l.addView(flush);
@@ -333,13 +338,23 @@ public final class RLMenu implements yl0.a, View.OnClickListener, View.OnApplyWi
         return f;
     }
 
-    // Rainbow title like the desktop Sylla buttons
+    // Rainbow icon for the Sylla retime
     private static void rainbow(View row) {
-        TextView tv = (TextView) row.findViewById(res(row.getContext(), "title", "id"));
-        if (tv == null) return;
-        float w = tv.getPaint().measureText(String.valueOf(tv.getText()));
-        tv.getPaint().setShader(new LinearGradient(0f, 0f, Math.max(1f, w), 0f, RAINBOW, null, Shader.TileMode.CLAMP));
-        tv.setTextColor(0xFFFFFFFF);
+        ImageView icon = (ImageView) row.findViewById(res(row.getContext(), "icon", "id"));
+        if (icon == null || icon.getDrawable() == null) return;
+        int px = dp(row.getContext(), 24);
+        Bitmap b = Bitmap.createBitmap(px, px, Bitmap.Config.ARGB_8888);
+        Canvas cv = new Canvas(b);
+        Drawable d = icon.getDrawable();
+        d.setTint(0xFFFFFFFF);
+        d.setBounds(0, 0, px, px);
+        d.draw(cv);
+        // Gradient only where the icon is
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        p.setShader(new LinearGradient(0f, 0f, px, 0f, RAINBOW, null, Shader.TileMode.CLAMP));
+        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        cv.drawRect(0f, 0f, px, px, p);
+        icon.setImageBitmap(b);
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.meowarex.rlmobile.BuildConfig
 import com.meowarex.rlmobile.network.models.GithubRelease
 import com.meowarex.rlmobile.network.models.RLBuildInfo
 import com.meowarex.rlmobile.network.utils.ApiResponse
+import com.meowarex.rlmobile.network.utils.listed
+import com.meowarex.rlmobile.network.utils.title
 import io.ktor.client.request.header
 import io.ktor.client.request.url
 import io.ktor.http.HttpHeaders
@@ -83,6 +85,16 @@ class RadiantLyricsGithubService(
                 header(HttpHeaders.CacheControl, "public, max-age=120, s-maxage=120")
             }
         }
+
+    /** Top commits of the in-app list, for the update notification */
+    suspend fun getLatestCommitTitles(count: Int = 3): List<String> = try {
+        when (val response = getCommits(page = 0)) {
+            is ApiResponse.Success -> response.data.listed().take(count).map { it.title }
+            else -> emptyList()
+        }
+    } catch (t: Throwable) {
+        emptyList()
+    }
 
     companion object {
         const val REPO_OWNER = BuildConfig.PATCHES_REPO_OWNER

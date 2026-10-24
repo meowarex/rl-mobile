@@ -10,11 +10,13 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +47,12 @@ import com.meowarex.rlmobile.ui.components.Tag
 import com.meowarex.rlmobile.ui.theme.radiantStyle
 import com.meowarex.rlmobile.ui.screens.about.AboutScreen
 import com.meowarex.rlmobile.ui.screens.home.components.CommitList
+import com.meowarex.rlmobile.ui.screens.home.components.UpdatedPatchesDialog
+import com.meowarex.rlmobile.ui.screens.home.components.iconRes
+import com.meowarex.rlmobile.ui.screens.home.components.labelRes
+import com.meowarex.rlmobile.ui.screens.patching.PatchingScreen
+import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptions
+import com.meowarex.rlmobile.ui.screens.patchopts.PatchUpdateKind
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionsScreen
 import com.meowarex.rlmobile.ui.screens.settings.SettingsScreen
 import com.meowarex.rlmobile.ui.widgets.managerupdate.ManagerUpdateDialog
@@ -78,6 +86,8 @@ class HomeScreen : Screen, Parcelable {
         val managerUpdateAvailable = updater.targetVersion != null
         val refreshing = model.refreshing
         val refreshAngle = rememberRefreshAngle()
+        // Options for the updated patches dialog
+        var updateDialogOptions by rememberSaveable { mutableStateOf<PatchOptions?>(null) }
 
         LifecycleResumeEffect(Unit) {
             model.refresh(delay = true)
@@ -149,15 +159,39 @@ class HomeScreen : Screen, Parcelable {
                         state = state,
                         commits = model.commits,
                         managerUpdateAvailable = managerUpdateAvailable,
+                        isDevMode = model.isDevMode,
                         onInstall = { navigator.pushOnce(PatchOptionsScreen()) },
                         onRepatch = {
                             scope.launchIO {
-                                val screen = model.createRepatchScreen() ?: return@launchIO
+                                val screen = model.createRepatchScreen(managerUpdateAvailable) ?: return@launchIO
                                 mainThread { navigator.push(screen) }
                             }
                         },
                         onLaunch = model::launchInstall,
                         onInfo = model::openCurrentAppInfo,
+                        onManagerUpdate = updater::reopenDialog,
+                        onPatchesTag = {
+                            scope.launchIO {
+                                val options = model.createRepatchOptions() ?: return@launchIO
+                                mainThread { updateDialogOptions = options }
+                            }
+                        },
+                    )
+                }
+
+                val loaded = model.state as? HomeState.Loaded
+                val changes = loaded?.patchChanges
+                val dialogOptions = updateDialogOptions
+                if (dialogOptions != null && loaded != null && changes != null) {
+                    UpdatedPatchesDialog(
+                        prefilledOptions = dialogOptions,
+                        changes = changes,
+                        installEnabled = loaded.canInstall(managerUpdateAvailable),
+                        onDismiss = { updateDialogOptions = null },
+                        onInstall = { config ->
+                            updateDialogOptions = null
+                            navigator.push(PatchingScreen(config))
+                        },
                     )
                 }
 
@@ -177,36 +211,37 @@ private fun ColumnScope.HomeContent(
     state: HomeState.Loaded,
     commits: kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<com.meowarex.rlmobile.network.models.GithubCommit>>,
     managerUpdateAvailable: Boolean,
+    isDevMode: Boolean,
     onInstall: () -> Unit,
     onRepatch: () -> Unit,
+    onManagerUpdate: () -> Unit,
     onLaunch: () -> Unit,
     onInfo: () -> Unit,
+    onPatchesTag: () -> Unit,
 ) {
     val install = state.install
     val currentVersionName = (install?.version as? com.meowarex.rlmobile.ui.util.TidalVersion.Existing)
         ?.let { "v${it.name} (build ${it.code})" }
     val latestVersionName = state.latestTidalVersionCode?.let { "build $it" }
 
-    val patchesBehind = install != null && install.patchesUpToDate == false
-    val tidalBehind = install != null && install.tidalUpToDate == false
+    val patchesBehind = state.patchesBehind
+    val tidalBehind = state.tidalBehind
 
     InstallHeroCard(
         install = install,
         currentVersionName = currentVersionName,
         latestVersionName = latestVersionName,
-        patchesBehind = patchesBehind,
+        patchUpdate = state.patchChanges?.takeIf { patchesBehind }?.kind,
         tidalBehind = tidalBehind,
         onLaunch = onLaunch,
         onInfo = onInfo,
+        onPatchesTag = onPatchesTag,
     )
 
     val blockedByManagerUpdate = managerUpdateAvailable && (patchesBehind || tidalBehind)
-    val canLocalRepatch = install != null && state.offlineRepatchReady
-    val onlineEnabled = state.latestTidalVersionCode != null || install != null
-    val buttonEnabled = !blockedByManagerUpdate && (if (state.offline) canLocalRepatch else onlineEnabled)
+    val buttonEnabled = state.canInstall(managerUpdateAvailable)
 
     val label = when {
-        blockedByManagerUpdate -> "Manager Update Required"
         state.offline && install != null -> "Local Repatch"
         state.offline -> "No Network"
         install == null && state.latestTidalVersionCode == null -> "Loading…"
@@ -217,18 +252,39 @@ private fun ColumnScope.HomeContent(
         else -> "Repatch"
     }
 
-    // The main button (repatch or update button)
-    RadiantButton(
-        text = label,
-        icon = painterResource(
-            if (install == null) R.drawable.ic_download else R.drawable.ic_sparkle
-        ),
-        onClick = if (install == null) onInstall else onRepatch,
-        enabled = buttonEnabled,
-        style = RadiantButtonStyle.Accent,
-        size = RadiantButtonSize.Large,
-        fillWidth = true,
-    )
+    // Repatch still works, updating needs the new Manager
+    if (blockedByManagerUpdate) Row(
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        RadiantButton(
+            text = "Repatch",
+            icon = painterResource(R.drawable.ic_sparkle),
+            onClick = onRepatch,
+            enabled = state.canInstall(managerUpdateAvailable = false),
+            style = RadiantButtonStyle.Accent,
+            size = RadiantButtonSize.Large,
+            fillWidth = true,
+            modifier = Modifier.weight(1f),
+        )
+        ManagerUpdateButton(onClick = onManagerUpdate, modifier = Modifier.weight(1f))
+    } else if (install == null && managerUpdateAvailable && !isDevMode) {
+        // Fresh installs need the new Manager too
+        ManagerUpdateButton(onClick = onManagerUpdate, modifier = Modifier.fillMaxWidth())
+    } else {
+        // The main button (repatch or update button)
+        RadiantButton(
+            text = label,
+            icon = painterResource(
+                if (install == null) R.drawable.ic_download else R.drawable.ic_sparkle
+            ),
+            onClick = if (install == null) onInstall else onRepatch,
+            enabled = buttonEnabled,
+            style = RadiantButtonStyle.Accent,
+            size = RadiantButtonSize.Large,
+            fillWidth = true,
+        )
+    }
 
     if (state.offline && install != null) {
         Text(
@@ -252,6 +308,33 @@ private fun ColumnScope.HomeContent(
 }
 
 /**
+ * Greyed out, but still opens the update modal
+ */
+@Composable
+private fun ManagerUpdateButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier) {
+        RadiantButton(
+            text = "Update",
+            icon = painterResource(R.drawable.ic_update),
+            onClick = onClick,
+            enabled = false,
+            style = RadiantButtonStyle.Accent,
+            size = RadiantButtonSize.Large,
+            fillWidth = true,
+        )
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clip(RoundedCornerShape(RadiantButtonSize.Large.corner))
+                .clickable(onClick = onClick),
+        )
+    }
+}
+
+/**
  * The identity block: (what is installed & which build etc etc whatever)
  */
 @Composable
@@ -259,10 +342,12 @@ private fun InstallHeroCard(
     install: InstallData?,
     currentVersionName: String?,
     latestVersionName: String?,
-    patchesBehind: Boolean,
+    /** Shown once the update's changes are known */
+    patchUpdate: PatchUpdateKind?,
     tidalBehind: Boolean,
     onLaunch: () -> Unit,
     onInfo: () -> Unit,
+    onPatchesTag: () -> Unit,
 ) {
     val fallbackPainter = if (install?.icon == null) {
         // R.mipmap.ic_launcher is an adaptive-icon XML on API 26+, which painterResource cannot decode.
@@ -328,11 +413,12 @@ private fun InstallHeroCard(
                 }
             }
 
-            AnimatedVisibility(visible = patchesBehind || tidalBehind) {
+            AnimatedVisibility(visible = patchUpdate != null || tidalBehind) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    if (patchesBehind) Tag(
-                        text = "New Patches!",
-                        icon = painterResource(R.drawable.ic_sparkle),
+                    if (patchUpdate != null) Tag(
+                        text = stringResource(patchUpdate.labelRes),
+                        icon = painterResource(patchUpdate.iconRes),
+                        onClick = onPatchesTag,
                     )
                     if (tidalBehind) Tag(
                         text = "TIDAL Update!",

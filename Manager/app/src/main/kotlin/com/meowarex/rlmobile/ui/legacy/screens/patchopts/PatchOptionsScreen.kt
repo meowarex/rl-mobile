@@ -36,6 +36,8 @@ import org.koin.core.parameter.parametersOf
 @Parcelize
 class PatchOptionsScreen(
     private val prefilledOptions: PatchOptions? = null,
+    /** Marks what the patch update added */
+    private val patchChanges: PatchChanges? = null,
 ) : Screen, Parcelable {
     @IgnoredOnParcel
     override val key = "Legacy-PatchOptions"
@@ -45,53 +47,55 @@ class PatchOptionsScreen(
         val navigator = LocalNavigator.currentOrThrow
         val model = koinScreenModel<PatchOptionsModel> { parametersOf(prefilledOptions ?: PatchOptions.Default) }
 
-        PatchOptionsScreenContent(
-            isUpdate = prefilledOptions != null,
-            isDevMode = model.isDevMode,
+        CompositionLocalProvider(LocalPatchChanges provides (patchChanges ?: PatchChanges.None)) {
+            PatchOptionsScreenContent(
+                isUpdate = prefilledOptions != null,
+                isDevMode = model.isDevMode,
 
-            debuggable = model.debuggable,
-            setDebuggable = model::changeDebuggable,
-            bypassIncompatible = model.bypassIncompatible,
-            setBypassIncompatible = model::changeBypassIncompatible,
+                debuggable = model.debuggable,
+                setDebuggable = model::changeDebuggable,
+                bypassIncompatible = model.bypassIncompatible,
+                setBypassIncompatible = model::changeBypassIncompatible,
 
-            appName = model.appName,
-            appNameIsError = model.appNameIsError,
-            setAppName = model::changeAppName,
+                appName = model.appName,
+                appNameIsError = model.appNameIsError,
+                setAppName = model::changeAppName,
 
-            packageName = model.packageName,
-            packageNameState = model.packageNameState,
-            setPackageName = model::changePackageName,
+                packageName = model.packageName,
+                packageNameState = model.packageNameState,
+                setPackageName = model::changePackageName,
 
-            packageNameLocked = model.packageNameLocked,
-            onUnlockPackageName = model::unlockPackageName,
-            onLockPackageName = model::lockPackageName,
+                packageNameLocked = model.packageNameLocked,
+                onUnlockPackageName = model::unlockPackageName,
+                onLockPackageName = model::lockPackageName,
 
-            customTidalApk = model.customTidalApk,
-            customPatches = model.customPatches,
-            onSelectCustomTidalApk = {
-                model.selectCustomTidalApk(navigator) { default ->
-                    ComponentOptionsScreen(default = default, componentType = PatchComponent.Type.TidalApk)
-                }
-            },
-            onSelectCustomPatches = {
-                model.selectCustomPatches(navigator) { default ->
-                    ComponentOptionsScreen(default = default, componentType = PatchComponent.Type.Patches)
-                }
-            },
+                customTidalApk = model.customTidalApk,
+                customPatches = model.customPatches,
+                onSelectCustomTidalApk = {
+                    model.selectCustomTidalApk(navigator) { default ->
+                        ComponentOptionsScreen(default = default, componentType = PatchComponent.Type.TidalApk)
+                    }
+                },
+                onSelectCustomPatches = {
+                    model.selectCustomPatches(navigator) { default ->
+                        ComponentOptionsScreen(default = default, componentType = PatchComponent.Type.Patches)
+                    }
+                },
 
-            specs = model.specs,
-            isPatchEnabled = model::isPatchEnabled,
-            onTogglePatch = model::setPatchEnabled,
-            patchLockState = model::lockState,
-            variantIndex = model::variantIndex,
-            onSelectVariant = model::selectVariant,
-            optionState = model.optionState,
+                specs = model.specs,
+                isPatchEnabled = model::isPatchEnabled,
+                onTogglePatch = model::setPatchEnabled,
+                patchLockState = model::lockState,
+                variantIndex = model::variantIndex,
+                onSelectVariant = model::selectVariant,
+                optionState = model.optionState,
 
-            isConfigValid = model.isConfigValid,
-            onInstall = {
-                navigator.push(PatchingScreen(model.generateConfig()))
-            },
-        )
+                isConfigValid = model.isConfigValid,
+                onInstall = {
+                    navigator.push(PatchingScreen(model.generateConfig()))
+                },
+            )
+        }
     }
 }
 

@@ -19,6 +19,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.github.diamondminer88.zip.ZipReader
 import com.meowarex.rlmobile.BuildConfig
 import com.meowarex.rlmobile.R
+import com.meowarex.rlmobile.manager.PatchManifestLoader
 import com.meowarex.rlmobile.manager.PathManager
 import com.meowarex.rlmobile.manager.PreferencesManager
 import com.meowarex.rlmobile.manager.ReleaseInfoCache
@@ -28,8 +29,10 @@ import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
 import com.meowarex.rlmobile.network.utils.CommitsPagingSource
 import com.meowarex.rlmobile.network.utils.fold
 import com.meowarex.rlmobile.patcher.InstallMetadata
+import com.meowarex.rlmobile.ui.screens.patchopts.PatchChanges
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptions
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionsScreen
+import com.meowarex.rlmobile.ui.screens.patchopts.toCatalog
 import com.meowarex.rlmobile.ui.util.TidalVersion
 import com.meowarex.rlmobile.ui.widgets.managerupdate.VersionDelta
 import com.meowarex.rlmobile.util.*
@@ -48,6 +51,7 @@ class HomeModel(
     private val json: Json,
     private val prefs: PreferencesManager,
     private val paths: PathManager,
+    private val manifests: PatchManifestLoader,
 ) : ScreenModel {
 
     var state by mutableStateOf<HomeState>(HomeState.Loading)
@@ -81,6 +85,12 @@ class HomeModel(
     private val initialPrefTidalVersionCode: Int = prefs.lastSeenTidalVersionCode
 
     private var managerUpdateChecked = false
+
+    // Cached patch changes, keyed by install + latest patches
+    private var patchChangesKey: String? = null
+    private var patchChanges: PatchChanges? = null
+    // False when a manifest failed, retried next refresh
+    private var patchChangesComplete = false
 
     init {
         refresh()
@@ -205,6 +215,8 @@ class HomeModel(
                 val install = pkg?.toInstallData()
                 val latest = remoteDataJson?.tidalVersionCode
                 val offlineRepatchReady = hasOfflineRepatchAssets()
+                val patchesBehind = install?.patchesUpToDate == false
+                val knownChanges = pkg?.takeIf { patchesBehind }?.let(::cachedPatchChanges)
 
                 mainThread {
                     state = HomeState.Loaded(
@@ -212,14 +224,29 @@ class HomeModel(
                         latestTidalVersionCode = latest,
                         offline = !online,
                         offlineRepatchReady = offlineRepatchReady,
+                        patchChanges = knownChanges,
                     )
                     maybeCheckManagerUpdate(pkg)
+                }
+
+                // Can download manifests, so show home first
+                if (pkg != null && patchesBehind && (knownChanges == null || !patchChangesComplete)) {
+                    val changes = resolvePatchChanges(pkg, online)
+                    mainThread {
+                        val loaded = state as? HomeState.Loaded
+                        if (loaded?.install?.packageName == pkg.packageName) {
+                            state = loaded.copy(patchChanges = changes)
+                        }
+                    }
                 }
             } finally {
                 if (force) mainThread { refreshing = false }
             }
         }
     }
+
+    val isDevMode: Boolean
+        get() = prefs.devMode
 
     fun launchInstall() {
         val current = (state as? HomeState.Loaded)?.install ?: return
@@ -231,17 +258,29 @@ class HomeModel(
         openAppInfo(current.packageName)
     }
 
-    fun createRepatchScreen(): PatchOptionsScreen? {
-        val current = (state as? HomeState.Loaded)?.install ?: return null
-        return createPrefilledPatchOptsScreen(current.packageName)
+    /**
+     * @param managerOutdated Stays on the installed patches version
+     */
+    fun createRepatchScreen(managerOutdated: Boolean = false): PatchOptionsScreen? {
+        val loaded = state as? HomeState.Loaded ?: return null
+        val current = loaded.install ?: return null
+        return PatchOptionsScreen(
+            prefilledOptions = prefilledPatchOptions(current.packageName, managerOutdated),
+            // Pinned repatches never see the new stuff
+            patchChanges = if (managerOutdated) null else repatchChanges(),
+        )
     }
+
+    /** "New" pins for repatch, only while patches are behind */
+    fun repatchChanges(): PatchChanges? =
+        (state as? HomeState.Loaded)?.takeIf { it.patchesBehind }?.patchChanges
 
     /**
      * The prefilled options behind [createRepatchScreen] without the Screen wrapper (needed for legacy ui)
      */
-    fun createRepatchOptions(): PatchOptions? {
+    fun createRepatchOptions(managerOutdated: Boolean = false): PatchOptions? {
         val current = (state as? HomeState.Loaded)?.install ?: return null
-        return prefilledPatchOptions(current.packageName)
+        return prefilledPatchOptions(current.packageName, managerOutdated)
     }
 
     fun openApp(packageName: String) {
@@ -261,12 +300,13 @@ class HomeModel(
         application.startActivity(launchIntent)
     }
 
-    fun createPrefilledPatchOptsScreen(packageName: String): PatchOptionsScreen =
-        PatchOptionsScreen(prefilledOptions = prefilledPatchOptions(packageName))
-
-    fun prefilledPatchOptions(packageName: String): PatchOptions =
-        loadInstallMetadata(packageName)?.options
-            ?: PatchOptions.Default.copy(packageName = packageName)
+    fun prefilledPatchOptions(packageName: String, managerOutdated: Boolean = false): PatchOptions {
+        val metadata = loadInstallMetadata(packageName)
+        val options = metadata?.options ?: PatchOptions.Default.copy(packageName = packageName)
+        // No new patches without the new Manager
+        val pinned = metadata?.patchesVersion?.toString()?.takeIf { managerOutdated }
+        return options.copy(pinnedPatchesVersion = pinned)
+    }
 
     private fun loadInstallMetadata(packageName: String): InstallMetadata? = try {
         val applicationInfo = application.packageManager.getApplicationInfo(packageName, 0)
@@ -328,6 +368,37 @@ class HomeModel(
             success = { remoteDataJson = it },
             fail = { Log.w(BuildConfig.TAG, "Failed to fetch build info", it) },
         )
+    }
+
+    private fun patchChangesKey(pkg: PackageInfo): String? {
+        val remote = remoteDataJson ?: return null
+        return "${pkg.packageName}:${pkg.lastUpdateTime}:${remote.patchesVersion}"
+    }
+
+    private fun cachedPatchChanges(pkg: PackageInfo): PatchChanges? =
+        patchChanges?.takeIf { patchChangesKey != null && patchChangesKey == patchChangesKey(pkg) }
+
+    /**
+     * Installed vs latest patches, for the tag and pins
+     */
+    private suspend fun resolvePatchChanges(pkg: PackageInfo, online: Boolean): PatchChanges {
+        val key = patchChangesKey(pkg) ?: return PatchChanges.None
+
+        fun store(changes: PatchChanges, complete: Boolean) = changes.also {
+            patchChangesKey = key
+            patchChanges = it
+            patchChangesComplete = complete
+        }
+
+        val metadata = loadInstallMetadata(pkg.packageName) ?: return store(PatchChanges.None, true)
+        val latest = (if (online) manifests.latestRelease() else null)
+            ?: return store(PatchChanges.None, false)
+        // Old installs have no catalog, use that release's manifest
+        val installed = metadata.patchCatalog
+            ?: manifests.forPatchesVersion(metadata.patchesVersion, online)?.toCatalog()
+            ?: return store(PatchChanges.None, false)
+
+        return store(PatchChanges.between(installed, latest), true)
     }
 
     private fun isTidalUpToDate(pkg: PackageInfo): Boolean? {

@@ -10,6 +10,7 @@ import com.meowarex.rlmobile.patcher.steps.base.Step
 import com.meowarex.rlmobile.patcher.steps.download.CopyDependenciesStep
 import com.meowarex.rlmobile.patcher.steps.download.DownloadPatchesStep
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptions
+import com.meowarex.rlmobile.ui.screens.patchopts.toCatalog
 import com.github.diamondminer88.zip.ZipWriter
 import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
@@ -30,6 +31,7 @@ class SaveMetadataStep(private val options: PatchOptions) : Step(), KoinComponen
             managerVersion = SemVer.parse(BuildConfig.VERSION_NAME),
             patchesVersion = patches.getVersion(container),
             options = options,
+            patchCatalog = container.getStep<SmaliPatchStep>().specs.toCatalog(),
         )
 
         container.log("Writing serialized install metadata to APK")

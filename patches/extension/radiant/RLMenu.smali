@@ -611,13 +611,13 @@
 .end method
 
 .method private static rainbow(Landroid/view/View;)V
-    .registers 11
+    .registers 18
 
-    invoke-virtual {p0}, Landroid/view/View;->getContext()Landroid/content/Context;
+    invoke-virtual/range {p0 .. p0}, Landroid/view/View;->getContext()Landroid/content/Context;
 
     move-result-object v0
 
-    const-string v1, "title"
+    const-string v1, "icon"
 
     const-string v2, "id"
 
@@ -625,65 +625,107 @@
 
     move-result v0
 
-    invoke-virtual {p0, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
+    move-object/from16 v1, p0
 
-    move-result-object p0
-
-    check-cast p0, Landroid/widget/TextView;
-
-    if-nez p0, :cond_15
-
-    return-void
-
-    :cond_15
-    invoke-virtual {p0}, Landroid/widget/TextView;->getPaint()Landroid/text/TextPaint;
+    invoke-virtual {v1, v0}, Landroid/view/View;->findViewById(I)Landroid/view/View;
 
     move-result-object v0
 
-    invoke-virtual {p0}, Landroid/widget/TextView;->getText()Ljava/lang/CharSequence;
+    check-cast v0, Landroid/widget/ImageView;
+
+    if-eqz v0, :cond_6c
+
+    invoke-virtual {v0}, Landroid/widget/ImageView;->getDrawable()Landroid/graphics/drawable/Drawable;
+
+    move-result-object v2
+
+    if-nez v2, :cond_1d
+
+    goto :goto_6c
+
+    :cond_1d
+    invoke-virtual {v1}, Landroid/view/View;->getContext()Landroid/content/Context;
 
     move-result-object v1
 
-    invoke-static {v1}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
+    const/16 v2, 0x18
 
-    move-result-object v1
+    invoke-static {v1, v2}, Lradiant/RLMenu;->dp(Landroid/content/Context;I)I
 
-    invoke-virtual {v0, v1}, Landroid/text/TextPaint;->measureText(Ljava/lang/String;)F
+    move-result v1
 
-    move-result v0
+    sget-object v2, Landroid/graphics/Bitmap$Config;->ARGB_8888:Landroid/graphics/Bitmap$Config;
 
-    invoke-virtual {p0}, Landroid/widget/TextView;->getPaint()Landroid/text/TextPaint;
+    invoke-static {v1, v1, v2}, Landroid/graphics/Bitmap;->createBitmap(IILandroid/graphics/Bitmap$Config;)Landroid/graphics/Bitmap;
 
-    move-result-object v1
+    move-result-object v2
 
-    new-instance v2, Landroid/graphics/LinearGradient;
+    new-instance v3, Landroid/graphics/Canvas;
 
-    const/high16 v3, 0x3f800000    # 1.0f
+    invoke-direct {v3, v2}, Landroid/graphics/Canvas;-><init>(Landroid/graphics/Bitmap;)V
 
-    invoke-static {v3, v0}, Ljava/lang/Math;->max(FF)F
+    invoke-virtual {v0}, Landroid/widget/ImageView;->getDrawable()Landroid/graphics/drawable/Drawable;
 
-    move-result v5
+    move-result-object v4
 
-    sget-object v7, Lradiant/RLMenu;->RAINBOW:[I
+    const/4 v5, -0x1
 
-    const/4 v8, 0x0
+    invoke-virtual {v4, v5}, Landroid/graphics/drawable/Drawable;->setTint(I)V
 
-    sget-object v9, Landroid/graphics/Shader$TileMode;->CLAMP:Landroid/graphics/Shader$TileMode;
+    const/4 v5, 0x0
 
-    const/4 v3, 0x0
+    invoke-virtual {v4, v5, v5, v1, v1}, Landroid/graphics/drawable/Drawable;->setBounds(IIII)V
+
+    invoke-virtual {v4, v3}, Landroid/graphics/drawable/Drawable;->draw(Landroid/graphics/Canvas;)V
+
+    new-instance v8, Landroid/graphics/Paint;
+
+    const/4 v4, 0x1
+
+    invoke-direct {v8, v4}, Landroid/graphics/Paint;-><init>(I)V
+
+    new-instance v9, Landroid/graphics/LinearGradient;
+
+    int-to-float v6, v1
+
+    sget-object v14, Lradiant/RLMenu;->RAINBOW:[I
+
+    const/4 v15, 0x0
+
+    sget-object v16, Landroid/graphics/Shader$TileMode;->CLAMP:Landroid/graphics/Shader$TileMode;
+
+    const/4 v10, 0x0
+
+    const/4 v11, 0x0
+
+    const/4 v13, 0x0
+
+    move v12, v6
+
+    invoke-direct/range {v9 .. v16}, Landroid/graphics/LinearGradient;-><init>(FFFF[I[FLandroid/graphics/Shader$TileMode;)V
+
+    invoke-virtual {v8, v9}, Landroid/graphics/Paint;->setShader(Landroid/graphics/Shader;)Landroid/graphics/Shader;
+
+    new-instance v1, Landroid/graphics/PorterDuffXfermode;
+
+    sget-object v4, Landroid/graphics/PorterDuff$Mode;->SRC_IN:Landroid/graphics/PorterDuff$Mode;
+
+    invoke-direct {v1, v4}, Landroid/graphics/PorterDuffXfermode;-><init>(Landroid/graphics/PorterDuff$Mode;)V
+
+    invoke-virtual {v8, v1}, Landroid/graphics/Paint;->setXfermode(Landroid/graphics/Xfermode;)Landroid/graphics/Xfermode;
 
     const/4 v4, 0x0
 
-    const/4 v6, 0x0
+    const/4 v5, 0x0
 
-    invoke-direct/range {v2 .. v9}, Landroid/graphics/LinearGradient;-><init>(FFFF[I[FLandroid/graphics/Shader$TileMode;)V
+    move v7, v6
 
-    invoke-virtual {v1, v2}, Landroid/text/TextPaint;->setShader(Landroid/graphics/Shader;)Landroid/graphics/Shader;
+    invoke-virtual/range {v3 .. v8}, Landroid/graphics/Canvas;->drawRect(FFFFLandroid/graphics/Paint;)V
 
-    const/4 v0, -0x1
+    invoke-virtual {v0, v2}, Landroid/widget/ImageView;->setImageBitmap(Landroid/graphics/Bitmap;)V
 
-    invoke-virtual {p0, v0}, Landroid/widget/TextView;->setTextColor(I)V
-
+    :cond_6c
+    :goto_6c
     return-void
 .end method
 
@@ -930,31 +972,29 @@
 
     const/4 v5, 0x0
 
-    if-eqz v7, :cond_ef
+    const-string v1, "ic_media_lyric_sync_medium"
 
-    const-string v1, "ic_sparkle"
+    if-eqz v7, :cond_ef
 
     const-string v2, "Retime Lyrics using Sylla!"
 
-    goto :goto_f3
+    goto :goto_f1
 
     :cond_ef
-    const-string v1, "ic_media_lyric_sync_medium"
-
     const-string v2, "Flush Lyrics"
 
-    :goto_f3
+    :goto_f1
     invoke-static/range {v0 .. v5}, Lradiant/RLMenu;->item(Landroid/view/ViewGroup;Ljava/lang/String;Ljava/lang/CharSequence;ZII)Landroid/view/View;
 
     move-result-object v1
 
-    if-eqz v7, :cond_fe
+    if-eqz v7, :cond_fc
 
-    if-nez v6, :cond_fe
+    if-nez v6, :cond_fc
 
     invoke-static {v1}, Lradiant/RLMenu;->rainbow(Landroid/view/View;)V
 
-    :cond_fe
+    :cond_fc
     invoke-virtual {v0, v1}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
     return-void
