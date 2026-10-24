@@ -71,6 +71,7 @@ class ManagerApplication : Application() {
             modules(module {
                 single { providePreferences() }
                 singleOf(::PathManager)
+                singleOf(::PatchManifestLoader)
                 singleOf(::InstallerManager)
                 singleOf(::OverlayManager)
                 singleOf(::InstallLogManager)

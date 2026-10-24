@@ -7,6 +7,7 @@ import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.manager.CachedReleaseInfo
 import com.meowarex.rlmobile.manager.PathManager
 import com.meowarex.rlmobile.manager.ReleaseInfoCache
+import com.meowarex.rlmobile.network.models.GithubRelease
 import com.meowarex.rlmobile.network.models.RLBuildInfo
 import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
 import com.meowarex.rlmobile.network.utils.getOrThrow
@@ -20,7 +21,10 @@ import org.koin.core.component.inject
 import kotlin.coroutines.cancellation.CancellationException
 
 @Stable
-class FetchInfoStep : Step(), KoinComponent {
+class FetchInfoStep(
+    // Set while the Manager is outdated, no newer patches
+    private val pinnedVersion: String? = null,
+) : Step(), KoinComponent {
     private val github: RadiantLyricsGithubService by inject()
     private val context: Application by inject()
     private val paths: PathManager by inject()
@@ -39,7 +43,7 @@ class FetchInfoStep : Step(), KoinComponent {
         // Fetch the latest release and refresh the cache (when online)
         if (context.isOnline()) {
             try {
-                fetchFromRemote(container)
+                if (pinnedVersion != null) fetchPinned(container, pinnedVersion) else fetchFromRemote(container)
                 return
             } catch (e: CancellationException) {
                 throw e
@@ -56,6 +60,12 @@ class FetchInfoStep : Step(), KoinComponent {
                 "Could not fetch the latest release and no cached release info is available. " +
                     "Connect to the internet and try again."
             )
+        if (pinnedVersion != null && cached.data.patchesVersion.toString() != pinnedVersion) {
+            throw IllegalStateException(
+                "Patches v$pinnedVersion aren't cached for a local re-patch. " +
+                    "Connect to the internet or update the Manager."
+            )
+        }
         data = cached.data
         patchesAssetUrl = cached.patchesAssetUrl
         container.log("Using cached build info: $data")
@@ -64,17 +74,27 @@ class FetchInfoStep : Step(), KoinComponent {
 
     private suspend fun fetchFromRemote(container: StepRunner) {
         container.log("Fetching latest release from ${RadiantLyricsGithubService.REPO_OWNER}/${RadiantLyricsGithubService.REPO_NAME}")
-        val release = github.getLatestRelease(force = true).getOrThrow()
+        useRelease(container, github.getLatestRelease(force = true).getOrThrow())
+    }
 
+    private suspend fun fetchPinned(container: StepRunner, version: String) {
+        container.log("Manager update pending, staying on patches v$version")
+        val release = github.getManagerReleases(force = true).getOrThrow()
+            .firstOrNull { it.tagName.removePrefix("v") == version }
+            ?: throw IllegalStateException("No release found for patches v$version, update the Manager to repatch")
+        useRelease(container, release)
+    }
+
+    private suspend fun useRelease(container: StepRunner, release: GithubRelease) {
         val dataJsonUrl = release.assets
             .find { it.name == RadiantLyricsGithubService.DATA_JSON_ASSET_NAME }
             ?.browserDownloadUrl
-            ?: throw IllegalStateException("No ${RadiantLyricsGithubService.DATA_JSON_ASSET_NAME} asset found in latest release ${release.tagName}")
+            ?: throw IllegalStateException("No ${RadiantLyricsGithubService.DATA_JSON_ASSET_NAME} asset found in release ${release.tagName}")
 
         val patchesUrl = release.assets
             .find { it.name == RadiantLyricsGithubService.PATCHES_ASSET_NAME }
             ?.browserDownloadUrl
-            ?: throw IllegalStateException("No ${RadiantLyricsGithubService.PATCHES_ASSET_NAME} asset found in latest release ${release.tagName}")
+            ?: throw IllegalStateException("No ${RadiantLyricsGithubService.PATCHES_ASSET_NAME} asset found in release ${release.tagName}")
 
         container.log("Fetching build info from $dataJsonUrl")
         val buildInfo = github.getBuildInfo(dataJsonUrl, force = true).getOrThrow()

@@ -12,7 +12,7 @@ class TidalPatchRunner(
 ) : StepRunner() {
     override val steps = persistentListOf(
         // Prepare
-        FetchInfoStep(),
+        FetchInfoStep(options.pinnedPatchesVersion),
         DowngradeCheckStep(options),
         RestoreDownloadsStep(),
 

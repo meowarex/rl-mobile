@@ -12,6 +12,7 @@
   <string name="notif_channel_updates">Manager updates</string>
   <string name="notif_update_title">Manager update available</string>
   <string name="notif_update_text">v%1$s is now available</string>
+  <string name="notif_update_latest_changes">Latest changes:</string>
 
   <string name="setting_auto_update_check">Background update check</string>
   <string name="setting_auto_update_check_desc">Show a notification when a new Manager version is released</string>
@@ -273,6 +274,18 @@
   <string name="patchopts_toggle_snap">Toggle snapping to steps</string>
   <string name="patchopts_field_unlock">Unlock editing</string>
   <string name="patchopts_field_lock">Lock and reset to default</string>
+  <string name="patchopts_new">New</string>
+  <string name="patchopts_new_options">New Options</string>
+  <string name="patchopts_new_count">%d New</string>
+
+  <string name="patch_update_updated">Updated Patches</string>
+  <string name="patch_update_new_options">New Patch Options</string>
+  <string name="patch_update_new_patches">New Patches</string>
+  <string name="patch_update_dialog_desc_new_patches">Set up what\'s new, the rest of your patches stay as they are.</string>
+  <string name="patch_update_dialog_desc_new_options">Your patches gained new options, set them up here. Everything else stays as it is.</string>
+  <string name="patch_update_dialog_desc_updated">Nothing new to set up this time, just improvements to the patches you already have.</string>
+  <string name="patch_update_dialog_disabled_hint">Turn a patch on to see its new options.</string>
+  <string name="patch_update_dialog_install">Install Updated Patches!</string>
 
   <string name="patch_lyrics_disable_cover_title">Disable Lyrics Cover</string>
   <string name="patch_lyrics_disable_cover_desc">Removes the mini track cover from the lyrics screen.</string>

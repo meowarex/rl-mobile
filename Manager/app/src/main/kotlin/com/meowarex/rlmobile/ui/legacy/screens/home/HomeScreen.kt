@@ -6,11 +6,13 @@ import android.os.Parcelable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,7 +38,11 @@ import com.meowarex.rlmobile.ui.legacy.components.SegmentedButton
 import com.meowarex.rlmobile.ui.legacy.components.Tag
 import com.meowarex.rlmobile.ui.legacy.screens.about.AboutScreen
 import com.meowarex.rlmobile.ui.legacy.screens.home.components.CommitList
+import com.meowarex.rlmobile.ui.legacy.screens.patching.PatchingScreen
 import com.meowarex.rlmobile.ui.legacy.screens.patchopts.PatchOptionsScreen
+import com.meowarex.rlmobile.ui.screens.home.components.UpdatedPatchesDialog
+import com.meowarex.rlmobile.ui.screens.home.components.labelRes
+import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptions
 import com.meowarex.rlmobile.ui.legacy.screens.settings.SettingsScreen
 import com.meowarex.rlmobile.ui.legacy.widgets.managerupdate.ManagerUpdateDialog
 import com.meowarex.rlmobile.ui.widgets.updater.UpdaterViewModel
@@ -60,6 +66,8 @@ class HomeScreen : Screen, Parcelable {
         val managerUpdateAvailable = updater.targetVersion != null
         val refreshing = model.refreshing
         val refreshAngle = rememberRefreshAngle()
+        // Options for the updated patches dialog
+        var updateDialogOptions by rememberSaveable { mutableStateOf<PatchOptions?>(null) }
 
         LifecycleResumeEffect(Unit) {
             model.refresh(delay = true)
@@ -129,16 +137,43 @@ class HomeScreen : Screen, Parcelable {
                         state = state,
                         commits = model.commits,
                         managerUpdateAvailable = managerUpdateAvailable,
+                        isDevMode = model.isDevMode,
                         onInstall = { navigator.pushOnce(PatchOptionsScreen()) },
                         onRepatch = {
                             scope.launchIO {
-                                val options = model.createRepatchOptions() ?: return@launchIO
-                                val screen = PatchOptionsScreen(prefilledOptions = options)
+                                val options = model.createRepatchOptions(managerUpdateAvailable) ?: return@launchIO
+                                val screen = PatchOptionsScreen(
+                                    prefilledOptions = options,
+                                    patchChanges = if (managerUpdateAvailable) null else model.repatchChanges(),
+                                )
                                 mainThread { navigator.push(screen) }
                             }
                         },
                         onLaunch = model::launchInstall,
                         onInfo = model::openCurrentAppInfo,
+                        onManagerUpdate = updater::reopenDialog,
+                        onPatchesTag = {
+                            scope.launchIO {
+                                val options = model.createRepatchOptions() ?: return@launchIO
+                                mainThread { updateDialogOptions = options }
+                            }
+                        },
+                    )
+                }
+
+                val loaded = state as? HomeState.Loaded
+                val changes = loaded?.patchChanges
+                val dialogOptions = updateDialogOptions
+                if (dialogOptions != null && loaded != null && changes != null) {
+                    UpdatedPatchesDialog(
+                        prefilledOptions = dialogOptions,
+                        changes = changes,
+                        installEnabled = loaded.canInstall(managerUpdateAvailable),
+                        onDismiss = { updateDialogOptions = null },
+                        onInstall = { config ->
+                            updateDialogOptions = null
+                            navigator.push(PatchingScreen(config))
+                        },
                     )
                 }
 
@@ -158,10 +193,13 @@ private fun ColumnScope.HomeContent(
     state: HomeState.Loaded,
     commits: kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<com.meowarex.rlmobile.network.models.GithubCommit>>,
     managerUpdateAvailable: Boolean,
+    isDevMode: Boolean,
     onInstall: () -> Unit,
     onRepatch: () -> Unit,
+    onManagerUpdate: () -> Unit,
     onLaunch: () -> Unit,
     onInfo: () -> Unit,
+    onPatchesTag: () -> Unit,
 ) {
     val install = state.install
     val currentVersionName = (install?.version as? com.meowarex.rlmobile.ui.util.TidalVersion.Existing)
@@ -215,26 +253,41 @@ private fun ColumnScope.HomeContent(
         }
     }
 
-    val patchesBehind = install != null && install.patchesUpToDate == false
-    val tidalBehind = install != null && install.tidalUpToDate == false
-    AnimatedVisibility(visible = patchesBehind || tidalBehind) {
+    val patchesBehind = state.patchesBehind
+    val tidalBehind = state.tidalBehind
+    val patchUpdate = state.patchChanges?.takeIf { patchesBehind }?.kind
+    AnimatedVisibility(visible = patchUpdate != null || tidalBehind) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            if (patchesBehind) Tag(text = "New Patches!")
+            if (patchUpdate != null) Tag(
+                text = stringResource(patchUpdate.labelRes),
+                onClick = onPatchesTag,
+            )
             if (tidalBehind) Tag(text = "TIDAL Update!")
         }
     }
 
     val blockedByManagerUpdate = managerUpdateAvailable && (patchesBehind || tidalBehind)
-    val canLocalRepatch = install != null && state.offlineRepatchReady
-    val onlineEnabled = state.latestTidalVersionCode != null || install != null
-    val buttonEnabled = !blockedByManagerUpdate && (if (state.offline) canLocalRepatch else onlineEnabled)
-    Button(
+    val buttonEnabled = state.canInstall(managerUpdateAvailable)
+    // Repatch still works, updating needs the new Manager
+    if (blockedByManagerUpdate) Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Button(
+            onClick = onRepatch,
+            enabled = state.canInstall(managerUpdateAvailable = false),
+            modifier = Modifier.weight(1f),
+        ) { Text("Repatch", maxLines = 1) }
+        ManagerUpdateButton(onClick = onManagerUpdate, modifier = Modifier.weight(1f))
+    } else if (install == null && managerUpdateAvailable && !isDevMode) {
+        // Fresh installs need the new Manager too
+        ManagerUpdateButton(onClick = onManagerUpdate, modifier = Modifier.fillMaxWidth())
+    } else Button(
         onClick = if (install == null) onInstall else onRepatch,
         enabled = buttonEnabled,
         modifier = Modifier.fillMaxWidth(),
     ) {
         val label = when {
-            blockedByManagerUpdate -> "Manager Update Required"
             state.offline && install != null -> "Local Repatch"
             state.offline -> "No Network"
             install == null && state.latestTidalVersionCode == null -> "Loading…"
@@ -286,5 +339,28 @@ private fun ColumnScope.HomeContent(
 
     ElevatedCard(modifier = Modifier.fillMaxSize()) {
         CommitList(commits = commits.collectAsLazyPagingItems())
+    }
+}
+
+/**
+ * Greyed out, but still opens the update modal
+ */
+@Composable
+private fun ManagerUpdateButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier) {
+        Button(
+            onClick = onClick,
+            enabled = false,
+            modifier = Modifier.fillMaxWidth(),
+        ) { Text("Update", maxLines = 1) }
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clip(CircleShape)
+                .clickable(onClick = onClick),
+        )
     }
 }

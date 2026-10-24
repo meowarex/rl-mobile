@@ -34,6 +34,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.pebble.PebbleWatchapp
+import com.meowarex.rlmobile.ui.components.NewPin
+import com.meowarex.rlmobile.ui.components.TitleWithNewPin
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchLock
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionState
@@ -70,6 +72,8 @@ fun PatchSelectionAccordion(
 
     var lockInfo by remember { mutableStateOf<LockInfo?>(null) }
     var advancedFor by remember { mutableStateOf<PatchSpec?>(null) }
+    val changes = LocalPatchChanges.current
+    val newCount = specs.count(changes::hasNew)
 
     Column(
         modifier = modifier
@@ -94,10 +98,16 @@ fun PatchSelectionAccordion(
                 verticalArrangement = Arrangement.spacedBy(2.dp),
                 modifier = Modifier.weight(1f),
             ) {
-                Text(
-                    text = stringResource(titleRes),
-                    style = MaterialTheme.typography.titleMedium,
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(titleRes),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    if (newCount > 0) NewPin(text = stringResource(R.string.patchopts_new_count, newCount))
+                }
                 Text(
                     text = stringResource(
                         R.string.patchopts_patches_summary,
@@ -165,6 +175,8 @@ fun PatchSelectionAccordion(
                         PatchSwitchRow(
                             title = patch.title,
                             description = patch.description,
+                            isNew = changes.isNew(patch),
+                            hasNewOptions = !changes.isNew(patch) && changes.hasNew(patch),
                             checked = checked,
                             lock = lock,
                             onCheckedChange = { onToggle(patch, it) },
@@ -191,6 +203,7 @@ fun PatchSelectionAccordion(
                                             InlineToggleRow(
                                                 title = option.title,
                                                 description = option.description,
+                                                isNew = changes.isNew(patch, option),
                                                 checked = optionState.toggle(patch, option),
                                                 onCheckedChange = { optionState.setToggle(patch, option, it) },
                                             )
@@ -218,6 +231,7 @@ fun PatchSelectionAccordion(
                                                     InlineToggleRow(
                                                         title = option.title,
                                                         description = option.description,
+                                                        isNew = changes.isNew(patch, option),
                                                         checked = optionState.toggle(patch, option),
                                                         onCheckedChange = { optionState.setToggle(patch, option, it) },
                                                         enabled = patch.lockingToggle(option) { optionState.toggle(patch, it) } == null,
@@ -233,6 +247,7 @@ fun PatchSelectionAccordion(
                                                     ChoiceOptionRow(
                                                         title = option.title,
                                                         description = option.description,
+                                                        isNew = changes.isNew(patch, option),
                                                         entries = option.entries,
                                                         selectedIndex = optionState.choice(patch, option),
                                                         forceDropdown = option.forceDropdown,
@@ -255,6 +270,7 @@ fun PatchSelectionAccordion(
                                         ) {
                                             AdvancedOptionsButton(
                                                 modified = optionState.isModified(patch),
+                                                hasNew = changes.hasNewSheetOptions(patch),
                                                 onClick = { advancedFor = patch },
                                             )
                                         }
@@ -341,27 +357,32 @@ private fun AdvancedOptionsButton(
     modified: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    hasNew: Boolean = false,
 ) {
-    FilledTonalButton(
-        onClick = onClick,
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier,
     ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_tune),
-            contentDescription = null,
-            modifier = Modifier.size(18.dp),
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(stringResource(R.string.patchopts_advanced_button))
-        if (modified) {
-            Spacer(Modifier.width(8.dp))
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary),
+        FilledTonalButton(onClick = onClick) {
+            Icon(
+                painter = painterResource(R.drawable.ic_tune),
+                contentDescription = null,
+                modifier = Modifier.size(18.dp),
             )
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(R.string.patchopts_advanced_button))
+            if (modified) {
+                Spacer(Modifier.width(8.dp))
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary),
+                )
+            }
         }
+        if (hasNew) NewPin()
     }
 }
 
@@ -373,6 +394,7 @@ private fun InlineToggleRow(
     onCheckedChange: (Boolean) -> Unit,
     // False when another option pins it
     enabled: Boolean = true,
+    isNew: Boolean = false,
 ) {
     val interactionSource = remember(::MutableInteractionSource)
 
@@ -394,7 +416,7 @@ private fun InlineToggleRow(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             modifier = Modifier.weight(1f),
         ) {
-            Text(text = title, style = MaterialTheme.typography.titleSmall)
+            TitleWithNewPin(title = title, isNew = isNew, style = MaterialTheme.typography.titleSmall)
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodySmall,
@@ -418,6 +440,9 @@ private fun PatchSwitchRow(
     lock: PatchLock,
     onCheckedChange: (Boolean) -> Unit,
     onLockedTap: () -> Unit,
+    isNew: Boolean = false,
+    // Only its options are new
+    hasNewOptions: Boolean = false,
 ) {
     val interactionSource = remember(::MutableInteractionSource)
     val isLocked = lock !is PatchLock.Free
@@ -441,9 +466,11 @@ private fun PatchSwitchRow(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             modifier = Modifier.weight(1f),
         ) {
-            Text(
-                text = title,
+            TitleWithNewPin(
+                title = title,
+                isNew = isNew || hasNewOptions,
                 style = MaterialTheme.typography.titleSmall,
+                pinText = stringResource(if (isNew) R.string.patchopts_new else R.string.patchopts_new_options),
             )
             Text(
                 text = description,

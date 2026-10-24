@@ -40,7 +40,10 @@ import com.meowarex.rlmobile.ui.components.radiant.RadiantSegmented
 import com.meowarex.rlmobile.ui.components.radiant.RadiantSlider
 import com.meowarex.rlmobile.ui.components.radiant.RadiantSwitch
 import com.meowarex.rlmobile.ui.components.radiant.RadiantTextField
+import com.meowarex.rlmobile.ui.components.NewPin
 import com.meowarex.rlmobile.ui.components.ResetToDefaultButton
+import com.meowarex.rlmobile.ui.components.TitleWithNewPin
+import com.meowarex.rlmobile.ui.screens.patchopts.LocalPatchChanges
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionLock
 import com.meowarex.rlmobile.ui.screens.patchopts.OptionSpec
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchOptionState
@@ -63,6 +66,7 @@ fun PatchAdvancedOptionsSheet(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     var lockDialog by remember { mutableStateOf<OptionLock?>(null) }
+    val changes = LocalPatchChanges.current
 
     fun dismiss() {
         scope.launch { sheetState.hide() }.invokeOnCompletion {
@@ -155,6 +159,7 @@ fun PatchAdvancedOptionsSheet(
                             ToggleOptionRow(
                                 title = option.title,
                                 description = option.description,
+                                isNew = changes.isNew(patch, option),
                                 checked = toggleOn,
                                 onCheckedChange = { state.setToggle(patch, option, it) },
                                 locked = lock != OptionLock.Free,
@@ -174,6 +179,7 @@ fun PatchAdvancedOptionsSheet(
                                                 ChoiceOptionRow(
                                                     title = choice.title,
                                                     description = choice.description,
+                                                    isNew = changes.isNew(patch, choice),
                                                     entries = choice.entries,
                                                     selectedIndex = state.choice(patch, choice),
                                                     forceDropdown = choice.forceDropdown,
@@ -191,6 +197,7 @@ fun PatchAdvancedOptionsSheet(
                                                 ToggleOptionRow(
                                                     title = sub.title,
                                                     description = sub.description,
+                                                    isNew = changes.isNew(patch, sub),
                                                     checked = state.toggle(patch, sub),
                                                     onCheckedChange = { state.setToggle(patch, sub, it) },
                                                     locked = subLock != OptionLock.Free,
@@ -207,6 +214,7 @@ fun PatchAdvancedOptionsSheet(
                     is OptionSpec.Slider -> SliderOptionRow(
                         title = option.title,
                         description = option.description,
+                        isNew = changes.isNew(patch, option),
                         value = state.slider(patch, option),
                         valueLabel = formatSliderValue(option, state.slider(patch, option)),
                         valueRange = option.valueRange,
@@ -219,6 +227,7 @@ fun PatchAdvancedOptionsSheet(
                             ChoiceOptionRow(
                                 title = option.title,
                                 description = option.description,
+                                isNew = changes.isNew(patch, option),
                                 entries = option.entries,
                                 selectedIndex = state.choice(patch, option),
                                 forceDropdown = option.forceDropdown,
@@ -232,6 +241,7 @@ fun PatchAdvancedOptionsSheet(
 
                     is OptionSpec.Color -> ColorOptionRow(
                         title = option.title,
+                        isNew = changes.isNew(patch, option),
                         color = state.color(patch, option),
                         defaultColor = option.default,
                         onColorChange = { state.setColor(patch, option, it) },
@@ -264,6 +274,7 @@ private fun ToggleOptionRow(
     locked: Boolean = false,
     onLockedTap: () -> Unit = {},
     modifier: Modifier = Modifier,
+    isNew: Boolean = false,
 ) {
     val interactionSource = remember(::MutableInteractionSource)
 
@@ -282,6 +293,7 @@ private fun ToggleOptionRow(
         OptionText(
             title = title,
             description = description,
+            isNew = isNew,
             modifier = Modifier.weight(1f),
         )
 
@@ -316,6 +328,7 @@ private fun SliderOptionRow(
     valueRange: ClosedFloatingPointRange<Float>,
     steps: Int,
     onValueChange: (Float) -> Unit,
+    isNew: Boolean = false,
 ) {
     // Whether the slider snaps to the step dots
     var snap by rememberSaveable { mutableStateOf(true) }
@@ -325,8 +338,9 @@ private fun SliderOptionRow(
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = title,
+            TitleWithNewPin(
+                title = title,
+                isNew = isNew,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.weight(1f),
             )
@@ -401,6 +415,7 @@ internal fun ChoiceOptionRow(
     forceDropdown: Boolean = false,
     disabledIndices: Set<Int> = emptySet(),
     modifier: Modifier = Modifier,
+    isNew: Boolean = false,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -408,10 +423,13 @@ internal fun ChoiceOptionRow(
         horizontalAlignment = Alignment.Start,
     ) {
         if (title.isNotEmpty()) {
-            Text(
-                text = title,
+            TitleWithNewPin(
+                title = title,
+                isNew = isNew,
                 style = MaterialTheme.typography.titleSmall,
             )
+        } else if (isNew) {
+            NewPin()
         }
         if (description.isNotEmpty()) {
             Text(
@@ -444,6 +462,7 @@ private fun ColorOptionRow(
     color: Int,
     defaultColor: Int,
     onColorChange: (Int) -> Unit,
+    isNew: Boolean = false,
 ) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
     val selectedColor = color.withOpaqueAlpha()
@@ -476,12 +495,18 @@ private fun ColorOptionRow(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.align(Alignment.CenterHorizontally),
-        )
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            if (isNew) NewPin()
+        }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -588,13 +613,15 @@ private fun OptionText(
     title: String,
     description: String,
     modifier: Modifier = Modifier,
+    isNew: Boolean = false,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
-        Text(
-            text = title,
+        TitleWithNewPin(
+            title = title,
+            isNew = isNew,
             style = MaterialTheme.typography.titleMedium,
         )
         Text(

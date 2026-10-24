@@ -4313,7 +4313,7 @@
 .end method
 
 .method static runFlush()V
-    .registers 10
+    .registers 12
 
     const-string v0, ""
 
@@ -4472,17 +4472,17 @@
 
     move-result-object v6
 
-    const/4 v8, 0x0
+    const v8, 0xafc8
 
-    const v9, 0xafc8
+    const/4 v9, 0x0
 
-    invoke-static {v7, v6, v8, v9}, Lradiant/RLHttp;->request(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Lradiant/RLHttp;
+    invoke-static {v7, v6, v9, v8}, Lradiant/RLHttp;->request(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Lradiant/RLHttp;
 
     move-result-object v6
 
     sget v7, Lradiant/RLLyrics;->syllaEpoch:I
     :try_end_a7
-    .catchall {:try_start_30 .. :try_end_a7} :catchall_185
+    .catchall {:try_start_30 .. :try_end_a7} :catchall_1bb
 
     if-eq v5, v7, :cond_b3
 
@@ -4524,7 +4524,7 @@
 
     invoke-static {v0}, Lradiant/RLLyrics;->toast(Ljava/lang/String;)V
     :try_end_cd
-    .catchall {:try_start_b3 .. :try_end_cd} :catchall_185
+    .catchall {:try_start_b3 .. :try_end_cd} :catchall_1bb
 
     :goto_cd
     sget v0, Lradiant/RLLyrics;->syllaEpoch:I
@@ -4542,9 +4542,9 @@
     :try_start_d7
     invoke-virtual {v6}, Lradiant/RLHttp;->ok()Z
 
-    move-result v4
+    move-result v7
 
-    if-nez v4, :cond_118
+    if-nez v7, :cond_118
 
     iget v0, v6, Lradiant/RLHttp;->status:I
 
@@ -4597,7 +4597,7 @@
     :goto_10b
     invoke-static {v0}, Lradiant/RLLyrics;->toastErr(Ljava/lang/String;)V
     :try_end_10e
-    .catchall {:try_start_d7 .. :try_end_10e} :catchall_185
+    .catchall {:try_start_d7 .. :try_end_10e} :catchall_1bb
 
     sget v0, Lradiant/RLLyrics;->syllaEpoch:I
 
@@ -4612,140 +4612,229 @@
 
     :cond_118
     :try_start_118
-    new-instance v4, Lorg/json/JSONObject;
+    new-instance v7, Lorg/json/JSONObject;
 
-    iget-object v6, v6, Lradiant/RLHttp;->body:Ljava/lang/String;
+    iget-object v8, v6, Lradiant/RLHttp;->body:Ljava/lang/String;
 
-    invoke-direct {v4, v6}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+    invoke-direct {v7, v8}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
 
-    const-string v6, "_flush"
+    const-string v8, "_flush"
 
-    invoke-virtual {v4, v6, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    invoke-virtual {v7, v8, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
-    move-result-object v0
+    move-result-object v8
     :try_end_125
-    .catchall {:try_start_118 .. :try_end_125} :catchall_126
+    .catchall {:try_start_118 .. :try_end_125} :catchall_13f
 
-    goto :goto_127
+    :try_start_125
+    const-string v10, "type"
 
-    :catchall_126
-    move-exception v4
+    invoke-virtual {v7, v10, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
-    :goto_127
-    :try_start_127
+    move-result-object v0
+
+    const-string v10, "data"
+
+    invoke-virtual {v7, v10}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+
+    move-result-object v7
+
+    if-eqz v7, :cond_143
+
+    invoke-virtual {v7}, Lorg/json/JSONArray;->length()I
+
+    move-result v7
+    :try_end_137
+    .catchall {:try_start_125 .. :try_end_137} :catchall_13b
+
+    if-lez v7, :cond_143
+
+    move v7, v4
+
+    goto :goto_144
+
+    :catchall_13b
+    move-exception v7
+
+    move-object v7, v0
+
+    move-object v0, v8
+
+    goto :goto_141
+
+    :catchall_13f
+    move-exception v7
+
+    move-object v7, v0
+
+    :goto_141
+    move-object v8, v0
+
+    move-object v0, v7
+
+    :cond_143
+    move v7, v2
+
+    :goto_144
+    :try_start_144
+    invoke-virtual {v8}, Ljava/lang/String;->length()I
+
+    move-result v10
+
+    if-eqz v10, :cond_15d
+
+    const-string v10, "Created"
+
+    invoke-virtual {v8, v10}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+
+    move-result v10
+
+    if-nez v10, :cond_15d
+
+    const-string v10, "Updated"
+
+    invoke-virtual {v8, v10}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+
+    move-result v10
+
+    if-eqz v10, :cond_15b
+
+    goto :goto_15d
+
+    :cond_15b
+    move v10, v2
+
+    goto :goto_15e
+
+    :cond_15d
+    :goto_15d
+    move v10, v4
+
+    :goto_15e
+    const-string v11, "Word"
+
+    invoke-virtual {v11, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_169
+
+    if-eqz v7, :cond_169
+
+    goto :goto_16a
+
+    :cond_169
+    move v4, v2
+
+    :goto_16a
     invoke-static {}, Lradiant/RLSettings;->allowAI()Z
 
-    move-result v4
+    move-result v0
 
-    if-eqz v4, :cond_131
+    if-eqz v0, :cond_190
 
-    iget-object v4, v1, Lradiant/RLAPILyricsWorker;->key:Ljava/lang/String;
+    if-eqz v4, :cond_173
 
-    sput-object v4, Lradiant/RLLyrics;->retimeTrack:Ljava/lang/String;
-
-    :cond_131
-    invoke-virtual {v0}, Ljava/lang/String;->length()I
-
-    move-result v4
-
-    if-eqz v4, :cond_16c
-
-    const-string v4, "Created"
-
-    invoke-virtual {v0, v4}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
-
-    move-result v4
-
-    if-nez v4, :cond_16c
-
-    const-string v4, "Updated"
-
-    invoke-virtual {v0, v4}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
-
-    move-result v4
-
-    if-eqz v4, :cond_148
-
-    goto :goto_16c
-
-    :cond_148
-    invoke-static {}, Lradiant/RLSettings;->allowAI()Z
-
-    move-result v4
-
-    if-eqz v4, :cond_168
-
-    new-instance v4, Ljava/lang/StringBuilder;
-
-    invoke-direct {v4}, Ljava/lang/StringBuilder;-><init>()V
-
-    invoke-virtual {v4, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v0
-
-    const-string v4, "\nRetiming with Sylla\u2026"
-
-    invoke-virtual {v0, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v0
-
-    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v0
-
-    invoke-static {v0}, Lradiant/RLLyrics;->toast(Ljava/lang/String;)V
-
-    invoke-static {v1, v2}, Lradiant/RLLyrics;->runRetime(Lradiant/RLAPILyricsWorker;Z)V
-
-    goto :goto_17b
-
-    :cond_168
-    invoke-static {v0}, Lradiant/RLLyrics;->toast(Ljava/lang/String;)V
-
-    goto :goto_17b
-
-    :cond_16c
-    :goto_16c
-    invoke-virtual {v0}, Ljava/lang/String;->length()I
-
-    move-result v1
-
-    if-lez v1, :cond_173
-
-    goto :goto_175
+    goto :goto_190
 
     :cond_173
-    const-string v0, "Lyrics flushed"
+    if-eqz v7, :cond_178
 
-    :goto_175
+    const-string v0, "Only line lyrics found\nRetiming with Sylla\u2026"
+
+    goto :goto_17a
+
+    :cond_178
+    const-string v0, "No synced lyrics found\nGenerating them with Sylla\u2026"
+
+    :goto_17a
     invoke-static {v0}, Lradiant/RLLyrics;->toast(Ljava/lang/String;)V
 
-    invoke-static {}, Lradiant/RLLyrics;->refetch()V
-    :try_end_17b
-    .catchall {:try_start_127 .. :try_end_17b} :catchall_185
+    xor-int/lit8 v0, v7, 0x1
 
-    :goto_17b
+    if-eqz v7, :cond_183
+
+    iget-object v9, v6, Lradiant/RLHttp;->body:Ljava/lang/String;
+
+    :cond_183
+    invoke-static {v1, v0, v9}, Lradiant/RLLyrics;->runRetime(Lradiant/RLAPILyricsWorker;ZLjava/lang/String;)V
+    :try_end_186
+    .catchall {:try_start_144 .. :try_end_186} :catchall_1bb
+
     sget v0, Lradiant/RLLyrics;->syllaEpoch:I
 
-    if-ne v5, v0, :cond_181
-
-    sput-boolean v2, Lradiant/RLLyrics;->busy:Z
-
-    :cond_181
-    invoke-static {v3, v2, v2}, Lradiant/SparkleIcons;->work(Ljava/lang/Object;ZZ)V
-
-    return-void
-
-    :catchall_185
-    move-exception v0
-
-    sget v1, Lradiant/RLLyrics;->syllaEpoch:I
-
-    if-ne v5, v1, :cond_18c
+    if-ne v5, v0, :cond_18c
 
     sput-boolean v2, Lradiant/RLLyrics;->busy:Z
 
     :cond_18c
+    invoke-static {v3, v2, v2}, Lradiant/SparkleIcons;->work(Ljava/lang/Object;ZZ)V
+
+    return-void
+
+    :cond_190
+    :goto_190
+    if-eqz v4, :cond_19c
+
+    :try_start_192
+    invoke-static {}, Lradiant/RLSettings;->allowAI()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_19c
+
+    iget-object v0, v1, Lradiant/RLAPILyricsWorker;->key:Ljava/lang/String;
+
+    sput-object v0, Lradiant/RLLyrics;->retimeTrack:Ljava/lang/String;
+
+    :cond_19c
+    if-eqz v10, :cond_1ae
+
+    invoke-virtual {v8}, Ljava/lang/String;->length()I
+
+    move-result v0
+
+    if-lez v0, :cond_1a5
+
+    goto :goto_1a7
+
+    :cond_1a5
+    const-string v8, "Lyrics flushed"
+
+    :goto_1a7
+    invoke-static {v8}, Lradiant/RLLyrics;->toast(Ljava/lang/String;)V
+
+    invoke-static {}, Lradiant/RLLyrics;->refetch()V
+
+    goto :goto_1b1
+
+    :cond_1ae
+    invoke-static {v8}, Lradiant/RLLyrics;->toast(Ljava/lang/String;)V
+    :try_end_1b1
+    .catchall {:try_start_192 .. :try_end_1b1} :catchall_1bb
+
+    :goto_1b1
+    sget v0, Lradiant/RLLyrics;->syllaEpoch:I
+
+    if-ne v5, v0, :cond_1b7
+
+    sput-boolean v2, Lradiant/RLLyrics;->busy:Z
+
+    :cond_1b7
+    invoke-static {v3, v2, v2}, Lradiant/SparkleIcons;->work(Ljava/lang/Object;ZZ)V
+
+    return-void
+
+    :catchall_1bb
+    move-exception v0
+
+    sget v1, Lradiant/RLLyrics;->syllaEpoch:I
+
+    if-ne v5, v1, :cond_1c2
+
+    sput-boolean v2, Lradiant/RLLyrics;->busy:Z
+
+    :cond_1c2
     invoke-static {v3, v2, v2}, Lradiant/SparkleIcons;->work(Ljava/lang/Object;ZZ)V
 
     throw v0
@@ -4782,17 +4871,35 @@
 .end method
 
 .method private static runRetime(Lradiant/RLAPILyricsWorker;Z)V
+    .registers 3
+
+    const/4 v0, 0x0
+
+    invoke-static {p0, p1, v0}, Lradiant/RLLyrics;->runRetime(Lradiant/RLAPILyricsWorker;ZLjava/lang/String;)V
+
+    return-void
+.end method
+
+.method private static runRetime(Lradiant/RLAPILyricsWorker;ZLjava/lang/String;)V
     .registers 10
 
+    if-eqz p2, :cond_4
+
+    move-object v0, p2
+
+    goto :goto_6
+
+    :cond_4
     sget-object v0, Lradiant/RLLyrics;->body:Ljava/lang/String;
 
+    :goto_6
     const/4 v1, 0x1
 
-    if-nez v0, :cond_6
+    if-nez v0, :cond_a
 
     move p1, v1
 
-    :cond_6
+    :cond_a
     new-instance v2, Ljava/lang/Object;
 
     invoke-direct {v2}, Ljava/lang/Object;-><init>()V
@@ -4803,60 +4910,119 @@
 
     const/4 v4, 0x0
 
-    if-eqz p1, :cond_18
+    if-eqz p1, :cond_1c
 
-    :try_start_13
+    :try_start_17
     invoke-static {p0}, Lradiant/RLLyrics;->gen(Lradiant/RLAPILyricsWorker;)Ljava/lang/Object;
 
     move-result-object v0
 
-    goto :goto_1c
+    goto :goto_20
 
-    :cond_18
+    :cond_1c
     invoke-static {p0, v0}, Lradiant/RLLyrics;->align(Lradiant/RLAPILyricsWorker;Ljava/lang/String;)Ljava/lang/Object;
 
     move-result-object v0
 
-    :goto_1c
-    instance-of v5, v0, Lorg/json/JSONObject;
+    :goto_20
+    if-eqz p2, :cond_5b
 
-    const/4 v6, 0x0
+    if-nez p1, :cond_5b
 
-    if-eqz v5, :cond_27
+    instance-of p2, v0, Lorg/json/JSONObject;
+
+    if-nez p2, :cond_5b
+
+    sget p2, Lradiant/RLLyrics;->syllaEpoch:I
+
+    if-ne v3, p2, :cond_5b
+
+    sget-object p2, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
+
+    sget-object v5, Lradiant/RLLyrics;->syllaRefused:Ljava/lang/ThreadLocal;
+
+    invoke-virtual {v5}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
+
+    move-result-object v5
+
+    invoke-virtual {p2, v5}, Ljava/lang/Boolean;->equals(Ljava/lang/Object;)Z
+
+    move-result p2
+
+    if-eqz p2, :cond_5b
+
+    new-instance p1, Ljava/lang/StringBuilder;
+
+    invoke-direct {p1}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string p2, "Sylla Align (flush) failed ("
+
+    invoke-virtual {p1, p2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object p1
+
+    invoke-virtual {p1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+
+    move-result-object p1
+
+    const-string p2, "), trying Gen"
+
+    invoke-virtual {p1, p2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object p1
+
+    invoke-virtual {p1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-static {p1}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
+
+    invoke-static {p0}, Lradiant/RLLyrics;->gen(Lradiant/RLAPILyricsWorker;)Ljava/lang/Object;
+
+    move-result-object v0
+
+    move p1, v1
+
+    :cond_5b
+    instance-of p2, v0, Lorg/json/JSONObject;
+
+    const/4 v5, 0x0
+
+    if-eqz p2, :cond_66
 
     check-cast v0, Lorg/json/JSONObject;
 
-    move-object v7, v6
+    move-object v6, v5
 
-    move-object v6, v0
+    move-object v5, v0
 
-    move-object v0, v7
+    move-object v0, v6
 
-    goto :goto_29
+    goto :goto_68
 
-    :cond_27
+    :cond_66
     check-cast v0, Ljava/lang/String;
-    :try_end_29
-    .catchall {:try_start_13 .. :try_end_29} :catchall_76
+    :try_end_68
+    .catchall {:try_start_17 .. :try_end_68} :catchall_b5
 
-    :goto_29
-    sget v5, Lradiant/RLLyrics;->syllaEpoch:I
+    :goto_68
+    sget p2, Lradiant/RLLyrics;->syllaEpoch:I
 
-    if-ne v3, v5, :cond_2f
+    if-ne v3, p2, :cond_6e
 
     sput-boolean v4, Lradiant/RLLyrics;->busy:Z
 
-    :cond_2f
+    :cond_6e
     invoke-static {v2, v1, v4}, Lradiant/SparkleIcons;->work(Ljava/lang/Object;ZZ)V
 
-    sget v2, Lradiant/RLLyrics;->syllaEpoch:I
+    sget p2, Lradiant/RLLyrics;->syllaEpoch:I
 
-    if-eq v3, v2, :cond_37
+    if-eq v3, p2, :cond_76
 
     return-void
 
-    :cond_37
-    if-nez v6, :cond_6b
+    :cond_76
+    if-nez v5, :cond_aa
 
     const-string p0, "!"
 
@@ -4864,7 +5030,7 @@
 
     move-result p0
 
-    if-eqz p0, :cond_49
+    if-eqz p0, :cond_88
 
     invoke-virtual {v0, v1}, Ljava/lang/String;->substring(I)Ljava/lang/String;
 
@@ -4872,23 +5038,23 @@
 
     invoke-static {p0}, Lradiant/RLLyrics;->toast(Ljava/lang/String;)V
 
-    goto :goto_6a
+    goto :goto_a9
 
-    :cond_49
+    :cond_88
     new-instance p0, Ljava/lang/StringBuilder;
 
     invoke-direct {p0}, Ljava/lang/StringBuilder;-><init>()V
 
-    if-eqz p1, :cond_53
+    if-eqz p1, :cond_92
 
     const-string p1, "AI generation failed ("
 
-    goto :goto_55
+    goto :goto_94
 
-    :cond_53
+    :cond_92
     const-string p1, "AI retime failed ("
 
-    :goto_55
+    :goto_94
     invoke-virtual {p0, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object p0
@@ -4909,34 +5075,34 @@
 
     invoke-static {p0}, Lradiant/RLLyrics;->toastErr(Ljava/lang/String;)V
 
-    :goto_6a
+    :goto_a9
     return-void
 
-    :cond_6b
-    if-eqz p1, :cond_70
+    :cond_aa
+    if-eqz p1, :cond_af
 
     const-string p1, "generated"
 
-    goto :goto_72
+    goto :goto_b1
 
-    :cond_70
+    :cond_af
     const-string p1, "retimed"
 
-    :goto_72
-    invoke-static {p0, v6, p1}, Lradiant/RLLyrics;->loadSylla(Lradiant/RLAPILyricsWorker;Lorg/json/JSONObject;Ljava/lang/String;)V
+    :goto_b1
+    invoke-static {p0, v5, p1}, Lradiant/RLLyrics;->loadSylla(Lradiant/RLAPILyricsWorker;Lorg/json/JSONObject;Ljava/lang/String;)V
 
     return-void
 
-    :catchall_76
+    :catchall_b5
     move-exception p0
 
     sget p1, Lradiant/RLLyrics;->syllaEpoch:I
 
-    if-ne v3, p1, :cond_7d
+    if-ne v3, p1, :cond_bc
 
     sput-boolean v4, Lradiant/RLLyrics;->busy:Z
 
-    :cond_7d
+    :cond_bc
     invoke-static {v2, v1, v4}, Lradiant/SparkleIcons;->work(Ljava/lang/Object;ZZ)V
 
     throw p0

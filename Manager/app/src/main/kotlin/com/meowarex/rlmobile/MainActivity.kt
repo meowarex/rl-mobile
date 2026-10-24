@@ -70,9 +70,8 @@ class MainActivity : ComponentActivity() {
                 uiStyle = preferences.uiStyle,
                 dynamicColor = preferences.dynamicColor,
             ) {
-                if (BuildConfig.RELEASE) {
-                    UpdaterDialog()
-                }
+                // Always here so the update buttons can open it
+                UpdaterDialog()
 
                 @OptIn(ExperimentalVoyagerApi::class)
                 CompositionLocalProvider(

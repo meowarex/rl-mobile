@@ -500,22 +500,32 @@ public final class RLLyrics {
                 return;
             }
             String note = "";
+            String type = "";
+            boolean hasData = false;
             try {
-                note = new JSONObject(r.body).optString("_flush", "");
+                JSONObject o = new JSONObject(r.body);
+                note = o.optString("_flush", "");
+                type = o.optString("type", "");
+                JSONArray d = o.optJSONArray("data");
+                hasData = d != null && d.length() > 0;
             } catch (Throwable ignored) {
             }
-            if (RLSettings.allowAI()) retimeTrack = w.key;
             boolean changed = note.length() == 0 || note.startsWith("Created") || note.startsWith("Updated");
-            if (changed) {
-                toast(note.length() > 0 ? note : "Lyrics flushed");
-                refetch();
-            } else if (RLSettings.allowAI()) {
-                // Skipped or denied, nothing changed so retime now
-                toast(note + "\nRetiming with Sylla…");
-                runRetime(w, false);
-            } else {
-                toast(note);
+            boolean syllables = "Word".equals(type) && hasData;
+            if (!RLSettings.allowAI() || syllables) {
+                // Real syllables, Sylla needs a second tap
+                if (syllables && RLSettings.allowAI()) retimeTrack = w.key;
+                if (changed) {
+                    toast(note.length() > 0 ? note : "Lyrics flushed");
+                    refetch();
+                } else {
+                    toast(note);
+                }
+                return;
             }
+            // Lines or nothing, straight to Sylla
+            toast(hasData ? "Only line lyrics found\nRetiming with Sylla…" : "No synced lyrics found\nGenerating them with Sylla…");
+            runRetime(w, !hasData, hasData ? r.body : null);
         } finally {
             if (epoch == syllaEpoch) busy = false;
             SparkleIcons.work(job, false, false);
@@ -526,7 +536,12 @@ public final class RLLyrics {
 
     // Sylla after a flush, align or generate if none
     private static void runRetime(RLAPILyricsWorker w, boolean generate) {
-        String current = body;
+        runRetime(w, generate, null);
+    }
+
+    // Aligns the given lyrics, gen if Sylla says no
+    private static void runRetime(RLAPILyricsWorker w, boolean generate, String src) {
+        String current = src != null ? src : body;
         if (current == null) generate = true;
         Object job = new Object();
         SparkleIcons.work(job, true, true);
@@ -535,6 +550,13 @@ public final class RLLyrics {
         String err = null;
         try {
             Object res = generate ? gen(w) : align(w, current);
+            // Flushed text didn't match the audio, generate instead
+            if (src != null && !generate && !(res instanceof JSONObject) && epoch == syllaEpoch
+                    && Boolean.TRUE.equals(syllaRefused.get())) {
+                RLAPILyricsHook.dlog("Sylla Align (flush) failed (" + res + "), trying Gen");
+                res = gen(w);
+                generate = true;
+            }
             if (res instanceof JSONObject) r = (JSONObject) res;
             else err = (String) res;
         } finally {

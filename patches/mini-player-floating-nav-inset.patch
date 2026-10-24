@@ -1,0 +1,11 @@
+--- a/com/tidal/android/feature/appscaffold/ui/composable/k.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/k.smali
+@@ -2276,7 +2276,7 @@
+     move-result-object v1
+ 
+     .line 143
+-    invoke-static {v1}, Landroidx/compose/foundation/layout/WindowInsetsPadding_androidKt;->navigationBarsPadding(Landroidx/compose/ui/Modifier;)Landroidx/compose/ui/Modifier;
++    invoke-static {v1, v7}, Lradiant/MiniNavInset;->apply(Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;)Landroidx/compose/ui/Modifier;    # keeps the gap when the nav bar is hidden
+ 
+     move-result-object v1
+ 
