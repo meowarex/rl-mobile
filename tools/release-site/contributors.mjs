@@ -1,19 +1,16 @@
 // contributors.json from full git history <3
 // Usage: node contributors.mjs <dir> <x.y.z>
 import { execFileSync } from "node:child_process";
-import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const GITCAFE = "https://git.cafe";
-const SITE = process.env.RELEASES_URL ?? "https://mobile.release.radiant-lyrics.org";
 const [outDir, version] = process.argv.slice(2);
 if (!outDir || !/^\d+\.\d+\.\d+$/.test(version ?? "")) {
 	console.error("usage: node contributors.mjs <assetsDir> <x.y.z>");
 	process.exit(2);
 }
-const dir = version.replaceAll(".", "-");
 
 const log = execFileSync("git", ["log", "--no-merges", "--format=%aN%x00%aE"], { encoding: "utf8", maxBuffer: 64 << 20 });
 // Reused runners keep stale shallow marks, HEAD's fine
@@ -56,18 +53,11 @@ async function gitcafeUser(name) {
 	return (await res.json()).items.find((u) => u.handle === want || u.displayName?.toLowerCase() === want) ?? null;
 }
 
-// Gravatar 403s Android, so we host it
-async function gravatar(email, slug) {
-	const hash = createHash("sha256").update(email.trim().toLowerCase()).digest("hex");
-	const res = await fetch(`https://gravatar.com/avatar/${hash}?d=404&s=128`);
-	if (!res.ok) return null;
-	const ext = res.headers.get("content-type")?.includes("png") ? "png" : "jpg";
-	const name = `avatar-${slug}.${ext}`;
-	await writeFile(join(outDir, name), Buffer.from(await res.arrayBuffer()));
-	return `${SITE}/${dir}/${name}`;
-}
+// Not on GitCafe yet, so his GitHub pfp
+const GITHUB_AVATARS = {
+	"se7en-dev": "https://github.com/Se7en-dev.png",
+};
 
-const slugOf = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 20) || "user";
 
 const groups = new Map();
 for (const [key, count] of pairs) {
@@ -86,8 +76,10 @@ for (const g of groups.values()) {
 	let user = null;
 	for (const n of names) if ((user = await gitcafeUser(n))) break;
 
-	let avatarUrl = user?.avatarUrl ? GITCAFE + user.avatarUrl : null;
-	for (const e of g.emails) if (!avatarUrl) avatarUrl = await gravatar(e, slugOf(user?.handle ?? names[0]));
+	// Never stored on disk, just linked
+	const avatarUrl = user?.avatarUrl
+		? GITCAFE + user.avatarUrl
+		: names.map((n) => GITHUB_AVATARS[n.toLowerCase()]).find(Boolean) ?? null;
 
 	contributors.push({
 		username: user?.handle ?? names[0],
