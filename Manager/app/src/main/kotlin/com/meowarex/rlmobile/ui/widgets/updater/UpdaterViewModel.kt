@@ -13,7 +13,7 @@ import com.meowarex.rlmobile.installers.InstallerResult
 import com.meowarex.rlmobile.manager.InstallerManager
 import com.meowarex.rlmobile.manager.download.IDownloadManager
 import com.meowarex.rlmobile.manager.download.KtorDownloadManager
-import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
+import com.meowarex.rlmobile.network.services.RLReleasesService
 import com.meowarex.rlmobile.network.utils.SemVer
 import com.meowarex.rlmobile.network.utils.getOrThrow
 import com.meowarex.rlmobile.util.*
@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlin.system.exitProcess
 
 class UpdaterViewModel(
-    private val github: RadiantLyricsGithubService,
+    private val releases: RLReleasesService,
     private val downloader: KtorDownloadManager,
     private val installers: InstallerManager,
     private val application: Application,
@@ -147,35 +147,18 @@ class UpdaterViewModel(
         }
     }
 
-    /**
-     * This fetched the releases data from GitHub and populates the state if there is an update.
-     *
-     * It obtains all the releases that have an asset named `radiantLyrics-manager-[tag].apk`,
-     * then finds the latest release based on the largest semantic version extracted from the tag name (`v1.0.0`),
-     * and populates the state to show to the user.
-     */
+    // Newest manager.apk on the release site
     private suspend fun fetchInfo(force: Boolean = false) {
         Log.d(BuildConfig.TAG, "Checking for updates...")
 
         val currentVersion = SemVer.parseOrNull(BuildConfig.VERSION_NAME)
             ?: throw Error("Failed to parse current app version")
 
-        // Fetch releases from GitHub (60s local cache)
-        val releases = github.getManagerReleases(force).getOrThrow()
-
-        // Find the latest release by parsed version
-        val (version, release, apkUrl) = releases
-            .mapNotNull { release ->
-                val version = SemVer.parseOrNull(release.name?.removePrefix("v") ?: "")
-                    ?: return@mapNotNull null
-
-                val asset = release.assets.find { it.name == "rl-manager.apk" }
-                    ?: return@mapNotNull null
-
-                Triple(version, release, asset.browserDownloadUrl)
-            }
-            .maxByOrNull { (version) -> version }
+        val release = releases.getReleases(force).getOrThrow()
+            .latestWith(RLReleasesService.MANAGER_APK)
             ?: return
+        val version = release.semVer ?: return
+        val apkUrl = release.url(RLReleasesService.MANAGER_APK)
 
         // Check if currently installed version is greater
         if (currentVersion >= version) {
@@ -187,7 +170,7 @@ class UpdaterViewModel(
         val newVersion = version.toString()
         mainThread {
             val alreadyKnown = targetVersion == newVersion
-            targetReleaseUrl = release.htmlUrl
+            targetReleaseUrl = RLReleasesService.SITE_URL
             targetVersion = newVersion
             targetApkUrl = apkUrl
             // Only pops up by itself on release builds
@@ -201,7 +184,7 @@ class UpdaterViewModel(
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .also(application::startActivity)
         } catch (t: Throwable) {
-            Log.w(BuildConfig.TAG, "Failed to open latest Github release in browser!", t)
+            Log.w(BuildConfig.TAG, "Failed to open the releases site in browser!", t)
         }
     }
 }

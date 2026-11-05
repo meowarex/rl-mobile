@@ -16,7 +16,8 @@ import androidx.work.*
 import com.meowarex.rlmobile.BuildConfig
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.manager.PreferencesManager
-import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
+import com.meowarex.rlmobile.network.services.RLReleasesService
+import com.meowarex.rlmobile.network.services.GitCafeService
 import com.meowarex.rlmobile.network.utils.SemVer
 import com.meowarex.rlmobile.network.utils.fold
 import org.koin.core.component.KoinComponent
@@ -32,7 +33,8 @@ class UpdateCheckWorker(
     params: WorkerParameters,
 ) : CoroutineWorker(appContext, params), KoinComponent {
 
-    private val github: RadiantLyricsGithubService by inject()
+    private val releases: RLReleasesService by inject()
+    private val gitcafe: GitCafeService by inject()
     private val prefs: PreferencesManager by inject()
 
     override suspend fun doWork(): Result {
@@ -40,21 +42,14 @@ class UpdateCheckWorker(
 
         val current = SemVer.parseOrNull(BuildConfig.VERSION_NAME) ?: return Result.success()
 
-        val releases = github.getManagerReleases().fold(
-            success = { it },
+        val version = releases.getReleases().fold(
+            success = { it.latestWith(RLReleasesService.MANAGER_APK)?.semVer },
             fail = { return Result.retry() },
-        )
-
-        val latestVersion = releases
-            .mapNotNull { r -> SemVer.parseOrNull((r.name ?: "").removePrefix("v"))?.let { v -> v to r } }
-            .maxByOrNull { it.first }
-            ?: return Result.success()
-
-        val (version, _) = latestVersion
+        ) ?: return Result.success()
         if (current >= version) return Result.success()
 
         Log.i(BuildConfig.TAG, "Update available: $version (installed $current)")
-        postUpdateNotification(version.toString(), github.getLatestCommitTitles())
+        postUpdateNotification(version.toString(), gitcafe.getLatestCommitTitles())
         return Result.success()
     }
 

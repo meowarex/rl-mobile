@@ -1,5 +1,6 @@
 package com.meowarex.rlmobile.ui.legacy.components
 
+import com.meowarex.rlmobile.network.services.GitCafeService
 import com.meowarex.rlmobile.ui.components.*
 
 import androidx.compose.foundation.layout.*
@@ -40,13 +41,13 @@ fun ProjectHeader(modifier: Modifier = Modifier) {
         Row(
             horizontalArrangement = Arrangement.Center,
         ) {
-            TextButton(onClick = { uriHandler.openUri("https://github.com/meowarex/rl-mobile") }) {
+            TextButton(onClick = { uriHandler.openUri(GitCafeService.REPO_URL) }) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_account_github_white_24dp),
+                    painter = painterResource(R.drawable.ic_code),
                     contentDescription = null,
                     modifier = Modifier.padding(end = ButtonDefaults.IconSpacing),
                 )
-                Text(text = stringResource(R.string.github))
+                Text(text = stringResource(R.string.gitcafe))
             }
         }
     }

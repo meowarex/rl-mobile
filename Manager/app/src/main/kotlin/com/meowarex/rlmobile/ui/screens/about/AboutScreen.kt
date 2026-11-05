@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.meowarex.rlmobile.BuildConfig
+import com.meowarex.rlmobile.network.services.GitCafeService
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.ui.components.*
 import com.meowarex.rlmobile.ui.screens.about.components.LeadContributor
@@ -70,7 +71,15 @@ fun AboutScreenContent(state: State<AboutScreenState>) {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    LeadContributor(BuildConfig.PATCHES_REPO_OWNER, "Radiant Lyrics")
+                    // Avatar comes with contributors.json
+                    val lead = (state.value as? AboutScreenState.Loaded)?.contributors
+                        ?.find { it.username == BuildConfig.PATCHES_REPO_OWNER }
+                    LeadContributor(
+                        name = BuildConfig.PATCHES_REPO_OWNER,
+                        roles = "Radiant Lyrics",
+                        avatarUrl = lead?.avatarUrl,
+                        profileUrl = lead?.url ?: "${GitCafeService.SITE_URL}/${BuildConfig.PATCHES_REPO_OWNER}",
+                    )
                 }
             }
 

@@ -31,8 +31,8 @@ android {
     defaultConfig {
         minSdk = 24
         targetSdk = 36
-        versionCode = 120
-        versionName = "2.2.0"
+        versionCode = 20300
+        versionName = "2.3.0"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -43,6 +43,8 @@ android {
 
         buildConfigField("String", "PATCHES_REPO_OWNER", "\"meowarex\"")
         buildConfigField("String", "PATCHES_REPO_NAME", "\"rl-mobile\"")
+        // Releases live here now <3
+        buildConfigField("String", "RELEASES_URL", "\"https://mobile.release.radiant-lyrics.org\"")
 
         buildConfigField("Boolean", "RELEASE", isRelease.toString())
         buildConfigField("String", "GIT_BRANCH", "\"$gitCurrentBranch\"")
@@ -181,6 +183,16 @@ tasks.withType<JavaCompile> {
     options.compilerArgs.add("-Xlint:-options")
 }
 
+// ARSCLib ships stub android classes, R8 hates them
+val arsclibRaw: Configuration by configurations.creating { isTransitive = false }
+val strippedArsclib = tasks.register<Jar>("strippedArsclib") {
+    archiveFileName = "arsclib-stripped.jar"
+    destinationDirectory = layout.buildDirectory.dir("libs-stripped")
+    from({ arsclibRaw.map { zipTree(it) } }) {
+        exclude("android/**", "org/xmlpull/**", "META-INF/MANIFEST.MF")
+    }
+}
+
 dependencies {
     implementation(libs.bundles.accompanist)
     implementation(libs.bundles.androidx)
@@ -207,6 +219,8 @@ dependencies {
     implementation(libs.hiddenApi.bypass)
 
     implementation(libs.apksig)
+    arsclibRaw(libs.arsclib)
+    implementation(files(strippedArsclib))
     implementation(libs.axml)
     implementation(libs.bouncycastle)
     implementation(libs.binaryResources)

@@ -23,7 +23,8 @@ import com.valentinilk.shimmer.shimmer
 fun LeadContributor(
     name: String,
     roles: String,
-    username: String = name,
+    avatarUrl: String?,
+    profileUrl: String?,
     modifier: Modifier = Modifier,
 ) {
     val uriHandler = LocalUriHandler.current
@@ -33,15 +34,16 @@ fun LeadContributor(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
             .clickable(
-                onClick = { uriHandler.openUri("https://github.com/$username") },
+                enabled = profileUrl != null,
+                onClick = { profileUrl?.let(uriHandler::openUri) },
                 indication = ripple(bounded = false, radius = 90.dp),
                 interactionSource = remember(::MutableInteractionSource)
             )
             .widthIn(min = 100.dp)
     ) {
         SubcomposeAsyncImage(
-            model = "https://github.com/$username.png",
-            contentDescription = username,
+            model = avatarUrl,
+            contentDescription = name,
             error = {
                 Surface(
                     content = {},

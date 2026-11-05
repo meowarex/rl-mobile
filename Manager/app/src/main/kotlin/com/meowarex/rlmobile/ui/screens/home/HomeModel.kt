@@ -23,9 +23,9 @@ import com.meowarex.rlmobile.manager.PatchManifestLoader
 import com.meowarex.rlmobile.manager.PathManager
 import com.meowarex.rlmobile.manager.PreferencesManager
 import com.meowarex.rlmobile.manager.ReleaseInfoCache
-import com.meowarex.rlmobile.network.models.GithubCommit
 import com.meowarex.rlmobile.network.models.RLBuildInfo
-import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
+import com.meowarex.rlmobile.network.services.RLReleasesService
+import com.meowarex.rlmobile.network.services.GitCafeService
 import com.meowarex.rlmobile.network.utils.CommitsPagingSource
 import com.meowarex.rlmobile.network.utils.fold
 import com.meowarex.rlmobile.patcher.InstallMetadata
@@ -47,7 +47,8 @@ import kotlinx.serialization.json.decodeFromStream
 
 class HomeModel(
     private val application: Application,
-    private val github: RadiantLyricsGithubService,
+    private val gitcafe: GitCafeService,
+    private val releases: RLReleasesService,
     private val json: Json,
     private val prefs: PreferencesManager,
     private val paths: PathManager,
@@ -72,7 +73,7 @@ class HomeModel(
     val commits = commitsGeneration
         .flatMapLatest { generation ->
             Pager(PagingConfig(pageSize = 30)) {
-                CommitsPagingSource(github, force = generation > 0)
+                CommitsPagingSource(gitcafe, releases, force = generation > 0)
             }.flow
         }
         .cachedIn(screenModelScope)
@@ -350,21 +351,16 @@ class HomeModel(
 
     private suspend fun fetchRemoteData(force: Boolean = false) {
         val release = try {
-            github.getLatestRelease(force).fold(
-                success = { it },
-                fail = { Log.w(BuildConfig.TAG, "Failed to fetch latest release", it); return },
+            releases.getReleases(force).fold(
+                success = { it.latestWith(RLReleasesService.DATA_JSON) ?: return },
+                fail = { Log.w(BuildConfig.TAG, "Failed to fetch releases", it); return },
             )
         } catch (t: Throwable) {
             Log.w(BuildConfig.TAG, "Failed to fetch remote data", t)
             return
         }
 
-        val dataJsonUrl = release.assets
-            .find { it.name == RadiantLyricsGithubService.DATA_JSON_ASSET_NAME }
-            ?.browserDownloadUrl
-            ?: return
-
-        github.getBuildInfo(dataJsonUrl, force).fold(
+        releases.getBuildInfo(release, force).fold(
             success = { remoteDataJson = it },
             fail = { Log.w(BuildConfig.TAG, "Failed to fetch build info", it) },
         )

@@ -22,14 +22,15 @@ Manager/app/release/
 # Reference material (APKs, original source)
 Reference/
 
-# tidal-apk/: CI consumes the top-level .apk/.apkm; ignore decompiled subdirs
+# Local stock TIDAL, dev only
+tidal-apk/
 *.apkm
-!tidal-apk/*.apk
-!tidal-apk/*.apkm
-tidal-apk/*/
 
 # Kawarp-AGSL library (CLONE HERE! the build tooling in tools/kawarp-build expects it)
 tools/kawarp-agsl
 
 # API creds
 .env
+
+# Release site tooling
+node_modules/

@@ -46,7 +46,7 @@ fun UpdaterDialog(
             Text(stringResource(R.string.updater_body))
 
             RadiantButton(
-                text = stringResource(R.string.updater_open_github),
+                text = stringResource(R.string.updater_open_releases),
                 onClick = { uriHandler.openUri(viewModel.targetReleaseUrl!!) },
                 style = RadiantButtonStyle.Ghost,
                 size = RadiantButtonSize.Small,

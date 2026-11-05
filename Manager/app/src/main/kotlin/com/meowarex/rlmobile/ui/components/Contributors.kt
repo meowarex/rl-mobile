@@ -26,7 +26,7 @@ fun ContributorCommitsItem(
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier
-            .clickable { uriHandler.openUri("https://github.com/${user.username}") }
+            .clickable(enabled = user.url != null) { user.url?.let(uriHandler::openUri) }
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .fillMaxWidth(),
     ) {

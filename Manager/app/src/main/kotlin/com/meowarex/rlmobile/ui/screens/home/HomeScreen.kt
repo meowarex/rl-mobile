@@ -209,7 +209,7 @@ class HomeScreen : Screen, Parcelable {
 @Composable
 private fun ColumnScope.HomeContent(
     state: HomeState.Loaded,
-    commits: kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<com.meowarex.rlmobile.network.models.GithubCommit>>,
+    commits: kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<com.meowarex.rlmobile.network.models.RLCommit>>,
     managerUpdateAvailable: Boolean,
     isDevMode: Boolean,
     onInstall: () -> Unit,

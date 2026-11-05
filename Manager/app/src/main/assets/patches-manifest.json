@@ -990,7 +990,7 @@
         "radiant/OplusBridge.smali"
       ],
       "title": "ColorOS",
-      "description": "LockScreen Lyrics, Heart Button & Hi-Res Audio on ColorOS (needs com.netease.cloudmusic package name)",
+      "description": "Lyrics, Heart Button & Hi-Res Audio on ColorOS (needs the com.netease.cloudmusic package name)",
       "default": false,
       "requires": [
         "LyricsRlApi"

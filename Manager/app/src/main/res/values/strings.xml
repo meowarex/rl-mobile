@@ -4,7 +4,7 @@
 
   <string name="rlmobile" translatable="false">Radiant Lyrics</string>
   <string name="tidal" translatable="false">TIDAL</string>
-  <string name="github" translatable="false">GitHub</string>
+  <string name="gitcafe" translatable="false">GitCafe</string>
   <string name="support_server">Support Server</string>
   <string name="installer">Installer</string>
   <string name="navigation_home">Home</string>
@@ -175,7 +175,7 @@
   >Since battery optimizations have not been disabled, minimizing this screen may abort the installation process!</string>
   <string
     name="installer_banner_failure"
-  >Installation failed! You can either retry or click this banner to open the GitHub repository for help.</string>
+  >Installation failed! You can either retry or click this banner to open an issue on GitCafe for help.</string>
   <string
     name="installer_banner_success"
   >Successfully installed Radiant Lyrics! Do *NOT* uninstall the manager (this app) as it is required to perform certain types of updates.</string>
@@ -224,7 +224,7 @@
   <string
     name="updater_body"
   >A new update has been released for Radiant Lyrics Manager! It may be required in order to function properly. Would you like to update?</string>
-  <string name="updater_open_github">View release on GitHub</string>
+  <string name="updater_open_releases">View releases online</string>
   <string name="updater_check_fail">Failed to check for updates!</string>
   <string name="updater_update_fail">Failed to update! Please download and install the update manually!</string>
 
@@ -254,9 +254,9 @@
   <string name="patchopts_debuggable_title">Debuggable</string>
   <string name="patchopts_debuggable_desc">Enable the debuggable manifest flag. Only use this if you know what you are doing!</string>
   <string name="patchopts_custom_tidal_apk_title">Custom TIDAL APK</string>
-  <string name="patchopts_custom_tidal_apk_desc">Provide your own Stock TIDAL APK to patch instead of the version from Github.</string>
+  <string name="patchopts_custom_tidal_apk_desc">Provide your own Stock TIDAL APK to patch instead of the version from APKPure.</string>
   <string name="patchopts_custom_patches_title">Custom Patches</string>
-  <string name="patchopts_custom_patches_desc">Provide your own Patches Zip to use instead of the ones from Github.</string>
+  <string name="patchopts_custom_patches_desc">Provide your own Patches Zip to use instead of the released ones.</string>
   <string name="patchopts_bypass_incompatible_title">Bypass Incompatible</string>
   <string name="patchopts_bypass_incompatible_desc">Force-allow path-gated patches. This can be VERY DANGEROUS!</string>
   <string name="patchopts_divider_basic">Basic</string>
@@ -380,9 +380,12 @@
   <string name="componentopts_deleted">Successfully deleted component!</string>
   <string name="componentopts_browse_title">Browse files…</string>
   <string name="componentopts_browse_desc">Import a file from your device</string>
-  <string name="componentopts_releases_title">GitHub Releases</string>
-  <string name="componentopts_releases_desc">Pick a historical release from the repo</string>
+  <string name="componentopts_releases_title">Releases</string>
+  <string name="componentopts_releases_desc">Pick an older release from the site</string>
   <string name="componentopts_releases_empty">No releases with this component found</string>
+  <string name="componentopts_apkpure_title">APKPure</string>
+  <string name="componentopts_apkpure_desc">Pick any TIDAL version, verified against TIDAL\'s signature</string>
+  <string name="componentopts_apkpure_version_desc">Version code %1$d</string>
 
   <string name="log_title">Log</string>
   <string name="log_section_install_info">Installation Info</string>
@@ -414,7 +417,7 @@
   <string name="fun_fact_3">i am in your walls!</string>
   <string name="fun_fact_4">TIDAL is Rewriting the UI with Compose</string>
   <string name="fun_fact_5">The TIDAL app has a hidden Debug Menu!</string>
-  <string name="fun_fact_6">Having issues? Open an issue on GitHub!</string>
+  <string name="fun_fact_6">Having issues? Open an issue on GitCafe!</string>
   <string name="fun_fact_7">This installer/manager was forked from Aliucord</string>
   <string name="fun_fact_8">I have CATS!!</string>
   <string name="fun_fact_9">Radiant Lyrics is made by JUST meoware.exe</string>

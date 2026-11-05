@@ -5,8 +5,8 @@ import com.github.diamondminer88.zip.ZipReader
 import com.meowarex.rlmobile.BuildConfig
 import com.meowarex.rlmobile.manager.download.IDownloadManager
 import com.meowarex.rlmobile.manager.download.KtorDownloadManager
-import com.meowarex.rlmobile.network.models.GithubRelease
-import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
+import com.meowarex.rlmobile.network.models.RLRelease
+import com.meowarex.rlmobile.network.services.RLReleasesService
 import com.meowarex.rlmobile.network.utils.SemVer
 import com.meowarex.rlmobile.network.utils.getOrThrow
 import com.meowarex.rlmobile.ui.screens.patchopts.PatchManifest
@@ -22,7 +22,7 @@ import java.io.File
 class PatchManifestLoader(
     private val paths: PathManager,
     private val json: Json,
-    private val github: RadiantLyricsGithubService,
+    private val releases: RLReleasesService,
     private val downloader: KtorDownloadManager,
 ) {
     // Home and patch options can grab the same zip
@@ -42,11 +42,11 @@ class PatchManifestLoader(
         }
     }
 
-    /**
-     * Pulls the patch list from the latest GitHub release's patches.zip manifest
-     */
+    /** Patch list from the latest release */
     suspend fun latestRelease(): List<PatchSpec>? = try {
-        fromRelease(github.getLatestRelease().getOrThrow())
+        releases.getReleases().getOrThrow()
+            .latestWith(RLReleasesService.PATCHES_ZIP)
+            ?.let { fromRelease(it) }
     } catch (t: Throwable) {
         Log.w(BuildConfig.TAG, "Failed to load latest release manifest", t)
         null
@@ -60,9 +60,7 @@ class PatchManifestLoader(
             ?.let(::fromZip)
             ?.also { Log.i(BuildConfig.TAG, "Loaded ${it.size} patches from cached release manifest (offline)") }
 
-    /**
-     * Patch list for a patches version, local first then GitHub
-     */
+    /** Patch list for a version, local first then site */
     suspend fun forPatchesVersion(version: SemVer, online: Boolean): List<PatchSpec>? {
         val local = listOf(
             paths.patchingDownloadDir.resolve("patches/$version.zip"),
@@ -74,8 +72,7 @@ class PatchManifestLoader(
         if (!online) return null
 
         return try {
-            val release = github.getManagerReleases().getOrThrow()
-                .firstOrNull { it.tagName.removePrefix("v") == version.toString() }
+            val release = releases.getReleases().getOrThrow().find(version.toString())
                 ?: return null
             fromRelease(release)
         } catch (t: Throwable) {
@@ -84,17 +81,15 @@ class PatchManifestLoader(
         }
     }
 
-    private suspend fun fromRelease(release: GithubRelease): List<PatchSpec>? {
-        val url = release.assets
-            .find { it.name == RadiantLyricsGithubService.PATCHES_ASSET_NAME }
-            ?.browserDownloadUrl
-        if (url == null) {
-            Log.w(BuildConfig.TAG, "Release ${release.tagName} has no patches.zip asset")
+    private suspend fun fromRelease(release: RLRelease): List<PatchSpec>? {
+        if (!release.has(RLReleasesService.PATCHES_ZIP)) {
+            Log.w(BuildConfig.TAG, "Release ${release.version} has no patches.zip")
             return null
         }
+        val url = release.url(RLReleasesService.PATCHES_ZIP)
 
-        // Cached per release tag so re-opening the screen doesn't re-download the same zip.
-        val dest = paths.cacheDownloadDir.resolve("manifest-${release.tagName}.zip")
+        // Cached per release so it's not redownloaded
+        val dest = paths.cacheDownloadDir.resolve("manifest-v${release.version}.zip")
             .apply { parentFile?.mkdirs() }
         val downloaded = downloadLock.withLock {
             dest.exists() || downloader.download(url, dest) is IDownloadManager.Result.Success
@@ -103,9 +98,9 @@ class PatchManifestLoader(
 
         return fromZip(dest).also { loaded ->
             if (loaded != null) {
-                Log.i(BuildConfig.TAG, "Loaded ${loaded.size} patches from release ${release.tagName} manifest")
+                Log.i(BuildConfig.TAG, "Loaded ${loaded.size} patches from release ${release.version} manifest")
             } else {
-                Log.w(BuildConfig.TAG, "Release ${release.tagName} ships no manifest.json")
+                Log.w(BuildConfig.TAG, "Release ${release.version} ships no manifest.json")
             }
         }
     }
