@@ -57,7 +57,7 @@ markers.
   It holds `Lyj0/d;`, `ExoPlayer` and `Handler` and reposts with `0xc8`.
 - `integration-pebble-lyrics.patch` hooks our `RLAPILyricsWorker`, so no markers there.
 
-## 1. Rolled class references (270)
+## 1. Rolled class references (271)
 
 | symbol | uses | referenced from |
 |---|---:|---|
@@ -331,6 +331,7 @@ markers.
 | `Lo4/g$e;` | 1 | `gestures/queue/swipe-to-queue.patch` |
 | `Lgb0/x;` | 1 | `gestures/queue/swipe-to-queue-compose.patch` |
 | `Lgb0/d0;` | 1 | `gestures/queue/swipe-to-queue-compose.patch` |
+| `Lcom/google/common/collect/ImmutableCollection$a;` | 2 | `integration-coloros-hires.patch` |
 
 ## 2. Rolled members on otherwise-stable classes (347)
 
@@ -686,7 +687,7 @@ The owner name survives R8; only the member name rolls. Match on the descriptor.
 | `Lk70/a;` | `c` | `:Lcom/aspiro/wamp/model/AvailabilityInteractor;` | 1 |
 | `Lxf/c;` | `c` | `:Lcom/tidal/android/navigation/NavigationInfo;` | 1 |
 
-## 3. Rolled patch target classes (65)
+## 3. Rolled patch target classes (67)
 
 `--- a/` headers naming an obfuscated class. If these move the hunk cannot even be located.
 
@@ -756,8 +757,10 @@ The owner name survives R8; only the member name rolls. Match on the descriptor.
 | `kb/f.smali` | `integration-waze-playback.patch` |
 | `o7/a.smali` | `gestures/queue/swipe-to-queue.patch` |
 | `u6/e.smali` | `gestures/queue/swipe-to-queue.patch` |
+| `zj0/n1.smali` | `integration-coloros-hires.patch` |
+| `ij0/d.smali` | `integration-coloros-hires.patch` |
 
-## 4. Occurrences inside .patch files - not marked inline (221)
+## 4. Occurrences inside .patch files - not marked inline (223)
 
 | file | line | kind | symbols |
 |---|---:|---|---|
@@ -982,3 +985,5 @@ The owner name survives R8; only the member name rolls. Match on the descriptor.
 | `player-quality-badge-colors.patch` | 68 | added | `Lcom/tidal/android/feature/playerscreen/ui/i$a; b` |
 | `player-quality-badge-colors.patch` | 111 | removed | `Lcom/tidal/android/feature/playerscreen/ui/i$a;` |
 | `player-quality-badge-colors.patch` | 114 | added | `Lcom/tidal/android/feature/playerscreen/ui/i$a;` |
+| `integration-coloros-hires.patch` | 20 | context | `Lcom/google/common/collect/ImmutableCollection$a; f` |
+| `integration-coloros-hires.patch` | 34 | added | `Lcom/google/common/collect/ImmutableCollection$a; e` |

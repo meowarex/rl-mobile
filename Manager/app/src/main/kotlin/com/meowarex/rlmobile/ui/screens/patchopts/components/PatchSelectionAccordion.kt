@@ -529,6 +529,11 @@ private fun PatchLockDialog(
             R.string.patch_lock_pkgname_msg,
             PatchOptions.Default.packageName,
         )
+        is PatchLock.RequiresPackage -> Triple(
+            R.string.patch_lock_pkgname_required_title,
+            R.string.patch_lock_pkgname_required_msg,
+            lock.packageName,
+        )
         PatchLock.Free -> return
     }
 

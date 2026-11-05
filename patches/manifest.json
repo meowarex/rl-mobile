@@ -977,6 +977,60 @@
       }
     },
     {
+      "id": "ColorOSIntegration",
+      "order": 92,
+      "category": "integration",
+      "packageNames": [
+        "com.netease.cloudmusic"
+      ],
+      "fileNames": [
+        "integration-coloros-lyrics.patch"
+      ],
+      "extensionFiles": [
+        "radiant/OplusBridge.smali"
+      ],
+      "title": "ColorOS",
+      "description": "Lyrics, Heart Button & Hi-Res Audio on ColorOS (needs the com.netease.cloudmusic package name)",
+      "default": false,
+      "requires": [
+        "LyricsRlApi"
+      ],
+      "advancedOptions": [
+        {
+          "type": "toggle",
+          "key": "lyrics",
+          "title": "Lyrics",
+          "description": "Synced lyrics on the lockscreen, Fluid Cloud and connected devices",
+          "default": true,
+          "inline": true,
+          "token": "RL_OPLUS_LYRICS"
+        },
+        {
+          "type": "toggle",
+          "key": "heart",
+          "title": "Heart Button",
+          "description": "Adds a heart to the media card to favorite the current track",
+          "default": true,
+          "inline": true,
+          "token": "RL_OPLUS_HEART"
+        },
+        {
+          "type": "toggle",
+          "key": "hires",
+          "title": "Hi-Res Audio",
+          "description": "Plays the full 24-bit audio (Hi-Res tracks skip resampling on headphones)",
+          "default": false,
+          "inline": true,
+          "fileNames": [
+            "integration-coloros-hires.patch"
+          ],
+          "extensionFiles": [
+            "radiant/HiResAudio.smali"
+          ]
+        }
+      ]
+    },
+    {
       "id": "DebugMenuUnlock",
       "order": 100,
       "fileNames": [

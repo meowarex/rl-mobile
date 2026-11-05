@@ -34,6 +34,8 @@ data class PatchSpec(
     val advancedOptions: List<OptionSpec> = emptyList(),
     val category: String = CATEGORY_PATCH,
     val pathLocked: Boolean = false,
+    /** Only works under these package names */
+    val packageNames: List<String> = emptyList(),
     /** Watchapp shown under an integration. */
     val companionApp: CompanionAppSpec? = null,
     /** selectedVariants key, new one when the variants get reshaped */

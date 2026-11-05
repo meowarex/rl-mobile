@@ -39,7 +39,8 @@ class PatchOptionsModel(
 
     /** Patches flagged [PatchSpec.pathLocked] only work under the stock package name. */
     fun isBlockedByPackageName(spec: PatchSpec): Boolean =
-        spec.pathLocked && packageName != PatchOptions.Default.packageName && !bypassIncompatible
+        !bypassIncompatible && (spec.pathLocked && packageName != PatchOptions.Default.packageName ||
+            spec.packageNames.isNotEmpty() && packageName !in spec.packageNames)
 
     /** The package-name field starts locked & editing requires confirming the unlock dialog */
     var packageNameLocked by mutableStateOf(prefilledOptions.packageName == PatchOptions.Default.packageName)
@@ -244,7 +245,10 @@ class PatchOptionsModel(
     )
 
     fun lockState(spec: PatchSpec): PatchLock {
-        if (isBlockedByPackageName(spec)) return PatchLock.RequiresDefaultPackage
+        if (isBlockedByPackageName(spec)) {
+            return spec.packageNames.firstOrNull()?.let(PatchLock::RequiresPackage)
+                ?: PatchLock.RequiresDefaultPackage
+        }
 
         val byId = specs.associateBy { it.id }
         fun closure(seed: PatchSpec, step: (PatchSpec) -> List<PatchSpec>): Set<PatchSpec> =
@@ -439,4 +443,7 @@ sealed class PatchLock {
 
     /** Locked off because the install uses a non-default package name */
     data object RequiresDefaultPackage : PatchLock()
+
+    /** Locked until the package name matches */
+    data class RequiresPackage(val packageName: String) : PatchLock()
 }

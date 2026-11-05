@@ -365,6 +365,8 @@
   <string name="patch_lock_required_msg">Patch Required by &lt;b>%s&lt;/b>.</string>
   <string name="patch_lock_blocked_msg">Patch Blocked by &lt;b>%s&lt;/b>.</string>
   <string name="patch_lock_pkgname_title">Original Package Name Invalid!</string>
+  <string name="patch_lock_pkgname_required_title">Package Name Required!</string>
+  <string name="patch_lock_pkgname_required_msg">This only works when the Package Name option is set to &lt;b>%s&lt;/b>.&lt;br/>&lt;br/>An existing install can\'t be renamed (requires a fresh install)</string>
   <string name="patch_lock_pkgname_msg">This only works while the app keeps its original &lt;b>%s&lt;/b> package name. Reset the Package Name option to enable it.&lt;br/>&lt;br/>An existing install can\'t be renamed (requires a fresh install)</string>
   <string name="patch_opt_lock_title">Option Locked</string>
   <string name="patch_opt_lock_needs_variant">Requires the &lt;b>%s&lt;/b> style.</string>
