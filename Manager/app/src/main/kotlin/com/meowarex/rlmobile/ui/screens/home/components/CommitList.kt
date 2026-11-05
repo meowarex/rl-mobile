@@ -25,11 +25,15 @@ import java.time.Instant
 import java.util.Date
 
 @Composable
-fun CommitList(commits: LazyPagingItems<RLCommit>) {
+fun CommitList(
+    commits: LazyPagingItems<RLCommit>,
+    // Last rows scroll clear of the nav bar
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+) {
     val loading = commits.loadState.refresh is LoadState.Loading || commits.loadState.append is LoadState.Loading
     val failed = commits.loadState.refresh is LoadState.Error || commits.loadState.append is LoadState.Error
 
-    LazyColumn {
+    LazyColumn(contentPadding = contentPadding) {
         items(
             count = commits.itemCount,
             key = commits.itemKey { it.sha },

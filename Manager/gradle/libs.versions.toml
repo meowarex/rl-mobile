@@ -14,7 +14,7 @@ axml = "1.0.1"
 binary-resources = "2.1.0"
 bouncycastle = "1.83"
 coil = "3.3.0"
-compose = "1.12.0-rc01"
+compose = "1.13.0-alpha03"
 # Material 3 Expressive (MaterialExpressiveTheme, MotionScheme, ButtonGroup, LoadingIndicator,
 # wavy progress, MaterialShapes) only exists on the 1.5.0-alpha line — it is not in 1.4.0 stable.
 compose-material3 = "1.5.0-alpha25"

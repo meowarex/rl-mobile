@@ -27,12 +27,14 @@ android {
     // this only widens the API surface available at compile time, it does not opt the app in to
     // Android 17's runtime behaviour changes.
     compileSdk = 37
+    // Compose 1.13 needs 37.1
+    compileSdkMinor = 1
 
     defaultConfig {
         minSdk = 24
         targetSdk = 36
-        versionCode = 20301
-        versionName = "2.3.1"
+        versionCode = 20302
+        versionName = "2.3.2"
 
         vectorDrawables {
             useSupportLibrary = true

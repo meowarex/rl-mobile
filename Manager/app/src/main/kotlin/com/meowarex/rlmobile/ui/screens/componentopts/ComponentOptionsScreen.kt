@@ -1,5 +1,6 @@
 package com.meowarex.rlmobile.ui.screens.componentopts
 
+import com.meowarex.rlmobile.ui.components.LocalNavBarInset
 import android.net.Uri
 import android.os.Parcelable
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -111,7 +112,7 @@ fun ComponentOptionsScreenContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = paddingValues
                 .exclude(PaddingValuesSides.Horizontal + PaddingValuesSides.Top)
-                .add(PaddingValues(16.dp)),
+                .add(PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp + LocalNavBarInset.current)),
             modifier = Modifier
                 .padding(paddingValues.exclude(PaddingValuesSides.Bottom)),
         ) {

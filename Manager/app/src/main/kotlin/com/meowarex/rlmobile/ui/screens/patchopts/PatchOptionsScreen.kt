@@ -1,5 +1,6 @@
 package com.meowarex.rlmobile.ui.screens.patchopts
 
+import com.meowarex.rlmobile.ui.components.LocalNavBarInset
 import android.os.Parcelable
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -151,6 +152,8 @@ fun PatchOptionsScreenContent(
                 .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
                 .padding(horizontal = 20.dp, vertical = 10.dp)
+                // Install button sits above the floating nav
+                .padding(bottom = LocalNavBarInset.current)
         ) {
             Text(
                 text = stringResource(R.string.patchopts_title),

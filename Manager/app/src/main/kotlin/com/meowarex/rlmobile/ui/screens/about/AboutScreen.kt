@@ -1,5 +1,6 @@
 package com.meowarex.rlmobile.ui.screens.about
 
+import com.meowarex.rlmobile.ui.components.LocalNavBarInset
 import android.os.Parcelable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -49,7 +50,7 @@ fun AboutScreenContent(state: State<AboutScreenState>) {
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = paddingValues
                 .exclude(PaddingValuesSides.Horizontal + PaddingValuesSides.Top)
-                .add(PaddingValues(vertical = 16.dp)),
+                .add(PaddingValues(top = 16.dp, bottom = 16.dp + LocalNavBarInset.current)),
             modifier = Modifier
                 .padding(paddingValues.exclude(PaddingValuesSides.Bottom))
                 .padding(horizontal = 14.dp),

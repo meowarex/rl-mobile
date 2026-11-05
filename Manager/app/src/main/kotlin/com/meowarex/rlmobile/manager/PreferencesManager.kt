@@ -12,6 +12,10 @@ class PreferencesManager(preferences: SharedPreferences) : BasePreferenceManager
     var uiStyle by enumPreference("ui_style", UiStyle.Radiant)
     // Off by default — Radiant ships its own palette. Opting in hands theming back to Monet.
     var dynamicColor by booleanPreference("dynamic_color", false)
+    // Essentials style progressive blur under the bars
+    var useBlur by booleanPreference("use_blur", true)
+    // Off brings back the old top bar
+    var floatingNav by booleanPreference("floating_nav", true)
     var devMode by booleanPreference("dev_mode", false)
     var installer by enumPreference<InstallerSetting>("installer", InstallerSetting.PackageInstaller)
     var keepPatchedApks by booleanPreference("keep_patched_apks", false)

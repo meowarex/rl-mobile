@@ -309,11 +309,19 @@ class HomeModel(
         return options.copy(pinnedPatchesVersion = pinned)
     }
 
+    // Unzipping is slow, cache until the app changes
+    @Volatile private var metadataCache: Pair<String, InstallMetadata?>? = null
+
     private fun loadInstallMetadata(packageName: String): InstallMetadata? = try {
+        val pkg = application.packageManager.getPackageInfo(packageName, 0)
+        val cacheKey = "$packageName:${pkg.lastUpdateTime}"
+        metadataCache?.takeIf { it.first == cacheKey }?.let { return it.second }
+
         val applicationInfo = application.packageManager.getApplicationInfo(packageName, 0)
         val metadataBytes = ZipReader(applicationInfo.publicSourceDir)
             .use { it.openEntry("rlmobile.json")?.read() }
         metadataBytes?.let { json.decodeFromStream<InstallMetadata>(it.inputStream()) }
+            .also { metadataCache = cacheKey to it }
     } catch (t: Throwable) {
         Log.w(BuildConfig.TAG, "Failed to parse install metadata for $packageName", t)
         null

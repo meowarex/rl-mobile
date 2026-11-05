@@ -1,5 +1,19 @@
 package com.meowarex.rlmobile
 
+import com.meowarex.rlmobile.ui.components.navBarVisible
+import com.meowarex.rlmobile.ui.components.LocalNavBarInset
+import com.meowarex.rlmobile.ui.components.AppNavBar
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import com.meowarex.rlmobile.ui.util.BlurDirection
+import com.meowarex.rlmobile.ui.util.progressiveBlur
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +29,8 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.*
-import cafe.adriel.voyager.transitions.SlideTransition
+import cafe.adriel.voyager.transitions.ScreenTransition
+import com.meowarex.rlmobile.ui.components.appTransition
 import com.meowarex.rlmobile.MainActivity.Companion.EXTRA_COMPONENT_TYPE
 import com.meowarex.rlmobile.MainActivity.Companion.EXTRA_FILE_PATH
 import com.meowarex.rlmobile.MainActivity.Companion.EXTRA_PACKAGE_NAME
@@ -105,14 +120,42 @@ class MainActivity : ComponentActivity() {
                             navigator.back(this@MainActivity)
                         }
 
-                        SlideTransition(
-                            navigator = navigator,
-                            disposeScreenAfterTransitionEnd = true,
-                            animationSpec = spring(
-                                stiffness = Spring.StiffnessMedium,
-                                visibilityThreshold = IntOffset.VisibilityThreshold,
+                        // Blurred status bar, like Essentials
+                        val density = LocalDensity.current
+                        val statusBarPx = with(density) { WindowInsets.statusBars.asPaddingValues().calculateTopPadding().toPx() }
+                        // Stays on through page changes
+                        val blurRadius = if (preferences.useBlur) 40f else 0f
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .progressiveBlur(
+                                    blurRadius = blurRadius,
+                                    height = statusBarPx * 1.15f,
+                                    direction = BlurDirection.TOP,
+                                ),
+                        ) {
+                            // Essentials style bar on every screen <3
+                            val showBar = !legacyUi && preferences.floatingNav && navBarVisible(navigator.lastItem)
+                            val bottomBlurPx = with(density) { 130.dp.toPx() }
+                            CompositionLocalProvider(LocalNavBarInset provides if (showBar) 100.dp else 0.dp) {
+                                ScreenTransition(
+                                    navigator = navigator,
+                                    transition = { appTransition(navigator.lastEvent, initialState, targetState) },
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .progressiveBlur(
+                                            blurRadius = blurRadius,
+                                            height = if (showBar) bottomBlurPx else 0f,
+                                            direction = BlurDirection.BOTTOM,
+                                        ),
+                                    disposeScreenAfterTransitionEnd = true,
+                                )
+                            }
+                            if (showBar) AppNavBar(
+                                navigator = navigator,
+                                modifier = Modifier.align(Alignment.BottomCenter),
                             )
-                        )
+                        }
                     }
                     }
 

@@ -76,7 +76,7 @@ jobs:
       - uses: android-actions/setup-android@v3
         with:
           # Default "tools" pkg no longer exists
-          packages: platform-tools platforms;android-37.0 build-tools;37.0.0
+          packages: platform-tools platforms;android-37.1 build-tools;37.0.0
 
       # No setup-gradle, GitCafe has no cache
       - uses: actions/setup-node@v4
