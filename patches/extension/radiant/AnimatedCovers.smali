@@ -7,7 +7,7 @@
 
 
 # static fields
-.field private static final API:Ljava/lang/String; = "https://ama.trainswift.net/api/v1/artwork/search?"
+.field private static final API:Ljava/lang/String; = "https://animated-cover.appwrite.network?"
 
 .field private static final APPLY:I = 0x3
 
@@ -18,8 +18,6 @@
 .field private static final FETCH:I = 0x2
 
 .field private static final FETCH_TIMEOUT_MS:J = 0x2710L
-
-.field private static final NONE:Ljava/lang/Object;
 
 .field private static final PLACEHOLDER:I = 0x5
 
@@ -33,6 +31,8 @@
 
 .field private static artworkKey:Ljava/lang/String;
 
+.field private static volatile artworkTall:Ljava/lang/String;
+
 .field private static artworkUrl:Ljava/lang/String;
 
 .field private static final cache:Ljava/util/LinkedHashMap;
@@ -40,6 +40,7 @@
         value = {
             "Ljava/util/LinkedHashMap<",
             "Ljava/lang/String;",
+            "[",
             "Ljava/lang/String;",
             ">;"
         }
@@ -50,7 +51,7 @@
 
 .field private static volatile lastState:Ljava/lang/String;
 
-.field private static loadToken:I
+.field private static volatile loadToken:I
 
 .field private static main:Landroid/os/Handler;
 
@@ -89,6 +90,8 @@
 .field private placeholder:Ljava/lang/Object;
 
 .field private request:Lyl0/l;
+
+.field private tall:Ljava/lang/String;
 
 .field private title:Ljava/lang/String;
 
@@ -129,12 +132,6 @@
 
     sput-object v0, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
 
-    new-instance v0, Ljava/lang/Object;
-
-    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
-
-    sput-object v0, Lradiant/AnimatedCovers;->NONE:Ljava/lang/Object;
-
     return-void
 .end method
 
@@ -148,32 +145,34 @@
     return-void
 .end method
 
-.method private static apply(Ljava/lang/String;Ljava/lang/String;I)V
-    .registers 3
+.method private static apply(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
+    .registers 4
 
-    sput-object p1, Lradiant/AnimatedCovers;->artworkKey:Ljava/lang/String;
+    sput-object p2, Lradiant/AnimatedCovers;->artworkKey:Ljava/lang/String;
 
     if-eqz p0, :cond_c
 
-    sget-object p1, Lradiant/AnimatedCovers;->artworkUrl:Ljava/lang/String;
+    sget-object p2, Lradiant/AnimatedCovers;->artworkUrl:Ljava/lang/String;
 
-    invoke-virtual {p0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+    invoke-virtual {p0, p2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 
-    move-result p1
+    move-result p2
 
-    if-nez p1, :cond_f
+    if-nez p2, :cond_f
 
     :cond_c
-    const/4 p1, 0x0
+    const/4 p2, 0x0
 
-    sput-object p1, Lradiant/AnimatedCovers;->failedSrc:Ljava/lang/String;
+    sput-object p2, Lradiant/AnimatedCovers;->failedSrc:Ljava/lang/String;
 
     :cond_f
     sput-object p0, Lradiant/AnimatedCovers;->artworkUrl:Ljava/lang/String;
 
+    sput-object p1, Lradiant/AnimatedCovers;->artworkTall:Ljava/lang/String;
+
     sget-object p0, Lradiant/AnimatedCovers;->albumState:Landroidx/compose/runtime/MutableState;
 
-    invoke-static {p2}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    invoke-static {p3}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
 
     move-result-object p1
 
@@ -317,8 +316,8 @@
     return-object v0
 .end method
 
-.method private done(Ljava/lang/String;Ljava/lang/String;)V
-    .registers 5
+.method private done(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+    .registers 6
 
     new-instance v0, Lradiant/AnimatedCovers;
 
@@ -332,7 +331,9 @@
 
     iput-object p1, v0, Lradiant/AnimatedCovers;->url:Ljava/lang/String;
 
-    iput-object p2, v0, Lradiant/AnimatedCovers;->key:Ljava/lang/String;
+    iput-object p2, v0, Lradiant/AnimatedCovers;->tall:Ljava/lang/String;
+
+    iput-object p3, v0, Lradiant/AnimatedCovers;->key:Ljava/lang/String;
 
     iget p1, p0, Lradiant/AnimatedCovers;->albumId:I
 
@@ -344,75 +345,27 @@
 .end method
 
 .method private static enc(Ljava/lang/String;)Ljava/lang/String;
-    .registers 4
+    .registers 2
 
     :try_start_0
     const-string v0, "UTF-8"
 
     invoke-static {p0, v0}, Ljava/net/URLEncoder;->encode(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
-    move-result-object v0
-
-    const-string v1, "+"
-
-    const-string v2, "%20"
-
-    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
-
-    move-result-object v0
-
-    const-string v1, "%21"
-
-    const-string v2, "!"
-
-    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
-
-    move-result-object v0
-
-    const-string v1, "%27"
-
-    const-string v2, "\'"
-
-    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
-
-    move-result-object v0
-
-    const-string v1, "%28"
-
-    const-string v2, "("
-
-    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
-
-    move-result-object v0
-
-    const-string v1, "%29"
-
-    const-string v2, ")"
-
-    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
-
-    move-result-object v0
-
-    const-string v1, "%7E"
-
-    const-string v2, "~"
-
-    invoke-virtual {v0, v1, v2}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
-
     move-result-object p0
-    :try_end_36
-    .catchall {:try_start_0 .. :try_end_36} :catchall_37
+    :try_end_6
+    .catchall {:try_start_0 .. :try_end_6} :catchall_7
 
     return-object p0
 
-    :catchall_37
+    :catchall_7
     move-exception v0
 
     return-object p0
 .end method
 
 .method private fetch()V
-    .registers 10
+    .registers 12
 
     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
 
@@ -424,171 +377,172 @@
 
     iget-object v2, p0, Lradiant/AnimatedCovers;->album:Ljava/lang/String;
 
-    if-eqz v2, :cond_d
+    if-nez v2, :cond_e
 
-    const/4 v2, 0x1
+    const-string v2, ""
 
-    goto :goto_e
+    goto :goto_14
 
-    :cond_d
-    const/4 v2, 0x0
+    :cond_e
+    iget-object v2, p0, Lradiant/AnimatedCovers;->album:Ljava/lang/String;
 
-    :goto_e
-    iget-object v3, p0, Lradiant/AnimatedCovers;->isrc:Ljava/lang/String;
+    invoke-virtual {v2}, Ljava/lang/String;->trim()Ljava/lang/String;
 
-    if-nez v3, :cond_15
+    move-result-object v2
 
-    const-string v3, ""
+    :goto_14
+    invoke-virtual {v2}, Ljava/lang/String;->isEmpty()Z
 
-    goto :goto_1b
+    move-result v3
 
-    :cond_15
-    iget-object v3, p0, Lradiant/AnimatedCovers;->isrc:Ljava/lang/String;
+    if-nez v3, :cond_34
 
-    invoke-virtual {v3}, Ljava/lang/String;->trim()Ljava/lang/String;
+    new-instance v3, Ljava/lang/StringBuilder;
+
+    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
+
+    iget-object v4, p0, Lradiant/AnimatedCovers;->artist:Ljava/lang/String;
+
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object v3
 
-    :goto_1b
-    if-eqz v2, :cond_39
+    const-string v4, "\u0000"
 
-    new-instance v4, Ljava/lang/StringBuilder;
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    invoke-direct {v4}, Ljava/lang/StringBuilder;-><init>()V
+    move-result-object v3
 
-    iget-object v5, p0, Lradiant/AnimatedCovers;->artist:Ljava/lang/String;
+    invoke-virtual {v3, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v2
 
-    move-result-object v4
+    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
-    const-string v5, "\u0000"
+    move-result-object v2
 
-    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    goto :goto_3c
 
-    move-result-object v4
+    :cond_34
+    iget-object v2, p0, Lradiant/AnimatedCovers;->artist:Ljava/lang/String;
 
-    iget-object v5, p0, Lradiant/AnimatedCovers;->album:Ljava/lang/String;
+    iget-object v3, p0, Lradiant/AnimatedCovers;->title:Ljava/lang/String;
 
-    invoke-virtual {v4, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-static {v2, v3}, Lradiant/AnimatedCovers;->titleKey(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
-    move-result-object v4
+    move-result-object v2
 
-    invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    :goto_3c
+    sget-object v3, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
 
-    move-result-object v4
+    monitor-enter v3
 
-    goto :goto_41
+    :try_start_3f
+    sget-object v4, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
 
-    :cond_39
-    iget-object v4, p0, Lradiant/AnimatedCovers;->artist:Ljava/lang/String;
+    invoke-virtual {v4, v2}, Ljava/util/LinkedHashMap;->containsKey(Ljava/lang/Object;)Z
 
-    iget-object v5, p0, Lradiant/AnimatedCovers;->title:Ljava/lang/String;
+    move-result v4
 
-    invoke-static {v4, v5}, Lradiant/AnimatedCovers;->titleKey(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    const/4 v5, 0x0
 
-    move-result-object v4
-
-    :goto_41
-    sget-object v5, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
-
-    monitor-enter v5
-
-    :try_start_44
-    sget-object v6, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
-
-    invoke-virtual {v6, v4}, Ljava/util/LinkedHashMap;->containsKey(Ljava/lang/Object;)Z
-
-    move-result v6
+    const/4 v6, 0x1
 
     const/4 v7, 0x0
 
-    if-eqz v6, :cond_5f
+    if-eqz v4, :cond_62
 
-    sget-object v6, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
+    sget-object v0, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
 
-    invoke-virtual {v6, v4}, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    invoke-virtual {v0, v2}, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
 
-    move-result-object v6
+    move-result-object v0
 
-    if-nez v6, :cond_58
+    check-cast v0, [Ljava/lang/String;
 
-    sget-object v6, Lradiant/AnimatedCovers;->NONE:Ljava/lang/Object;
+    if-nez v0, :cond_56
 
-    goto :goto_60
+    move-object v1, v7
 
-    :cond_58
-    sget-object v6, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
+    goto :goto_58
 
-    invoke-virtual {v6, v4}, Ljava/util/LinkedHashMap;->get(Ljava/lang/Object;)Ljava/lang/Object;
+    :cond_56
+    aget-object v1, v0, v5
 
-    move-result-object v6
+    :goto_58
+    if-nez v0, :cond_5b
 
-    goto :goto_60
+    goto :goto_5d
 
-    :cond_5f
-    move-object v6, v7
+    :cond_5b
+    aget-object v7, v0, v6
 
-    :goto_60
-    if-nez v6, :cond_64
+    :goto_5d
+    invoke-direct {p0, v1, v7, v2}, Lradiant/AnimatedCovers;->done(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 
-    :goto_62
-    move-object v8, v7
-
-    goto :goto_6c
-
-    :cond_64
-    sget-object v8, Lradiant/AnimatedCovers;->NONE:Ljava/lang/Object;
-
-    if-ne v6, v8, :cond_69
-
-    goto :goto_62
-
-    :cond_69
-    move-object v8, v6
-
-    check-cast v8, Ljava/lang/String;
-
-    :goto_6c
-    if-eqz v6, :cond_73
-
-    invoke-direct {p0, v8, v4}, Lradiant/AnimatedCovers;->done(Ljava/lang/String;Ljava/lang/String;)V
-
-    monitor-exit v5
+    monitor-exit v3
 
     return-void
 
-    :cond_73
-    monitor-exit v5
-    :try_end_74
-    .catchall {:try_start_44 .. :try_end_74} :catchall_f6
+    :cond_62
+    monitor-exit v3
+    :try_end_63
+    .catchall {:try_start_3f .. :try_end_63} :catchall_b3
 
-    invoke-virtual {v3}, Ljava/lang/String;->isEmpty()Z
+    new-array v3, v6, [Z
 
-    move-result v5
+    iget-object v4, p0, Lradiant/AnimatedCovers;->title:Ljava/lang/String;
 
-    if-eqz v5, :cond_7c
+    iget-object v8, p0, Lradiant/AnimatedCovers;->artist:Ljava/lang/String;
 
-    move-object v3, v7
+    iget-object v9, p0, Lradiant/AnimatedCovers;->album:Ljava/lang/String;
 
-    goto :goto_97
+    iget-object v10, p0, Lradiant/AnimatedCovers;->isrc:Ljava/lang/String;
 
-    :cond_7c
-    new-instance v5, Ljava/lang/StringBuilder;
+    invoke-static {v4, v8, v9, v10}, Lradiant/AnimatedCovers;->searchUrl(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
-    invoke-direct {v5}, Ljava/lang/StringBuilder;-><init>()V
+    move-result-object v4
 
-    const-string v6, "https://ama.trainswift.net/api/v1/artwork/search?isrc="
+    invoke-static {v4, v0, v1, v3}, Lradiant/AnimatedCovers;->tryFetch(Ljava/lang/String;J[Z)[Ljava/lang/String;
 
-    invoke-virtual {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
 
-    move-result-object v5
+    aget-boolean v1, v3, v5
 
-    invoke-static {v3}, Lradiant/AnimatedCovers;->enc(Ljava/lang/String;)Ljava/lang/String;
+    if-nez v1, :cond_82
+
+    iget v1, p0, Lradiant/AnimatedCovers;->token:I
+
+    sget v3, Lradiant/AnimatedCovers;->loadToken:I
+
+    if-ne v1, v3, :cond_82
+
+    invoke-static {v2, v0}, Lradiant/AnimatedCovers;->remember(Ljava/lang/String;[Ljava/lang/String;)V
+
+    :cond_82
+    if-nez v0, :cond_a4
+
+    const-string v1, "RLAnimatedCovers"
+
+    new-instance v3, Ljava/lang/StringBuilder;
+
+    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v4, "no animated art for \""
+
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object v3
 
-    invoke-virtual {v5, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    iget-object v4, p0, Lradiant/AnimatedCovers;->title:Ljava/lang/String;
+
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v3
+
+    const-string v4, "\""
+
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object v3
 
@@ -596,119 +550,38 @@
 
     move-result-object v3
 
-    invoke-static {v3, v0, v1}, Lradiant/AnimatedCovers;->tryFetch(Ljava/lang/String;J)Ljava/lang/String;
+    invoke-static {v1, v3}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
 
-    move-result-object v3
+    :cond_a4
+    if-nez v0, :cond_a8
 
-    :goto_97
-    if-eqz v3, :cond_9d
+    move-object v1, v7
 
-    :goto_99
-    invoke-static {v4, v3}, Lradiant/AnimatedCovers;->remember(Ljava/lang/String;Ljava/lang/String;)V
+    goto :goto_aa
 
-    goto :goto_d0
+    :cond_a8
+    aget-object v1, v0, v5
 
-    :cond_9d
-    iget-object v3, p0, Lradiant/AnimatedCovers;->title:Ljava/lang/String;
+    :goto_aa
+    if-nez v0, :cond_ad
 
-    iget-object v5, p0, Lradiant/AnimatedCovers;->artist:Ljava/lang/String;
+    goto :goto_af
 
-    iget-object v6, p0, Lradiant/AnimatedCovers;->album:Ljava/lang/String;
+    :cond_ad
+    aget-object v7, v0, v6
 
-    invoke-static {v3, v5, v6}, Lradiant/AnimatedCovers;->searchUrl(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v3
-
-    invoke-static {v3, v0, v1}, Lradiant/AnimatedCovers;->tryFetch(Ljava/lang/String;J)Ljava/lang/String;
-
-    move-result-object v3
-
-    if-eqz v3, :cond_ae
-
-    goto :goto_99
-
-    :cond_ae
-    if-eqz v2, :cond_c5
-
-    iget-object v2, p0, Lradiant/AnimatedCovers;->title:Ljava/lang/String;
-
-    iget-object v3, p0, Lradiant/AnimatedCovers;->artist:Ljava/lang/String;
-
-    invoke-static {v2, v3, v7}, Lradiant/AnimatedCovers;->searchUrl(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v2
-
-    invoke-static {v2, v0, v1}, Lradiant/AnimatedCovers;->tryFetch(Ljava/lang/String;J)Ljava/lang/String;
-
-    move-result-object v3
-
-    iget-object v0, p0, Lradiant/AnimatedCovers;->artist:Ljava/lang/String;
-
-    iget-object v1, p0, Lradiant/AnimatedCovers;->title:Ljava/lang/String;
-
-    invoke-static {v0, v1}, Lradiant/AnimatedCovers;->titleKey(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v4
-
-    goto :goto_d0
-
-    :cond_c5
-    invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
-
-    move-result-wide v5
-
-    cmp-long v0, v5, v0
-
-    if-gez v0, :cond_d0
-
-    invoke-static {v4, v7}, Lradiant/AnimatedCovers;->remember(Ljava/lang/String;Ljava/lang/String;)V
-
-    :cond_d0
-    :goto_d0
-    if-nez v3, :cond_f2
-
-    const-string v0, "RLAnimatedCovers"
-
-    new-instance v1, Ljava/lang/StringBuilder;
-
-    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
-
-    const-string v2, "no animated art for \""
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    iget-object v2, p0, Lradiant/AnimatedCovers;->title:Ljava/lang/String;
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    const-string v2, "\""
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v1
-
-    invoke-static {v0, v1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-
-    :cond_f2
-    invoke-direct {p0, v3, v4}, Lradiant/AnimatedCovers;->done(Ljava/lang/String;Ljava/lang/String;)V
+    :goto_af
+    invoke-direct {p0, v1, v7, v2}, Lradiant/AnimatedCovers;->done(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 
     return-void
 
-    :catchall_f6
+    :catchall_b3
     move-exception v0
 
-    :try_start_f7
-    monitor-exit v5
-    :try_end_f8
-    .catchall {:try_start_f7 .. :try_end_f8} :catchall_f6
+    :try_start_b4
+    monitor-exit v3
+    :try_end_b5
+    .catchall {:try_start_b4 .. :try_end_b5} :catchall_b3
 
     throw v0
 .end method
@@ -926,7 +799,7 @@
     return-void
 .end method
 
-.method private static remember(Ljava/lang/String;Ljava/lang/String;)V
+.method private static remember(Ljava/lang/String;[Ljava/lang/String;)V
     .registers 5
 
     sget-object v0, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
@@ -936,21 +809,13 @@
     :try_start_3
     sget-object v1, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
 
-    invoke-virtual {v1, p0}, Ljava/util/LinkedHashMap;->containsKey(Ljava/lang/Object;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_2b
-
-    sget-object v1, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
-
     invoke-virtual {v1}, Ljava/util/LinkedHashMap;->size()I
 
     move-result v1
 
     const/16 v2, 0xc8
 
-    if-lt v1, v2, :cond_2b
+    if-lt v1, v2, :cond_23
 
     sget-object v1, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
 
@@ -966,13 +831,13 @@
 
     move-result v2
 
-    if-eqz v2, :cond_2b
+    if-eqz v2, :cond_23
 
     invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
 
     invoke-interface {v1}, Ljava/util/Iterator;->remove()V
 
-    :cond_2b
+    :cond_23
     sget-object v1, Lradiant/AnimatedCovers;->cache:Ljava/util/LinkedHashMap;
 
     invoke-virtual {v1, p0, p1}, Ljava/util/LinkedHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
@@ -981,12 +846,12 @@
 
     return-void
 
-    :catchall_32
+    :catchall_2a
     move-exception p0
 
     monitor-exit v0
-    :try_end_34
-    .catchall {:try_start_3 .. :try_end_34} :catchall_32
+    :try_end_2c
+    .catchall {:try_start_3 .. :try_end_2c} :catchall_2a
 
     throw p0
 .end method
@@ -1295,14 +1160,14 @@
     return-void
 .end method
 
-.method private static searchUrl(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-    .registers 5
+.method private static searchUrl(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    .registers 6
 
     new-instance v0, Ljava/lang/StringBuilder;
 
     invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string v1, "https://ama.trainswift.net/api/v1/artwork/search?title="
+    const-string v1, "https://animated-cover.appwrite.network?title="
 
     invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
@@ -1377,6 +1242,41 @@
     move-result-object p0
 
     :cond_50
+    if-eqz p3, :cond_73
+
+    invoke-virtual {p3}, Ljava/lang/String;->isEmpty()Z
+
+    move-result p1
+
+    if-nez p1, :cond_73
+
+    new-instance p1, Ljava/lang/StringBuilder;
+
+    invoke-direct {p1}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {p1, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object p0
+
+    const-string p1, "&isrc="
+
+    invoke-virtual {p0, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object p0
+
+    invoke-static {p3}, Lradiant/AnimatedCovers;->enc(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-virtual {p0, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object p0
+
+    invoke-virtual {p0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object p0
+
+    :cond_73
     return-object p0
 .end method
 
@@ -1509,7 +1409,7 @@
 
     const/4 v2, 0x0
 
-    invoke-static {v2, v2, v1}, Lradiant/AnimatedCovers;->apply(Ljava/lang/String;Ljava/lang/String;I)V
+    invoke-static {v2, v2, v2, v1}, Lradiant/AnimatedCovers;->apply(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
 
     new-instance v1, Lradiant/AnimatedCovers;
 
@@ -1548,6 +1448,46 @@
     return-void
 .end method
 
+.method static srcFor(Ljava/lang/String;II)Ljava/lang/String;
+    .registers 5
+
+    sget-object v0, Lradiant/AnimatedCovers;->artworkTall:Ljava/lang/String;
+
+    if-eqz p0, :cond_13
+
+    sget-object v1, Lradiant/AnimatedCovers;->artworkUrl:Ljava/lang/String;
+
+    invoke-virtual {p0, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_13
+
+    if-eqz v0, :cond_13
+
+    if-lez p1, :cond_13
+
+    if-le p2, p1, :cond_13
+
+    move-object p0, v0
+
+    :cond_13
+    if-eqz p0, :cond_1e
+
+    sget-object p1, Lradiant/AnimatedCovers;->failedSrc:Ljava/lang/String;
+
+    invoke-virtual {p0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result p1
+
+    if-eqz p1, :cond_1e
+
+    const/4 p0, 0x0
+
+    :cond_1e
+    return-object p0
+.end method
+
 .method private static titleKey(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
     .registers 3
 
@@ -1576,132 +1516,103 @@
     return-object p0
 .end method
 
-.method private static tryFetch(Ljava/lang/String;J)Ljava/lang/String;
-    .registers 11
+.method private static tryFetch(Ljava/lang/String;J[Z)[Ljava/lang/String;
+    .registers 12
 
-    const-string v0, ""
+    const-string v0, " | "
 
-    const-string v1, " | "
-
-    const-string v2, "RLAnimatedCovers"
+    const-string v1, "RLAnimatedCovers"
 
     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
 
-    move-result-wide v3
+    move-result-wide v2
 
-    sub-long/2addr p1, v3
+    sub-long/2addr p1, v2
 
-    const-wide/16 v3, 0x0
+    const-wide/16 v2, 0x0
 
-    cmp-long v3, p1, v3
+    cmp-long v2, p1, v2
+
+    const/4 v3, 0x1
 
     const/4 v4, 0x0
 
-    if-gtz v3, :cond_13
+    const/4 v5, 0x0
 
-    return-object v4
+    if-gtz v2, :cond_15
 
-    :cond_13
-    :try_start_13
-    new-instance v3, Ljava/lang/StringBuilder;
+    aput-boolean v3, p3, v4
 
-    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
+    return-object v5
 
-    const-string v5, "fetching "
+    :cond_15
+    :try_start_15
+    new-instance v2, Ljava/lang/StringBuilder;
 
-    invoke-virtual {v3, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-direct {v2}, Ljava/lang/StringBuilder;-><init>()V
 
-    move-result-object v3
+    const-string v6, "fetching "
 
-    invoke-virtual {v3, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v2, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    move-result-object v3
+    move-result-object v2
 
-    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    invoke-virtual {v2, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
-    move-result-object v3
+    move-result-object v2
 
-    invoke-static {v2, v3}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
+    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
-    new-instance v3, Ljava/net/URL;
+    move-result-object v2
 
-    invoke-direct {v3, p0}, Ljava/net/URL;-><init>(Ljava/lang/String;)V
+    invoke-static {v1, v2}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
 
-    invoke-virtual {v3}, Ljava/net/URL;->openConnection()Ljava/net/URLConnection;
+    new-instance v2, Ljava/net/URL;
 
-    move-result-object v3
+    invoke-direct {v2, p0}, Ljava/net/URL;-><init>(Ljava/lang/String;)V
 
-    check-cast v3, Ljava/net/HttpURLConnection;
-    :try_end_34
-    .catch Ljava/net/SocketTimeoutException; {:try_start_13 .. :try_end_34} :catch_fb
-    .catchall {:try_start_13 .. :try_end_34} :catchall_d5
+    invoke-virtual {v2}, Ljava/net/URL;->openConnection()Ljava/net/URLConnection;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/net/HttpURLConnection;
+    :try_end_36
+    .catch Ljava/net/SocketTimeoutException; {:try_start_15 .. :try_end_36} :catch_127
+    .catchall {:try_start_15 .. :try_end_36} :catchall_101
 
     long-to-int p1, p1
 
-    :try_start_35
-    invoke-virtual {v3, p1}, Ljava/net/HttpURLConnection;->setConnectTimeout(I)V
+    :try_start_37
+    invoke-virtual {v2, p1}, Ljava/net/HttpURLConnection;->setConnectTimeout(I)V
 
-    invoke-virtual {v3, p1}, Ljava/net/HttpURLConnection;->setReadTimeout(I)V
+    invoke-virtual {v2, p1}, Ljava/net/HttpURLConnection;->setReadTimeout(I)V
 
-    invoke-virtual {v3}, Ljava/net/HttpURLConnection;->getResponseCode()I
+    invoke-virtual {v2}, Ljava/net/HttpURLConnection;->getResponseCode()I
 
     move-result p1
 
     const/16 p2, 0xc8
 
-    if-eq p1, p2, :cond_67
+    if-lt p1, p2, :cond_d9
 
-    new-instance p2, Ljava/lang/StringBuilder;
+    const/16 p2, 0x12b
 
-    invoke-direct {p2}, Ljava/lang/StringBuilder;-><init>()V
+    if-le p1, p2, :cond_4b
 
-    const-string v0, "fetch failed "
+    goto/16 :goto_d9
 
-    invoke-virtual {p2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object p2
-
-    invoke-virtual {p2, p1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
-
-    move-result-object p1
-
-    invoke-virtual {p1, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object p1
-
-    invoke-virtual {p1, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object p1
-
-    invoke-virtual {p1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object p1
-
-    invoke-static {v2, p1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-    :try_end_61
-    .catch Ljava/net/SocketTimeoutException; {:try_start_35 .. :try_end_61} :catch_d3
-    .catchall {:try_start_35 .. :try_end_61} :catchall_d1
-
-    if-eqz v3, :cond_66
-
-    invoke-virtual {v3}, Ljava/net/HttpURLConnection;->disconnect()V
-
-    :cond_66
-    return-object v4
-
-    :cond_67
-    :try_start_67
+    :cond_4b
     new-instance p1, Ljava/io/BufferedReader;
 
     new-instance p2, Ljava/io/InputStreamReader;
 
-    invoke-virtual {v3}, Ljava/net/HttpURLConnection;->getInputStream()Ljava/io/InputStream;
+    invoke-virtual {v2}, Ljava/net/HttpURLConnection;->getInputStream()Ljava/io/InputStream;
 
-    move-result-object v5
+    move-result-object v6
 
-    const-string v6, "UTF-8"
+    const-string v7, "UTF-8"
 
-    invoke-direct {p2, v5, v6}, Ljava/io/InputStreamReader;-><init>(Ljava/io/InputStream;Ljava/lang/String;)V
+    invoke-direct {p2, v6, v7}, Ljava/io/InputStreamReader;-><init>(Ljava/io/InputStream;Ljava/lang/String;)V
 
     invoke-direct {p1, p2}, Ljava/io/BufferedReader;-><init>(Ljava/io/Reader;)V
 
@@ -1709,24 +1620,22 @@
 
     invoke-direct {p2}, Ljava/lang/StringBuilder;-><init>()V
 
-    const/16 v5, 0x1000
+    const/16 v6, 0x1000
 
-    new-array v5, v5, [C
+    new-array v6, v6, [C
 
-    :goto_80
-    invoke-virtual {p1, v5}, Ljava/io/BufferedReader;->read([C)I
+    :goto_64
+    invoke-virtual {p1, v6}, Ljava/io/BufferedReader;->read([C)I
 
-    move-result v6
+    move-result v7
 
-    if-lez v6, :cond_8b
+    if-lez v7, :cond_6e
 
-    const/4 v7, 0x0
+    invoke-virtual {p2, v6, v4, v7}, Ljava/lang/StringBuilder;->append([CII)Ljava/lang/StringBuilder;
 
-    invoke-virtual {p2, v5, v7, v6}, Ljava/lang/StringBuilder;->append([CII)Ljava/lang/StringBuilder;
+    goto :goto_64
 
-    goto :goto_80
-
-    :cond_8b
+    :cond_6e
     invoke-virtual {p1}, Ljava/io/BufferedReader;->close()V
 
     new-instance p1, Lorg/json/JSONObject;
@@ -1737,42 +1646,100 @@
 
     invoke-direct {p1, p2}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
 
-    const-string p2, "url"
+    const-string p2, "animatedCover"
 
-    invoke-virtual {p1, p2, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    invoke-virtual {p1, p2}, Lorg/json/JSONObject;->optJSONObject(Ljava/lang/String;)Lorg/json/JSONObject;
+
+    move-result-object p1
+    :try_end_80
+    .catch Ljava/net/SocketTimeoutException; {:try_start_37 .. :try_end_80} :catch_ff
+    .catchall {:try_start_37 .. :try_end_80} :catchall_fd
+
+    const-string p2, ""
+
+    if-nez p1, :cond_86
+
+    move-object v6, p2
+
+    goto :goto_8c
+
+    :cond_86
+    :try_start_86
+    const-string v6, "square"
+
+    invoke-virtual {p1, v6, p2}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v6
+
+    :goto_8c
+    if-nez p1, :cond_8f
+
+    goto :goto_95
+
+    :cond_8f
+    const-string v7, "tall"
+
+    invoke-virtual {p1, v7, p2}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object p2
 
-    const-string v5, "url_tall"
+    :goto_95
+    invoke-virtual {v6}, Ljava/lang/String;->length()I
 
-    invoke-virtual {p1, v5, v0}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+    move-result p1
 
-    move-result-object p1
+    if-lez p1, :cond_ad
 
     invoke-virtual {p2}, Ljava/lang/String;->length()I
 
-    move-result v0
+    move-result p1
 
-    if-lez v0, :cond_b5
+    if-lez p1, :cond_a2
 
-    invoke-virtual {p1}, Ljava/lang/String;->length()I
+    goto :goto_a3
+
+    :cond_a2
+    move-object p2, v6
+
+    :goto_a3
+    filled-new-array {v6, p2}, [Ljava/lang/String;
+
+    move-result-object p0
+    :try_end_a7
+    .catch Ljava/net/SocketTimeoutException; {:try_start_86 .. :try_end_a7} :catch_ff
+    .catchall {:try_start_86 .. :try_end_a7} :catchall_fd
+
+    if-eqz v2, :cond_ac
+
+    invoke-virtual {v2}, Ljava/net/HttpURLConnection;->disconnect()V
+
+    :cond_ac
+    return-object p0
+
+    :cond_ad
+    :try_start_ad
+    invoke-virtual {p2}, Ljava/lang/String;->length()I
 
     move-result p1
-    :try_end_ad
-    .catch Ljava/net/SocketTimeoutException; {:try_start_67 .. :try_end_ad} :catch_d3
-    .catchall {:try_start_67 .. :try_end_ad} :catchall_d1
 
-    if-lez p1, :cond_b5
+    if-lez p1, :cond_bd
 
-    if-eqz v3, :cond_b4
+    filled-new-array {p2, p2}, [Ljava/lang/String;
 
-    invoke-virtual {v3}, Ljava/net/HttpURLConnection;->disconnect()V
+    move-result-object p0
+    :try_end_b7
+    .catch Ljava/net/SocketTimeoutException; {:try_start_ad .. :try_end_b7} :catch_ff
+    .catchall {:try_start_ad .. :try_end_b7} :catchall_fd
 
-    :cond_b4
-    return-object p2
+    if-eqz v2, :cond_bc
 
-    :cond_b5
-    :try_start_b5
+    invoke-virtual {v2}, Ljava/net/HttpURLConnection;->disconnect()V
+
+    :cond_bc
+    return-object p0
+
+    :cond_bd
+    :try_start_bd
     new-instance p1, Ljava/lang/StringBuilder;
 
     invoke-direct {p1}, Ljava/lang/StringBuilder;-><init>()V
@@ -1791,42 +1758,83 @@
 
     move-result-object p1
 
-    invoke-static {v2, p1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-    :try_end_cb
-    .catch Ljava/net/SocketTimeoutException; {:try_start_b5 .. :try_end_cb} :catch_d3
-    .catchall {:try_start_b5 .. :try_end_cb} :catchall_d1
+    invoke-static {v1, p1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
+    :try_end_d3
+    .catch Ljava/net/SocketTimeoutException; {:try_start_bd .. :try_end_d3} :catch_ff
+    .catchall {:try_start_bd .. :try_end_d3} :catchall_fd
 
-    if-eqz v3, :cond_d0
+    if-eqz v2, :cond_d8
 
-    invoke-virtual {v3}, Ljava/net/HttpURLConnection;->disconnect()V
+    invoke-virtual {v2}, Ljava/net/HttpURLConnection;->disconnect()V
 
-    :cond_d0
-    return-object v4
+    :cond_d8
+    return-object v5
 
-    :catchall_d1
-    move-exception p1
-
-    goto :goto_d7
-
-    :catch_d3
-    move-exception p1
-
-    goto :goto_fd
-
-    :catchall_d5
-    move-exception p1
-
-    move-object v3, v4
-
-    :goto_d7
-    :try_start_d7
+    :cond_d9
+    :goto_d9
+    :try_start_d9
     new-instance p2, Ljava/lang/StringBuilder;
 
     invoke-direct {p2}, Ljava/lang/StringBuilder;-><init>()V
 
-    const-string v0, "request error | "
+    const-string v6, "fetch failed "
 
-    invoke-virtual {p2, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {p2, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object p2
+
+    invoke-virtual {p2, p1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+
+    move-result-object p1
+
+    invoke-virtual {p1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object p1
+
+    invoke-virtual {p1, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object p1
+
+    invoke-virtual {p1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object p1
+
+    invoke-static {v1, p1}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
+    :try_end_f7
+    .catch Ljava/net/SocketTimeoutException; {:try_start_d9 .. :try_end_f7} :catch_ff
+    .catchall {:try_start_d9 .. :try_end_f7} :catchall_fd
+
+    if-eqz v2, :cond_fc
+
+    invoke-virtual {v2}, Ljava/net/HttpURLConnection;->disconnect()V
+
+    :cond_fc
+    return-object v5
+
+    :catchall_fd
+    move-exception p1
+
+    goto :goto_103
+
+    :catch_ff
+    move-exception p1
+
+    goto :goto_129
+
+    :catchall_101
+    move-exception p1
+
+    move-object v2, v5
+
+    :goto_103
+    :try_start_103
+    new-instance p2, Ljava/lang/StringBuilder;
+
+    invoke-direct {p2}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string p3, "request error | "
+
+    invoke-virtual {p2, p3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object p2
 
@@ -1834,7 +1842,7 @@
 
     move-result-object p0
 
-    invoke-virtual {p0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {p0, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object p0
 
@@ -1846,24 +1854,26 @@
 
     move-result-object p0
 
-    invoke-static {v2, p0}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-    :try_end_f5
-    .catchall {:try_start_d7 .. :try_end_f5} :catchall_119
+    invoke-static {v1, p0}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
+    :try_end_121
+    .catchall {:try_start_103 .. :try_end_121} :catchall_147
 
-    if-eqz v3, :cond_fa
+    if-eqz v2, :cond_126
 
-    invoke-virtual {v3}, Ljava/net/HttpURLConnection;->disconnect()V
+    invoke-virtual {v2}, Ljava/net/HttpURLConnection;->disconnect()V
 
-    :cond_fa
-    return-object v4
+    :cond_126
+    return-object v5
 
-    :catch_fb
+    :catch_127
     move-exception p1
 
-    move-object v3, v4
+    move-object v2, v5
 
-    :goto_fd
-    :try_start_fd
+    :goto_129
+    :try_start_129
+    aput-boolean v3, p3, v4
+
     new-instance p1, Ljava/lang/StringBuilder;
 
     invoke-direct {p1}, Ljava/lang/StringBuilder;-><init>()V
@@ -1882,25 +1892,25 @@
 
     move-result-object p0
 
-    invoke-static {v2, p0}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
-    :try_end_113
-    .catchall {:try_start_fd .. :try_end_113} :catchall_119
+    invoke-static {v1, p0}, Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I
+    :try_end_141
+    .catchall {:try_start_129 .. :try_end_141} :catchall_147
 
-    if-eqz v3, :cond_118
+    if-eqz v2, :cond_146
 
-    invoke-virtual {v3}, Ljava/net/HttpURLConnection;->disconnect()V
+    invoke-virtual {v2}, Ljava/net/HttpURLConnection;->disconnect()V
 
-    :cond_118
-    return-object v4
+    :cond_146
+    return-object v5
 
-    :catchall_119
+    :catchall_147
     move-exception p0
 
-    if-eqz v3, :cond_11f
+    if-eqz v2, :cond_14d
 
-    invoke-virtual {v3}, Ljava/net/HttpURLConnection;->disconnect()V
+    invoke-virtual {v2}, Ljava/net/HttpURLConnection;->disconnect()V
 
-    :cond_11f
+    :cond_14d
     throw p0
 .end method
 
@@ -1981,21 +1991,21 @@
 .end method
 
 .method public run()V
-    .registers 5
+    .registers 6
 
     const-string v0, "RLAnimatedCovers"
 
     :try_start_2
     iget v1, p0, Lradiant/AnimatedCovers;->mode:I
 
-    packed-switch v1, :pswitch_data_7e
+    packed-switch v1, :pswitch_data_8a
 
-    goto/16 :goto_7c
+    goto/16 :goto_88
 
     :pswitch_9
     iget-object v1, p0, Lradiant/AnimatedCovers;->url:Ljava/lang/String;
 
-    if-eqz v1, :cond_7c
+    if-eqz v1, :cond_88
 
     iget-object v1, p0, Lradiant/AnimatedCovers;->url:Ljava/lang/String;
 
@@ -2005,8 +2015,19 @@
 
     move-result v1
 
-    if-eqz v1, :cond_7c
+    if-nez v1, :cond_21
 
+    iget-object v1, p0, Lradiant/AnimatedCovers;->url:Ljava/lang/String;
+
+    sget-object v2, Lradiant/AnimatedCovers;->artworkTall:Ljava/lang/String;
+
+    invoke-virtual {v1, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-eqz v1, :cond_88
+
+    :cond_21
     new-instance v1, Ljava/lang/StringBuilder;
 
     invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
@@ -2041,43 +2062,45 @@
 
     invoke-static {}, Lradiant/AnimatedCovers;->publish()V
 
-    goto :goto_7c
+    goto :goto_88
 
-    :pswitch_3d
+    :pswitch_47
     iget v1, p0, Lradiant/AnimatedCovers;->token:I
 
     sget v2, Lradiant/AnimatedCovers;->loadToken:I
 
-    if-ne v1, v2, :cond_7c
+    if-ne v1, v2, :cond_88
 
     iget-object v1, p0, Lradiant/AnimatedCovers;->url:Ljava/lang/String;
 
-    iget-object v2, p0, Lradiant/AnimatedCovers;->key:Ljava/lang/String;
+    iget-object v2, p0, Lradiant/AnimatedCovers;->tall:Ljava/lang/String;
 
-    iget v3, p0, Lradiant/AnimatedCovers;->albumId:I
+    iget-object v3, p0, Lradiant/AnimatedCovers;->key:Ljava/lang/String;
 
-    invoke-static {v1, v2, v3}, Lradiant/AnimatedCovers;->apply(Ljava/lang/String;Ljava/lang/String;I)V
+    iget v4, p0, Lradiant/AnimatedCovers;->albumId:I
 
-    goto :goto_7c
+    invoke-static {v1, v2, v3, v4}, Lradiant/AnimatedCovers;->apply(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V
 
-    :pswitch_4d
+    goto :goto_88
+
+    :pswitch_59
     invoke-direct {p0}, Lradiant/AnimatedCovers;->fetch()V
 
-    goto :goto_7c
+    goto :goto_88
 
-    :pswitch_51
+    :pswitch_5d
     invoke-direct {p0}, Lradiant/AnimatedCovers;->setTrack()V
 
-    goto :goto_7c
+    goto :goto_88
 
-    :pswitch_55
+    :pswitch_61
     invoke-direct {p0}, Lradiant/AnimatedCovers;->resolve()V
-    :try_end_58
-    .catchall {:try_start_2 .. :try_end_58} :catchall_59
+    :try_end_64
+    .catchall {:try_start_2 .. :try_end_64} :catchall_65
 
-    goto :goto_7c
+    goto :goto_88
 
-    :catchall_59
+    :catchall_65
     move-exception v1
 
     new-instance v2, Ljava/lang/StringBuilder;
@@ -2112,18 +2135,18 @@
 
     invoke-static {v0, v1}, Landroid/util/Log;->w(Ljava/lang/String;Ljava/lang/String;)I
 
-    :cond_7c
-    :goto_7c
+    :cond_88
+    :goto_88
     return-void
 
     nop
 
-    :pswitch_data_7e
+    :pswitch_data_8a
     .packed-switch 0x0
-        :pswitch_55
-        :pswitch_51
-        :pswitch_4d
-        :pswitch_3d
+        :pswitch_61
+        :pswitch_5d
+        :pswitch_59
+        :pswitch_47
         :pswitch_9
     .end packed-switch
 .end method
