@@ -1,0 +1,39 @@
+--- a/android/support/v4/media/session/MediaSessionCompat.smali
++++ b/android/support/v4/media/session/MediaSessionCompat.smali
+@@ -1646,6 +1646,10 @@
+ .method public setMetadata(Landroid/support/v4/media/MediaMetadataCompat;)V
+     .locals 1
+ 
++    invoke-static {p0, p1}, Lradiant/OplusBridge;->decorate(Landroid/support/v4/media/session/MediaSessionCompat;Landroid/support/v4/media/MediaMetadataCompat;)Landroid/support/v4/media/MediaMetadataCompat;    # ColorOS lyrics + heart <3
++
++    move-result-object p1
++
+     .line 1
+     iget-object v0, p0, Landroid/support/v4/media/session/MediaSessionCompat;->mImpl:Landroid/support/v4/media/session/MediaSessionCompat$MediaSessionImpl;
+ 
+--- a/android/support/v4/media/session/MediaSessionCompat$Callback.smali
++++ b/android/support/v4/media/session/MediaSessionCompat$Callback.smali
+@@ -699,6 +699,8 @@
+ .method public onSetRating(Landroid/support/v4/media/RatingCompat;)V
+     .locals 0
+ 
++    invoke-static {p0, p1}, Lradiant/OplusBridge;->onSetRating(Landroid/support/v4/media/session/MediaSessionCompat$Callback;Landroid/support/v4/media/RatingCompat;)V    # heart tap
++
+     .line 1
+     return-void
+ .end method
+--- a/radiant/RLAPILyricsWorker.smali
++++ b/radiant/RLAPILyricsWorker.smali
+@@ -900,6 +900,12 @@
+ 
+     invoke-static {v11}, Lradiant/WordLyrics;->ingest(Ljava/lang/String;)V
+ 
++    iget-object v4, p0, Lradiant/RLAPILyricsWorker;->key:Ljava/lang/String;    # track id
++
++    iget-object v5, p0, Lradiant/RLAPILyricsWorker;->title:Ljava/lang/String;    # track title
++
++    invoke-static {v4, v5, v11}, Lradiant/OplusBridge;->onLyrics(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V    # send lyrics to ColorOS
++
+     iget-object v4, p0, Lradiant/RLAPILyricsWorker;->vm:Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;
+ 
+     iget-object v5, v4, Lcom/tidal/android/feature/playerscreen/ui/PlayerViewModel;->R:Lkotlinx/coroutines/flow/MutableStateFlow;    # MARKER: R8 O

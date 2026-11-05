@@ -28,7 +28,9 @@ public final class CoverPlayer extends MediaPlayer implements Runnable {
         Context c = RLSettings.app();
         if (c == null) return null;
         CoverPlayer cp = new CoverPlayer(onFirstFrame);
-        cp.art = ArtPlayer.start(c, url, surface, nextW, nextH, cp);
+        // Desktop pickSrc, broken stream stays static
+        String src = AnimatedCovers.srcFor(url, nextW, nextH);
+        if (src != null) cp.art = ArtPlayer.start(c, src, surface, nextW, nextH, cp);
         return cp;
     }
 

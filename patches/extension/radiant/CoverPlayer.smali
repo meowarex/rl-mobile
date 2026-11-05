@@ -55,11 +55,19 @@
 
     invoke-direct {v7, p2}, Lradiant/CoverPlayer;-><init>(Lyl0/a;)V
 
+    sget p2, Lradiant/CoverPlayer;->nextW:I
+
+    sget v0, Lradiant/CoverPlayer;->nextH:I
+
+    invoke-static {p0, p2, v0}, Lradiant/AnimatedCovers;->srcFor(Ljava/lang/String;II)Ljava/lang/String;
+
+    move-result-object v3
+
+    if-eqz v3, :cond_29
+
     sget v5, Lradiant/CoverPlayer;->nextW:I
 
     sget v6, Lradiant/CoverPlayer;->nextH:I
-
-    move-object v3, p0
 
     move-object v4, p1
 
@@ -69,6 +77,7 @@
 
     iput-object p0, v7, Lradiant/CoverPlayer;->art:Lradiant/ArtPlayer;
 
+    :cond_29
     return-object v7
 .end method
 

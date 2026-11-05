@@ -83,7 +83,7 @@ fun UpdaterDialog(
                     onClick = { uriHandler.openUri(viewModel.targetReleaseUrl!!) }
                 ) {
                     Text(
-                        text = stringResource(R.string.updater_open_github),
+                        text = stringResource(R.string.updater_open_releases),
                         textAlign = TextAlign.Center,
                         textDecoration = TextDecoration.Underline,
                     )

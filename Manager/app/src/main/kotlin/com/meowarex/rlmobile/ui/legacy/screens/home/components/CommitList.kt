@@ -20,13 +20,13 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
-import com.meowarex.rlmobile.network.models.GithubCommit
+import com.meowarex.rlmobile.network.models.RLCommit
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Date
 
 @Composable
-fun CommitList(commits: LazyPagingItems<GithubCommit>) {
+fun CommitList(commits: LazyPagingItems<RLCommit>) {
     val loading = commits.loadState.refresh is LoadState.Loading || commits.loadState.append is LoadState.Loading
     val failed = commits.loadState.refresh is LoadState.Error || commits.loadState.append is LoadState.Error
 
@@ -69,13 +69,13 @@ fun CommitList(commits: LazyPagingItems<GithubCommit>) {
 }
 
 @Composable
-private fun CommitRow(commit: GithubCommit) {
+private fun CommitRow(commit: RLCommit) {
     val uriHandler = LocalUriHandler.current
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { uriHandler.openUri(commit.htmlUrl) }
+            .clickable { uriHandler.openUri(commit.url) }
             .padding(16.dp),
     ) {
         Row(
@@ -83,12 +83,12 @@ private fun CommitRow(commit: GithubCommit) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                model = commit.author?.avatarUrl ?: "https://github.com/ghost.png",
-                contentDescription = commit.author?.login ?: "ghost",
+                model = commit.avatarUrl,
+                contentDescription = commit.authorName,
                 modifier = Modifier.size(20.dp).clip(CircleShape),
             )
             Text(
-                text = commit.author?.login ?: commit.commit.author.name,
+                text = commit.authorName,
                 style = MaterialTheme.typography.labelMedium,
             )
             Text("•", style = MaterialTheme.typography.labelLarge)
@@ -102,7 +102,7 @@ private fun CommitRow(commit: GithubCommit) {
             Text(
                 text = runCatching {
                     SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT)
-                        .format(Date.from(Instant.parse(commit.commit.author.date)))
+                        .format(Date.from(Instant.ofEpochSecond(commit.timestamp)))
                 }.getOrDefault(""),
                 style = MaterialTheme.typography.labelMedium,
                 color = LocalContentColor.current.copy(alpha = 0.5f),
@@ -111,7 +111,7 @@ private fun CommitRow(commit: GithubCommit) {
             )
         }
         Text(
-            text = commit.commit.message.lineSequence().first(),
+            text = commit.title,
             style = MaterialTheme.typography.labelLarge,
         )
     }

@@ -28,18 +28,17 @@ import java.util.LinkedHashMap;
 // Animated covers, works exactly like the desktop plugin
 public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 yl0.p
     private static final String TAG = "RLAnimatedCovers";
-    private static final String API = "https://ama.trainswift.net/api/v1/artwork/search?";
+    private static final String API = "https://animated-cover.appwrite.network?";
     private static final int CACHE_MAX = 200;
     private static final long FETCH_TIMEOUT_MS = 10000L;
 
-    // HLS url for the playing track, null if none
+    // Square HLS url, null if none
     static final MutableState urlState = SnapshotStateKt.mutableStateOf$default(null, null, 2, null);
     // Album the art belongs to, other albums stay static
     static final MutableState albumState = SnapshotStateKt.mutableStateOf$default(Integer.valueOf(-1), null, 2, null);
 
-    // Hits and misses, keyed like the desktop cache
-    private static final LinkedHashMap<String, String> cache = new LinkedHashMap<String, String>();
-    private static final Object NONE = new Object();
+    // Hits + misses, album key for album matches
+    private static final LinkedHashMap<String, String[]> cache = new LinkedHashMap<String, String[]>();
 
     // Play queue, for the full track info
     private static volatile Object queue;
@@ -49,8 +48,10 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
     private static String trackId;
     // Album key if album matched, else title key
     private static String artworkKey;
-    private static int loadToken;
+    private static volatile int loadToken;
     private static String artworkUrl;
+    // Tall stream for portrait covers
+    private static volatile String artworkTall;
     // Errored stream, skipped until the art changes
     private static String failedSrc;
 
@@ -65,7 +66,7 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
     private final int mode;
 
     // track
-    private String id, title, artist, album, isrc, url, key;
+    private String id, title, artist, album, isrc, url, tall, key;
     private int albumId, token;
 
     // normal cover under the video
@@ -129,6 +130,13 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
         return u != null && ((Integer) albumState.getValue()).intValue() == albumId ? u : null;
     }
 
+    // Tall stream on portrait covers, null if broken
+    static String srcFor(String url, int w, int h) {
+        String tall = artworkTall;
+        String src = url != null && url.equals(artworkUrl) && tall != null && w > 0 && h > w ? tall : url;
+        return src != null && src.equals(failedSrc) ? null : src;
+    }
+
     // Stream errored, hide it until the art changes
     static void onPlaybackFailed(String src) {
         AnimatedCovers f = new AnimatedCovers(FAILED);
@@ -158,10 +166,10 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
                     fetch();
                     break;
                 case APPLY:
-                    if (token == loadToken) apply(url, key, albumId);
+                    if (token == loadToken) apply(url, tall, key, albumId);
                     break;
                 case FAILED:
-                    if (url != null && url.equals(artworkUrl)) {
+                    if (url != null && (url.equals(artworkUrl) || url.equals(artworkTall))) {
                         Log.i(TAG, "hiding video (src: " + url + ")");
                         failedSrc = url;
                         publish();
@@ -225,7 +233,7 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
             return;
         }
         // New art, drop the old video now
-        apply(null, null, albumId);
+        apply(null, null, null, albumId);
         AnimatedCovers f = new AnimatedCovers(FETCH);
         f.token = token;
         f.id = id;
@@ -237,10 +245,11 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
         background(f);
     }
 
-    private static void apply(String url, String key, int albumId) {
+    private static void apply(String url, String tall, String key, int albumId) {
         artworkKey = key;
         if (url == null || !url.equals(artworkUrl)) failedSrc = null;
         artworkUrl = url;
+        artworkTall = tall;
         albumState.setValue(Integer.valueOf(albumId));
         publish();
     }
@@ -256,68 +265,56 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
 
     private void fetch() {
         long deadline = System.currentTimeMillis() + FETCH_TIMEOUT_MS;
-        boolean albumPresent = album != null;
-        String isrcTrimmed = isrc == null ? "" : isrc.trim();
+        String albumName = album == null ? "" : album.trim();
+        boolean albumPresent = !albumName.isEmpty();
         // Album key, or title key without an album
-        String cacheKey = albumPresent ? artist + "\u0000" + album : titleKey(artist, title);
-        String foundKey = cacheKey;
-        String found;
+        String cacheKey = albumPresent ? artist + "\u0000" + albumName : titleKey(artist, title);
         synchronized (cache) {
-            Object hit = cache.containsKey(cacheKey) ? (cache.get(cacheKey) == null ? NONE : cache.get(cacheKey)) : null;
-            found = hit == null ? null : hit == NONE ? null : (String) hit;
-            if (hit != null) {
-                done(found, cacheKey);
+            if (cache.containsKey(cacheKey)) {
+                String[] hit = cache.get(cacheKey);
+                done(hit == null ? null : hit[0], hit == null ? null : hit[1], cacheKey);
                 return;
             }
         }
-        // ISRC first, misses fall through uncached
-        found = isrcTrimmed.isEmpty() ? null : tryFetch(API + "isrc=" + enc(isrcTrimmed), deadline);
-        if (found != null) {
-            remember(cacheKey, found);
-        } else {
-            // Exact album first, then once without it
-            found = tryFetch(searchUrl(title, artist, album), deadline);
-            if (found != null) {
-                remember(cacheKey, found);
-            } else if (albumPresent) {
-                // Title only result, just for this track
-                found = tryFetch(searchUrl(title, artist, null), deadline);
-                foundKey = titleKey(artist, title);
-            } else {
-                // No album, title key is already per track
-                if (System.currentTimeMillis() < deadline) remember(cacheKey, null);
-            }
-        }
-        if (found == null) Log.i(TAG, "no animated art for \"" + title + "\"");
-        done(found, foundKey);
+        // One request, 404 means no animated art
+        boolean[] timedOut = new boolean[1];
+        String[] artwork = tryFetch(searchUrl(title, artist, album, isrc), deadline, timedOut);
+        // Cancelled attempts don't count as misses
+        if (!timedOut[0] && token == loadToken) remember(cacheKey, artwork);
+        if (artwork == null) Log.i(TAG, "no animated art for \"" + title + "\"");
+        done(artwork == null ? null : artwork[0], artwork == null ? null : artwork[1], cacheKey);
     }
 
-    private void done(String found, String key) {
+    private void done(String found, String foundTall, String key) {
         AnimatedCovers a = new AnimatedCovers(APPLY);
         a.token = token;
         a.url = found;
+        a.tall = foundTall;
         a.key = key;
         a.albumId = albumId;
         post(a);
     }
 
-    private static void remember(String key, String url) {
+    private static void remember(String key, String[] artwork) {
         synchronized (cache) {
-            if (!cache.containsKey(key) && cache.size() >= CACHE_MAX) {
+            if (cache.size() >= CACHE_MAX) {
                 Iterator<String> it = cache.keySet().iterator();
                 if (it.hasNext()) {
                     it.next();
                     it.remove();
                 }
             }
-            cache.put(key, url);
+            cache.put(key, artwork);
         }
     }
 
-    // Both urls or nothing, like desktop
-    private static String tryFetch(String url, long deadline) {
+    // {square, tall}, either alone works
+    private static String[] tryFetch(String url, long deadline, boolean[] timedOut) {
         long left = deadline - System.currentTimeMillis();
-        if (left <= 0) return null;
+        if (left <= 0) {
+            timedOut[0] = true;
+            return null;
+        }
         HttpURLConnection c = null;
         try {
             Log.i(TAG, "fetching " + url);
@@ -325,7 +322,7 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
             c.setConnectTimeout((int) left);
             c.setReadTimeout((int) left);
             int status = c.getResponseCode();
-            if (status != 200) {
+            if (status < 200 || status > 299) {
                 Log.i(TAG, "fetch failed " + status + " | " + url);
                 return null;
             }
@@ -335,13 +332,15 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
             int n;
             while ((n = r.read(buf)) > 0) sb.append(buf, 0, n);
             r.close();
-            JSONObject o = new JSONObject(sb.toString());
-            String u = o.optString("url", "");
-            String tall = o.optString("url_tall", "");
-            if (u.length() > 0 && tall.length() > 0) return u;
+            JSONObject cover = new JSONObject(sb.toString()).optJSONObject("animatedCover");
+            String square = cover == null ? "" : cover.optString("square", "");
+            String tall = cover == null ? "" : cover.optString("tall", "");
+            if (square.length() > 0) return new String[]{square, tall.length() > 0 ? tall : square};
+            if (tall.length() > 0) return new String[]{tall, tall};
             Log.i(TAG, "none found | " + url);
             return null;
         } catch (SocketTimeoutException e) {
+            timedOut[0] = true;
             Log.i(TAG, "request timed out | " + url);
             return null;
         } catch (Throwable t) {
@@ -352,10 +351,11 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
         }
     }
 
-    private static String searchUrl(String title, String artist, String album) {
+    // URLSearchParams order, title as album breaks search
+    private static String searchUrl(String title, String artist, String album, String isrc) {
         String q = API + "title=" + enc(title) + "&artist=" + enc(artist);
-        // Omit the album param entirely when absent
         if (album != null && !album.trim().isEmpty()) q += "&album=" + enc(album.trim());
+        if (isrc != null && !isrc.isEmpty()) q += "&isrc=" + enc(isrc);
         return q;
     }
 
@@ -390,11 +390,10 @@ public final class AnimatedCovers implements Runnable, yl0.p {    // MARKER: R8 
         }
     }
 
-    // encodeURIComponent
+    // Same encoding as URLSearchParams
     private static String enc(String s) {
         try {
-            return URLEncoder.encode(s, "UTF-8").replace("+", "%20").replace("%21", "!").replace("%27", "'")
-                    .replace("%28", "(").replace("%29", ")").replace("%7E", "~");
+            return URLEncoder.encode(s, "UTF-8");
         } catch (Throwable t) {
             return s;
         }

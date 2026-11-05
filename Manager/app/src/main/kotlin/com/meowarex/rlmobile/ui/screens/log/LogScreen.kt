@@ -1,5 +1,6 @@
 package com.meowarex.rlmobile.ui.screens.log
 
+import com.meowarex.rlmobile.ui.components.LocalNavBarInset
 import android.os.Parcelable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -64,6 +65,7 @@ fun LogScreenContent(
     ) { paddingValues ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(28.dp),
+            contentPadding = PaddingValues(bottom = LocalNavBarInset.current),
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(vertical = 10.dp, horizontal = 22.dp)

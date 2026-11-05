@@ -1,0 +1,133 @@
+name: "[main] Deploy Releases to Appwrite"
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**/*.md"
+  workflow_dispatch:
+
+concurrency:
+  group: appwrite-releases-deploy
+  cancel-in-progress: false
+
+env:
+  APPWRITE_ENDPOINT: https://syd.cloud.appwrite.io/v1
+  APPWRITE_PROJECT: atomix-api
+  RELEASES_SITE: rl-mobile-releases
+  RELEASES_BUCKET: rl-mobile-releases
+
+jobs:
+  Deploy:
+    name: Build & publish release
+    # GitCafe only, skip GitHub mirrors
+    if: github.server_url != 'https://github.com'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history for contributors.json
+          fetch-depth: 0
+
+      # Fail fast before the slow setup
+      - name: Check secrets
+        env:
+          keystore: ${{ secrets.keystore }}
+          keyAlias: ${{ secrets.keyAlias }}
+          keyPassword: ${{ secrets.keyPassword }}
+          keystorePassword: ${{ secrets.keystorePassword }}
+          RL_ACCESS_TOKEN_ID: ${{ secrets.RL_ACCESS_TOKEN_ID }}
+          RL_ACCESS_TOKEN: ${{ secrets.RL_ACCESS_TOKEN }}
+          APPWRITE_KEY: ${{ secrets.APPWRITE_KEY }}
+        run: |
+          missing=()
+          for name in keystore keyAlias keyPassword keystorePassword RL_ACCESS_TOKEN_ID RL_ACCESS_TOKEN APPWRITE_KEY; do
+            [ -n "${!name}" ] || missing+=("$name")
+          done
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "::error::Missing repo secrets: ${missing[*]}"
+            exit 1
+          fi
+
+      # Runner lacks unzip and zip
+      - name: System deps
+        run: |
+          missing=()
+          for tool in unzip zip; do
+            command -v "$tool" >/dev/null || missing+=("$tool")
+          done
+          if [ ${#missing[@]} -gt 0 ]; then
+            # Runner is root, sudo may not exist
+            as_root=()
+            [ "$(id -u)" -ne 0 ] && as_root=(sudo)
+            "${as_root[@]}" apt-get update -qq
+            "${as_root[@]}" apt-get install -y -qq --no-install-recommends "${missing[@]}"
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: zulu
+
+      # GitCafe image has no Android SDK
+      - uses: android-actions/setup-android@v3
+        with:
+          # Default "tools" pkg no longer exists
+          packages: platform-tools platforms;android-37.1 build-tools;37.0.0
+
+      # No setup-gradle, GitCafe has no cache
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Version
+        id: version
+        run: |
+          version=$(tr -d '[:space:]' < .version)
+          code=$(bash tools/version-code.sh "$version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Releasing $version (versionCode $code)"
+          sed -i "s/versionName = \".*\"/versionName = \"$version\"/" Manager/app/build.gradle.kts
+          sed -i "s/versionCode = .*/versionCode = $code/" Manager/app/build.gradle.kts
+          grep -E "versionCode|versionName" Manager/app/build.gradle.kts
+
+      - name: Build Manager
+        working-directory: Manager
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.keyAlias }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.keyPassword }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.keystorePassword }}
+          SIGNING_STORE_FILE: ${{ github.workspace }}/release.keystore
+          RELEASE: true
+        run: |
+          echo "${{ secrets.keystore }}" | base64 -d > "$SIGNING_STORE_FILE"
+          ./gradlew :app:packageRelease --stacktrace
+          rm "$SIGNING_STORE_FILE"
+
+      - name: Inject RL API creds
+        env:
+          RL_ACCESS_TOKEN_ID: ${{ secrets.RL_ACCESS_TOKEN_ID }}
+          RL_ACCESS_TOKEN: ${{ secrets.RL_ACCESS_TOKEN }}
+        run: bash tools/inject-secrets.sh patches
+
+      - name: Prepare assets
+        run: |
+          mkdir dist
+          cp Manager/app/build/outputs/apk/release/app-release.apk dist/manager.apk
+          cp patches/data.json dist/data.json
+          (cd patches && zip -qr ../dist/patches.zip . -x "data.json")
+          node tools/release-site/contributors.mjs dist "${{ steps.version.outputs.version }}"
+          ls -la dist
+
+      - name: Publish to Appwrite 🚀
+        working-directory: tools/release-site
+        env:
+          APPWRITE_KEY: ${{ secrets.APPWRITE_KEY }}
+          # Repo var, true overwrites a release
+          RELEASES_FORCE: ${{ vars.RELEASES_FORCE }}
+        run: |
+          npm ci --no-audit --no-fund
+          node publish.mjs "${{ steps.version.outputs.version }}" ../../dist

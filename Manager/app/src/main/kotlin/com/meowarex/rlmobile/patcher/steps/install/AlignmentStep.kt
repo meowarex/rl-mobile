@@ -21,8 +21,17 @@ class AlignmentStep : Step(), KoinComponent {
     override val localizedName = R.string.patch_step_alignment
 
     override suspend fun execute(container: StepRunner) {
-        val currentDeviceArch = Build.SUPPORTED_ABIS.first()
         val apk = container.getStep<CopyDependenciesStep>().apk
+
+        // APKPure might only ship a secondary ABI
+        val shippedAbis = ZipReader(apk).use { zip ->
+            zip.entryNames.filter { it.startsWith("lib/") && it.endsWith(".so") }
+                .mapNotNull { it.split('/').getOrNull(1) }
+                .toSet()
+        }
+        val currentDeviceArch = Build.SUPPORTED_ABIS.firstOrNull { it in shippedAbis }
+            ?: Build.SUPPORTED_ABIS.first()
+        container.log("Using native lib ABI $currentDeviceArch (APK ships $shippedAbis)")
 
         var resourcesArscBytes: ByteArray? = null
         var dexCount: Int = -1
@@ -60,7 +69,7 @@ class AlignmentStep : Step(), KoinComponent {
             // Extract to disk temporarily
             for ((idx, path) in libPaths.withIndex()) {
                 // Ignore lib architectures that don't match this device
-                if (!path.startsWith("lib/$currentDeviceArch")) {
+                if (!path.startsWith("lib/$currentDeviceArch/")) {
                     container.log("Skipping native lib $path due to incompatible architecture")
                     continue
                 }
@@ -106,7 +115,7 @@ class AlignmentStep : Step(), KoinComponent {
             // Write back native libraries aligned to 16KiB page boundary
             for ((idx, path) in nativeLibPaths.withIndex()) {
                 // Ignore lib architectures that don't match this device
-                if (!path.startsWith("lib/$currentDeviceArch"))
+                if (!path.startsWith("lib/$currentDeviceArch/"))
                     continue
 
                 val file = paths.patchingWorkingDir.resolve("$idx.so")

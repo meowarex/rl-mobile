@@ -1,5 +1,37 @@
 package com.meowarex.rlmobile.ui.screens.home
 
+import com.meowarex.rlmobile.manager.PreferencesManager
+import org.koin.compose.koinInject
+import androidx.compose.ui.unit.Velocity
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
+import com.meowarex.rlmobile.ui.components.LocalNavBarInset
+import com.meowarex.rlmobile.ui.components.NavBarHost
+import android.os.Build
+import android.view.HapticFeedbackConstants
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontVariation
+import androidx.paging.compose.LazyPagingItems
+import com.meowarex.rlmobile.network.models.RLCommit
+import com.meowarex.rlmobile.ui.util.liquidRipple
 import android.os.Parcelable
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
@@ -85,7 +117,6 @@ class HomeScreen : Screen, Parcelable {
         val updater = koinViewModel<UpdaterViewModel>(viewModelStoreOwner = activity)
         val managerUpdateAvailable = updater.targetVersion != null
         val refreshing = model.refreshing
-        val refreshAngle = rememberRefreshAngle()
         // Options for the updated patches dialog
         var updateDialogOptions by rememberSaveable { mutableStateOf<PatchOptions?>(null) }
 
@@ -94,25 +125,30 @@ class HomeScreen : Screen, Parcelable {
             onPauseOrDispose {}
         }
 
+        val commits = model.commits.collectAsLazyPagingItems()
+
+        // Patches tab in the app nav lands here
+        SideEffect {
+            NavBarHost.openPatches = { go ->
+                if ((model.state as? HomeState.Loaded)?.install == null) {
+                    go(PatchOptionsScreen())
+                } else {
+                    // Metadata's cached, so this is instant
+                    model.createRepatchScreen(managerUpdateAvailable)?.let(go)
+                }
+            }
+        }
+
+        val prefs = koinInject<PreferencesManager>()
+        val floatingNav = prefs.floatingNav
+
         Scaffold(
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
-                // Compact bar
-                TopAppBar(
+                // Nav bar off, old top bar instead
+                if (!floatingNav) TopAppBar(
                     title = { Text(stringResource(R.string.rlmobile)) },
                     actions = {
-                        RadiantIconButton(
-                            icon = painterResource(R.drawable.ic_refresh),
-                            contentDescription = stringResource(R.string.navigation_refresh),
-                            subtle = true,
-                            enabled = !refreshing,
-                            onClick = {
-                                model.refresh(force = true)
-                                updater.checkForUpdates(force = true)
-                            },
-                            modifier = Modifier.graphicsLayer {
-                                rotationZ = if (refreshing) refreshAngle() else 0f
-                            },
-                        )
                         if (managerUpdateAvailable) {
                             RadiantIconButton(
                                 icon = painterResource(R.drawable.ic_update),
@@ -123,8 +159,8 @@ class HomeScreen : Screen, Parcelable {
                             )
                         }
                         RadiantIconButton(
-                            icon = painterResource(R.drawable.ic_info),
-                            contentDescription = stringResource(R.string.navigation_about),
+                            icon = painterResource(R.drawable.ic_favorite),
+                            contentDescription = stringResource(R.string.navigation_contributors),
                             subtle = true,
                             onClick = { navigator.push(AboutScreen()) },
                         )
@@ -138,14 +174,7 @@ class HomeScreen : Screen, Parcelable {
                 )
             },
         ) { pv ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .padding(pv)
-                    .padding(horizontal = 16.dp)
-                    .fillMaxSize(),
-            ) {
+            Box(modifier = Modifier.fillMaxSize().padding(top = pv.calculateTopPadding())) {
                 when (val state = model.state) {
                     HomeState.Loading -> Box(
                         contentAlignment = Alignment.Center,
@@ -157,7 +186,13 @@ class HomeScreen : Screen, Parcelable {
 
                     is HomeState.Loaded -> HomeContent(
                         state = state,
-                        commits = model.commits,
+                        floatingNav = floatingNav,
+                        commits = commits,
+                        refreshing = refreshing,
+                        onRefresh = {
+                            model.refresh(force = true)
+                            updater.checkForUpdates(force = true)
+                        },
                         managerUpdateAvailable = managerUpdateAvailable,
                         isDevMode = model.isDevMode,
                         onInstall = { navigator.pushOnce(PatchOptionsScreen()) },
@@ -207,9 +242,12 @@ class HomeScreen : Screen, Parcelable {
 }
 
 @Composable
-private fun ColumnScope.HomeContent(
+private fun HomeContent(
     state: HomeState.Loaded,
-    commits: kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<com.meowarex.rlmobile.network.models.GithubCommit>>,
+    floatingNav: Boolean,
+    commits: LazyPagingItems<RLCommit>,
+    refreshing: Boolean,
+    onRefresh: () -> Unit,
     managerUpdateAvailable: Boolean,
     isDevMode: Boolean,
     onInstall: () -> Unit,
@@ -227,16 +265,279 @@ private fun ColumnScope.HomeContent(
     val patchesBehind = state.patchesBehind
     val tidalBehind = state.tidalBehind
 
-    InstallHeroCard(
-        install = install,
-        currentVersionName = currentVersionName,
-        latestVersionName = latestVersionName,
-        patchUpdate = state.patchChanges?.takeIf { patchesBehind }?.kind,
-        tidalBehind = tidalBehind,
-        onLaunch = onLaunch,
-        onInfo = onInfo,
-        onPatchesTag = onPatchesTag,
+    val view = LocalView.current
+    val pullState = rememberPullToRefreshState()
+    var rippleTrigger by remember { mutableIntStateOf(0) }
+    var textCenter by remember { mutableStateOf(Offset.Zero) }
+
+    // Ticks while pulling, ripple at the threshold <3
+    var lastHapticBucket by remember { mutableIntStateOf(0) }
+    // Only the finger counts, not the card's animation
+    var released by remember { mutableStateOf(false) }
+    LaunchedEffect(pullState.distanceFraction, refreshing) {
+        val fraction = pullState.distanceFraction
+        if (released || refreshing) {
+            if (!refreshing && fraction == 0f) {
+                released = false
+                lastHapticBucket = 0
+            }
+            return@LaunchedEffect
+        }
+        val bucket = (fraction * 10).toInt()
+        if (fraction >= 1f && lastHapticBucket < 10) {
+            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            rippleTrigger++
+            lastHapticBucket = 10
+        } else if (fraction < 1f && bucket != lastHapticBucket) {
+            if (bucket > lastHapticBucket) sliderHaptic(view)
+            lastHapticBucket = bucket
+        }
+        if (fraction == 0f) lastHapticBucket = 0
+    }
+
+    val navBarBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+
+    PullToRefreshBox(
+        isRefreshing = refreshing,
+        onRefresh = {
+            released = true
+            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            onRefresh()
+        },
+        state = pullState,
+        indicator = {},
+        modifier = Modifier
+            .fillMaxSize()
+            .liquidRipple(
+                trigger = rippleTrigger,
+                origin = textCenter,
+                durationMillis = 2800,
+                amplitudeDp = 34f,
+                frequency = 12f,
+                decay = 4.5f,
+                speedDp = 1400f,
+            ),
+    ) {
+        val pullFraction = if (refreshing) 1f else pullState.distanceFraction
+
+        // Commits scroll inside their own card
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Only the top part pulls, never scrolls
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            PullCard(
+                title = stringResource(R.string.navigation_refresh),
+                // Top bar already covers the status bar
+                underStatusBar = floatingNav,
+                fraction = pullFraction,
+                onTitlePositioned = { textCenter = it },
+                onClick = {
+                    // Tap gets its one ripple straight away
+                    released = true
+                    rippleTrigger++
+                    view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                    onRefresh()
+                },
+            )
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp, bottom = 16.dp),
+            ) {
+                InstallHeroCard(
+                    install = install,
+                    currentVersionName = currentVersionName,
+                    latestVersionName = latestVersionName,
+                    patchUpdate = state.patchChanges?.takeIf { patchesBehind }?.kind,
+                    tidalBehind = tidalBehind,
+                    onLaunch = onLaunch,
+                    onInfo = onInfo,
+                    onPatchesTag = onPatchesTag,
+                )
+
+                HomeActions(
+                    state = state,
+                    managerUpdateAvailable = managerUpdateAvailable,
+                    isDevMode = isDevMode,
+                    onInstall = onInstall,
+                    onRepatch = onRepatch,
+                    onManagerUpdate = onManagerUpdate,
+                )
+            }
+
+            }
+
+            RadiantCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    // No nav bar, keep the old edge gap
+                    .padding(bottom = if (floatingNav) 0.dp else navBarBottom + 16.dp)
+                    .weight(1f)
+                    // Scrolling the box never moves the page
+                    .nestedScroll(KeepScrollInside),
+            ) {
+                CommitList(
+                    commits = commits,
+                    contentPadding = PaddingValues(bottom = if (floatingNav) navBarBottom + LocalNavBarInset.current else 0.dp),
+                )
+            }
+        }
+    }
+}
+
+// Eats leftover scroll so the list can't pull
+private object KeepScrollInside : NestedScrollConnection {
+    override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource) = available
+    override suspend fun onPostFling(consumed: Velocity, available: Velocity) = available
+}
+
+// Pull down to refresh, like Essentials' device card <3
+@Composable
+private fun PullCard(
+    title: String,
+    underStatusBar: Boolean,
+    fraction: Float,
+    onTitlePositioned: (Offset) -> Unit,
+    onClick: () -> Unit,
+) {
+    val thresholdPassed = fraction >= 1f
+    val statusBarTop = if (underStatusBar) WindowInsets.statusBars.asPaddingValues().calculateTopPadding() else 0.dp
+
+    val cardExpansion by animateDpAsState(
+        targetValue = 120.dp * fraction.coerceIn(0f, 1f),
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "cardExpansion",
     )
+    val containerColor by animateColorAsState(
+        targetValue = if (thresholdPassed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerLow,
+        animationSpec = tween(durationMillis = 300),
+        label = "containerColor",
+    )
+    val contentColor by animateColorAsState(
+        targetValue = if (thresholdPassed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.primary,
+        animationSpec = tween(durationMillis = 300),
+        label = "contentColor",
+    )
+    val borderColor by animateColorAsState(
+        targetValue = if (thresholdPassed) Color.Transparent else MaterialTheme.colorScheme.outlineVariant,
+        animationSpec = tween(durationMillis = 300),
+        label = "borderColor",
+    )
+    val chevronAlpha by animateFloatAsState(
+        targetValue = if (thresholdPassed) 0f else 1f,
+        animationSpec = tween(durationMillis = 300),
+        label = "chevronAlpha",
+    )
+    val chevronWidth by animateDpAsState(
+        targetValue = if (thresholdPassed) 0.dp else 24.dp + 8.dp,
+        animationSpec = tween(durationMillis = 300),
+        label = "chevronWidth",
+    )
+    val fontWeight by animateIntAsState(
+        targetValue = if (thresholdPassed) 700 else 500,
+        animationSpec = tween(durationMillis = 100),
+        label = "fontWeight",
+    )
+    val textScale by animateFloatAsState(
+        targetValue = if (thresholdPassed) 1.5f else 1f,
+        animationSpec = tween(durationMillis = 300),
+        label = "textScale",
+    )
+    // Wider as you pull
+    val fontWidth = remember(fraction) { (100f + (fraction.coerceIn(0f, 1f) * 50f)).toInt().toFloat() }
+    val fontFamily = remember(fontWidth, fontWeight) {
+        FontFamily(
+            Font(
+                R.font.google_sans_flex,
+                variationSettings = FontVariation.Settings(
+                    FontVariation.width(fontWidth),
+                    FontVariation.weight(fontWeight),
+                    FontVariation.Setting("ROND", 100f),
+                ),
+            ),
+        )
+    }
+
+    OutlinedCard(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .height(64.dp + statusBarTop + cardExpansion),
+        // Flat top only when hugging the screen edge
+        shape = RoundedCornerShape(
+            topStart = if (underStatusBar) 0.dp else 28.dp,
+            topEnd = if (underStatusBar) 0.dp else 28.dp,
+            bottomStart = 28.dp,
+            bottomEnd = 28.dp,
+        ),
+        colors = CardDefaults.outlinedCardColors(
+            containerColor = containerColor,
+            contentColor = if (thresholdPassed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+        ),
+        border = BorderStroke(1.dp, borderColor),
+    ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Spacer(modifier = Modifier.height(statusBarTop))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .width(chevronWidth)
+                            .graphicsLayer { alpha = chevronAlpha },
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_arrow_down_small),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .graphicsLayer { rotationZ = (fraction * 180f).coerceIn(0f, 180f) },
+                                tint = contentColor,
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
+                    }
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleMedium.copy(fontFamily = fontFamily),
+                        color = if (thresholdPassed) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier
+                            .onGloballyPositioned { coords ->
+                                val pos = coords.positionInRoot()
+                                onTitlePositioned(Offset(pos.x + coords.size.width / 2f, pos.y + coords.size.height / 2f))
+                            }
+                            .graphicsLayer {
+                                scaleX = textScale
+                                scaleY = textScale
+                            },
+                    )
+                }
+            }
+        }
+    }
+}
+
+// Main install/repatch/update buttons
+@Composable
+private fun HomeActions(
+    state: HomeState.Loaded,
+    managerUpdateAvailable: Boolean,
+    isDevMode: Boolean,
+    onInstall: () -> Unit,
+    onRepatch: () -> Unit,
+    onManagerUpdate: () -> Unit,
+) {
+    val install = state.install
+    val patchesBehind = state.patchesBehind
+    val tidalBehind = state.tidalBehind
 
     val blockedByManagerUpdate = managerUpdateAvailable && (patchesBehind || tidalBehind)
     val buttonEnabled = state.canInstall(managerUpdateAvailable)
@@ -295,16 +596,15 @@ private fun ColumnScope.HomeContent(
             modifier = Modifier.fillMaxWidth(),
         )
     }
+}
 
-    RadiantCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f),
-    ) {
-        CommitList(commits = commits.collectAsLazyPagingItems())
+// Same tick Essentials uses on sliders
+private fun sliderHaptic(view: android.view.View) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        view.performHapticFeedback(HapticFeedbackConstants.SEGMENT_FREQUENT_TICK)
+    } else {
+        view.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
     }
-
-    Spacer(Modifier.height(4.dp))
 }
 
 /**
@@ -382,12 +682,6 @@ private fun InstallHeroCard(
                         .clip(MaterialShapes.Cookie9Sided.toShape()),
                 )
             }
-
-            Text(
-                text = install?.name ?: stringResource(R.string.app_name),
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
-            )
 
             if (currentVersionName != null || latestVersionName != null) {
                 Column(

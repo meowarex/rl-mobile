@@ -1,5 +1,6 @@
 package com.meowarex.rlmobile.ui.components
 
+import com.meowarex.rlmobile.network.services.GitCafeService
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -53,9 +54,9 @@ fun ProjectHeader(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(top = 6.dp),
         ) {
             RadiantButton(
-                text = stringResource(R.string.github),
-                icon = painterResource(R.drawable.ic_account_github_white_24dp),
-                onClick = { uriHandler.openUri("https://github.com/meowarex/rl-mobile") },
+                text = stringResource(R.string.gitcafe),
+                icon = painterResource(R.drawable.ic_code),
+                onClick = { uriHandler.openUri(GitCafeService.REPO_URL) },
             )
         }
     }

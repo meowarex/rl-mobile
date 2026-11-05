@@ -1,5 +1,6 @@
 package com.meowarex.rlmobile.ui.screens.componentopts
 
+import com.meowarex.rlmobile.ui.components.LocalNavBarInset
 import android.net.Uri
 import android.os.Parcelable
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -92,7 +93,7 @@ fun ComponentOptionsScreenContent(
     releasesExpanded: Boolean,
     releasesState: ComponentOptionsModel.ReleasesState,
     onToggleReleases: () -> Unit,
-    onImportRelease: (com.meowarex.rlmobile.network.models.GithubRelease) -> Unit,
+    onImportRelease: (ComponentOptionsModel.ReleaseOption) -> Unit,
     importingReleaseTag: String?,
     onBackPressed: () -> Unit,
 ) {
@@ -111,7 +112,7 @@ fun ComponentOptionsScreenContent(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = paddingValues
                 .exclude(PaddingValuesSides.Horizontal + PaddingValuesSides.Top)
-                .add(PaddingValues(16.dp)),
+                .add(PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 16.dp + LocalNavBarInset.current)),
             modifier = Modifier
                 .padding(paddingValues.exclude(PaddingValuesSides.Bottom)),
         ) {
@@ -129,6 +130,7 @@ fun ComponentOptionsScreenContent(
 
             item(key = "RELEASES_ACCORDION") {
                 ReleasesAccordion(
+                    componentType = componentType,
                     expanded = releasesExpanded,
                     state = releasesState,
                     importingTag = importingReleaseTag,
@@ -175,12 +177,15 @@ fun ComponentOptionsScreenContent(
 
 @Composable
 private fun ReleasesAccordion(
+    componentType: PatchComponent.Type,
     expanded: Boolean,
     state: ComponentOptionsModel.ReleasesState,
     importingTag: String?,
     onToggle: () -> Unit,
-    onImport: (com.meowarex.rlmobile.network.models.GithubRelease) -> Unit,
+    onImport: (ComponentOptionsModel.ReleaseOption) -> Unit,
 ) {
+    val isTidal = componentType == PatchComponent.Type.TidalApk
+
     Surface(
         color = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = RoundedCornerShape(16.dp),
@@ -196,17 +201,23 @@ private fun ReleasesAccordion(
                     .padding(horizontal = 16.dp, vertical = 14.dp),
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_account_github_white_24dp),
+                    painter = painterResource(
+                        if (isTidal) R.drawable.ic_download else R.drawable.ic_history
+                    ),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                 )
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = stringResource(R.string.componentopts_releases_title),
+                        text = stringResource(
+                            if (isTidal) R.string.componentopts_apkpure_title else R.string.componentopts_releases_title
+                        ),
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
-                        text = stringResource(R.string.componentopts_releases_desc),
+                        text = stringResource(
+                            if (isTidal) R.string.componentopts_apkpure_desc else R.string.componentopts_releases_desc
+                        ),
                         style = MaterialTheme.typography.bodyMedium,
                         color = LocalContentColor.current.copy(alpha = 0.65f),
                     )
@@ -238,7 +249,7 @@ private fun ReleasesAccordion(
 private fun ReleasesContent(
     state: ComponentOptionsModel.ReleasesState,
     importingTag: String?,
-    onImport: (com.meowarex.rlmobile.network.models.GithubRelease) -> Unit,
+    onImport: (ComponentOptionsModel.ReleaseOption) -> Unit,
 ) {
     when (state) {
         is ComponentOptionsModel.ReleasesState.Idle,
@@ -273,7 +284,7 @@ private fun ReleasesContent(
                     state.releases.forEachIndexed { index, release ->
                         ReleaseRow(
                             release = release,
-                            importing = importingTag == release.tagName,
+                            importing = importingTag == release.key,
                             anyImporting = importingTag != null,
                             onImport = { onImport(release) },
                         )
@@ -291,7 +302,7 @@ private fun ReleasesContent(
 
 @Composable
 private fun ReleaseRow(
-    release: com.meowarex.rlmobile.network.models.GithubRelease,
+    release: ComponentOptionsModel.ReleaseOption,
     importing: Boolean,
     anyImporting: Boolean,
     onImport: () -> Unit,
@@ -305,11 +316,11 @@ private fun ReleaseRow(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = release.tagName,
+                text = release.title,
                 style = MaterialTheme.typography.titleSmall,
             )
             Text(
-                text = release.name ?: release.tagName,
+                text = release.subtitle,
                 style = MaterialTheme.typography.bodySmall,
                 color = LocalContentColor.current.copy(alpha = 0.55f),
             )

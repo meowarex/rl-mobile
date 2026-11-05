@@ -1,0 +1,11 @@
+{
+	"name": "rl-mobile-release-site",
+	"private": true,
+	"type": "module",
+	"engines": {
+		"node": ">=20"
+	},
+	"dependencies": {
+		"node-appwrite": "31.1.0"
+	}
+}

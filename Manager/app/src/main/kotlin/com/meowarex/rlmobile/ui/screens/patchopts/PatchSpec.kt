@@ -34,6 +34,8 @@ data class PatchSpec(
     val advancedOptions: List<OptionSpec> = emptyList(),
     val category: String = CATEGORY_PATCH,
     val pathLocked: Boolean = false,
+    /** Only works under these package names */
+    val packageNames: List<String> = emptyList(),
     /** Watchapp shown under an integration. */
     val companionApp: CompanionAppSpec? = null,
     /** selectedVariants key, new one when the variants get reshaped */
@@ -221,11 +223,15 @@ data class SmaliEncode(
 const val BUNDLED_MANIFEST_ASSET = "patches-manifest.json"
 
 // Fallback patch list (snapshot of the release manifest bundled in the app's assets)
-fun builtinPatchSpecs(context: Context, json: Json): List<PatchSpec> = try {
+// Bundled, never changes, parse once
+@Volatile private var builtinSpecsCache: List<PatchSpec>? = null
+
+fun builtinPatchSpecs(context: Context, json: Json): List<PatchSpec> = builtinSpecsCache ?: try {
     context.assets.open(BUNDLED_MANIFEST_ASSET).use { it.readBytes() }
         .let { json.decodeFromString(PatchManifest.serializer(), it.decodeToString()) }
         .patches
         .sortedBy { it.order }
+        .also { builtinSpecsCache = it }
 } catch (t: Throwable) {
     emptyList()
 }

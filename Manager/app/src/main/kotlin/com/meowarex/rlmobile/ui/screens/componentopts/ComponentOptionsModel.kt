@@ -9,9 +9,10 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.meowarex.rlmobile.BuildConfig
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.manager.PathManager
+import com.meowarex.rlmobile.manager.TidalApkSource
 import com.meowarex.rlmobile.manager.download.KtorDownloadManager
-import com.meowarex.rlmobile.network.models.GithubRelease
-import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
+import com.meowarex.rlmobile.network.models.RLRelease
+import com.meowarex.rlmobile.network.services.RLReleasesService
 import com.meowarex.rlmobile.network.utils.SemVer
 import com.meowarex.rlmobile.network.utils.fold
 import com.meowarex.rlmobile.ui.util.ScreenModelWithResult
@@ -25,8 +26,9 @@ class ComponentOptionsModel(
     screenResultKey: ScreenResultKey,
     private val paths: PathManager,
     private val context: Application,
-    private val github: RadiantLyricsGithubService,
+    private val releases: RLReleasesService,
     private val downloader: KtorDownloadManager,
+    private val tidalSource: TidalApkSource,
 ) : ScreenModelWithResult<PatchComponent?>(screenResultKey) {
     val components = mutableStateListOf<PatchComponent>()
     var selected by mutableStateOf<PatchComponent?>(null)
@@ -38,6 +40,8 @@ class ComponentOptionsModel(
         private set
     var importingReleaseTag by mutableStateOf<String?>(null)
         private set
+
+    private var siteReleases = emptyMap<String, RLRelease>()
 
     fun selectComponent(component: PatchComponent?) {
         selected = component
@@ -156,24 +160,92 @@ class ComponentOptionsModel(
 
     private fun loadReleases(type: PatchComponent.Type) = screenModelScope.launchIO {
         releasesState = ReleasesState.Loading
-        github.getManagerReleases().fold(
+        if (type == PatchComponent.Type.TidalApk) {
+            loadTidalVersions()
+            return@launchIO
+        }
+        releases.getReleases().fold(
             success = { all ->
                 val assetName = assetNameFor(type)
-                val filtered = all.filter { release ->
-                    release.assets.any { it.name == assetName }
-                }
-                releasesState = ReleasesState.Loaded(filtered)
+                val filtered = all.versions
+                    .filter { it.has(assetName) }
+                    .sortedByDescending { it.semVer }
+                siteReleases = filtered.associateBy { it.version }
+                releasesState = ReleasesState.Loaded(
+                    filtered.map { ReleaseOption(key = it.version, title = "v${it.version}", subtitle = it.date?.substringBefore('T') ?: it.version) }
+                )
             },
             fail = {
-                Log.w(BuildConfig.TAG, "Failed to load GitHub releases", it)
+                Log.w(BuildConfig.TAG, "Failed to load releases", it)
                 releasesState = ReleasesState.Failed
             },
         )
     }
 
-    fun importFromRelease(release: GithubRelease, type: PatchComponent.Type) = screenModelScope.launchIO {
+    fun importFromRelease(option: ReleaseOption, type: PatchComponent.Type) {
+        if (type == PatchComponent.Type.TidalApk) {
+            importTidalVersion(option)
+            return
+        }
+        val release = siteReleases[option.key] ?: return
+        importFromSiteRelease(release, type)
+    }
+
+    // One row per TIDAL version code
+    private suspend fun loadTidalVersions() {
+        try {
+            val options = tidalSource.versions()
+                .groupBy { it.versionCode }
+                .toSortedMap(compareByDescending { it })
+                .map { (code, variants) ->
+                    ReleaseOption(
+                        key = code.toString(),
+                        title = variants.first().versionName,
+                        subtitle = context.getString(R.string.componentopts_apkpure_version_desc, code),
+                    )
+                }
+            releasesState = ReleasesState.Loaded(options)
+        } catch (t: Throwable) {
+            Log.w(BuildConfig.TAG, "Failed to load APKPure versions", t)
+            releasesState = ReleasesState.Failed
+        }
+    }
+
+    private fun importTidalVersion(option: ReleaseOption) = screenModelScope.launchIO {
+        val versionCode = option.key.toIntOrNull() ?: return@launchIO
+        val targetDir = paths.customTidalApksDir.apply { mkdirs() }
+
+        importingReleaseTag = option.key
+        val tempFile = targetDir.resolve("apkpure-${System.currentTimeMillis()}.tmp")
+        try {
+            tidalSource.download(
+                versionCode = versionCode,
+                out = tempFile,
+                log = { Log.i(BuildConfig.TAG, it) },
+                onProgress = {},
+            )
+
+            val version = SemVer.parseOrNull(option.title)?.toString() ?: FALLBACK_VERSION
+            val finalName = "${System.currentTimeMillis()}_$version.apk"
+            val finalFile = targetDir.resolve(finalName)
+            if (!tempFile.renameTo(finalFile)) {
+                tempFile.copyTo(finalFile, overwrite = true)
+                tempFile.delete()
+            }
+            refreshComponents(PatchComponent.Type.TidalApk)
+            mainThread { context.showToast(R.string.intent_import_component_success, finalName) }
+        } catch (t: Throwable) {
+            tempFile.delete()
+            Log.e(BuildConfig.TAG, "Failed to import TIDAL $versionCode from APKPure", t)
+            mainThread { context.showToast(R.string.intent_import_component_failure) }
+        } finally {
+            importingReleaseTag = null
+        }
+    }
+
+    private fun importFromSiteRelease(release: RLRelease, type: PatchComponent.Type) = screenModelScope.launchIO {
         val assetName = assetNameFor(type)
-        val asset = release.assets.find { it.name == assetName } ?: run {
+        if (!release.has(assetName)) {
             mainThread { context.showToast(R.string.intent_import_component_failure) }
             return@launchIO
         }
@@ -184,10 +256,10 @@ class ComponentOptionsModel(
         }
         targetDir.mkdirs()
 
-        importingReleaseTag = release.tagName
+        importingReleaseTag = release.version
         try {
             val tempFile = targetDir.resolve("release-${System.currentTimeMillis()}.tmp")
-            val result = downloader.download(asset.browserDownloadUrl, tempFile)
+            val result = downloader.download(release.url(assetName), tempFile)
             if (result !is com.meowarex.rlmobile.manager.download.IDownloadManager.Result.Success) {
                 tempFile.delete()
                 mainThread { context.showToast(R.string.intent_import_component_failure) }
@@ -198,7 +270,7 @@ class ComponentOptionsModel(
                 PatchComponent.Type.TidalApk -> "apk"
                 PatchComponent.Type.Patches -> "zip"
             }
-            val version = SemVer.parseOrNull(release.tagName.removePrefix("v"))?.toString()
+            val version = release.semVer?.toString()
                 ?: FALLBACK_VERSION
             val finalName = "${System.currentTimeMillis()}_$version.$ext"
             val finalFile = targetDir.resolve(finalName)
@@ -209,7 +281,7 @@ class ComponentOptionsModel(
             refreshComponents(type)
             mainThread { context.showToast(R.string.intent_import_component_success, finalName) }
         } catch (t: Throwable) {
-            Log.e(BuildConfig.TAG, "Failed to import release ${release.tagName}", t)
+            Log.e(BuildConfig.TAG, "Failed to import release ${release.version}", t)
             mainThread { context.showToast(R.string.intent_import_component_failure) }
         } finally {
             importingReleaseTag = null
@@ -218,7 +290,7 @@ class ComponentOptionsModel(
 
     private fun assetNameFor(type: PatchComponent.Type) = when (type) {
         PatchComponent.Type.TidalApk -> "tidal-stock.apk"
-        PatchComponent.Type.Patches -> "patches.zip"
+        PatchComponent.Type.Patches -> RLReleasesService.PATCHES_ZIP
     }
 
     override fun onDispose() {
@@ -228,9 +300,12 @@ class ComponentOptionsModel(
     sealed interface ReleasesState {
         data object Idle : ReleasesState
         data object Loading : ReleasesState
-        data class Loaded(val releases: List<GithubRelease>) : ReleasesState
+        data class Loaded(val releases: List<ReleaseOption>) : ReleasesState
         data object Failed : ReleasesState
     }
+
+    @Immutable
+    data class ReleaseOption(val key: String, val title: String, val subtitle: String)
 
     companion object {
         private const val FALLBACK_VERSION = "0.0.0"

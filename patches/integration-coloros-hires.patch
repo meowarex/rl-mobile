@@ -1,0 +1,89 @@
+--- a/zj0/n1.smali
++++ b/zj0/n1.smali
+@@ -191,6 +191,12 @@
+     .line 50
+     move-result-object v0
+ 
++    const/4 v1, 0x1    # keep 24-bit audio <3
++
++    invoke-virtual {v0, v1}, Landroidx/media3/exoplayer/audio/DefaultAudioSink$Builder;->setEnableFloatOutput(Z)Landroidx/media3/exoplayer/audio/DefaultAudioSink$Builder;
++
++    move-result-object v0
++
+     .line 51
+     invoke-virtual {v0}, Landroidx/media3/exoplayer/audio/DefaultAudioSink$Builder;->build()Landroidx/media3/exoplayer/audio/DefaultAudioSink;
+ 
+--- a/androidx/media3/exoplayer/audio/DefaultAudioSink.smali
++++ b/androidx/media3/exoplayer/audio/DefaultAudioSink.smali
+@@ -5125,6 +5125,20 @@
+     .line 52
+     invoke-virtual {v6, v7}, Lcom/google/common/collect/ImmutableCollection$a;->f(Ljava/lang/Iterable;)V
+ 
++    iget-object v7, v1, Landroidx/media3/exoplayer/audio/DefaultAudioSink;->audioProcessorChain:Landroidx/media3/common/audio/AudioProcessorChain;    # keep crossfade working
++
++    invoke-interface {v7}, Landroidx/media3/common/audio/AudioProcessorChain;->getAudioProcessors()[Landroidx/media3/common/audio/AudioProcessor;
++
++    move-result-object v7
++
++    invoke-static {v7}, Lradiant/HiResAudio;->floatProcessors([Landroidx/media3/common/audio/AudioProcessor;)[Ljava/lang/Object;
++
++    move-result-object v7
++
++    array-length v8, v7
++
++    invoke-virtual {v6, v8, v7}, Lcom/google/common/collect/ImmutableCollection$a;->e(I[Ljava/lang/Object;)V
++
+     .line 53
+     .line 54
+     .line 55
+--- a/ij0/d.smali
++++ b/ij0/d.smali
+@@ -287,6 +287,13 @@
+ 
+     .line 10
+     :cond_0
++    const/4 v1, 0x4    # allow float
++
++    if-ne v0, v1, :rl_hires_0
++
++    return-object p1
++
++    :rl_hires_0
+     sget-object p1, Landroidx/media3/common/audio/AudioProcessor$AudioFormat;->NOT_SET:Landroidx/media3/common/audio/AudioProcessor$AudioFormat;
+ 
+     .line 11
+@@ -397,7 +404,7 @@
+ .end method
+ 
+ .method public final queueInput(Ljava/nio/ByteBuffer;)V
+-    .locals 12
++    .locals 13
+ 
+     .line 1
+     invoke-virtual {p1}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
+@@ -638,6 +645,25 @@
+     :goto_2
+     if-ge v10, v9, :cond_6
+ 
++    iget v11, v1, Landroidx/media3/common/audio/AudioProcessor$AudioFormat;->encoding:I    # crossfade float audio
++
++    const/4 v12, 0x4
++
++    if-ne v11, v12, :rl_hires_1
++
++    invoke-virtual {p1}, Ljava/nio/ByteBuffer;->getFloat()F
++
++    move-result v11
++
++    mul-float/2addr v11, v8
++
++    invoke-virtual {v2, v11}, Ljava/nio/ByteBuffer;->putFloat(F)Ljava/nio/ByteBuffer;
++
++    add-int/lit8 v10, v10, 0x1
++
++    goto :goto_2
++
++    :rl_hires_1
+     .line 111
+     .line 112
+     invoke-virtual {p1}, Ljava/nio/ByteBuffer;->getShort()S

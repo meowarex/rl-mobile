@@ -31,7 +31,7 @@ private fun AboutScreenLoadedPreview(
 private class ContributorsProvider : PreviewParameterProvider<ImmutableList<Contributor>> {
     @Suppress("unused")
     private val realDataRaw =
-        "[{\"username\":\"meowarex\",\"avatarUrl\":\"https://avatars.githubusercontent.com/u/0?v=4\",\"commits\":1,\"repositories\":[{\"name\":\"Radiant Lyrics\",\"commits\":1}]}]"
+        "[{\"username\":\"meowarex\",\"avatarUrl\":\"https://git.cafe/avatars/v1/a7752dc81968ed94010dc84d4c1dd6a84f7911bc2dec9efacf665819dc1a3549\",\"commits\":1,\"repositories\":[{\"name\":\"Radiant Lyrics\",\"commits\":1}]}]"
     private val realData = Json.decodeFromString(ImmutableListSerializer(Contributor.serializer()), realDataRaw)
 
     override val values = sequenceOf(

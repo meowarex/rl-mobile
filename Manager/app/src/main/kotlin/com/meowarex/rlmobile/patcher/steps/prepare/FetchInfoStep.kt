@@ -7,9 +7,9 @@ import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.manager.CachedReleaseInfo
 import com.meowarex.rlmobile.manager.PathManager
 import com.meowarex.rlmobile.manager.ReleaseInfoCache
-import com.meowarex.rlmobile.network.models.GithubRelease
 import com.meowarex.rlmobile.network.models.RLBuildInfo
-import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
+import com.meowarex.rlmobile.network.models.RLRelease
+import com.meowarex.rlmobile.network.services.RLReleasesService
 import com.meowarex.rlmobile.network.utils.getOrThrow
 import com.meowarex.rlmobile.patcher.StepRunner
 import com.meowarex.rlmobile.patcher.steps.StepGroup
@@ -25,7 +25,7 @@ class FetchInfoStep(
     // Set while the Manager is outdated, no newer patches
     private val pinnedVersion: String? = null,
 ) : Step(), KoinComponent {
-    private val github: RadiantLyricsGithubService by inject()
+    private val releases: RLReleasesService by inject()
     private val context: Application by inject()
     private val paths: PathManager by inject()
     private val json: Json by inject()
@@ -73,31 +73,28 @@ class FetchInfoStep(
     }
 
     private suspend fun fetchFromRemote(container: StepRunner) {
-        container.log("Fetching latest release from ${RadiantLyricsGithubService.REPO_OWNER}/${RadiantLyricsGithubService.REPO_NAME}")
-        useRelease(container, github.getLatestRelease(force = true).getOrThrow())
+        container.log("Fetching latest release from ${RLReleasesService.SITE_URL}")
+        val release = releases.getReleases(force = true).getOrThrow()
+            .latestWith(RLReleasesService.PATCHES_ZIP)
+            ?: throw IllegalStateException("No release with ${RLReleasesService.PATCHES_ZIP} found")
+        useRelease(container, release)
     }
 
     private suspend fun fetchPinned(container: StepRunner, version: String) {
         container.log("Manager update pending, staying on patches v$version")
-        val release = github.getManagerReleases(force = true).getOrThrow()
-            .firstOrNull { it.tagName.removePrefix("v") == version }
+        val release = releases.getReleases(force = true).getOrThrow().find(version)
             ?: throw IllegalStateException("No release found for patches v$version, update the Manager to repatch")
         useRelease(container, release)
     }
 
-    private suspend fun useRelease(container: StepRunner, release: GithubRelease) {
-        val dataJsonUrl = release.assets
-            .find { it.name == RadiantLyricsGithubService.DATA_JSON_ASSET_NAME }
-            ?.browserDownloadUrl
-            ?: throw IllegalStateException("No ${RadiantLyricsGithubService.DATA_JSON_ASSET_NAME} asset found in release ${release.tagName}")
+    private suspend fun useRelease(container: StepRunner, release: RLRelease) {
+        for (file in listOf(RLReleasesService.DATA_JSON, RLReleasesService.PATCHES_ZIP)) {
+            if (!release.has(file)) throw IllegalStateException("No $file in release ${release.version}")
+        }
+        val patchesUrl = release.url(RLReleasesService.PATCHES_ZIP)
 
-        val patchesUrl = release.assets
-            .find { it.name == RadiantLyricsGithubService.PATCHES_ASSET_NAME }
-            ?.browserDownloadUrl
-            ?: throw IllegalStateException("No ${RadiantLyricsGithubService.PATCHES_ASSET_NAME} asset found in release ${release.tagName}")
-
-        container.log("Fetching build info from $dataJsonUrl")
-        val buildInfo = github.getBuildInfo(dataJsonUrl, force = true).getOrThrow()
+        container.log("Fetching build info from ${release.url(RLReleasesService.DATA_JSON)}")
+        val buildInfo = releases.getBuildInfo(release, force = true).getOrThrow()
 
         data = buildInfo
         patchesAssetUrl = patchesUrl

@@ -4,7 +4,7 @@
 
   <string name="rlmobile" translatable="false">Radiant Lyrics</string>
   <string name="tidal" translatable="false">TIDAL</string>
-  <string name="github" translatable="false">GitHub</string>
+  <string name="gitcafe" translatable="false">GitCafe</string>
   <string name="support_server">Support Server</string>
   <string name="installer">Installer</string>
   <string name="navigation_home">Home</string>
@@ -98,6 +98,10 @@
   <string name="setting_theme_desc">The theme to apply to this app</string>
   <string name="setting_dynamic_color">Dynamic color</string>
   <string name="setting_dynamic_color_desc">Enables Material You theming on Android 12+</string>
+  <string name="setting_floating_nav">Floating nav bar</string>
+  <string name="setting_floating_nav_desc">Essentials style bar at the bottom, off brings back the top bar</string>
+  <string name="setting_use_blur">Use blur</string>
+  <string name="setting_use_blur_desc">Progressive blur under the status bar and nav bar</string>
   <string name="setting_developer_options">Developer options</string>
   <string name="setting_developer_options_desc">Don\'t enable this unless you know what it does! (yes, really)</string>
   <string name="setting_installer">Installation Method</string>
@@ -141,6 +145,10 @@
   <string name="navigation_about">About</string>
   <string name="navigation_settings">Settings</string>
   <string name="navigation_refresh">Refresh</string>
+  <string name="navigation_patches">Patches</string>
+  <string name="navigation_contributors">Contributors</string>
+  <string name="navigation_components">Components</string>
+  <string name="navigation_log">Log</string>
 
   <string name="contributors_lead">Developer</string>
   <string name="contributors">Contributors</string>
@@ -175,7 +183,7 @@
   >Since battery optimizations have not been disabled, minimizing this screen may abort the installation process!</string>
   <string
     name="installer_banner_failure"
-  >Installation failed! You can either retry or click this banner to open the GitHub repository for help.</string>
+  >Installation failed! You can either retry or click this banner to open an issue on GitCafe for help.</string>
   <string
     name="installer_banner_success"
   >Successfully installed Radiant Lyrics! Do *NOT* uninstall the manager (this app) as it is required to perform certain types of updates.</string>
@@ -224,7 +232,7 @@
   <string
     name="updater_body"
   >A new update has been released for Radiant Lyrics Manager! It may be required in order to function properly. Would you like to update?</string>
-  <string name="updater_open_github">View release on GitHub</string>
+  <string name="updater_open_releases">View releases online</string>
   <string name="updater_check_fail">Failed to check for updates!</string>
   <string name="updater_update_fail">Failed to update! Please download and install the update manually!</string>
 
@@ -254,9 +262,9 @@
   <string name="patchopts_debuggable_title">Debuggable</string>
   <string name="patchopts_debuggable_desc">Enable the debuggable manifest flag. Only use this if you know what you are doing!</string>
   <string name="patchopts_custom_tidal_apk_title">Custom TIDAL APK</string>
-  <string name="patchopts_custom_tidal_apk_desc">Provide your own Stock TIDAL APK to patch instead of the version from Github.</string>
+  <string name="patchopts_custom_tidal_apk_desc">Provide your own Stock TIDAL APK to patch instead of the version from APKPure.</string>
   <string name="patchopts_custom_patches_title">Custom Patches</string>
-  <string name="patchopts_custom_patches_desc">Provide your own Patches Zip to use instead of the ones from Github.</string>
+  <string name="patchopts_custom_patches_desc">Provide your own Patches Zip to use instead of the released ones.</string>
   <string name="patchopts_bypass_incompatible_title">Bypass Incompatible</string>
   <string name="patchopts_bypass_incompatible_desc">Force-allow path-gated patches. This can be VERY DANGEROUS!</string>
   <string name="patchopts_divider_basic">Basic</string>
@@ -296,7 +304,7 @@
   <string name="patch_lyrics_rl_api_title">Radiant Lyrics API - WIP</string>
   <string name="patch_lyrics_rl_api_desc">Use Radiant Lyrics API to fetch Lyrics (Higher quality &amp; More providers)</string>
   <string name="patch_sticky_lyrics_title">Sticky Lyrics</string>
-  <string name="patch_sticky_lyrics_desc">Always Forces the Lyrics page to be opened (aslong as the track has lyrics)</string>
+  <string name="patch_sticky_lyrics_desc">Always Forces the Lyrics page to be opened (as long as the track has lyrics)</string>
   <string name="patch_lyrics_keep_controls_title">Keep Controls Visible</string>
   <string
     name="patch_lyrics_keep_controls_desc"
@@ -365,6 +373,8 @@
   <string name="patch_lock_required_msg">Patch Required by &lt;b>%s&lt;/b>.</string>
   <string name="patch_lock_blocked_msg">Patch Blocked by &lt;b>%s&lt;/b>.</string>
   <string name="patch_lock_pkgname_title">Original Package Name Invalid!</string>
+  <string name="patch_lock_pkgname_required_title">Package Name Required!</string>
+  <string name="patch_lock_pkgname_required_msg">This only works when the Package Name option is set to &lt;b>%s&lt;/b>.&lt;br/>&lt;br/>An existing install can\'t be renamed (requires a fresh install)</string>
   <string name="patch_lock_pkgname_msg">This only works while the app keeps its original &lt;b>%s&lt;/b> package name. Reset the Package Name option to enable it.&lt;br/>&lt;br/>An existing install can\'t be renamed (requires a fresh install)</string>
   <string name="patch_opt_lock_title">Option Locked</string>
   <string name="patch_opt_lock_needs_variant">Requires the &lt;b>%s&lt;/b> style.</string>
@@ -378,9 +388,12 @@
   <string name="componentopts_deleted">Successfully deleted component!</string>
   <string name="componentopts_browse_title">Browse files…</string>
   <string name="componentopts_browse_desc">Import a file from your device</string>
-  <string name="componentopts_releases_title">GitHub Releases</string>
-  <string name="componentopts_releases_desc">Pick a historical release from the repo</string>
+  <string name="componentopts_releases_title">Releases</string>
+  <string name="componentopts_releases_desc">Pick an older release from the site</string>
   <string name="componentopts_releases_empty">No releases with this component found</string>
+  <string name="componentopts_apkpure_title">APKPure</string>
+  <string name="componentopts_apkpure_desc">Pick any TIDAL version, verified against TIDAL\'s signature</string>
+  <string name="componentopts_apkpure_version_desc">Version code %1$d</string>
 
   <string name="log_title">Log</string>
   <string name="log_section_install_info">Installation Info</string>
@@ -412,7 +425,7 @@
   <string name="fun_fact_3">i am in your walls!</string>
   <string name="fun_fact_4">TIDAL is Rewriting the UI with Compose</string>
   <string name="fun_fact_5">The TIDAL app has a hidden Debug Menu!</string>
-  <string name="fun_fact_6">Having issues? Open an issue on GitHub!</string>
+  <string name="fun_fact_6">Having issues? Open an issue on GitCafe!</string>
   <string name="fun_fact_7">This installer/manager was forked from Aliucord</string>
   <string name="fun_fact_8">I have CATS!!</string>
   <string name="fun_fact_9">Radiant Lyrics is made by JUST meoware.exe</string>

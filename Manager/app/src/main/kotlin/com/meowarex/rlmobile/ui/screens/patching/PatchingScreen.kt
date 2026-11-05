@@ -1,5 +1,6 @@
 package com.meowarex.rlmobile.ui.screens.patching
 
+import com.meowarex.rlmobile.network.services.GitCafeService
 import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
@@ -174,7 +175,7 @@ class PatchingScreen(
                                 iconColor = MaterialTheme.colorScheme.error,
                                 outlineColor = null,
                                 containerColor = MaterialTheme.colorScheme.errorContainer,
-                                onClick = { handler.openUri("https://tidal.gg/${BuildConfig.SUPPORT_SERVER}") },
+                                onClick = { handler.openUri("${GitCafeService.REPO_URL}/issues") },
                                 modifier = Modifier
                                     .padding(bottom = VERTICAL_PADDING)
                                     .fillMaxWidth(),

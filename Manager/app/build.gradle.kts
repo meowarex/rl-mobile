@@ -27,12 +27,14 @@ android {
     // this only widens the API surface available at compile time, it does not opt the app in to
     // Android 17's runtime behaviour changes.
     compileSdk = 37
+    // Compose 1.13 needs 37.1
+    compileSdkMinor = 1
 
     defaultConfig {
         minSdk = 24
         targetSdk = 36
-        versionCode = 118
-        versionName = "2.1.0"
+        versionCode = 20302
+        versionName = "2.3.2"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -43,6 +45,8 @@ android {
 
         buildConfigField("String", "PATCHES_REPO_OWNER", "\"meowarex\"")
         buildConfigField("String", "PATCHES_REPO_NAME", "\"rl-mobile\"")
+        // Releases live here now <3
+        buildConfigField("String", "RELEASES_URL", "\"https://mobile.release.radiant-lyrics.org\"")
 
         buildConfigField("Boolean", "RELEASE", isRelease.toString())
         buildConfigField("String", "GIT_BRANCH", "\"$gitCurrentBranch\"")
@@ -181,6 +185,16 @@ tasks.withType<JavaCompile> {
     options.compilerArgs.add("-Xlint:-options")
 }
 
+// ARSCLib ships stub android classes, R8 hates them
+val arsclibRaw: Configuration by configurations.creating { isTransitive = false }
+val strippedArsclib = tasks.register<Jar>("strippedArsclib") {
+    archiveFileName = "arsclib-stripped.jar"
+    destinationDirectory = layout.buildDirectory.dir("libs-stripped")
+    from({ arsclibRaw.map { zipTree(it) } }) {
+        exclude("android/**", "org/xmlpull/**", "META-INF/MANIFEST.MF")
+    }
+}
+
 dependencies {
     implementation(libs.bundles.accompanist)
     implementation(libs.bundles.androidx)
@@ -207,6 +221,8 @@ dependencies {
     implementation(libs.hiddenApi.bypass)
 
     implementation(libs.apksig)
+    arsclibRaw(libs.arsclib)
+    implementation(files(strippedArsclib))
     implementation(libs.axml)
     implementation(libs.bouncycastle)
     implementation(libs.binaryResources)

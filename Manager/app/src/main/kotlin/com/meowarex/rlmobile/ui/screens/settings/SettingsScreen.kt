@@ -1,5 +1,6 @@
 package com.meowarex.rlmobile.ui.screens.settings
 
+import com.meowarex.rlmobile.ui.components.LocalNavBarInset
 import android.os.Build
 import android.os.Parcelable
 import androidx.compose.foundation.layout.*
@@ -77,13 +78,15 @@ class SettingsScreen : Screen, Parcelable {
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(padding),
+                    .padding(padding)
+                    // Clear the floating nav
+                    .padding(bottom = LocalNavBarInset.current),
             ) {
                 SettingsHeader(stringResource(R.string.settings_header_appearance))
 
                 SettingsGroup {
                     val dynamicColorAvailable = Build.VERSION.SDK_INT >= 31
-                    val appearanceCount = if (dynamicColorAvailable) 4 else 3
+                    val appearanceCount = if (dynamicColorAvailable) 6 else 5
 
                     SettingsItem(
                         position = groupPosition(0, appearanceCount),
@@ -124,6 +127,24 @@ class SettingsScreen : Screen, Parcelable {
                             onPrefChange = { preferences.dynamicColor = it },
                         )
                     }
+
+                    SettingsSwitch(
+                        label = stringResource(R.string.setting_floating_nav),
+                        secondaryLabel = stringResource(R.string.setting_floating_nav_desc),
+                        pref = preferences.floatingNav,
+                        position = groupPosition(appearanceCount - 3, appearanceCount),
+                        icon = { Icon(painterResource(R.drawable.ic_app_shortcut), null) },
+                        onPrefChange = { preferences.floatingNav = it },
+                    )
+
+                    SettingsSwitch(
+                        label = stringResource(R.string.setting_use_blur),
+                        secondaryLabel = stringResource(R.string.setting_use_blur_desc),
+                        pref = preferences.useBlur,
+                        position = groupPosition(appearanceCount - 2, appearanceCount),
+                        icon = { Icon(painterResource(R.drawable.ic_light), null) },
+                        onPrefChange = { preferences.useBlur = it },
+                    )
 
                     SettingsSwitch(
                         label = stringResource(R.string.setting_auto_update_check),

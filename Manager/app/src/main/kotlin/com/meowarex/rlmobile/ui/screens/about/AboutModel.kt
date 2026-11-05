@@ -4,15 +4,13 @@ import android.util.Log
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.meowarex.rlmobile.BuildConfig
-import com.meowarex.rlmobile.network.models.Contributor
-import com.meowarex.rlmobile.network.services.RadiantLyricsGithubService
+import com.meowarex.rlmobile.network.services.RLReleasesService
 import com.meowarex.rlmobile.network.utils.ApiResponse
 import com.meowarex.rlmobile.ui.util.toUnsafeImmutable
 import com.meowarex.rlmobile.util.launchIO
-import kotlinx.collections.immutable.persistentListOf
 
 class AboutModel(
-    private val github: RadiantLyricsGithubService,
+    private val releases: RLReleasesService,
 ) : StateScreenModel<AboutScreenState>(AboutScreenState.Loading) {
 
     init {
@@ -22,21 +20,10 @@ class AboutModel(
     fun fetchContributors() = screenModelScope.launchIO {
         mutableState.value = AboutScreenState.Loading
 
-        when (val result = github.getContributors()) {
-            is ApiResponse.Success -> {
-                val list = result.data
-                    .filter { it.type == null || it.type == "User" }
-                    .map { c ->
-                        Contributor(
-                            username = c.login,
-                            avatarUrl = c.avatarUrl,
-                            commits = c.contributions,
-                            repositories = persistentListOf(),
-                        )
-                    }
-                    .toUnsafeImmutable()
-                mutableState.value = AboutScreenState.Loaded(list)
-            }
+        when (val result = releases.getContributors()) {
+            is ApiResponse.Success ->
+                mutableState.value = AboutScreenState.Loaded(result.data.toUnsafeImmutable())
+
             is ApiResponse.Error,
             is ApiResponse.Failure -> {
                 Log.w(BuildConfig.TAG, "Failed to fetch contributors: $result")
