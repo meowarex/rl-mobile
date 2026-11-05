@@ -296,7 +296,7 @@
   <string name="patch_lyrics_rl_api_title">Radiant Lyrics API - WIP</string>
   <string name="patch_lyrics_rl_api_desc">Use Radiant Lyrics API to fetch Lyrics (Higher quality &amp; More providers)</string>
   <string name="patch_sticky_lyrics_title">Sticky Lyrics</string>
-  <string name="patch_sticky_lyrics_desc">Always Forces the Lyrics page to be opened (aslong as the track has lyrics)</string>
+  <string name="patch_sticky_lyrics_desc">Always Forces the Lyrics page to be opened (as long as the track has lyrics)</string>
   <string name="patch_lyrics_keep_controls_title">Keep Controls Visible</string>
   <string
     name="patch_lyrics_keep_controls_desc"
