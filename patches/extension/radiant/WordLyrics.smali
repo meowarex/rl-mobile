@@ -2246,6 +2246,9 @@
     goto :sd_flip
 
     :sd_scan
+    # {braced} lines always go right
+    invoke-static {p1, v9}, Lradiant/RLBrackets;->pin(Lorg/json/JSONArray;[I)V
+
     const/4 v6, 0x0
 
     const/4 v10, 0x0
@@ -2339,6 +2342,15 @@
     move-result-object v1
 
     if-eqz v1, :none
+
+    # Second singer side is pinned later
+    const-string v2, "secondSinger"
+
+    invoke-virtual {v1, v2}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;)Z
+
+    move-result v2
+
+    if-nez v2, :none
 
     const-string v2, "element"
 

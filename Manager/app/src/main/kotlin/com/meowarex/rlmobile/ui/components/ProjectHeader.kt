@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.ui.components.radiant.RadiantButton
 
+private const val SPONSOR_URL = "https://github.com/sponsors/meowarex"
+
 @Composable
 fun ProjectHeader(modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
@@ -50,13 +52,18 @@ fun ProjectHeader(modifier: Modifier = Modifier) {
         )
 
         Row(
-            horizontalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
             modifier = Modifier.padding(top = 6.dp),
         ) {
             RadiantButton(
                 text = stringResource(R.string.gitcafe),
                 icon = painterResource(R.drawable.ic_code),
                 onClick = { uriHandler.openUri(GitCafeService.REPO_URL) },
+            )
+            RadiantButton(
+                text = stringResource(R.string.sponsor),
+                icon = painterResource(R.drawable.ic_favorite),
+                onClick = { uriHandler.openUri(SPONSOR_URL) },
             )
         }
     }

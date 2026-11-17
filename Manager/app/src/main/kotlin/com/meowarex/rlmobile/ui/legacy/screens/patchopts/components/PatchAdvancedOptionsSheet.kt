@@ -668,10 +668,13 @@ private fun OptionText(
 
 private fun formatSliderValue(option: OptionSpec.Slider, value: Float): String {
     val rounded = value.roundToInt()
+    // Half steps like 2.5 s keep their decimal
+    val tenths = (value * 10f).roundToInt()
+    val shown = if (tenths % 10 == 0) rounded.toString() else "${tenths / 10}.${tenths % 10}"
     val unit = option.unit
     return when {
         option.displayAsPercent -> "$rounded%"
-        unit != null -> "$rounded $unit"
+        unit != null -> "$shown $unit"
         else -> rounded.toString()
     }
 }

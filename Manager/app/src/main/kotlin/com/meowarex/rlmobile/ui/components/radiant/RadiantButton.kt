@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.meowarex.rlmobile.ui.theme.*
+import com.meowarex.rlmobile.ui.util.fluidStretch
 
 /**
  * How much a button shrinks while held.
@@ -145,6 +146,7 @@ fun RadiantButton(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .fluidStretch(enabled)
             .scale(scale)
             .then(if (fillWidth) Modifier.fillMaxWidth() else Modifier)
             .height(size.height)
@@ -242,6 +244,7 @@ fun RadiantIconButton(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
+            .fluidStretch(enabled)
             .scale(scale)
             .size(size)
             .then(container)

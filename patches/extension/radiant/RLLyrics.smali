@@ -13,6 +13,16 @@
 
 .field static volatile aiType:Ljava/lang/String;
 
+.field private static final apiBody:Ljava/lang/ThreadLocal;
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "Ljava/lang/ThreadLocal<",
+            "Ljava/lang/String;",
+            ">;"
+        }
+    .end annotation
+.end field
+
 .field private static volatile autoSyllaJob:Ljava/lang/Object;
 
 .field static volatile autoSyllaRunning:Z
@@ -118,6 +128,12 @@
     invoke-direct {v0}, Ljava/lang/ThreadLocal;-><init>()V
 
     sput-object v0, Lradiant/RLLyrics;->rawBody:Ljava/lang/ThreadLocal;
+
+    new-instance v0, Ljava/lang/ThreadLocal;
+
+    invoke-direct {v0}, Ljava/lang/ThreadLocal;-><init>()V
+
+    sput-object v0, Lradiant/RLLyrics;->apiBody:Ljava/lang/ThreadLocal;
 
     new-instance v0, Ljava/util/WeakHashMap;
 
@@ -1497,62 +1513,80 @@
 .end method
 
 .method public static normalize(Ljava/lang/String;)Ljava/lang/String;
-    .registers 4
+    .registers 5
 
-    sget-object v0, Lradiant/RLLyrics;->rawBody:Ljava/lang/ThreadLocal;
+    const-string v0, "data"
 
-    invoke-virtual {v0, p0}, Ljava/lang/ThreadLocal;->set(Ljava/lang/Object;)V
+    sget-object v1, Lradiant/RLLyrics;->rawBody:Ljava/lang/ThreadLocal;
 
-    :try_start_5
-    new-instance v0, Lorg/json/JSONObject;
+    invoke-virtual {v1, p0}, Ljava/lang/ThreadLocal;->set(Ljava/lang/Object;)V
 
-    invoke-direct {v0, p0}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+    sget-object v1, Lradiant/RLLyrics;->apiBody:Ljava/lang/ThreadLocal;
 
-    const-string v1, "Word"
+    invoke-virtual {v1, p0}, Ljava/lang/ThreadLocal;->set(Ljava/lang/Object;)V
 
-    const-string v2, "type"
+    :try_start_c
+    new-instance v1, Lorg/json/JSONObject;
 
-    invoke-virtual {v0, v2}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+    invoke-direct {v1, p0}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+
+    const-string v2, "Word"
+
+    const-string v3, "type"
+
+    invoke-virtual {v1, v3}, Lorg/json/JSONObject;->optString(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v3
+
+    invoke-virtual {v2, v3}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v2
+
+    if-nez v2, :cond_20
+
+    return-object p0
+
+    :cond_20
+    invoke-virtual {v1, v0}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
 
     move-result-object v2
 
-    invoke-virtual {v1, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v1
-
-    if-nez v1, :cond_19
+    if-nez v2, :cond_27
 
     return-object p0
 
-    :cond_19
-    const-string v1, "data"
+    :cond_27
+    invoke-static {v2}, Lradiant/RLKaraoke;->prepare(Lorg/json/JSONArray;)Lorg/json/JSONArray;
 
-    invoke-virtual {v0, v1}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+    move-result-object v3
 
-    move-result-object v1
+    if-eqz v3, :cond_31
 
-    if-eqz v1, :cond_2c
+    invoke-virtual {v1, v0, v3}, Lorg/json/JSONObject;->put(Ljava/lang/String;Ljava/lang/Object;)Lorg/json/JSONObject;
 
-    invoke-static {v1}, Lradiant/RLLyrics;->syncRomanized(Lorg/json/JSONArray;)Z
+    move-object v2, v3
 
-    move-result v1
+    :cond_31
+    invoke-static {v2}, Lradiant/RLLyrics;->syncRomanized(Lorg/json/JSONArray;)Z
 
-    if-nez v1, :cond_28
+    move-result v0
 
-    goto :goto_2c
+    if-nez v0, :cond_3a
 
-    :cond_28
-    invoke-virtual {v0}, Lorg/json/JSONObject;->toString()Ljava/lang/String;
+    if-nez v3, :cond_3a
+
+    return-object p0
+
+    :cond_3a
+    invoke-virtual {v1}, Lorg/json/JSONObject;->toString()Ljava/lang/String;
 
     move-result-object p0
-    :try_end_2c
-    .catchall {:try_start_5 .. :try_end_2c} :catchall_2d
+    :try_end_3e
+    .catchall {:try_start_c .. :try_end_3e} :catchall_3f
 
-    :cond_2c
-    :goto_2c
     return-object p0
 
-    :catchall_2d
+    :catchall_3f
     move-exception v0
 
     return-object p0
@@ -1561,237 +1595,263 @@
 .method public static onBody(Lradiant/RLAPILyricsWorker;Ljava/lang/String;)V
     .registers 9
 
-    :try_start_0
-    new-instance v0, Lorg/json/JSONObject;
+    sget-object v0, Lradiant/RLLyrics;->apiBody:Ljava/lang/ThreadLocal;
 
-    invoke-direct {v0, p1}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
-    :try_end_5
-    .catchall {:try_start_0 .. :try_end_5} :catchall_db
-
-    const-string v1, "type"
-
-    const-string v2, ""
-
-    invoke-virtual {v0, v1, v2}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v1
-
-    sput-object p1, Lradiant/RLLyrics;->body:Ljava/lang/String;
-
-    const-string v3, "Line"
-
-    invoke-virtual {v3, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v1
-
-    sput-boolean v1, Lradiant/RLLyrics;->bodyIsLine:Z
-
-    const-string v1, "_synthesized"
-
-    const/4 v3, 0x0
-
-    invoke-virtual {v0, v1, v3}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
-
-    move-result v1
-
-    if-eqz v1, :cond_27
-
-    const-string v1, "_synthesisType"
-
-    invoke-virtual {v0, v1, v2}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v1
-
-    goto :goto_28
-
-    :cond_27
-    move-object v1, v2
-
-    :goto_28
-    const-string v4, "Align"
-
-    invoke-virtual {v4, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v4
-
-    if-nez v4, :cond_3a
-
-    const-string v4, "Generate"
-
-    invoke-virtual {v4, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v4
-
-    if-eqz v4, :cond_39
-
-    goto :goto_3a
-
-    :cond_39
-    const/4 v1, 0x0
-
-    :cond_3a
-    :goto_3a
-    sput-object v1, Lradiant/RLLyrics;->aiType:Ljava/lang/String;
-
-    sget-object v1, Lradiant/RLLyrics;->aiType:Ljava/lang/String;
-
-    const/4 v4, 0x1
-
-    if-eqz v1, :cond_48
-
-    invoke-static {}, Lradiant/RLSettings;->allowAI()Z
-
-    move-result v1
-
-    if-eqz v1, :cond_48
-
-    move v3, v4
-
-    :cond_48
-    invoke-static {v3}, Lradiant/AiSparkle;->set(Z)V
-
-    sget-object v1, Lradiant/RLLyrics;->aiType:Ljava/lang/String;
-
-    if-eqz v1, :cond_95
-
-    new-instance v1, Ljava/lang/StringBuilder;
-
-    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
-
-    const-string v3, "Sylla "
-
-    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    sget-object v3, Lradiant/RLLyrics;->aiType:Ljava/lang/String;
-
-    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    const-string v3, " lyrics ("
-
-    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    const-string v3, "_model"
-
-    const-string v5, "?"
-
-    invoke-virtual {v0, v3, v5}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v3
-
-    const-string v6, "_modelVersion"
-
-    invoke-virtual {v0, v6, v3}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v3
-
-    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    const-string v3, ", conf "
-
-    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    const-string v3, "_confidence"
-
-    invoke-virtual {v0, v3, v5}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v3
-
-    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    const-string v3, ")"
-
-    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v1
-
-    invoke-static {v1}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
-
-    :cond_95
-    invoke-static {}, Lradiant/RLSettings;->translate()Z
-
-    move-result v1
-
-    if-eqz v1, :cond_c5
-
-    const-string v1, "_translated"
-
-    invoke-virtual {v0, v1}, Lorg/json/JSONObject;->has(Ljava/lang/String;)Z
-
-    move-result v3
-
-    if-eqz v3, :cond_c5
-
-    invoke-virtual {v0, v1, v4}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
-
-    move-result v1
-
-    if-nez v1, :cond_c5
-
-    new-instance v1, Ljava/lang/StringBuilder;
-
-    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
-
-    const-string v3, "RL API: translation failed | "
-
-    invoke-virtual {v1, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    const-string v3, "_translationError"
-
-    invoke-virtual {v0, v3, v2}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-
-    move-result-object v2
-
-    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v1
-
-    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v1
-
-    invoke-static {v1}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
-
-    :cond_c5
-    const-string v1, "data"
-
-    invoke-virtual {v0, v1}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+    invoke-virtual {v0}, Ljava/lang/ThreadLocal;->get()Ljava/lang/Object;
 
     move-result-object v0
 
-    invoke-static {v0}, Lradiant/RLLyrics;->readTranslations(Lorg/json/JSONArray;)V
+    check-cast v0, Ljava/lang/String;
+
+    sget-object v1, Lradiant/RLLyrics;->apiBody:Ljava/lang/ThreadLocal;
+
+    invoke-virtual {v1}, Ljava/lang/ThreadLocal;->remove()V
+
+    :try_start_d
+    new-instance v1, Lorg/json/JSONObject;
+
+    invoke-direct {v1, p1}, Lorg/json/JSONObject;-><init>(Ljava/lang/String;)V
+    :try_end_12
+    .catchall {:try_start_d .. :try_end_12} :catchall_f3
+
+    const-string v2, "type"
+
+    const-string v3, ""
+
+    invoke-virtual {v1, v2, v3}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v2
+
+    if-eqz v0, :cond_1d
+
+    goto :goto_1e
+
+    :cond_1d
+    move-object v0, p1
+
+    :goto_1e
+    sput-object v0, Lradiant/RLLyrics;->body:Ljava/lang/String;
+
+    const-string v0, "Line"
+
+    invoke-virtual {v0, v2}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    sput-boolean v0, Lradiant/RLLyrics;->bodyIsLine:Z
+
+    const-string v0, "_synthesized"
+
+    const/4 v2, 0x0
+
+    invoke-virtual {v1, v0, v2}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    if-eqz v0, :cond_38
+
+    const-string v0, "_synthesisType"
+
+    invoke-virtual {v1, v0, v3}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    goto :goto_39
+
+    :cond_38
+    move-object v0, v3
+
+    :goto_39
+    const-string v4, "Align"
+
+    invoke-virtual {v4, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v4
+
+    if-nez v4, :cond_4b
+
+    const-string v4, "Generate"
+
+    invoke-virtual {v4, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v4
+
+    if-eqz v4, :cond_4a
+
+    goto :goto_4b
+
+    :cond_4a
+    const/4 v0, 0x0
+
+    :cond_4b
+    :goto_4b
+    sput-object v0, Lradiant/RLLyrics;->aiType:Ljava/lang/String;
+
+    sget-object v0, Lradiant/RLLyrics;->aiType:Ljava/lang/String;
+
+    const/4 v4, 0x1
+
+    if-eqz v0, :cond_59
+
+    invoke-static {}, Lradiant/RLSettings;->allowAI()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_59
+
+    move v2, v4
+
+    :cond_59
+    invoke-static {v2}, Lradiant/AiSparkle;->set(Z)V
+
+    sget-object v0, Lradiant/RLLyrics;->aiType:Ljava/lang/String;
+
+    if-eqz v0, :cond_a6
+
+    new-instance v0, Ljava/lang/StringBuilder;
+
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v2, "Sylla "
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    sget-object v2, Lradiant/RLLyrics;->aiType:Ljava/lang/String;
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    const-string v2, " lyrics ("
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    const-string v2, "_model"
+
+    const-string v5, "?"
+
+    invoke-virtual {v1, v2, v5}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v2
+
+    const-string v6, "_modelVersion"
+
+    invoke-virtual {v1, v6, v2}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    const-string v2, ", conf "
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    const-string v2, "_confidence"
+
+    invoke-virtual {v1, v2, v5}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    const-string v2, ")"
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
+
+    :cond_a6
+    invoke-static {}, Lradiant/RLSettings;->translate()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_d6
+
+    const-string v0, "_translated"
+
+    invoke-virtual {v1, v0}, Lorg/json/JSONObject;->has(Ljava/lang/String;)Z
+
+    move-result v2
+
+    if-eqz v2, :cond_d6
+
+    invoke-virtual {v1, v0, v4}, Lorg/json/JSONObject;->optBoolean(Ljava/lang/String;Z)Z
+
+    move-result v0
+
+    if-nez v0, :cond_d6
+
+    new-instance v0, Ljava/lang/StringBuilder;
+
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v2, "RL API: translation failed | "
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    const-string v2, "_translationError"
+
+    invoke-virtual {v1, v2, v3}, Lorg/json/JSONObject;->optString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
+
+    :cond_d6
+    const-string v0, "data"
+
+    invoke-virtual {v1, v0}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+
+    move-result-object v2
+
+    invoke-static {v2}, Lradiant/RLLyrics;->readTranslations(Lorg/json/JSONArray;)V
+
+    invoke-virtual {v1, v0}, Lorg/json/JSONObject;->optJSONArray(Ljava/lang/String;)Lorg/json/JSONArray;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lradiant/RLKaraoke;->load(Lorg/json/JSONArray;)V
 
     invoke-static {}, Lradiant/RLLyrics;->bump()V
 
     sget-boolean v0, Lradiant/RLLyrics;->bodyIsLine:Z
 
-    if-eqz v0, :cond_da
+    if-eqz v0, :cond_f2
 
     const-string v0, "align"
 
     invoke-static {p0, v0, p1}, Lradiant/RLLyrics;->autoSylla(Lradiant/RLAPILyricsWorker;Ljava/lang/String;Ljava/lang/String;)Z
 
-    :cond_da
+    :cond_f2
     return-void
 
-    :catchall_db
+    :catchall_f3
     move-exception p0
 
     return-void
@@ -1887,7 +1947,7 @@
 
     sput-object p0, Lradiant/RLLyrics;->track:Lcom/aspiro/wamp/model/Track;
 
-    if-eqz p1, :cond_59
+    if-eqz p1, :cond_5c
 
     sget-object p0, Lradiant/RLLyrics;->trackKey:Ljava/lang/String;
 
@@ -1897,7 +1957,7 @@
 
     if-eqz p0, :cond_10
 
-    goto :goto_59
+    goto :goto_5c
 
     :cond_10
     sput-object p1, Lradiant/RLLyrics;->trackKey:Ljava/lang/String;
@@ -1943,7 +2003,7 @@
 
     monitor-exit p0
     :try_end_31
-    .catchall {:try_start_2c .. :try_end_31} :catchall_56
+    .catchall {:try_start_2c .. :try_end_31} :catchall_59
 
     sget p0, Lradiant/RLLyrics;->syllaEpoch:I
 
@@ -1973,6 +2033,8 @@
 
     sput-object p1, Lradiant/RLLyrics;->twDur:[[J
 
+    invoke-static {}, Lradiant/RLKaraoke;->clear()V
+
     invoke-static {}, Lradiant/SparkleIcons;->resetWork()V
 
     invoke-static {v2}, Lradiant/AiSparkle;->set(Z)V
@@ -1981,18 +2043,18 @@
 
     return-void
 
-    :catchall_56
+    :catchall_59
     move-exception p1
 
-    :try_start_57
+    :try_start_5a
     monitor-exit p0
-    :try_end_58
-    .catchall {:try_start_57 .. :try_end_58} :catchall_56
+    :try_end_5b
+    .catchall {:try_start_5a .. :try_end_5b} :catchall_59
 
     throw p1
 
-    :cond_59
-    :goto_59
+    :cond_5c
+    :goto_5c
     return-void
 .end method
 
@@ -3188,10 +3250,21 @@
 .method public static render(IILjava/lang/String;JJ)Landroidx/compose/ui/text/AnnotatedString;
     .registers 21
 
+    move-wide/from16 v10, p3
+
     sget-object v0, Lradiant/RLLyrics;->version:Landroidx/compose/runtime/MutableState;
 
     invoke-interface {v0}, Landroidx/compose/runtime/MutableState;->getValue()Ljava/lang/Object;
 
+    invoke-static {p0, v10, v11}, Lradiant/RLKaraoke;->renderBreak(IJ)Landroidx/compose/ui/text/AnnotatedString;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_e
+
+    return-object v0
+
+    :cond_e
     invoke-static {}, Lradiant/RLSettings;->sync()I
 
     move-result v3
@@ -3200,164 +3273,164 @@
 
     sget-boolean v1, Lradiant/RLAPILyricsHook;->isRlState:Z
 
-    if-eqz v1, :cond_dd
+    if-eqz v1, :cond_e4
 
     invoke-static {}, Lradiant/RLSettings;->translate()Z
 
     move-result v1
 
-    if-eqz v1, :cond_dd
+    if-eqz v1, :cond_e4
 
-    if-eqz v0, :cond_dd
+    if-eqz v0, :cond_e4
 
-    if-ltz p0, :cond_dd
+    if-ltz p0, :cond_e4
 
     array-length v1, v0
 
-    if-ge p0, v1, :cond_dd
+    if-ge p0, v1, :cond_e4
 
     aget-object v1, v0, p0
 
-    if-eqz v1, :cond_dd
+    if-eqz v1, :cond_e4
 
     sget-object v1, Lradiant/RLLyrics;->twText:[[Ljava/lang/String;
 
-    sget-object v4, Lradiant/RLLyrics;->twStart:[[J
+    sget-object v2, Lradiant/RLLyrics;->twStart:[[J
 
-    sget-object v5, Lradiant/RLLyrics;->twDur:[[J
+    sget-object v4, Lradiant/RLLyrics;->twDur:[[J
 
-    const/4 v6, 0x0
+    const/4 v5, 0x0
 
-    if-eqz v3, :cond_31
+    if-eqz v3, :cond_3a
 
-    if-eqz v1, :cond_31
+    if-eqz v1, :cond_3a
 
-    array-length v7, v1
+    array-length v6, v1
 
-    if-ge p0, v7, :cond_31
+    if-ge p0, v6, :cond_3a
 
     aget-object v1, v1, p0
 
-    goto :goto_32
+    goto :goto_3b
 
-    :cond_31
-    move-object v1, v6
+    :cond_3a
+    move-object v1, v5
 
-    :goto_32
-    if-eqz v1, :cond_3d
+    :goto_3b
+    if-eqz v1, :cond_46
 
-    if-eqz v4, :cond_3d
+    if-eqz v2, :cond_46
 
-    array-length v7, v4
+    array-length v6, v2
 
-    if-ge p0, v7, :cond_3d
+    if-ge p0, v6, :cond_46
 
-    aget-object v4, v4, p0
+    aget-object v2, v2, p0
 
-    move-object v8, v4
+    move-object v8, v2
 
-    goto :goto_3e
+    goto :goto_47
 
-    :cond_3d
-    move-object v8, v6
+    :cond_46
+    move-object v8, v5
 
-    :goto_3e
-    if-eqz v1, :cond_47
+    :goto_47
+    if-eqz v1, :cond_50
 
-    if-eqz v5, :cond_47
+    if-eqz v4, :cond_50
 
-    array-length v4, v5
+    array-length v2, v4
 
-    if-ge p0, v4, :cond_47
+    if-ge p0, v2, :cond_50
 
-    aget-object v6, v5, p0
+    aget-object v5, v4, p0
 
-    :cond_47
-    move-object v9, v6
+    :cond_50
+    move-object v9, v5
 
-    if-eqz v1, :cond_d1
+    if-eqz v1, :cond_d8
 
-    if-eqz v8, :cond_d1
+    if-eqz v8, :cond_d8
 
-    if-eqz v9, :cond_d1
+    if-eqz v9, :cond_d8
 
-    array-length v4, v8
+    array-length v2, v8
 
-    array-length v5, v1
+    array-length v4, v1
 
-    if-ne v4, v5, :cond_d1
+    if-ne v2, v4, :cond_d8
 
-    array-length v4, v9
+    array-length v2, v9
 
-    array-length v5, v1
+    array-length v4, v1
 
-    if-eq v4, v5, :cond_58
+    if-eq v2, v4, :cond_61
 
-    goto/16 :goto_d1
+    goto/16 :goto_d8
 
-    :cond_58
+    :cond_61
     new-instance v0, Ljava/lang/StringBuilder;
 
     invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
 
-    array-length v4, v1
+    array-length v2, v1
 
-    new-array v6, v4, [I
+    new-array v6, v2, [I
 
-    array-length v4, v1
+    array-length v2, v1
 
-    new-array v7, v4, [I
+    new-array v7, v2, [I
 
-    const/4 v4, 0x0
+    const/4 v2, 0x0
 
-    move v5, v4
+    move v4, v2
 
-    :goto_65
-    array-length v10, v1
+    :goto_6e
+    array-length v5, v1
 
-    if-ge v5, v10, :cond_8b
+    if-ge v4, v5, :cond_94
 
-    aget-object v10, v1, v5
+    aget-object v5, v1, v4
 
-    invoke-static {v10}, Lradiant/RLLyrics;->trimEndLen(Ljava/lang/String;)I
-
-    move-result v11
-
-    invoke-virtual {v0}, Ljava/lang/StringBuilder;->length()I
+    invoke-static {v5}, Lradiant/RLLyrics;->trimEndLen(Ljava/lang/String;)I
 
     move-result v12
 
-    aput v12, v6, v5
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->length()I
 
-    invoke-virtual {v0, v10, v4, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/CharSequence;II)Ljava/lang/StringBuilder;
+    move-result v13
+
+    aput v13, v6, v4
+
+    invoke-virtual {v0, v5, v2, v12}, Ljava/lang/StringBuilder;->append(Ljava/lang/CharSequence;II)Ljava/lang/StringBuilder;
 
     invoke-virtual {v0}, Ljava/lang/StringBuilder;->length()I
 
-    move-result v12
+    move-result v13
 
-    aput v12, v7, v5
+    aput v13, v7, v4
 
-    invoke-virtual {v10}, Ljava/lang/String;->length()I
+    invoke-virtual {v5}, Ljava/lang/String;->length()I
 
-    move-result v10
+    move-result v5
 
-    if-eq v11, v10, :cond_88
+    if-eq v12, v5, :cond_91
 
-    const/16 v10, 0x20
+    const/16 v5, 0x20
 
-    invoke-virtual {v0, v10}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
+    invoke-virtual {v0, v5}, Ljava/lang/StringBuilder;->append(C)Ljava/lang/StringBuilder;
 
-    :cond_88
-    add-int/lit8 v5, v5, 0x1
+    :cond_91
+    add-int/lit8 v4, v4, 0x1
 
-    goto :goto_65
+    goto :goto_6e
 
-    :cond_8b
+    :cond_94
     invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
 
     move-result-object v1
 
-    sput-wide p3, Lradiant/WordLyrics;->tmpSung:J
+    sput-wide v10, Lradiant/WordLyrics;->tmpSung:J
 
     sput-wide p5, Lradiant/WordLyrics;->tmpUnsung:J
 
@@ -3371,50 +3444,48 @@
 
     invoke-static {}, Lradiant/WordLyrics;->ctxSingers()Z
 
-    move-result v10
+    move-result v4
 
-    if-eqz v10, :cond_ab
+    if-eqz v4, :cond_b4
 
-    sget-boolean v10, Lradiant/WordLyrics;->dualSide:Z
+    sget-boolean v4, Lradiant/WordLyrics;->dualSide:Z
 
-    if-eqz v10, :cond_ab
+    if-eqz v4, :cond_b4
 
     invoke-static {p0}, Lradiant/WordLyrics;->sideOf(I)I
 
-    move-result v10
+    move-result v4
 
-    goto :goto_ac
+    goto :goto_b5
 
-    :cond_ab
-    const/4 v10, -0x1
+    :cond_b4
+    const/4 v4, -0x1
 
-    :goto_ac
-    if-ltz v10, :cond_b5
+    :goto_b5
+    if-ltz v4, :cond_be
 
-    invoke-static {v10, v4}, Lradiant/WordLyrics;->paraStyle(IZ)Landroidx/compose/ui/text/ParagraphStyle;
-
-    move-result-object v10
-
-    invoke-virtual {v0, v10, v4, v5}, Landroidx/compose/ui/text/AnnotatedString$Builder;->addStyle(Landroidx/compose/ui/text/ParagraphStyle;II)V
-
-    :cond_b5
-    invoke-static/range {p5 .. p6}, Lradiant/WordLyrics;->makeSpan(J)Landroidx/compose/ui/text/SpanStyle;
-
-    move-result-object v10
-
-    invoke-virtual {v0, v10, v4, v5}, Landroidx/compose/ui/text/AnnotatedString$Builder;->addStyle(Landroidx/compose/ui/text/SpanStyle;II)V
-
-    invoke-static {}, Lradiant/WordLyrics;->lineState()Landroidx/compose/runtime/MutableState;
+    invoke-static {v4, v2}, Lradiant/WordLyrics;->paraStyle(IZ)Landroidx/compose/ui/text/ParagraphStyle;
 
     move-result-object v4
 
-    invoke-interface {v4}, Landroidx/compose/runtime/MutableState;->getValue()Ljava/lang/Object;
+    invoke-virtual {v0, v4, v2, v5}, Landroidx/compose/ui/text/AnnotatedString$Builder;->addStyle(Landroidx/compose/ui/text/ParagraphStyle;II)V
+
+    :cond_be
+    invoke-static/range {p5 .. p6}, Lradiant/WordLyrics;->makeSpan(J)Landroidx/compose/ui/text/SpanStyle;
+
+    move-result-object v4
+
+    invoke-virtual {v0, v4, v2, v5}, Landroidx/compose/ui/text/AnnotatedString$Builder;->addStyle(Landroidx/compose/ui/text/SpanStyle;II)V
+
+    invoke-static {}, Lradiant/WordLyrics;->lineState()Landroidx/compose/runtime/MutableState;
+
+    move-result-object v2
+
+    invoke-interface {v2}, Landroidx/compose/runtime/MutableState;->getValue()Ljava/lang/Object;
 
     const/4 v4, 0x0
 
     move v2, p0
-
-    move-wide/from16 v10, p3
 
     move-wide/from16 v12, p5
 
@@ -3422,58 +3493,56 @@
 
     invoke-virtual {v0}, Landroidx/compose/ui/text/AnnotatedString$Builder;->toAnnotatedString()Landroidx/compose/ui/text/AnnotatedString;
 
-    move-result-object v0
+    move-result-object p0
 
-    return-object v0
+    return-object p0
 
-    :cond_d1
-    :goto_d1
+    :cond_d8
+    :goto_d8
     new-instance v1, Landroidx/compose/ui/text/AnnotatedString$Builder;
 
-    aget-object v0, v0, p0
+    aget-object p0, v0, p0
 
-    invoke-direct {v1, v0}, Landroidx/compose/ui/text/AnnotatedString$Builder;-><init>(Ljava/lang/String;)V
+    invoke-direct {v1, p0}, Landroidx/compose/ui/text/AnnotatedString$Builder;-><init>(Ljava/lang/String;)V
 
     invoke-virtual {v1}, Landroidx/compose/ui/text/AnnotatedString$Builder;->toAnnotatedString()Landroidx/compose/ui/text/AnnotatedString;
 
-    move-result-object v0
+    move-result-object p0
 
-    return-object v0
+    return-object p0
 
-    :cond_dd
+    :cond_e4
     const/4 v0, 0x2
 
-    if-ne v3, v0, :cond_e5
+    if-ne v3, v0, :cond_ec
 
-    invoke-static/range {p0 .. p6}, Lradiant/WordLyrics;->renderSyl(IILjava/lang/String;JJ)Landroidx/compose/ui/text/AnnotatedString;
+    invoke-static/range {p0 .. p6}, Lradiant/RLKaraoke;->renderSyl(IILjava/lang/String;JJ)Landroidx/compose/ui/text/AnnotatedString;
 
-    move-result-object v0
+    move-result-object p0
 
-    return-object v0
+    return-object p0
 
-    :cond_e5
+    :cond_ec
     const/4 v0, 0x1
 
-    if-ne v3, v0, :cond_ed
+    if-ne v3, v0, :cond_f8
 
     invoke-static/range {p0 .. p6}, Lradiant/WordLyrics;->render(IILjava/lang/String;JJ)Landroidx/compose/ui/text/AnnotatedString;
 
     move-result-object v0
 
-    return-object v0
+    invoke-static {p0, v0}, Lradiant/RLKaraoke;->glowWord(ILandroidx/compose/ui/text/AnnotatedString;)Landroidx/compose/ui/text/AnnotatedString;
 
-    :cond_ed
-    new-instance v0, Landroidx/compose/ui/text/AnnotatedString$Builder;
+    move-result-object p0
 
-    move-object/from16 v1, p2
+    return-object p0
 
-    invoke-direct {v0, v1}, Landroidx/compose/ui/text/AnnotatedString$Builder;-><init>(Ljava/lang/String;)V
+    :cond_f8
+    invoke-static/range {p0 .. p4}, Lradiant/RLKaraoke;->glowLine(IILjava/lang/String;J)Landroidx/compose/ui/text/AnnotatedString;
 
-    invoke-virtual {v0}, Landroidx/compose/ui/text/AnnotatedString$Builder;->toAnnotatedString()Landroidx/compose/ui/text/AnnotatedString;
+    move-result-object p0
 
-    move-result-object v0
-
-    return-object v0
+    return-object p0
 .end method
 
 .method static republish(Lradiant/RLAPILyricsWorker;)Z
@@ -3481,9 +3550,9 @@
 
     sget-object v0, Lradiant/RLLyrics;->body:Ljava/lang/String;
 
-    if-eqz v0, :cond_34
+    if-eqz v0, :cond_3d
 
-    if-eqz p0, :cond_34
+    if-eqz p0, :cond_3d
 
     iget-object v1, p0, Lradiant/RLAPILyricsWorker;->key:Ljava/lang/String;
 
@@ -3495,7 +3564,7 @@
 
     if-nez v1, :cond_11
 
-    goto :goto_34
+    goto :goto_3d
 
     :cond_11
     new-instance v1, Ljava/lang/StringBuilder;
@@ -3526,14 +3595,22 @@
 
     invoke-static {v1}, Lradiant/RLAPILyricsHook;->dlog(Ljava/lang/String;)V
 
+    invoke-static {v0}, Lradiant/RLLyrics;->normalize(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    sget-object v1, Lradiant/RLLyrics;->rawBody:Ljava/lang/ThreadLocal;
+
+    invoke-virtual {v1}, Ljava/lang/ThreadLocal;->remove()V
+
     invoke-virtual {p0, v0}, Lradiant/RLAPILyricsWorker;->publish(Ljava/lang/String;)Z
 
     move-result p0
 
     return p0
 
-    :cond_34
-    :goto_34
+    :cond_3d
+    :goto_3d
     const/4 p0, 0x0
 
     return p0

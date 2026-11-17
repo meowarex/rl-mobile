@@ -45,6 +45,8 @@ public final class RLLyrics {
 
     // Body this worker just fetched, for onNoLyrics
     private static final ThreadLocal<String> rawBody = new ThreadLocal<String>();
+    // API body before brackets / dots, what Sylla sees
+    private static final ThreadLocal<String> apiBody = new ThreadLocal<String>();
 
     // Track changed, in-flight Sylla results get dropped
     static volatile int syllaEpoch;
@@ -98,6 +100,7 @@ public final class RLLyrics {
         twText = null;
         twStart = null;
         twDur = null;
+        RLKaraoke.clear();
         SparkleIcons.resetWork();
         AiSparkle.set(false);
         bump();
@@ -183,6 +186,8 @@ public final class RLLyrics {
 
     // Lyrics about to be published
     public static void onBody(RLAPILyricsWorker w, String b) {
+        String api = apiBody.get();
+        apiBody.remove();
         JSONObject o;
         try {
             o = new JSONObject(b);
@@ -190,7 +195,7 @@ public final class RLLyrics {
             return;
         }
         String type = o.optString("type", "");
-        body = b;
+        body = api != null ? api : b;
         bodyIsLine = "Line".equals(type);
 
         // Sparkle only for Sylla lyrics
@@ -205,6 +210,7 @@ public final class RLLyrics {
             RLAPILyricsHook.dlog("RL API: translation failed | " + o.optString("_translationError", ""));
         }
         readTranslations(o.optJSONArray("data"));
+        RLKaraoke.load(o.optJSONArray("data"));
         bump();
 
         // Line only, Radiant AI aligns it in the background
@@ -240,7 +246,9 @@ public final class RLLyrics {
         String b = body;
         if (b == null || w == null || !w.key.equals(trackKey)) return false;
         RLAPILyricsHook.dlog("rl-api empty for " + w.key + ", keeping the last lyrics");
-        return w.publish(b);
+        String n = normalize(b);
+        rawBody.remove();
+        return w.publish(n);
     }
 
     // MARKER: translations
@@ -310,13 +318,15 @@ public final class RLLyrics {
     // One lyric line, translation replaces it (no room for both)
     public static AnnotatedString render(int idx, int active, String text, long sung, long unsung) {
         version.getValue();    // recompose on setting changes
+        AnnotatedString dots = RLKaraoke.renderBreak(idx, sung);
+        if (dots != null) return dots;
         int mode = RLSettings.sync();
         String[] t = trans;
         boolean translated = RLAPILyricsHook.isRlState && RLSettings.translate() && t != null && idx >= 0 && idx < t.length && t[idx] != null;
         if (!translated) {
-            if (mode == RLSettings.SYNC_SYLLABLE) return WordLyrics.renderSyl(idx, active, text, sung, unsung);
-            if (mode == RLSettings.SYNC_WORD) return WordLyrics.render(idx, active, text, sung, unsung);
-            return new AnnotatedString.Builder(text).toAnnotatedString();
+            if (mode == RLSettings.SYNC_SYLLABLE) return RLKaraoke.renderSyl(idx, active, text, sung, unsung);
+            if (mode == RLSettings.SYNC_WORD) return RLKaraoke.glowWord(idx, WordLyrics.render(idx, active, text, sung, unsung));
+            return RLKaraoke.glowLine(idx, active, text, sung);
         }
 
         // Timed translation only in Word / Syllable
@@ -648,15 +658,20 @@ public final class RLLyrics {
         }
     }
 
-    // Copy word breaks onto romanized so words don't glue
+    // Word breaks, bracket marks and dots before publish
     public static String normalize(String b) {
         // Keep it for onNoLyrics in case it's untimed
         rawBody.set(b);
+        apiBody.set(b);
         try {
             JSONObject o = new JSONObject(b);
             if (!"Word".equals(o.optString("type"))) return b;
             JSONArray data = o.optJSONArray("data");
-            if (data == null || !syncRomanized(data)) return b;
+            if (data == null) return b;
+            // Bracket marks + instrumental dots
+            JSONArray fx = RLKaraoke.prepare(data);
+            if (fx != null) o.put("data", data = fx);
+            if (!syncRomanized(data) && fx == null) return b;
             return o.toString();
         } catch (Throwable t) {
             return b;
