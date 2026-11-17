@@ -81,3 +81,40 @@
 
     return v0
 .end method
+
+# MARKER: Karaoke FX
+# Words lift as they're sung <3
+.method static risingWords()I
+    .locals 1
+
+    const v0, __RL_RISING__
+
+    return v0
+.end method
+
+# Dots in long instrumental breaks
+.method static dots()I
+    .locals 1
+
+    const v0, __RL_DOTS__
+
+    return v0
+.end method
+
+# Lyrics glow on or off
+.method static glowOn()I
+    .locals 1
+
+    const v0, __RL_GLOW_ON__
+
+    return v0
+.end method
+
+# Lyrics glow strength, 0 off
+.method static glow()I
+    .locals 1
+
+    const v0, __RL_GLOW__
+
+    return v0
+.end method

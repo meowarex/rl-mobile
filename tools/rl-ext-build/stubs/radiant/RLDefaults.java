@@ -9,4 +9,8 @@ public final class RLDefaults {
     static int sync() { return 0; }
     static int quickMenu() { return 1; }
     static int toasts() { return 0; }
+    static int risingWords() { return 1; }
+    static int dots() { return 1; }
+    static int glowOn() { return 1; }
+    static int glow() { return 30; }
 }

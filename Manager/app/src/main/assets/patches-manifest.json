@@ -55,7 +55,8 @@
         "radiant/RLHttp.smali",
         "radiant/RLTask.smali",
         "radiant/AiSparkle.smali",
-        "radiant/RLTopButton.smali"
+        "radiant/RLTopButton.smali",
+        "radiant/RLKaraoke.smali"
       ],
       "advancedOptions": [
         {
@@ -179,6 +180,31 @@
           ],
           "defaultIndex": 1,
           "token": "RL_TOASTS"
+        },
+        {
+          "type": "toggle",
+          "key": "lyrics_glow",
+          "title": "Lyrics Glow",
+          "description": "Lyrics glow softly as they're sung",
+          "default": true,
+          "token": "RL_GLOW_ON"
+        },
+        {
+          "type": "slider",
+          "key": "text_glow",
+          "title": "Text Glow",
+          "description": "How strong the lyrics glow is (default: 30)",
+          "default": 30,
+          "min": 0,
+          "max": 100,
+          "steps": 19,
+          "displayAsPercent": false,
+          "requiresOption": "lyrics_glow",
+          "token": "RL_GLOW",
+          "encode": {
+            "kind": "int",
+            "scale": 1.0
+          }
         }
       ]
     },
