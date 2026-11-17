@@ -56,6 +56,7 @@
         "radiant/RLTask.smali",
         "radiant/AiSparkle.smali",
         "radiant/RLTopButton.smali",
+        "radiant/RLBrackets.smali",
         "radiant/RLKaraoke.smali"
       ],
       "advancedOptions": [
@@ -180,6 +181,22 @@
           ],
           "defaultIndex": 1,
           "token": "RL_TOASTS"
+        },
+        {
+          "type": "toggle",
+          "key": "rising_words",
+          "title": "Rising Words",
+          "description": "Words lift as they're sung, and long notes grow and glow letter by letter (Syllable)",
+          "default": true,
+          "token": "RL_RISING"
+        },
+        {
+          "type": "toggle",
+          "key": "instrumental_dots",
+          "title": "Instrumental Dots",
+          "description": "Dots that fill up during instrumental breaks",
+          "default": true,
+          "token": "RL_DOTS"
         },
         {
           "type": "toggle",

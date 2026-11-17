@@ -63,7 +63,7 @@ fi
 dest="$repo/patches/extension/radiant"
 for c in AiSparkle AnimatedCovers AnimatedCoverView RoundOutline SparkleIcons \
          RLSettings RLLyrics RLHttp RLTask RLMenu RLSwitch ArtPlayer CoverPlayer FadeIn QualitySeek RLTopButton CoverWave CoverWaveView \
-         RLKaraoke; do
+         RLBrackets RLKaraoke; do
     rm -f "$dest/$c".smali
     cp "$out"/smali/radiant/"$c".smali "$dest/"
     echo "    -> patches/extension/radiant/$c.smali"
