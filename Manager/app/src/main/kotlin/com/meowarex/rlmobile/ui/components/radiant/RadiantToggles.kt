@@ -21,6 +21,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import kotlinx.coroutines.launch
+import kotlin.math.sqrt
 import com.meowarex.rlmobile.R
 import com.meowarex.rlmobile.ui.theme.*
 
@@ -52,11 +58,18 @@ fun RadiantSwitch(
     }
 
     val scheme = MaterialTheme.colorScheme
-    val offset by animateDpAsState(
-        targetValue = if (checked) TrackWidth - ThumbSize - ThumbInset else ThumbInset,
-        animationSpec = spring(dampingRatio = 0.55f, stiffness = Spring.StiffnessMediumLow),
-        label = "SwitchThumbOffset",
-    )
+    // Thumb edges use separate springs so it stretches <3
+    val off = ThumbInset.value
+    val on = (TrackWidth - ThumbSize - ThumbInset).value
+    val start = if (checked) on else off
+    val left = remember { Animatable(start) }
+    val right = remember { Animatable(start + ThumbSize.value) }
+    LaunchedEffect(checked) {
+        val fast = spring<Float>(dampingRatio = 0.5f, stiffness = 900f)
+        val slow = spring<Float>(dampingRatio = 0.42f, stiffness = 260f)
+        launch { left.animateTo(start, if (checked) slow else fast) }
+        right.animateTo(start + ThumbSize.value, if (checked) fast else slow)
+    }
     val trackColor by animateColorAsState(
         targetValue = if (checked) Color.Transparent else scheme.surfaceContainerHighest,
         label = "SwitchTrack",
@@ -102,13 +115,20 @@ fun RadiantSwitch(
                 } else Modifier
             ),
     ) {
-        Box(
-            modifier = Modifier
-                .padding(start = offset)
-                .size(ThumbSize)
-                .clip(CircleShape)
-                .background(thumbColor, CircleShape),
-        )
+        Canvas(Modifier.matchParentSize()) {
+            val l = left.value.dp.toPx()
+            val r = right.value.dp.toPx()
+            val base = ThumbSize.toPx()
+            val w = (r - l).coerceAtLeast(base * 0.6f)
+            // Thinner the longer it gets
+            val h = (base * sqrt(base / w)).coerceIn(base * 0.7f, base * 1.15f)
+            drawRoundRect(
+                color = thumbColor,
+                topLeft = Offset(minOf(l, r), (size.height - h) / 2f),
+                size = Size(w, h),
+                cornerRadius = CornerRadius(h / 2f),
+            )
+        }
     }
 }
 

@@ -159,7 +159,7 @@ class HomeScreen : Screen, Parcelable {
                             )
                         }
                         RadiantIconButton(
-                            icon = painterResource(R.drawable.ic_favorite),
+                            icon = painterResource(if (NavBarHost.luckyHeart) R.drawable.ic_favorite else R.drawable.ic_crowdsource),
                             contentDescription = stringResource(R.string.navigation_contributors),
                             subtle = true,
                             onClick = { navigator.push(AboutScreen()) },

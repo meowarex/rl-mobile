@@ -1,10 +1,6 @@
 package com.meowarex.rlmobile.ui.components
 
 import androidx.activity.ComponentActivity
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -63,44 +59,33 @@ fun AppNavBar(navigator: Navigator, modifier: Modifier = Modifier) {
             label = stringResource(R.string.action_update),
             onClick = updater::reopenDialog,
             hasBadge = true,
+            navOnDrag = false,
         ) else null,
     )
 
     val title = titleFor(screen)
 
-    // Contributors live behind the heart now
+    // Contributors button in the FAB slot
     val openContributors = { if (screen !is AboutScreen) navigator.push(AboutScreen()) }
     val heart: @Composable () -> Unit = {
         Icon(
-            painter = painterResource(R.drawable.ic_favorite),
+            painter = painterResource(if (NavBarHost.luckyHeart) R.drawable.ic_favorite else R.drawable.ic_crowdsource),
             contentDescription = stringResource(R.string.navigation_contributors),
         )
     }
 
-    AnimatedContent(
-        targetState = tab >= 0,
-        transitionSpec = { fadeIn() togetherWith fadeOut() },
-        label = "nav_bar_mode",
+    // Single bar so the FAB can animate between screens
+    FloatingNavBar(
+        items = items,
+        selectedIndex = tab,
         modifier = modifier,
-    ) { tabbed ->
-        if (tabbed) {
-            FloatingNavBar(
-                items = items,
-                selectedIndex = tab,
-                onFabClick = openContributors,
-                fabContent = heart,
-            )
-        } else {
-            FloatingNavBar(
-                items = emptyList(),
-                selectedIndex = -1,
-                title = title,
-                onBack = { navigator.pop() },
-                onFabClick = openContributors,
-                fabContent = heart,
-            )
-        }
-    }
+        title = if (tab < 0) title else null,
+        onBack = if (tab < 0) ({ navigator.pop() }) else null,
+        showFab = screen !is AboutScreen,
+        onFabClick = openContributors,
+        fabContent = heart,
+        fabBubble = NavBarHost.luckyHeart,
+    )
 }
 
 // One stack swap so it animates once

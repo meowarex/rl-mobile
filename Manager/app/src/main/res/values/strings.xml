@@ -5,6 +5,8 @@
   <string name="rlmobile" translatable="false">Radiant Lyrics</string>
   <string name="tidal" translatable="false">TIDAL</string>
   <string name="gitcafe" translatable="false">GitCafe</string>
+  <string name="sponsor">Sponsor</string>
+  <string name="love_burst" translatable="false">wuv you too!</string>
   <string name="support_server">Support Server</string>
   <string name="installer">Installer</string>
   <string name="navigation_home">Home</string>
