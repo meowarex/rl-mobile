@@ -1,0 +1,112 @@
+--- a/com/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt.smali
+@@ -580,6 +580,10 @@
+     .line 258
+     move-result-object v6
+ 
++    invoke-static {v6, v1, v4}, Lradiant/CoverWave;->wrap(Landroidx/compose/ui/Modifier;ILjava/lang/String;)Landroidx/compose/ui/Modifier;    # Cover ripple
++
++    move-result-object v6
++
+     .line 259
+     sget-object v0, Landroidx/compose/ui/layout/ContentScale;->Companion:Landroidx/compose/ui/layout/ContentScale$Companion;
+ 
+@@ -1244,6 +1248,10 @@
+     .line 238
+     move-result-object v6
+ 
++    invoke-static {v6, v1, v4}, Lradiant/CoverWave;->wrap(Landroidx/compose/ui/Modifier;ILjava/lang/String;)Landroidx/compose/ui/Modifier;    # Cover ripple
++
++    move-result-object v6
++
+     .line 239
+     new-instance v7, Lcom/tidal/android/feature/playerscreen/ui/composables/s0;
+ 
+--- a/com/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt$CoverPager$2$1$a.smali
++++ b/com/tidal/android/feature/playerscreen/ui/composables/CoverPagerKt$CoverPager$2$1$a.smali
+@@ -128,6 +128,8 @@
+     .line 19
+     if-eq p1, p2, :cond_0
+ 
++    invoke-static {}, Lradiant/CoverWave;->onSwipe()V    # User swiped
++
+     .line 20
+     .line 21
+     new-instance p2, Lcom/tidal/android/feature/playerscreen/ui/q$g;
+--- a/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
++++ b/com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali
+@@ -275,6 +275,10 @@
+ 
+     move-object v2, v5
+ 
++    invoke-static {v2, p1, p2}, Lradiant/CoverWave;->wrap(Landroidx/compose/ui/Modifier;ILjava/lang/String;)Landroidx/compose/ui/Modifier;    # Cover ripple
++
++    move-result-object v2
++
+     move-object v5, p2
+ 
+     .line 9
+--- a/com/tidal/android/feature/appscaffold/ui/q.smali
++++ b/com/tidal/android/feature/appscaffold/ui/q.smali
+@@ -81,6 +81,8 @@
+     .line 22
+     iput-boolean p10, p0, Lcom/tidal/android/feature/appscaffold/ui/q;->j:Z
+ 
++    invoke-static {p3, p4}, Lradiant/CoverWave;->onTrack(ILjava/lang/String;)V    # Track changed
++
+     .line 23
+     .line 24
+     return-void
+--- a/com/aspiro/wamp/settings/CrossfadePreference$durationMs$1.smali
++++ b/com/aspiro/wamp/settings/CrossfadePreference$durationMs$1.smali
+@@ -215,6 +215,8 @@
+     .line 30
+     .line 31
+     :goto_0
++    invoke-static {v0, v1}, Lradiant/CoverWave;->onCrossfade(J)V    # Crossfade length
++
+     new-instance p1, Ljava/lang/Long;
+ 
+     .line 32
+--- a/com/aspiro/wamp/nowplaying/widgets/secondaryProgressView/SecondaryProgressView.smali
++++ b/com/aspiro/wamp/nowplaying/widgets/secondaryProgressView/SecondaryProgressView.smali
+@@ -653,6 +653,8 @@
+ 
+     .line 153
+     .line 154
++    invoke-static {v5, v6, v3}, Lradiant/CoverWave;->attachView(Landroid/widget/ImageView;ILjava/lang/String;)V    # Lyrics pill ripple
++
+     .line 155
+     goto :goto_4
+ 
+--- a/com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali
++++ b/com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali
+@@ -98,6 +98,8 @@
+     .line 3
+     iput-object v1, v0, Lcom/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel;->b:Lzh/b;
+ 
++    invoke-static/range {p1 .. p1}, Lradiant/CoverWave;->setQueue(Ljava/lang/Object;)V    # Queue for next cover
++
+     move-object/from16 v2, p3
+ 
+     .line 4
+--- a/com/tidal/sdk/player/playbackengine/ExoPlayerPlaybackEngine$a.smali
++++ b/com/tidal/sdk/player/playbackengine/ExoPlayerPlaybackEngine$a.smali
+@@ -437,6 +437,8 @@
+     .line 188
+     .line 189
+     iput-object v10, v1, Lcom/tidal/sdk/player/playbackengine/ExoPlayerPlaybackEngine;->F:Lij0/b;
++    invoke-static {}, Lradiant/CoverWave;->onCrossfadePrepare()V    # Preload next cover
++
+ 
+     .line 190
+     .line 191
+@@ -980,6 +982,8 @@
+     .line 449
+     .line 450
+     iput-object v6, v3, Lij0/b;->e:Ljava/lang/Long;
++    invoke-static {v7, v8}, Lradiant/CoverWave;->onCrossfadeStart(J)V    # Crossfade started <3
++
+ 
+     .line 451
+     .line 452

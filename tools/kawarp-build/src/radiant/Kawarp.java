@@ -3,6 +3,7 @@ package radiant;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.RuntimeShader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
@@ -31,6 +32,7 @@ import com.tidal.android.image.core.b;  // MARKER: R8 core.b
 
 import dev.kawarp.KawarpEngine;
 
+import java.lang.reflect.Field;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -74,6 +76,51 @@ public final class Kawarp implements yl0.l, Runnable, Choreographer.FrameCallbac
     private static volatile Context appContext;
     private static volatile String requestedUuid;
     private static volatile int loadToken;
+
+    // Cover Transitions wave, swapped into the engine
+    private static RuntimeShader waveShader;
+    private static Field waveStart;
+    private static final String STOCK_BLEND =
+        "  float3 col = mix(float3(texA.eval(sp).rgb), float3(texB.eval(sp).rgb), uBlend);\n";
+    // Desktop's backdrop wave, minus the stripes (they ring here)
+    private static final String WAVE_FN =
+        "uniform float uClock;\n" +
+        "float rlRnd(float2 q) {\n" +
+        "  float3 p = fract(float3(mod(q, 256.0).xyx) * 0.1031);\n" +
+        "  p += dot(p, p.yzx + 33.33);\n" +
+        "  return fract((p.x + p.y) * p.z);\n" +
+        "}\n" +
+        "float rlNoise(float2 q) {\n" +
+        "  float2 k = floor(q);\n" +
+        "  float2 w = fract(q);\n" +
+        "  w = w * w * (3.0 - 2.0 * w);\n" +
+        "  return mix(mix(rlRnd(k), rlRnd(k + float2(1.0, 0.0)), w.x), mix(rlRnd(k + float2(0.0, 1.0)), rlRnd(k + float2(1.0, 1.0)), w.x), w.y);\n" +
+        "}\n" +
+        "float rlOctaves(float2 q) {\n" +
+        "  float acc = 0.0;\n" +
+        "  float amp = 0.5;\n" +
+        "  for (int k = 0; k < 4; k++) {\n" +
+        "    acc += amp * rlNoise(q);\n" +
+        "    q = q * 2.03 + 17.1;\n" +
+        "    amp *= 0.5;\n" +
+        "  }\n" +
+        "  return acc;\n" +
+        "}\n" +
+        "float3 rlWave(float2 uv) {\n" +
+        "  float lin = clamp(uBlend, 0.0, 1.0);\n" +
+        "  float eased = lin * lin * (3.0 - 2.0 * lin);\n" +
+        "  float busy = step(0.002, eased) * step(eased, 0.998);\n" +
+        "  float w = uv.x * 0.74 + uv.y * 0.26 + sin(uv.y * 7.0 + uClock * 1.7) * 0.045 + (rlOctaves(uv * 3.0 + float2(0.0, uClock * 0.08)) - 0.47) * 0.16;\n" +
+        "  float gap = w - mix(-0.2, 1.2, eased);\n" +
+        "  float side = smoothstep(-0.08, 0.08, gap);\n" +
+        "  float bulge = exp(-abs(gap) * 9.0) * busy;\n" +
+        "  float2 shove = float2(0.74, 0.26) * bulge * 0.07;\n" +
+        "  float3 before = texA.eval(clamp(uv + shove, 0.0, 1.0) * 128.0).rgb;\n" +
+        "  float3 after = texB.eval(clamp(uv - shove, 0.0, 1.0) * 128.0).rgb;\n" +
+        "  float3 shade = mix(after, before, side);\n" +
+        "  shade += exp(-abs(gap) * 12.0) * 0.08 * busy;\n" +
+        "  return shade;\n" +
+        "}\n";
 
     private static long lastDrawUptime;
     private static boolean frameScheduled;
@@ -141,6 +188,46 @@ public final class Kawarp implements yl0.l, Runnable, Choreographer.FrameCallbac
         }
     }
 
+    // Patched by Cover Transitions, -1 is off
+    private static int waveMs() {
+        return -1;
+    }
+
+    // Swap the engine's blend for the wave, plain fade if it fails
+    private static void mountWave(KawarpEngine e) {
+        try {
+            Field agsl = KawarpEngine.class.getDeclaredField("AGSL");
+            agsl.setAccessible(true);
+            String src = (String) agsl.get(null);
+            int at = src.indexOf("half4 main(");
+            if (at < 0 || src.indexOf(STOCK_BLEND) < 0) return;
+            src = src.substring(0, at) + WAVE_FN + src.substring(at);
+            src = src.replace(STOCK_BLEND, "  float3 col = rlWave(wuv);\n");
+            RuntimeShader wave = new RuntimeShader(src);
+            Field start = KawarpEngine.class.getDeclaredField("transitionStart");
+            start.setAccessible(true);
+            Field shader = KawarpEngine.class.getDeclaredField("shader");
+            shader.setAccessible(true);
+            shader.set(e, wave);
+            waveStart = start;
+            waveShader = wave;
+        } catch (Throwable t) {
+            waveShader = null;
+        }
+    }
+
+    // Wave clock, before each frame
+    private static void stepWave() {
+        RuntimeShader wave = waveShader;
+        if (wave == null) return;
+        try {
+            long since = SystemClock.uptimeMillis() - waveStart.getLong(engine);
+            wave.setFloatUniform("uClock", Math.max(0L, since) / 1000f);
+        } catch (Throwable t) {
+            // keep the last clock
+        }
+    }
+
     /** Engine construction compiles the AGSL so this doubles as the support probe. */
     private static boolean ensureEngine() {
         if (engine != null) return true;
@@ -157,6 +244,7 @@ public final class Kawarp implements yl0.l, Runnable, Choreographer.FrameCallbac
             e.setContrast(Float.intBitsToFloat(tk(0x52410008)));
             e.setSaturation(Float.intBitsToFloat(tk(0x52410009)));
             e.setBrightness(Float.intBitsToFloat(tk(0x5241000a)));
+            if (waveMs() >= 0) mountWave(e);
             engine = e;
             return true;
         } catch (Throwable t) {
@@ -200,6 +288,8 @@ public final class Kawarp implements yl0.l, Runnable, Choreographer.FrameCallbac
         Bitmap cover = toBitmap(drawable);
         if (cover == null) { fail(); return; }
         // setCover copies, the bitmap stays Coil's (memory cache)
+        int ms = waveMs();
+        if (ms > 0) engine.setTransitionDuration(ms);
         engine.setCover(cover);
     }
 
@@ -255,6 +345,7 @@ public final class Kawarp implements yl0.l, Runnable, Choreographer.FrameCallbac
         float width = Size.getWidthImpl(packed);
         float height = Size.getHeightImpl(packed);
         try {
+            stepWave();
             engine.draw(AndroidCanvas_androidKt.getNativeCanvas(scope.getDrawContext().getCanvas()),
                 width, height);
         } catch (Throwable t) {

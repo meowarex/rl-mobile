@@ -1,2 +1,6 @@
 package com.aspiro.wamp.model;
-public class Album { public String getTitle() { return null; } }
+public class Album {
+    public String getTitle() { return null; }
+    public int getId() { return 0; }
+    public String getCover() { return null; }
+}

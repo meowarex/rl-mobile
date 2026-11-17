@@ -687,7 +687,7 @@ The owner name survives R8; only the member name rolls. Match on the descriptor.
 | `Lk70/a;` | `c` | `:Lcom/aspiro/wamp/model/AvailabilityInteractor;` | 1 |
 | `Lxf/c;` | `c` | `:Lcom/tidal/android/navigation/NavigationInfo;` | 1 |
 
-## 3. Rolled patch target classes (67)
+## 3. Rolled patch target classes (68)
 
 `--- a/` headers naming an obfuscated class. If these move the hunk cannot even be located.
 
@@ -720,12 +720,12 @@ The owner name survives R8; only the member name rolls. Match on the descriptor.
 | `com/tidal/android/dynamicpages/ui/modules/publicplaylistlist/PublicPlaylistListModuleManager$createModuleViewState$3.smali` | `gestures/queue/swipe-to-queue-compose.patch` |
 | `com/tidal/android/dynamicpages/ui/modules/tracklist/TrackListModuleManager$createModuleViewState$3.smali` | `gestures/queue/swipe-to-queue-compose.patch` |
 | `com/tidal/android/dynamicpages/ui/modules/verticallistcard/VerticalListCardModuleManager$createModuleViewState$3.smali` | `gestures/queue/swipe-to-queue-compose.patch` |
-| `com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali` | `gestures/mini-player/mini-player-left-right-gesture.patch` |
+| `com/tidal/android/feature/appscaffold/ui/MiniPlayerViewModel.smali` | `cover-transitions.patch`, `gestures/mini-player/mini-player-left-right-gesture.patch` |
 | `com/tidal/android/feature/appscaffold/ui/composable/MiniPlayerKt.smali` | `gestures/mini-player/mini-player-left-right-gesture.patch`, `gestures/mini-player/mini-player-up-gesture.patch` |
 | `com/tidal/android/feature/appscaffold/ui/composable/a.smali` | `mini-player-black.patch`, `mini-player-grey.patch` |
 | `com/tidal/android/feature/appscaffold/ui/composable/g.smali` | `gestures/mini-player/mini-player-left-right-gesture.patch` |
 | `com/tidal/android/feature/appscaffold/ui/composable/k.smali` | `gestures/mini-player/mini-player-up-gesture.patch`, `mini-player-black.patch`, `mini-player-dynamic-bg.patch`, `mini-player-floating-border.patch`, `mini-player-grey.patch` |
-| `com/tidal/android/feature/appscaffold/ui/q.smali` | `cover-capture.patch` |
+| `com/tidal/android/feature/appscaffold/ui/q.smali` | `cover-capture.patch`, `cover-transitions.patch` |
 | `com/tidal/android/feature/appscaffold/ui/t.smali` | `cover-capture.patch` |
 | `com/tidal/android/feature/feed/ui/FeedView.smali` | `gestures/queue/swipe-to-queue.patch` |
 | `com/tidal/android/feature/home/ui/composables/f.smali` | `home-backdrop.patch` |
@@ -759,14 +759,21 @@ The owner name survives R8; only the member name rolls. Match on the descriptor.
 | `u6/e.smali` | `gestures/queue/swipe-to-queue.patch` |
 | `zj0/n1.smali` | `integration-coloros-hires.patch` |
 | `ij0/d.smali` | `integration-coloros-hires.patch` |
+| `com/tidal/sdk/player/playbackengine/ExoPlayerPlaybackEngine$a.smali` | `cover-transitions.patch` |
 
-## 4. Occurrences inside .patch files - not marked inline (223)
+## 4. Occurrences inside .patch files - not marked inline (229)
 
 | file | line | kind | symbols |
 |---|---:|---|---|
 | `cover-capture.patch` | 5 | context | `Lcom/tidal/android/feature/appscaffold/ui/q; d` |
 | `cover-capture.patch` | 11 | context | `Lcom/tidal/android/feature/appscaffold/ui/q; e` |
 | `cover-capture.patch` | 15 | context | `Lcom/tidal/android/feature/appscaffold/ui/q;` |
+| `cover-transitions.patch` | 23 | context | `Lcom/tidal/android/feature/playerscreen/ui/composables/s0;` |
+| `cover-transitions.patch` | 35 | context | `Lcom/tidal/android/feature/playerscreen/ui/q$g;` |
+| `cover-transitions.patch` | 53 | context | `Lcom/tidal/android/feature/appscaffold/ui/q; j` |
+| `cover-transitions.patch` | 86 | context | `Lzh/b;` |
+| `cover-transitions.patch` | 98 | context | `Lcom/tidal/sdk/player/playbackengine/ExoPlayerPlaybackEngine; F`, `Lij0/b;` |
+| `cover-transitions.patch` | 107 | context | `Lij0/b; e` |
 | `debug-menu-unlock.patch` | 11 | context | `Lcom/tidal/android/featureflags/m; a` |
 | `debug-menu-unlock.patch` | 26 | context | `Lu40/a; a` |
 | `debug-menu-unlock.patch` | 36 | context | `Lu40/a; a` |

@@ -1,0 +1,29 @@
+# Skipped without Lradiant/Kawarp; (Radiant backdrop)
+--- a/radiant/Kawarp.smali
++++ b/radiant/Kawarp.smali
+@@ -608,6 +608,14 @@
+ 
+     invoke-virtual {v0, p2}, Ldev/kawarp/KawarpEngine;->setPlaying(Z)V
+ 
++    invoke-static {p0}, Lradiant/CoverWave;->backdropAlbum(I)I    # Next album on crossfade
++
++    move-result p0
++
++    invoke-static {p1}, Lradiant/CoverWave;->backdropCover(Ljava/lang/String;)Ljava/lang/String;    # Next cover on crossfade
++
++    move-result-object p1
++
+     invoke-static {p0, p1}, Lradiant/Kawarp;->request(ILjava/lang/String;)V
+ 
+     const/high16 p0, 0x3f800000    # 1.0f
+@@ -835,7 +843,9 @@
+ .method private static waveMs()I
+     .registers 1
+ 
+-    const/4 v0, -0x1
++    invoke-static {}, Lradiant/CoverWave;->backdropMs()I    # Ripple length
++
++    move-result v0
+ 
+     return v0
+ .end method

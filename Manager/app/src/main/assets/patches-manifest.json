@@ -460,6 +460,49 @@
       ]
     },
     {
+      "id": "CoverTransitions",
+      "order": 32,
+      "fileNames": [
+        "cover-transitions.patch",
+        "cover-transitions-backdrop.patch"
+      ],
+      "title": "Cover Transitions",
+      "description": "The new cover ripples across the old one on song change (based on the DJ plugin cover transitions by visiuun <3)",
+      "default": true,
+      "extensionFiles": [
+        "radiant/CoverWave.smali",
+        "radiant/CoverWaveView.smali",
+        "radiant/CoverDefaults.smali"
+      ],
+      "advancedOptions": [
+        {
+          "type": "slider",
+          "key": "duration",
+          "title": "Transition Duration",
+          "description": "Seconds the ripple takes when you skip or change songs (default = 3)",
+          "default": 3,
+          "min": 1,
+          "max": 15,
+          "steps": 27,
+          "displayAsPercent": false,
+          "unit": "s",
+          "token": "RL_CT_MS",
+          "encode": {
+            "kind": "int",
+            "scale": 1000.0
+          }
+        },
+        {
+          "type": "toggle",
+          "key": "follow_crossfade",
+          "title": "Follow Crossfade",
+          "description": "Crossfades ripple in sync with TIDAL's crossfade length (needs Audio Crossfade)",
+          "default": true,
+          "token": "RL_CT_FOLLOW"
+        }
+      ]
+    },
+    {
       "id": "AnimatedCovers",
       "order": 34,
       "fileNames": [

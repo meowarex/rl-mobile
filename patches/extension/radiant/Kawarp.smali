@@ -15,6 +15,10 @@
 
 .field private static final LOADER:Ljava/util/concurrent/ExecutorService;
 
+.field private static final STOCK_BLEND:Ljava/lang/String; = "  float3 col = mix(float3(texA.eval(sp).rgb), float3(texB.eval(sp).rgb), uBlend);\n"
+
+.field private static final WAVE_FN:Ljava/lang/String; = "uniform float uClock;\nfloat rlRnd(float2 q) {\n  float3 p = fract(float3(mod(q, 256.0).xyx) * 0.1031);\n  p += dot(p, p.yzx + 33.33);\n  return fract((p.x + p.y) * p.z);\n}\nfloat rlNoise(float2 q) {\n  float2 k = floor(q);\n  float2 w = fract(q);\n  w = w * w * (3.0 - 2.0 * w);\n  return mix(mix(rlRnd(k), rlRnd(k + float2(1.0, 0.0)), w.x), mix(rlRnd(k + float2(0.0, 1.0)), rlRnd(k + float2(1.0, 1.0)), w.x), w.y);\n}\nfloat rlOctaves(float2 q) {\n  float acc = 0.0;\n  float amp = 0.5;\n  for (int k = 0; k < 4; k++) {\n    acc += amp * rlNoise(q);\n    q = q * 2.03 + 17.1;\n    amp *= 0.5;\n  }\n  return acc;\n}\nfloat3 rlWave(float2 uv) {\n  float lin = clamp(uBlend, 0.0, 1.0);\n  float eased = lin * lin * (3.0 - 2.0 * lin);\n  float busy = step(0.002, eased) * step(eased, 0.998);\n  float w = uv.x * 0.74 + uv.y * 0.26 + sin(uv.y * 7.0 + uClock * 1.7) * 0.045 + (rlOctaves(uv * 3.0 + float2(0.0, uClock * 0.08)) - 0.47) * 0.16;\n  float gap = w - mix(-0.2, 1.2, eased);\n  float side = smoothstep(-0.08, 0.08, gap);\n  float bulge = exp(-abs(gap) * 9.0) * busy;\n  float2 shove = float2(0.74, 0.26) * bulge * 0.07;\n  float3 before = texA.eval(clamp(uv + shove, 0.0, 1.0) * 128.0).rgb;\n  float3 after = texB.eval(clamp(uv - shove, 0.0, 1.0) * 128.0).rgb;\n  float3 shade = mix(after, before, side);\n  shade += exp(-abs(gap) * 12.0) * 0.08 * busy;\n  return shade;\n}\n"
+
 .field private static volatile appContext:Landroid/content/Context;
 
 .field private static engine:Ldev/kawarp/KawarpEngine;
@@ -34,6 +38,10 @@
 .field private static volatile loader:Lcoil/e;    # MARKER: R8 Lcoil/e;
 
 .field private static volatile requestedUuid:Ljava/lang/String;
+
+.field private static waveShader:Landroid/graphics/RuntimeShader;
+
+.field private static waveStart:Ljava/lang/reflect/Field;
 
 
 # instance fields
@@ -210,6 +218,8 @@
     move-result v0
 
     :try_start_1a
+    invoke-static {}, Lradiant/Kawarp;->stepWave()V
+
     sget-object v1, Lradiant/Kawarp;->engine:Ldev/kawarp/KawarpEngine;
 
     invoke-interface {p0}, Landroidx/compose/ui/graphics/drawscope/DrawScope;->getDrawContext()Landroidx/compose/ui/graphics/drawscope/DrawContext;
@@ -225,12 +235,12 @@
     move-result-object p0
 
     invoke-virtual {v1, p0, v2, v0}, Ldev/kawarp/KawarpEngine;->draw(Landroid/graphics/Canvas;FF)Z
-    :try_end_2b
-    .catchall {:try_start_1a .. :try_end_2b} :catchall_2c
+    :try_end_2e
+    .catchall {:try_start_1a .. :try_end_2e} :catchall_2f
 
-    goto :goto_34
+    goto :goto_37
 
-    :catchall_2c
+    :catchall_2f
     move-exception p0
 
     sget-object p0, Lradiant/Kawarp;->fallbackState:Landroidx/compose/runtime/MutableState;
@@ -239,7 +249,7 @@
 
     invoke-interface {p0, v0}, Landroidx/compose/runtime/MutableState;->setValue(Ljava/lang/Object;)V
 
-    :goto_34
+    :goto_37
     return-void
 .end method
 
@@ -393,13 +403,22 @@
 
     invoke-virtual {v0, v3}, Ldev/kawarp/KawarpEngine;->setBrightness(F)V
 
+    invoke-static {}, Lradiant/Kawarp;->waveMs()I
+
+    move-result v3
+
+    if-ltz v3, :cond_a5
+
+    invoke-static {v0}, Lradiant/Kawarp;->mountWave(Ldev/kawarp/KawarpEngine;)V
+
+    :cond_a5
     sput-object v0, Lradiant/Kawarp;->engine:Ldev/kawarp/KawarpEngine;
-    :try_end_9e
-    .catchall {:try_start_e .. :try_end_9e} :catchall_9f
+    :try_end_a7
+    .catchall {:try_start_e .. :try_end_a7} :catchall_a8
 
     return v1
 
-    :catchall_9f
+    :catchall_a8
     move-exception v0
 
     sget-object v0, Lradiant/Kawarp;->fallbackState:Landroidx/compose/runtime/MutableState;
@@ -425,6 +444,134 @@
     sput-object v0, Lradiant/Kawarp;->requestedUuid:Ljava/lang/String;
 
     :cond_9
+    return-void
+.end method
+
+.method private static mountWave(Ldev/kawarp/KawarpEngine;)V
+    .registers 8
+
+    const-string v0, "  float3 col = mix(float3(texA.eval(sp).rgb), float3(texB.eval(sp).rgb), uBlend);\n"
+
+    const/4 v1, 0x0
+
+    :try_start_3
+    const-class v2, Ldev/kawarp/KawarpEngine;
+
+    const-string v3, "AGSL"
+
+    invoke-virtual {v2, v3}, Ljava/lang/Class;->getDeclaredField(Ljava/lang/String;)Ljava/lang/reflect/Field;
+
+    move-result-object v2
+
+    const/4 v3, 0x1
+
+    invoke-virtual {v2, v3}, Ljava/lang/reflect/Field;->setAccessible(Z)V
+
+    invoke-virtual {v2, v1}, Ljava/lang/reflect/Field;->get(Ljava/lang/Object;)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/String;
+
+    const-string v4, "half4 main("
+
+    invoke-virtual {v2, v4}, Ljava/lang/String;->indexOf(Ljava/lang/String;)I
+
+    move-result v4
+
+    if-ltz v4, :cond_6d
+
+    invoke-virtual {v2, v0}, Ljava/lang/String;->indexOf(Ljava/lang/String;)I
+
+    move-result v5
+
+    if-gez v5, :cond_24
+
+    goto :goto_6d
+
+    :cond_24
+    new-instance v5, Ljava/lang/StringBuilder;
+
+    invoke-direct {v5}, Ljava/lang/StringBuilder;-><init>()V
+
+    const/4 v6, 0x0
+
+    invoke-virtual {v2, v6, v4}, Ljava/lang/String;->substring(II)Ljava/lang/String;
+
+    move-result-object v6
+
+    invoke-virtual {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v5
+
+    const-string v6, "uniform float uClock;\nfloat rlRnd(float2 q) {\n  float3 p = fract(float3(mod(q, 256.0).xyx) * 0.1031);\n  p += dot(p, p.yzx + 33.33);\n  return fract((p.x + p.y) * p.z);\n}\nfloat rlNoise(float2 q) {\n  float2 k = floor(q);\n  float2 w = fract(q);\n  w = w * w * (3.0 - 2.0 * w);\n  return mix(mix(rlRnd(k), rlRnd(k + float2(1.0, 0.0)), w.x), mix(rlRnd(k + float2(0.0, 1.0)), rlRnd(k + float2(1.0, 1.0)), w.x), w.y);\n}\nfloat rlOctaves(float2 q) {\n  float acc = 0.0;\n  float amp = 0.5;\n  for (int k = 0; k < 4; k++) {\n    acc += amp * rlNoise(q);\n    q = q * 2.03 + 17.1;\n    amp *= 0.5;\n  }\n  return acc;\n}\nfloat3 rlWave(float2 uv) {\n  float lin = clamp(uBlend, 0.0, 1.0);\n  float eased = lin * lin * (3.0 - 2.0 * lin);\n  float busy = step(0.002, eased) * step(eased, 0.998);\n  float w = uv.x * 0.74 + uv.y * 0.26 + sin(uv.y * 7.0 + uClock * 1.7) * 0.045 + (rlOctaves(uv * 3.0 + float2(0.0, uClock * 0.08)) - 0.47) * 0.16;\n  float gap = w - mix(-0.2, 1.2, eased);\n  float side = smoothstep(-0.08, 0.08, gap);\n  float bulge = exp(-abs(gap) * 9.0) * busy;\n  float2 shove = float2(0.74, 0.26) * bulge * 0.07;\n  float3 before = texA.eval(clamp(uv + shove, 0.0, 1.0) * 128.0).rgb;\n  float3 after = texB.eval(clamp(uv - shove, 0.0, 1.0) * 128.0).rgb;\n  float3 shade = mix(after, before, side);\n  shade += exp(-abs(gap) * 12.0) * 0.08 * busy;\n  return shade;\n}\n"
+
+    invoke-virtual {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v5
+
+    invoke-virtual {v2, v4}, Ljava/lang/String;->substring(I)Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v5, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    move-result-object v2
+
+    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v2
+
+    const-string v4, "  float3 col = rlWave(wuv);\n"
+
+    invoke-virtual {v2, v0, v4}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+
+    move-result-object v0
+
+    new-instance v2, Landroid/graphics/RuntimeShader;
+
+    invoke-direct {v2, v0}, Landroid/graphics/RuntimeShader;-><init>(Ljava/lang/String;)V
+
+    const-class v0, Ldev/kawarp/KawarpEngine;
+
+    const-string v4, "transitionStart"
+
+    invoke-virtual {v0, v4}, Ljava/lang/Class;->getDeclaredField(Ljava/lang/String;)Ljava/lang/reflect/Field;
+
+    move-result-object v0
+
+    invoke-virtual {v0, v3}, Ljava/lang/reflect/Field;->setAccessible(Z)V
+
+    const-class v4, Ldev/kawarp/KawarpEngine;
+
+    const-string v5, "shader"
+
+    invoke-virtual {v4, v5}, Ljava/lang/Class;->getDeclaredField(Ljava/lang/String;)Ljava/lang/reflect/Field;
+
+    move-result-object v4
+
+    invoke-virtual {v4, v3}, Ljava/lang/reflect/Field;->setAccessible(Z)V
+
+    invoke-virtual {v4, p0, v2}, Ljava/lang/reflect/Field;->set(Ljava/lang/Object;Ljava/lang/Object;)V
+
+    sput-object v0, Lradiant/Kawarp;->waveStart:Ljava/lang/reflect/Field;
+
+    sput-object v2, Lradiant/Kawarp;->waveShader:Landroid/graphics/RuntimeShader;
+    :try_end_6c
+    .catchall {:try_start_3 .. :try_end_6c} :catchall_6e
+
+    goto :goto_71
+
+    :cond_6d
+    :goto_6d
+    return-void
+
+    :catchall_6e
+    move-exception p0
+
+    sput-object v1, Lradiant/Kawarp;->waveShader:Landroid/graphics/RuntimeShader;
+
+    :goto_71
     return-void
 .end method
 
@@ -583,6 +730,58 @@
     return-void
 .end method
 
+.method private static stepWave()V
+    .registers 6
+
+    sget-object v0, Lradiant/Kawarp;->waveShader:Landroid/graphics/RuntimeShader;
+
+    if-nez v0, :cond_5
+
+    return-void
+
+    :cond_5
+    :try_start_5
+    invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+
+    move-result-wide v1
+
+    sget-object v3, Lradiant/Kawarp;->waveStart:Ljava/lang/reflect/Field;
+
+    sget-object v4, Lradiant/Kawarp;->engine:Ldev/kawarp/KawarpEngine;
+
+    invoke-virtual {v3, v4}, Ljava/lang/reflect/Field;->getLong(Ljava/lang/Object;)J
+
+    move-result-wide v3
+
+    sub-long/2addr v1, v3
+
+    const-string v3, "uClock"
+
+    const-wide/16 v4, 0x0
+
+    invoke-static {v4, v5, v1, v2}, Ljava/lang/Math;->max(JJ)J
+
+    move-result-wide v1
+
+    long-to-float v1, v1
+
+    const/high16 v2, 0x447a0000    # 1000.0f
+
+    div-float/2addr v1, v2
+
+    invoke-virtual {v0, v3, v1}, Landroid/graphics/RuntimeShader;->setFloatUniform(Ljava/lang/String;F)V
+    :try_end_21
+    .catchall {:try_start_5 .. :try_end_21} :catchall_22
+
+    goto :goto_23
+
+    :catchall_22
+    move-exception v0
+
+    :goto_23
+    return-void
+.end method
+
 .method private static tk(I)I
     .registers 1
 
@@ -633,6 +832,14 @@
     return-object v0
 .end method
 
+.method private static waveMs()I
+    .registers 1
+
+    const/4 v0, -0x1
+
+    return v0
+.end method
+
 
 # virtual methods
 .method public a(Landroid/graphics/drawable/Drawable;)V
@@ -658,6 +865,17 @@
     return-void
 
     :cond_11
+    invoke-static {}, Lradiant/Kawarp;->waveMs()I
+
+    move-result v0
+
+    if-lez v0, :cond_1c
+
+    sget-object v1, Lradiant/Kawarp;->engine:Ldev/kawarp/KawarpEngine;
+
+    invoke-virtual {v1, v0}, Ldev/kawarp/KawarpEngine;->setTransitionDuration(I)V
+
+    :cond_1c
     sget-object v0, Lradiant/Kawarp;->engine:Ldev/kawarp/KawarpEngine;
 
     invoke-virtual {v0, p1}, Ldev/kawarp/KawarpEngine;->setCover(Landroid/graphics/Bitmap;)V
